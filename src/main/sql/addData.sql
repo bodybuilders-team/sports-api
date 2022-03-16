@@ -1,3 +1,10 @@
-insert into courses(name) values ('LEIC');
-insert into students(course, number, name) values (1, 12345, 'Alice');
-insert into students(course, number, name) select cid as course, 12346 as number, 'Bob' as name from courses where name = 'LEIC'
+INSERT INTO courses(name)
+VALUES ('LEIC');
+
+INSERT INTO students(course, number, name)
+VALUES (1, 12345, 'Alice');
+
+INSERT INTO students(course, number, name)
+SELECT cid AS course, 12346 AS number, 'Bob' AS name
+FROM courses
+WHERE name = 'LEIC';

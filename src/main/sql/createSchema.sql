@@ -1,13 +1,15 @@
-drop table if exists students;
-drop table if exists courses;
+DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS courses;
 
-create table courses (
-  cid serial primary key,
-  name varchar(80)
+CREATE TABLE courses
+(
+    cid  SERIAL PRIMARY KEY,
+    name varchar(80)
 );
 
-create table students (
-  number int primary key,
-  name varchar(80),
-  course int references courses(cid)
+CREATE TABLE students
+(
+    number int PRIMARY KEY,
+    name   varchar(80),
+    course int REFERENCES courses (cid)
 );
