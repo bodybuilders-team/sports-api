@@ -20,8 +20,8 @@ class DBTest {
 			val rs = stm.executeQuery()
 
 			val mockTable: Array<Array<Any>> = arrayOf(
-					arrayOf(12345, "Alice", 1),
-					arrayOf(12346, "Bob", 1)
+				arrayOf(12345, "Alice", 1),
+				arrayOf(12346, "Bob", 1)
 			)
 
 			tableAsserter(mockTable, rs)
@@ -42,7 +42,7 @@ class DBTest {
 			val rs = stm.executeQuery()
 
 			val mockTable: Array<Array<Any>> = arrayOf(
-					arrayOf(1, "LEIC")
+				arrayOf(1, "LEIC")
 			)
 
 			tableAsserter(mockTable, rs) { mockRow, row ->
@@ -96,7 +96,7 @@ class DBTest {
 	fun `Insert new course`() {
 		dataSource.connection.use {
 			it.prepareStatement("INSERT INTO courses(name) VALUES (\'MEIC\')")
-					.executeUpdate()
+				.executeUpdate()
 
 			val stm2 = it.prepareStatement("SELECT * FROM courses WHERE name = \'MEIC\'")
 			val rs = stm2.executeQuery()
@@ -110,7 +110,7 @@ class DBTest {
 	fun `Insert new student`() {
 		dataSource.connection.use {
 			it.prepareStatement("INSERT INTO students VALUES (12350, \'Jorge\', 1)")
-					.executeUpdate()
+				.executeUpdate()
 
 			val stm2 = it.prepareStatement("SELECT * FROM students WHERE name = \'Jorge\'")
 			val rs = stm2.executeQuery()
@@ -126,14 +126,14 @@ class DBTest {
 		dataSource.connection.use {
 			assertFailsWith<PSQLException> {
 				it.prepareStatement("INSERT INTO courses(name) VALUES (\'bolinha\')")
-						.executeUpdate()
+					.executeUpdate()
 
 				val result = it.prepareStatement("UPDATE courses SET cid = 3 WHERE cid = 2")
-						.executeUpdate()
+					.executeUpdate()
 				assertEquals(1, result)
 
 				it.prepareStatement("INSERT INTO courses(name) VALUES (\'bolinha\')")
-						.executeUpdate()
+					.executeUpdate()
 			}
 		}
 	}
@@ -142,19 +142,50 @@ class DBTest {
 	fun `Next insertion in courses will have cid equal to last_value of Courses CID sequence + 1`() {
 		dataSource.connection.use {
 			it.prepareStatement("INSERT INTO courses(name) VALUES (\'bolinha\')")
-					.executeUpdate()
+				.executeUpdate()
 
 			it.prepareStatement("INSERT INTO courses(name) VALUES (\'bolinha2\')")
-					.executeUpdate()
+				.executeUpdate()
 
 			it.prepareStatement("INSERT INTO courses(name) VALUES (\'bolinha3\')")
-					.executeUpdate()
+				.executeUpdate()
 
 			val stm2 = it.prepareStatement("SELECT last_value FROM courses_cid_seq")
 			val rs = stm2.executeQuery()
 			rs.next()
 
 			assertEquals(4, rs.getInt("last_value"))
+		}
+	}
+
+	@Test
+	fun `Delete student by number works`() {
+		dataSource.connection.use {
+			val rs = it.prepareStatement("DELETE FROM students WHERE number = 12345")
+				.executeUpdate()
+			assertEquals(1, rs)
+		}
+	}
+
+	@Test
+	fun `Delete course without students works`() {
+		dataSource.connection.use {
+			it.prepareStatement("INSERT INTO courses(name) VALUES ('MEIC')")
+				.executeUpdate()
+
+			val rs = it.prepareStatement("DELETE FROM courses WHERE cid = 2")
+				.executeUpdate()
+			assertEquals(1, rs)
+		}
+	}
+
+	@Test
+	fun `Delete course with students throws exception`() {
+		dataSource.connection.use {
+			assertFailsWith<PSQLException> {
+				it.prepareStatement("DELETE FROM courses WHERE cid = 1")
+					.executeUpdate()
+			}
 		}
 	}
 
