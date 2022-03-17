@@ -20,21 +20,21 @@ fun max(a: Int, b: Int) = if (a >= b) a else b
  * -1 otherwise.
  */
 fun indexOfBinary(a: IntArray, fromIndex: Int, toIndex: Int, n: Int): Int {
-    require(fromIndex <= toIndex) { "from($fromIndex) > to($toIndex)" }
-    if (toIndex >= a.size) return -1
+	require(fromIndex <= toIndex) { "from($fromIndex) > to($toIndex)" }
+	if (toIndex >= a.size) return -1
 
-    var low = fromIndex
-    var high = toIndex - 1
-    var mid: Int
+	var low = fromIndex
+	var high = toIndex - 1
+	var mid: Int
 
-    while (low < high) {
-        mid = high + low / 2 + 1
-        when {
-            n > a[mid] -> low = mid + 1
-            n < a[mid] -> high = mid - 1
-            else -> return mid
-        }
-    }
+	while (low < high) {
+		mid = high + low / 2 + 1
+		when {
+			n > a[mid] -> low = mid + 1
+			n < a[mid] -> high = mid - 1
+			else -> return mid
+		}
+	}
 
-    return -1
+	return -1
 }
