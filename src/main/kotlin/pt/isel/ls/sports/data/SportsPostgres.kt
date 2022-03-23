@@ -1,10 +1,12 @@
-package pt.isel.ls
+package pt.isel.ls.sports.data
+
+import pt.isel.ls.sports.Activity
+import pt.isel.ls.sports.Route
+import pt.isel.ls.sports.Sport
+import pt.isel.ls.sports.User
 
 
-/**
- * Sports API database representation.
- */
-interface DB {
+class SportsPostgres : SportsDatabase {
 	/**
 	 * Creates a new user in the database.
 	 *
@@ -13,7 +15,9 @@ interface DB {
 	 *
 	 * @return user's unique identifier
 	 */
-	fun createNewUser(name: String, email: String): Int
+	override fun createNewUser(name: String, email: String): Int {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Gets the user object.
@@ -22,14 +26,18 @@ interface DB {
 	 *
 	 * @return user object
 	 */
-	fun getUser(uid: Int): User
+	override fun getUser(uid: Int): User {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Get the list of users.
 	 *
 	 * @return list of user identifiers
 	 */
-	fun getUsers(): List<Int>
+	override fun getUsers(): List<Int> {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Creates a user token.
@@ -38,9 +46,9 @@ interface DB {
 	 *
 	 * @return user's token
 	 */
-	fun createUserToken(uid: Int): String
-
-	//----------- ROUTE MANAGEMENT -----------
+	override fun createUserToken(uid: Int): String {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Creates a new route.
@@ -52,23 +60,27 @@ interface DB {
 	 *
 	 * @return the route's unique identifier
 	 */
-	fun createNewRoute(uid: Int, startLocation: String, endLocation: String, distance: Int): Int
+	override fun createNewRoute(uid: Int, startLocation: String, endLocation: String, distance: Int): Int {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Get the details of a route.
 	 *
 	 * @param rid route's unique identifier
 	 */
-	fun getRoute(rid: Int): Route
+	override fun getRoute(rid: Int): Route {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Get the list of routes.
 	 *
 	 * @return list of route identifiers
 	 */
-	fun getListOfRoutes(): List<Int>
-
-	// ------------ Sports and Activities Management ------------
+	override fun getListOfRoutes(): List<Int> {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Create a new sport.
@@ -78,14 +90,18 @@ interface DB {
 	 *
 	 * @return the sport's unique identifier
 	 */
-	fun createNewSport(name: String, description: String)
+	override fun createNewSport(name: String, description: String) {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Get the list of all sports.
 	 *
 	 * @return list of identifiers of all sports
 	 */
-	fun getAllSports(): List<Int>
+	override fun getAllSports(): List<Int> {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Get a sport.
@@ -94,7 +110,9 @@ interface DB {
 	 *
 	 * @return the sport object
 	 */
-	fun getSport(sportId: Int): Sport
+	override fun getSport(sportId: Int): Sport {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Create a new activity.
@@ -107,7 +125,9 @@ interface DB {
 	 *
 	 * @return activity's unique identifier
 	 */
-	fun createNewActivity(uid: Int, sid: String, duration: String, date: String, rid: Int?): Int
+	override fun createNewActivity(uid: Int, sid: String, duration: String, date: String, rid: Int?): Int {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Get all the activities of a sport.
@@ -116,21 +136,27 @@ interface DB {
 	 *
 	 * @return list of identifiers of activities of a sport
 	 */
-	fun getSportActivities(sid: Int): List<Int>
+	override fun getSportActivities(sid: Int): List<Int> {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Get the detailed information of an activity.
 	 *
 	 * @param aid activity's unique identifier
 	 */
-	fun getActivity(aid: Int): Activity
+	override fun getActivity(aid: Int): Activity {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Delete an activity.
 	 *
 	 * @param aid activity's unique identifier
 	 */
-	fun deleteActivity(aid: Int)
+	override fun deleteActivity(aid: Int) {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Get all the activities made from a user.
@@ -139,7 +165,9 @@ interface DB {
 	 *
 	 * @return list of identifiers of activities made from a user
 	 */
-	fun getUserActivities(uid: Int): List<Int>
+	override fun getUserActivities(uid: Int): List<Int> {
+		TODO("Not yet implemented")
+	}
 
 	/**
 	 * Get a list with the activities, given the parameters.
@@ -151,5 +179,8 @@ interface DB {
 	 *
 	 * @return list of activities identifiers
 	 */
-	fun getActivities(sid: Int, orderBy: String, date: String, rid: Int): List<Int>
+	override fun getActivities(sid: Int, orderBy: String, date: String, rid: Int): List<Int> {
+		TODO("Not yet implemented")
+	}
+
 }
