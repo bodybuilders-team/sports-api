@@ -1,0 +1,604 @@
+openapi: 3.0.1
+info:
+  title: Sports API
+  description: 'Manage sports'
+  termsOfService: https://swagger.io/terms/
+  version: 1.0.0
+
+tags:
+  - name: Users
+
+  - name: Routes
+
+  - name: Sports
+
+  - name: Activities
+
+paths:
+
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Creates a new user
+      requestBody:
+        description: User object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: User was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreatedResponse'
+        400:
+          description: User with the same email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+    get:
+      tags:
+        - Users
+      summary: Gets all users
+      responses:
+        200:
+          description: Users were found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        404:
+          description: No users found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Gets a user by id
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: User was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+
+
+  /routes:
+    post:
+      tags:
+        - Routes
+      summary: Creates a new route
+      requestBody:
+        description: Route object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRouteRequestBody'
+      responses:
+        200:
+          description: Route was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteCreatedResponse'
+        400:
+          description: Route with the same name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+    get:
+      tags:
+        - Routes
+      summary: Gets all routes
+      responses:
+        200:
+          description: Routes were found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Route'
+
+
+  /routes/{id}:
+    get:
+      tags:
+        - Routes
+      summary: Gets a route by id
+      parameters:
+        - name: id
+          in: path
+          description: Route id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Route was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Route'
+        404:
+          description: Route was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+
+  /sports:
+    post:
+      tags:
+        - Sports
+      summary: Creates a new sport
+      requestBody:
+        description: Sport object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sport'
+      responses:
+        200:
+          description: Sport was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportCreatedResponse'
+
+    get:
+      tags:
+        - Sports
+      summary: Gets all sports
+      responses:
+        200:
+          description: Sports were found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sport'
+
+  /sports/{id}:
+    get:
+      tags:
+        - Sports
+      summary: Gets a sport by id
+      parameters:
+        - name: id
+          in: path
+          description: Sport id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Sport was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sport'
+        404:
+          description: Sport was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+
+  /activities:
+    post:
+      tags:
+        - Sports
+      summary: Creates a new activity for the sport identified by a sport id
+      parameters:
+        - name: sid
+          in: path
+          description: Sport id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Activity object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateActivityRequestBody'
+      responses:
+        200:
+          description: Activity was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityCreatedResponse'
+
+  /sports/{id}/activities:
+    get:
+      tags:
+        - Sports
+      summary: Gets all activities of a sport
+      parameters:
+        - name: id
+          in: path
+          description: Sport id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Activity was found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+
+        404:
+          description: Activity was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+
+  /users/{id}/activities:
+    get:
+      tags:
+        - Users
+      summary: Gets all activities made by a user
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: Activity was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        404:
+          description: Activity was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+
+  /activities/{id}:
+    get:
+      tags:
+        - Activities
+      summary: Gets an activity by id
+      parameters:
+        - name: id
+          in: path
+          description: Activity id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Activity was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        404:
+          description: Activity was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+
+    delete:
+      tags:
+        - Activities
+      summary: Deletes an activity by id
+      parameters:
+        - name: id
+          in: path
+          description: Activity id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Activity was deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityDeletedResponse'
+        404:
+          description: Activity was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+
+  /activities/search:
+    get:
+      tags:
+        - Activities
+      summary: Searches for activities
+      parameters:
+        - name: sid
+          in: query
+          description: Sport Id
+          required: true
+          schema:
+            type: string
+
+        - name: orderBy
+          in: query
+          description: Order by
+          required: true
+          schema:
+            type: string
+
+        - name: date
+          in: query
+          description: Activity date
+          required: false
+          schema:
+            type: string
+
+        - name: rid
+          in: query
+          description: Route id
+          required: false
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: Activity was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        404:
+          description: Activity was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+
+components:
+  schemas:
+
+    UserCreatedResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: User Id
+
+    RouteCreatedResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Route Id
+
+    SportCreatedResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Sport Id
+
+    ActivityCreatedResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Activity Id
+
+    CreateRouteRequestBody:
+      type: object
+      description: Route object
+      required:
+        - start_location
+        - end_location
+        - distance
+      properties:
+        start_location:
+          type: string
+          description: Route start location
+
+        end_location:
+          type: string
+          description: Route end location
+
+        distance:
+          type: string
+          description: Route distance in km
+          example: 15.2
+
+    CreateActivityRequestBody:
+      required:
+        - date
+        - duration
+        - sid
+      properties:
+        date:
+          type: string
+          description: Activity date
+
+        duration:
+          type: string
+          description: Activity duration
+          pattern: ^[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}$
+
+        sid:
+          type: string
+          description: Sport id
+
+        rid:
+          type: string
+          description: Route id
+
+    ActivityDeletedResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Activity Id
+
+    AppError:
+      type: object
+      description: Application error
+      required:
+        - code
+        - name
+        - message
+      properties:
+        code:
+          type: number
+          format: integer
+          description: Internal error code
+          example: 1000
+        name:
+          type: string
+          description: Internal error name
+          example: FAIL
+        message:
+          type: string
+          description: Error description message
+          example: An error occurred
+
+
+    User:
+      type: object
+      description: User object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          description: User name
+          example: André Páscoa
+        email:
+          type: string
+          description: User email
+          example: andre@pascoa.org
+
+    Sport:
+      type: object
+      description: Sport object
+      required:
+        - name
+        - uid
+      properties:
+        name:
+          type: string
+          description: Sport name
+          example: Powerlifting
+
+        description:
+          type: string
+          description: Sport Description
+          example: andre@pascoa.org
+
+        uid:
+          type: string
+          description: User id
+
+    Route:
+      type: object
+      description: Route object
+      required:
+        - start_location
+        - end_location
+        - distance
+        - uid
+      properties:
+        start_location:
+          type: string
+          description: Route start location
+
+        end_location:
+          type: string
+          description: Route end location
+
+        distance:
+          type: string
+          description: Route distance in km
+          example: 15.2
+
+        uid:
+          type: string
+          description: User id
+
+    Activity:
+      type: object
+      description: Activity object
+      required:
+        - date
+        - duration
+        - uid
+        - sid
+      properties:
+        date:
+          type: string
+          description: Activity date
+
+        duration:
+          type: string
+          description: Activity duration
+          pattern: ^[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}$
+
+        uid:
+          type: string
+          description: Sport id
+
+        sid:
+          type: string
+          description: Sport id
+
+        rid:
+          type: string
+          description: Route id

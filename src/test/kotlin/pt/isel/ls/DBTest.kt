@@ -118,6 +118,7 @@ class DBTest {
 
 			assertEquals("Jorge", rs.getString("name"))
 		}
+
 	}
 
 
