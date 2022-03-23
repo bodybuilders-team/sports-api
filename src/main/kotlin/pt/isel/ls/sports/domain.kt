@@ -65,7 +65,7 @@ data class Route(
 data class Activity(
 	val id: Int,
 	val date: String,
-	val duration: Int,
+	val duration: String,
 	val uid: Int,
 	val sid: Int,
 	val rid: Int?

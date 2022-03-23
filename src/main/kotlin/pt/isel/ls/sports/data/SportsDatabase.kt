@@ -83,7 +83,7 @@ interface SportsDatabase {
 	 *
 	 * @return the sport's unique identifier
 	 */
-	fun createNewSport(name: String, description: String)
+	fun createNewSport(name: String, description: String, uid: Int): Int
 
 	/**
 	 * Get the list of all sports.
@@ -112,7 +112,7 @@ interface SportsDatabase {
 	 *
 	 * @return activity's unique identifier
 	 */
-	fun createNewActivity(uid: Int, sid: String, duration: String, date: String, rid: Int?): Int
+	fun createNewActivity(uid: Int, sid: Int, duration: String, date: String, rid: Int?): Int
 
 	/**
 	 * Get all the activities of a sport.

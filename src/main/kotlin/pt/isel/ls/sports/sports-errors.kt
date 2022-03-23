@@ -2,5 +2,9 @@ package pt.isel.ls.sports
 
 import java.lang.Exception
 
-// TODO: 23/03/2022 Comment
+
+/**
+ * Thrown when something was not found.
+ * @property message exception cause
+ */
 class NotFoundException(override val message: String) : Exception(message)

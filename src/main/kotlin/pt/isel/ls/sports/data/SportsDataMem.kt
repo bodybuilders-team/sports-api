@@ -107,7 +107,7 @@ class SportsDataMem : SportsDatabase {
 	 *
 	 * @return the sport's unique identifier
 	 */
-	override fun createNewSport(name: String, description: String) {
+	override fun createNewSport(name: String, description: String, uid: Int): Int {
 		TODO("Not yet implemented")
 	}
 
@@ -142,7 +142,7 @@ class SportsDataMem : SportsDatabase {
 	 *
 	 * @return activity's unique identifier
 	 */
-	override fun createNewActivity(uid: Int, sid: String, duration: String, date: String, rid: Int?): Int {
+	override fun createNewActivity(uid: Int, sid: Int, duration: String, date: String, rid: Int?): Int {
 		TODO("Not yet implemented")
 	}
 

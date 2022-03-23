@@ -1,12 +1,18 @@
 package pt.isel.ls.sports.data
 
-import pt.isel.ls.sports.Activity
-import pt.isel.ls.sports.Route
-import pt.isel.ls.sports.Sport
-import pt.isel.ls.sports.User
+import org.postgresql.ds.PGSimpleDataSource
+import pt.isel.ls.sports.*
+import java.sql.*
 
 
-class SportsPostgres : SportsDatabase {
+object SportsPostgres : SportsDatabase {
+
+	private val dataSource = PGSimpleDataSource().apply {
+		val jdbcDatabaseURL: String = System.getenv("JDBC_DATABASE_URL")
+		setURL(jdbcDatabaseURL)
+	}
+
+
 	/**
 	 * Creates a new user in the database.
 	 *
@@ -16,7 +22,23 @@ class SportsPostgres : SportsDatabase {
 	 * @return user's unique identifier
 	 */
 	override fun createNewUser(name: String, email: String): Int {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					INSERT INTO users(name, email)
+					VALUES (?, ?)
+				""".trimIndent(),
+				Statement.RETURN_GENERATED_KEYS
+			)
+			stm.setString(1, name)
+			stm.setString(2, email)
+
+			if (stm.executeUpdate() == 0)
+				throw SQLException("Creating user failed, no rows affected.")
+
+			val generatedKeys = stm.generatedKeys
+			return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
+		}
 	}
 
 	/**
@@ -27,7 +49,27 @@ class SportsPostgres : SportsDatabase {
 	 * @return user object
 	 */
 	override fun getUser(uid: Int): User {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					SELECT *
+					FROM users
+					WHERE id = ?
+				""".trimIndent()
+			)
+			stm.setInt(1, uid)
+
+			val rs = stm.executeQuery()
+
+			if (rs.next())
+				return User(
+					id = rs.getInt(1),
+					name = rs.getString(2),
+					email = rs.getString(3)
+				)
+			else
+				throw NotFoundException("User with id $uid not found")
+		}
 	}
 
 	/**
@@ -36,7 +78,22 @@ class SportsPostgres : SportsDatabase {
 	 * @return list of user identifiers
 	 */
 	override fun getUsers(): List<Int> {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					SELECT id
+					FROM users
+				""".trimIndent()
+			)
+
+			val rs = stm.executeQuery()
+			val users = mutableListOf<Int>()
+
+			while (rs.next())
+				users.add(rs.getInt(1))
+
+			return users
+		}
 	}
 
 	/**
@@ -61,7 +118,25 @@ class SportsPostgres : SportsDatabase {
 	 * @return the route's unique identifier
 	 */
 	override fun createNewRoute(uid: Int, startLocation: String, endLocation: String, distance: Int): Int {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					INSERT INTO routes(uid, start_location, end_location, distance)
+					VALUES (?, ?, ?, ?)
+				""".trimIndent(),
+				Statement.RETURN_GENERATED_KEYS
+			)
+			stm.setInt(1, uid)
+			stm.setString(2, startLocation)
+			stm.setString(3, endLocation)
+			stm.setInt(4, distance)
+
+			if (stm.executeUpdate() == 0)
+				throw SQLException("Creating route failed, no rows affected.")
+
+			val generatedKeys = stm.generatedKeys
+			return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
+		}
 	}
 
 	/**
@@ -70,7 +145,29 @@ class SportsPostgres : SportsDatabase {
 	 * @param rid route's unique identifier
 	 */
 	override fun getRoute(rid: Int): Route {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					SELECT *
+					FROM routes
+					WHERE id = ?
+				""".trimIndent()
+			)
+			stm.setInt(1, rid)
+
+			val rs = stm.executeQuery()
+
+			if (rs.next())
+				return Route(
+					id = rs.getInt(1),
+					start_location = rs.getString(2),
+					end_location = rs.getString(3),
+					distance = rs.getInt(4),
+					uid = rs.getInt(5)
+				)
+			else
+				throw NotFoundException("Route with id $rid not found")
+		}
 	}
 
 	/**
@@ -79,7 +176,22 @@ class SportsPostgres : SportsDatabase {
 	 * @return list of route identifiers
 	 */
 	override fun getListOfRoutes(): List<Int> {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					SELECT id
+					FROM routes
+				""".trimIndent()
+			)
+
+			val rs = stm.executeQuery()
+			val routes = mutableListOf<Int>()
+
+			while (rs.next())
+				routes.add(rs.getInt(1))
+
+			return routes
+		}
 	}
 
 	/**
@@ -90,8 +202,25 @@ class SportsPostgres : SportsDatabase {
 	 *
 	 * @return the sport's unique identifier
 	 */
-	override fun createNewSport(name: String, description: String) {
-		TODO("Not yet implemented")
+	override fun createNewSport(name: String, description: String, uid: Int): Int {
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					INSERT INTO sports(name, description, uid)
+					VALUES (?, ?, ?)
+				""".trimIndent(),
+				Statement.RETURN_GENERATED_KEYS
+			)
+			stm.setString(1, name)
+			stm.setString(2, description)
+			stm.setInt(3, uid)
+
+			if (stm.executeUpdate() == 0)
+				throw SQLException("Creating sport failed, no rows affected.")
+
+			val generatedKeys = stm.generatedKeys
+			return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
+		}
 	}
 
 	/**
@@ -100,7 +229,22 @@ class SportsPostgres : SportsDatabase {
 	 * @return list of identifiers of all sports
 	 */
 	override fun getAllSports(): List<Int> {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					SELECT id
+					FROM sports
+				""".trimIndent()
+			)
+
+			val rs = stm.executeQuery()
+			val sports = mutableListOf<Int>()
+
+			while (rs.next())
+				sports.add(rs.getInt(1))
+
+			return sports
+		}
 	}
 
 	/**
@@ -111,7 +255,28 @@ class SportsPostgres : SportsDatabase {
 	 * @return the sport object
 	 */
 	override fun getSport(sportId: Int): Sport {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					SELECT *
+					FROM sports
+					WHERE id = ?
+				""".trimIndent()
+			)
+			stm.setInt(1, sportId)
+
+			val rs = stm.executeQuery()
+
+			if (rs.next())
+				return Sport(
+					id = rs.getInt(1),
+					name = rs.getString(2),
+					description = rs.getString(3),
+					uid = rs.getInt(4)
+				)
+			else
+				throw NotFoundException("Sport with id $sportId not found")
+		}
 	}
 
 	/**
@@ -125,8 +290,27 @@ class SportsPostgres : SportsDatabase {
 	 *
 	 * @return activity's unique identifier
 	 */
-	override fun createNewActivity(uid: Int, sid: String, duration: String, date: String, rid: Int?): Int {
-		TODO("Not yet implemented")
+	override fun createNewActivity(uid: Int, sid: Int, duration: String, date: String, rid: Int?): Int {
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					INSERT INTO activities(date, duration, uid, sid, rid)
+					VALUES (?, ?, ?, ?, ?)
+				""".trimIndent(),
+				Statement.RETURN_GENERATED_KEYS
+			)
+			stm.setDate(1, Date.valueOf(date))
+			stm.setString(2, duration)
+			stm.setInt(3, uid)
+			stm.setInt(4, sid)
+			if (rid != null) stm.setInt(5, rid)
+
+			if (stm.executeUpdate() == 0)
+				throw SQLException("Creating activity failed, no rows affected.")
+
+			val generatedKeys = stm.generatedKeys
+			return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
+		}
 	}
 
 	/**
@@ -137,7 +321,24 @@ class SportsPostgres : SportsDatabase {
 	 * @return list of identifiers of activities of a sport
 	 */
 	override fun getSportActivities(sid: Int): List<Int> {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					SELECT id
+					FROM activities
+					WHERE sid = ?
+				""".trimIndent()
+			)
+			stm.setInt(1, sid)
+
+			val rs = stm.executeQuery()
+			val activities = mutableListOf<Int>()
+
+			while (rs.next())
+				activities.add(rs.getInt(1))
+
+			return activities
+		}
 	}
 
 	/**
@@ -146,7 +347,30 @@ class SportsPostgres : SportsDatabase {
 	 * @param aid activity's unique identifier
 	 */
 	override fun getActivity(aid: Int): Activity {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					SELECT *
+					FROM activities
+					WHERE id = ?
+				""".trimIndent()
+			)
+			stm.setInt(1, aid)
+
+			val rs = stm.executeQuery()
+
+			if (rs.next())
+				return Activity(
+					id = rs.getInt(1),
+					date = rs.getDate(2).toString(),
+					duration = rs.getString(3),
+					uid = rs.getInt(4),
+					sid = rs.getInt(5),
+					rid = rs.getInt(6)
+				)
+			else
+				throw NotFoundException("Activity with id $aid not found")
+		}
 	}
 
 	/**
@@ -155,7 +379,16 @@ class SportsPostgres : SportsDatabase {
 	 * @param aid activity's unique identifier
 	 */
 	override fun deleteActivity(aid: Int) {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					DELETE FROM activities
+					WHERE id = ?
+				""".trimIndent()
+			)
+			stm.setInt(1, aid)
+			stm.executeUpdate()
+		}
 	}
 
 	/**
@@ -166,7 +399,24 @@ class SportsPostgres : SportsDatabase {
 	 * @return list of identifiers of activities made from a user
 	 */
 	override fun getUserActivities(uid: Int): List<Int> {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					SELECT id
+					FROM activities
+					WHERE uid = ?
+				""".trimIndent()
+			)
+			stm.setInt(1, uid)
+
+			val rs = stm.executeQuery()
+			val activities = mutableListOf<Int>()
+
+			while (rs.next())
+				activities.add(rs.getInt(1))
+
+			return activities
+		}
 	}
 
 	/**
@@ -180,7 +430,27 @@ class SportsPostgres : SportsDatabase {
 	 * @return list of activities identifiers
 	 */
 	override fun getActivities(sid: Int, orderBy: String, date: String, rid: Int): List<Int> {
-		TODO("Not yet implemented")
+		dataSource.connection.use { conn ->
+			val stm = conn.prepareStatement(
+				"""
+					SELECT id
+					FROM activities
+					WHERE sid = ? AND date = ? AND rid = ?
+					ORDER BY duration 
+				""".trimIndent() + if (orderBy == "ascending") "ASC" else "DESC"
+			)
+			stm.setInt(1, sid)
+			stm.setDate(2, Date.valueOf(date))
+			stm.setInt(3, rid)
+
+			val rs = stm.executeQuery()
+			val activities = mutableListOf<Int>()
+
+			while (rs.next())
+				activities.add(rs.getInt(1))
+
+			return activities
+		}
 	}
 
 }
