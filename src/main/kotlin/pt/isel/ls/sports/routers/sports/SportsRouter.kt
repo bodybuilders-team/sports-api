@@ -55,9 +55,9 @@ class SportsRouter(private val services: SportsServices) {
 		authenticate(token)
 
 		val sportRequest = Json.decodeFromString<CreateSportRequest>(request.bodyString())
-		val sid = services.createSport(
+		val sid = services.createNewSport(
 			token, sportRequest.name,
-			sportRequest.description, sportRequest.uid
+			sportRequest.description
 		)
 
 		return Response(Status.CREATED)
@@ -75,7 +75,7 @@ class SportsRouter(private val services: SportsServices) {
 	 * @return HTTP response
 	 */
 	private fun getSports(request: Request): Response = runCatching {
-		val sports = services.getSports()
+		val sports = services.getAllSports()
 
 		return Response(OK)
 			.header("Content-Type", "application/json")
@@ -109,7 +109,7 @@ class SportsRouter(private val services: SportsServices) {
 		val sid = request.path("id")?.toInt()
 			?: return AppError.badRequest("Invalid Sport Id").toResponse()
 
-		val activities = services.getActivitiesOfSport(sid)
+		val activities = services.getSportActivities(sid)
 
 		return Response(OK)
 			.header("Content-Type", "application/json")

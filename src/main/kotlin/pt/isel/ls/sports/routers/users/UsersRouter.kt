@@ -52,11 +52,11 @@ class UsersRouter(private val services: SportsServices) {
 		authenticate(token)
 
 		val userRequest = Json.decodeFromString<CreateUserRequest>(request.bodyString())
-		val uid = services.createUser(token, userRequest.name, userRequest.email)
+		val userResponse = services.createNewUser(userRequest.name, userRequest.email)
 
 		return Response(CREATED)
 			.header("Content-Type", "application/json")
-			.body(Json.encodeToString(CreateUserResponse(uid)))
+			.body(Json.encodeToString(userResponse))
 
 	}.getOrElse {
 		return getErrorResponse(it)
@@ -69,7 +69,7 @@ class UsersRouter(private val services: SportsServices) {
 	 * @return HTTP response
 	 */
 	private fun getUsers(request: Request): Response = runCatching {
-		val users = services.getUsers()
+		val users = services.getAllUsers()
 
 		return Response(OK)
 			.header("Content-Type", "application/json")
@@ -109,7 +109,7 @@ class UsersRouter(private val services: SportsServices) {
 		val uid = request.path("id")?.toInt()
 			?: return AppError.badRequest("Invalid User Id").toResponse()
 
-		val activities = services.getActivitiesMadeByUser(uid)
+		val activities = services.getUserActivities(uid)
 
 		return Response(OK)
 			.header("Content-Type", "application/json")

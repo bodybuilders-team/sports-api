@@ -25,7 +25,7 @@ interface SportsDatabase {
 	fun createNewUser(name: String, email: String): Int
 
 	/**
-	 * Gets the user object.
+	 * Gets the user identified by [uid].
 	 *
 	 * @param uid user's identifier
 	 *
@@ -36,18 +36,29 @@ interface SportsDatabase {
 	/**
 	 * Get the list of users.
 	 *
-	 * @return list of user identifiers
+	 * @return list of user objects
 	 */
-	fun getAllUsers(): List<Int>
+	fun getAllUsers(): List<User>
+
+	// ----------- User Tokens -----------
 
 	/**
-	 * Creates a user token.
+	 * Creates a user token and associates it with the [uid].
 	 *
-	 * @param uid user's unique identifier
+	 * @param uid user's identifier
 	 *
 	 * @return user's token
 	 */
-	fun createUserToken(uid: Int): String = UUID.randomUUID().toString()
+	fun createUserToken(uid: Int): String
+
+	/**
+	 * Gets the uid associated with the [token].
+	 *
+	 * @param token user's token
+	 *
+	 * @return uid
+	 */
+	fun getUID(token: String): Int
 
 	//----------- Routes -----------
 
@@ -73,9 +84,9 @@ interface SportsDatabase {
 	/**
 	 * Get the list of routes.
 	 *
-	 * @return list of route identifiers
+	 * @return list of route objects
 	 */
-	fun getAllRoutes(): List<Int>
+	fun getAllRoutes(): List<Route>
 
 	// ------------ Sports ------------
 
@@ -102,9 +113,9 @@ interface SportsDatabase {
 	/**
 	 * Get the list of all sports.
 	 *
-	 * @return list of identifiers of all sports
+	 * @return list of sport objects
 	 */
-	fun getAllSports(): List<Int>
+	fun getAllSports(): List<Sport>
 
 	// ------------ Activities ------------
 
@@ -142,7 +153,7 @@ interface SportsDatabase {
 	 *
 	 * @return list of identifiers of activities of a sport
 	 */
-	fun getSportActivities(sid: Int): List<Int>
+	fun getSportActivities(sid: Int): List<Activity>
 
 	/**
 	 * Get all the activities made from a user.
@@ -151,7 +162,7 @@ interface SportsDatabase {
 	 *
 	 * @return list of identifiers of activities made from a user
 	 */
-	fun getUserActivities(uid: Int): List<Int>
+	fun getUserActivities(uid: Int): List<Activity>
 
 	/**
 	 * Get a list with the activities, given the parameters.
@@ -161,7 +172,7 @@ interface SportsDatabase {
 	 * @param date activity date (optional)
 	 * @param rid route's unique identifier (optional)
 	 *
-	 * @return list of activities identifiers
+	 * @return list of activities
 	 */
-	fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?): List<Int>
+	fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?): List<Activity>
 }

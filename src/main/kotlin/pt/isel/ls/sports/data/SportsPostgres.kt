@@ -81,23 +81,51 @@ object SportsPostgres : SportsDatabase {
 	 *
 	 * @return list of user identifiers
 	 */
-	override fun getAllUsers(): List<Int> {
+	override fun getAllUsers(): List<User> {
 		dataSource.connection.use { conn ->
 			val stm = conn.prepareStatement(
 				"""
-					SELECT id
+					SELECT *
 					FROM users
 				""".trimIndent()
 			)
 
 			val rs = stm.executeQuery()
-			val users = mutableListOf<Int>()
+			val users = mutableListOf<User>()
 
 			while (rs.next())
-				users.add(rs.getInt(1))
+				users.add(
+					User(
+						id = rs.getInt(1),
+						name = rs.getString(2),
+						email = rs.getString(3)
+					)
+				)
 
 			return users
 		}
+	}
+
+	/**
+	 * Creates a user token and associates it with the [uid].
+	 *
+	 * @param uid user's identifier
+	 *
+	 * @return user's token
+	 */
+	override fun createUserToken(uid: Int): String {
+		TODO("Not yet implemented")
+	}
+
+	/**
+	 * Gets the uid associated with the [token].
+	 *
+	 * @param token user's token
+	 *
+	 * @return uid
+	 */
+	override fun getUID(token: String): Int {
+		TODO("Not yet implemented")
 	}
 
 	/**
@@ -170,20 +198,28 @@ object SportsPostgres : SportsDatabase {
 	 *
 	 * @return list of route identifiers
 	 */
-	override fun getAllRoutes(): List<Int> {
+	override fun getAllRoutes(): List<Route> {
 		dataSource.connection.use { conn ->
 			val stm = conn.prepareStatement(
 				"""
-					SELECT id
+					SELECT *
 					FROM routes
 				""".trimIndent()
 			)
 
 			val rs = stm.executeQuery()
-			val routes = mutableListOf<Int>()
+			val routes = mutableListOf<Route>()
 
 			while (rs.next())
-				routes.add(rs.getInt(1))
+				routes.add(
+					Route(
+						id = rs.getInt(1),
+						start_location = rs.getString(2),
+						end_location = rs.getString(3),
+						distance = rs.getInt(4),
+						uid = rs.getInt(5)
+					)
+				)
 
 			return routes
 		}
@@ -256,7 +292,7 @@ object SportsPostgres : SportsDatabase {
 	 *
 	 * @return list of identifiers of all sports
 	 */
-	override fun getAllSports(): List<Int> {
+	override fun getAllSports(): List<Sport> {
 		dataSource.connection.use { conn ->
 			val stm = conn.prepareStatement(
 				"""
@@ -266,10 +302,17 @@ object SportsPostgres : SportsDatabase {
 			)
 
 			val rs = stm.executeQuery()
-			val sports = mutableListOf<Int>()
+			val sports = mutableListOf<Sport>()
 
 			while (rs.next())
-				sports.add(rs.getInt(1))
+				sports.add(
+					Sport(
+						id = rs.getInt(1),
+						name = rs.getString(2),
+						description = rs.getString(3),
+						uid = rs.getInt(4)
+					)
+				)
 
 			return sports
 		}
@@ -368,7 +411,7 @@ object SportsPostgres : SportsDatabase {
 	 *
 	 * @return list of identifiers of activities of a sport
 	 */
-	override fun getSportActivities(sid: Int): List<Int> {
+	override fun getSportActivities(sid: Int): List<Activity> {
 		dataSource.connection.use { conn ->
 			val stm = conn.prepareStatement(
 				"""
@@ -380,10 +423,19 @@ object SportsPostgres : SportsDatabase {
 			stm.setInt(1, sid)
 
 			val rs = stm.executeQuery()
-			val activities = mutableListOf<Int>()
+			val activities = mutableListOf<Activity>()
 
 			while (rs.next())
-				activities.add(rs.getInt(1))
+				activities.add(
+					Activity(
+						id = rs.getInt(1),
+						date = rs.getDate(2).toString(),
+						duration = rs.getString(3),
+						uid = rs.getInt(4),
+						sid = rs.getInt(5),
+						rid = rs.getInt(6)
+					)
+				)
 
 			return activities
 		}
@@ -396,11 +448,11 @@ object SportsPostgres : SportsDatabase {
 	 *
 	 * @return list of identifiers of activities made from a user
 	 */
-	override fun getUserActivities(uid: Int): List<Int> {
+	override fun getUserActivities(uid: Int): List<Activity> {
 		dataSource.connection.use { conn ->
 			val stm = conn.prepareStatement(
 				"""
-					SELECT id
+					SELECT *
 					FROM activities
 					WHERE uid = ?
 				""".trimIndent()
@@ -408,10 +460,19 @@ object SportsPostgres : SportsDatabase {
 			stm.setInt(1, uid)
 
 			val rs = stm.executeQuery()
-			val activities = mutableListOf<Int>()
+			val activities = mutableListOf<Activity>()
 
 			while (rs.next())
-				activities.add(rs.getInt(1))
+				activities.add(
+					Activity(
+						id = rs.getInt(1),
+						date = rs.getDate(2).toString(),
+						duration = rs.getString(3),
+						uid = rs.getInt(4),
+						sid = rs.getInt(5),
+						rid = rs.getInt(6)
+					)
+				)
 
 			return activities
 		}
@@ -427,7 +488,7 @@ object SportsPostgres : SportsDatabase {
 	 *
 	 * @return list of activities identifiers
 	 */
-	override fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?): List<Int> {
+	override fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?): List<Activity> {
 		dataSource.connection.use { conn ->
 			val stm = conn.prepareStatement(
 				"""
@@ -443,10 +504,19 @@ object SportsPostgres : SportsDatabase {
 			if (rid == null) stm.setNull(3, Types.INTEGER) else stm.setInt(3, rid) // TODO: 24/03/2022 See setNull
 
 			val rs = stm.executeQuery()
-			val activities = mutableListOf<Int>()
+			val activities = mutableListOf<Activity>()
 
 			while (rs.next())
-				activities.add(rs.getInt(1))
+				activities.add(
+					Activity(
+						id = rs.getInt(1),
+						date = rs.getDate(2).toString(),
+						duration = rs.getString(3),
+						uid = rs.getInt(4),
+						sid = rs.getInt(5),
+						rid = rs.getInt(6)
+					)
+				)
 
 			return activities
 		}

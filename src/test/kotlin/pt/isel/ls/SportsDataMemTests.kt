@@ -23,7 +23,7 @@ class SportsDataMemTests {
 	}
 
 	@Test
-	fun `createNewUser returns correct identifier`() {
+	fun `createNewUser returns correct identifier`(){
 		val db = SportsDataMem()
 
 		val uid0 = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -38,7 +38,7 @@ class SportsDataMemTests {
 	// getUser
 
 	@Test
-	fun `getUser returns the user object`() {
+	fun `getUser returns the user object`(){
 		val db = SportsDataMem()
 
 		val user = User(0, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -49,7 +49,7 @@ class SportsDataMemTests {
 	}
 
 	@Test
-	fun `getUser throws NotFoundException if the user with the uid doesn't exist`() {
+	fun `getUser throws NotFoundException if the user with the uid doesn't exist`(){
 		val db = SportsDataMem()
 
 		assertFailsWith<NotFoundException> {
@@ -60,14 +60,18 @@ class SportsDataMemTests {
 	// getAllUsers
 
 	@Test
-	fun `getAllUsers returns list of identifiers`() {
+	fun `getAllUsers returns list of user objects`(){
 		val db = SportsDataMem()
 
-		db.users[0] = User(0, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-		db.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
-		db.users[2] = User(2, "André Páscoa", "andrepascoa@mail.com")
+		val user0 = User(0, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+		val user1 = User(1, "André Jesus", "andrejesus@mail.com")
+		val user2 = User(2, "André Páscoa", "andrepascoa@mail.com")
 
-		assertEquals(listOf(0, 1, 2), db.getAllUsers())
+		db.users[0] = user0
+		db.users[1] = user1
+		db.users[2] = user2
+
+		assertEquals(listOf(user0, user1, user2), db.getAllUsers())
 	}
 
 	@Test
@@ -132,16 +136,20 @@ class SportsDataMemTests {
 	// getAllRoutes
 
 	@Test
-	fun `getAllRoutes returns list of all route identifiers`() {
+	fun `getAllRoutes returns list of all route objects`(){
 		val db = SportsDataMem()
 
 		db.users[0] = User(0, "André Jesus", "andrejesus@mail.com")
 
-		db.routes[0] = Route(0, "Odivelas", "Chelas", 150, 0)
-		db.routes[1] = Route(1, "Chelas", "Odivelas", 150, 0)
-		db.routes[2] = Route(2, "Lisboa", "Chelas", 150, 0)
+		val route0 = Route(0, "Odivelas", "Chelas", 150, 0)
+		val route1 = Route(1, "Chelas", "Odivelas", 150, 0)
+		val route2 = Route(2, "Lisboa", "Chelas", 150, 0)
 
-		assertEquals(listOf(0, 1, 2), db.getAllRoutes())
+		db.routes[0] = route0
+		db.routes[1] = route1
+		db.routes[2] = route2
+
+		assertEquals(listOf(route0, route1, route2), db.getAllRoutes())
 	}
 
 	@Test

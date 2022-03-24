@@ -54,7 +54,7 @@ class ActivitiesRouter(private val services: SportsServices) {
 		authenticate(token)
 
 		val activityReq = Json.decodeFromString<CreateActivityRequest>(request.bodyString())
-		val aid = services.createActivity(
+		val aid = services.createNewActivity(
 			token,
 			activityReq.date,
 			activityReq.duration,
@@ -120,12 +120,12 @@ class ActivitiesRouter(private val services: SportsServices) {
 	private fun searchActivities(request: Request): Response = runCatching {
 		val sid = request.query("sid")?.toInt()
 			?: return AppError.badRequest("Sport Id required").toResponse()
-		val orderBy = request.query("orderBy")?.toInt()
+		val orderBy = request.query("orderBy")
 			?: return AppError.badRequest("Order By required").toResponse()
 		val date = request.query("date")
-		val rid = request.query("rid")
+		val rid = request.query("rid")?.toInt()
 
-		val activities = services.searchActivities(sid, orderBy, date, rid)
+		val activities = services.getActivities(sid, orderBy, date, rid)
 
 		return Response(OK)
 			.header("Content-Type", "application/json")

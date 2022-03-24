@@ -51,7 +51,7 @@ class RoutesRouter(private val services: SportsServices) {
 		authenticate(token)
 
 		val routeRequest = Json.decodeFromString<CreateRouteRequest>(request.bodyString())
-		val uid = services.createRoute(
+		val uid = services.createNewRoute(
 			token,
 			routeRequest.start_location,
 			routeRequest.end_location,
@@ -73,7 +73,7 @@ class RoutesRouter(private val services: SportsServices) {
 	 * @return HTTP response
 	 */
 	private fun getRoutes(request: Request): Response = runCatching {
-		val routes = services.getRoutes()
+		val routes = services.getAllRoutes()
 
 		return Response(OK)
 			.header("Content-Type", "application/json")

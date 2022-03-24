@@ -5,12 +5,13 @@ import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 
 class SportsDataMem : SportsDatabase {
-	private val userTokens: MutableMap<Int, String> = mutableMapOf()
+	private val userTokens: MutableMap<String, Int> = mutableMapOf()
 
 	val users: ConcurrentHashMap<Int, User> = ConcurrentHashMap<Int, User>()
 	private var usersLastValue: AtomicInteger = AtomicInteger(0)
@@ -55,10 +56,34 @@ class SportsDataMem : SportsDatabase {
 	/**
 	 * Get the list of users.
 	 *
-	 * @return list of user identifiers
+	 * @return list of user objects
 	 */
-	override fun getAllUsers(): List<Int> {
-		return users.keys.toList()
+	override fun getAllUsers(): List<User> {
+		return users.values.toList()
+	}
+
+	/**
+	 * Creates a user token and associates it with the [uid].
+	 *
+	 * @param uid user's identifier
+	 *
+	 * @return user's token
+	 */
+	override fun createUserToken(uid: Int): String {
+		val token = UUID.randomUUID().toString()
+		userTokens[token] = uid
+		return token
+	}
+
+	/**
+	 * Gets the uid associated with the [token].
+	 *
+	 * @param token user's token
+	 *
+	 * @return uid
+	 */
+	override fun getUID(token: String): Int {
+		return userTokens[token] ?: throw NotFoundException("User with the token $token not found")
 	}
 
 	/**
@@ -87,7 +112,7 @@ class SportsDataMem : SportsDatabase {
 	 *
 	 * @param rid route's unique identifier
 	 *
-	 * @return the route
+	 * @return the route object
 	 */
 	override fun getRoute(rid: Int): Route {
 		return routes[rid] ?: throw NotFoundException("Route with id $rid not found")
@@ -96,10 +121,10 @@ class SportsDataMem : SportsDatabase {
 	/**
 	 * Get the list of routes.
 	 *
-	 * @return list of route identifiers
+	 * @return list of route objects
 	 */
-	override fun getAllRoutes(): List<Int> {
-		return routes.keys.toList()
+	override fun getAllRoutes(): List<Route> {
+		return routes.values.toList()
 	}
 
 	/**
@@ -137,8 +162,8 @@ class SportsDataMem : SportsDatabase {
 	 *
 	 * @return list of identifiers of all sports
 	 */
-	override fun getAllSports(): List<Int> {
-		return sports.keys.toList()
+	override fun getAllSports(): List<Sport> {
+		return sports.values.toList()
 	}
 
 	/**
@@ -185,10 +210,10 @@ class SportsDataMem : SportsDatabase {
 	 *
 	 * @param sid sport's unique identifier
 	 *
-	 * @return list of identifiers of activities of a sport
+	 * @return list of activities of a sport
 	 */
-	override fun getSportActivities(sid: Int): List<Int> {
-		return activities.filter { it.value.sid == sid }.keys.toList()
+	override fun getSportActivities(sid: Int): List<Activity> {
+		return activities.filter { it.value.sid == sid }.values.toList()
 	}
 
 	/**
@@ -196,10 +221,10 @@ class SportsDataMem : SportsDatabase {
 	 *
 	 * @param uid user's unique identifier
 	 *
-	 * @return list of identifiers of activities made from a user
+	 * @return list of activities made from a user
 	 */
-	override fun getUserActivities(uid: Int): List<Int> {
-		return activities.filter { it.value.uid == uid }.keys.toList()
+	override fun getUserActivities(uid: Int): List<Activity> {
+		return activities.filter { it.value.uid == uid }.values.toList()
 	}
 
 	/**
@@ -212,13 +237,13 @@ class SportsDataMem : SportsDatabase {
 	 *
 	 * @return list of activities identifiers
 	 */
-	override fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?): List<Int> {
+	override fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?): List<Activity> {
 		// TODO: 23/03/2022 Check ifs
 		// TODO: 23/03/2022 Order by
 		return activities.filter {
 			it.value.sid == sid &&
 					(if (date != null) it.value.date == date else true) &&
 					(if (rid != null) it.value.rid == rid else true)
-		}.keys.toList()
+		}.values.toList()
 	}
 }
