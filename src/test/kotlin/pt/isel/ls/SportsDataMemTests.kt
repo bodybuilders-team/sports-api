@@ -14,7 +14,7 @@ class SportsDataMemTests {
 	// createNewUser
 
 	@Test
-	fun `createNewUser creates user correctly in the database`(){
+	fun `createNewUser creates user correctly in the database`() {
 		val db = SportsDataMem()
 
 		val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")

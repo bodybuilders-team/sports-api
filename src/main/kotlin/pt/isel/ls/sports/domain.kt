@@ -1,5 +1,7 @@
 package pt.isel.ls.sports
 
+import kotlinx.serialization.Serializable
+
 /**
  * User representation
  *
@@ -7,6 +9,7 @@ package pt.isel.ls.sports
  * @property name name of the user
  * @property email email of the user
  */
+@Serializable
 data class User(
 	val id: Int,
 	val name: String,
@@ -22,6 +25,7 @@ data class User(
  * @property description description of the sport (optional)
  * @property uid unique identifier of the user who created the sport
  */
+@Serializable
 data class Sport(
 	val id: Int,
 	val name: String,
@@ -39,6 +43,7 @@ data class Sport(
  * @property distance distance between [start_location] and [end_location] in meters
  * @property uid unique identifier of the user who created the route
  */
+@Serializable
 data class Route(
 	val id: Int,
 	val start_location: String,
@@ -62,6 +67,7 @@ data class Route(
  * @property sid unique identifier of the activity sport
  * @property rid unique identifier of the activity route (optional)
  */
+@Serializable
 data class Activity(
 	val id: Int,
 	val date: String,

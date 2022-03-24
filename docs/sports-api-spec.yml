@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Sports API
-  description: 'Manage sports'
+  description: 'API for an application that manages sports'
   termsOfService: https://swagger.io/terms/
   version: 1.0.0
 
@@ -21,26 +21,32 @@ paths:
       tags:
         - Users
       summary: Creates a new user
+      security:
+        - token: [ ]
       requestBody:
         description: User object
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/CreateUserRequest'
+
       responses:
-        200:
+        201:
           description: User was created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserCreatedResponse'
+                $ref: '#/components/schemas/CreateUserResponse'
         400:
-          description: User with the same email already exists
+          description: User with the same email already exists or invalid request body
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
     get:
       tags:
         - Users
@@ -54,12 +60,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        404:
-          description: No users found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
   /users/{id}:
     get:
       tags:
@@ -79,39 +82,85 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        400:
+          description: Invalid user id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
         404:
           description: User was not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppError'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
 
+  /users/{id}/activities:
+    get:
+      tags:
+        - Users
+      summary: Gets all activities made by a user
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: Activities were found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        400:
+          description: Invalid user id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
   /routes:
     post:
       tags:
         - Routes
       summary: Creates a new route
+      security:
+        - token: [ ]
       requestBody:
         description: Route object
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateRouteRequestBody'
+              $ref: '#/components/schemas/CreateRouteRequest'
       responses:
-        200:
+        201:
           description: Route was created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RouteCreatedResponse'
+                $ref: '#/components/schemas/CreateRouteResponse'
         400:
-          description: Route with the same name already exists
+          description: Route with the same name already exists or invalid request body
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
     get:
       tags:
         - Routes
@@ -125,6 +174,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Route'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
 
   /routes/{id}:
@@ -140,38 +191,57 @@ paths:
           schema:
             type: string
       responses:
+
         200:
           description: Route was found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Route'
+
+        400:
+          description: Invalid route id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+
         404:
           description: Route was not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
   /sports:
     post:
       tags:
         - Sports
       summary: Creates a new sport
+      security:
+        - token: [ ]
       requestBody:
         description: Sport object
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Sport'
+              $ref: '#/components/schemas/CreateSportRequest'
       responses:
-        200:
+        201:
           description: Sport was created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SportCreatedResponse'
+                $ref: '#/components/schemas/CreateSportResponse'
+
+        400:
+          $ref: '#/components/responses/InvalidRequestBodyResponse'
+
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
     get:
       tags:
@@ -186,6 +256,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Sport'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
   /sports/{id}:
     get:
@@ -206,39 +278,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sport'
+        400:
+          description: Invalid sport id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
         404:
           description: Sport was not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
   /activities:
     post:
       tags:
-        - Sports
+        - Activities
       summary: Creates a new activity for the sport identified by a sport id
-      parameters:
-        - name: sid
-          in: path
-          description: Sport id
-          required: true
-          schema:
-            type: string
+      security:
+        - token: [ ]
       requestBody:
         description: Activity object
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateActivityRequestBody'
+              $ref: '#/components/schemas/CreateActivityRequest'
       responses:
-        200:
+        201:
           description: Activity was created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActivityCreatedResponse'
+                $ref: '#/components/schemas/CreateActivityResponse'
+
+        400:
+          $ref: '#/components/responses/InvalidRequestBodyResponse'
+
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
   /sports/{id}/activities:
     get:
@@ -261,6 +342,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Activity'
+        400:
+          description: Invalid sport id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
 
         404:
           description: Activity was not found
@@ -268,33 +355,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
-  /users/{id}/activities:
-    get:
-      tags:
-        - Users
-      summary: Gets all activities made by a user
-      parameters:
-        - name: id
-          in: path
-          description: User id
-          required: true
-          schema:
-            type: string
-
-      responses:
-        200:
-          description: Activity was found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Activity'
-        404:
-          description: Activity was not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AppError'
 
   /activities/{id}:
     get:
@@ -315,12 +378,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Activity'
+        400:
+          description: Invalid activity id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
         404:
           description: Activity was not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
     delete:
       tags:
@@ -335,17 +406,25 @@ paths:
             type: string
       responses:
         200:
-          description: Activity was deleted
+          description: Activity deleted
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActivityDeletedResponse'
+                $ref: '#/components/schemas/DeleteActivityResponse'
+        400:
+          description: Invalid activity id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
         404:
           description: Activity was not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
   /activities/search:
     get:
@@ -358,7 +437,7 @@ paths:
           description: Sport Id
           required: true
           schema:
-            type: string
+            type: integer
 
         - name: orderBy
           in: query
@@ -379,7 +458,7 @@ paths:
           description: Route id
           required: false
           schema:
-            type: string
+            type: integer
 
       responses:
         200:
@@ -387,105 +466,87 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Activity'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        400:
+          description: Invalid query params
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
         404:
           description: Activity was not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
 components:
-  schemas:
+  responses:
+    InternalServerErrorResponse:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AppError'
 
-    UserCreatedResponse:
+    InvalidRequestBodyResponse:
+      description: Invalid request body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AppError'
+
+  schemas:
+    CreateUserResponse:
       type: object
       required:
-        - id
+        - uid
       properties:
-        id:
-          type: string
+        uid:
+          type: integer
           description: User Id
 
-    RouteCreatedResponse:
+    CreateRouteResponse:
       type: object
       required:
-        - id
+        - rid
       properties:
-        id:
-          type: string
+        rid:
+          type: integer
           description: Route Id
 
-    SportCreatedResponse:
+    CreateSportResponse:
       type: object
       required:
-        - id
-      properties:
-        id:
-          type: string
-          description: Sport Id
-
-    ActivityCreatedResponse:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          type: string
-          description: Activity Id
-
-    CreateRouteRequestBody:
-      type: object
-      description: Route object
-      required:
-        - start_location
-        - end_location
-        - distance
-      properties:
-        start_location:
-          type: string
-          description: Route start location
-
-        end_location:
-          type: string
-          description: Route end location
-
-        distance:
-          type: string
-          description: Route distance in km
-          example: 15.2
-
-    CreateActivityRequestBody:
-      required:
-        - date
-        - duration
         - sid
       properties:
-        date:
-          type: string
-          description: Activity date
-
-        duration:
-          type: string
-          description: Activity duration
-          pattern: ^[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}$
-
         sid:
-          type: string
-          description: Sport id
+          type: integer
+          description: Sport Id
 
-        rid:
-          type: string
-          description: Route id
+    CreateActivityResponse:
+      type: object
+      required:
+        - aid
+      properties:
+        aid:
+          type: integer
+          description: Activity Id
 
-    ActivityDeletedResponse:
+    DeleteActivityResponse:
       type: object
       required:
         - id
       properties:
-        id:
+        message:
           type: string
-          description: Activity Id
+          description: Message
+          enum:
+            - Activity deleted
 
     AppError:
       type: object
@@ -510,9 +571,48 @@ components:
           example: An error occurred
 
 
-    User:
+    CreateRouteRequest:
       type: object
-      description: User object
+      required:
+        - start_location
+        - end_location
+        - distance
+      properties:
+        start_location:
+          type: string
+          description: Route start location
+
+        end_location:
+          type: string
+          description: Route end location
+
+        distance:
+          type: number
+          description: Route distance in km
+          example: 15.2
+
+    CreateActivityRequest:
+      required:
+        - date
+        - duration
+        - sid
+      properties:
+        date:
+          $ref: '#/components/schemas/Date'
+
+        duration:
+          $ref: '#/components/schemas/Duration'
+
+        sid:
+          type: integer
+          description: Sport id
+
+        rid:
+          type: integer
+          description: Route id
+
+    CreateUserRequest:
+      type: object
       required:
         - name
         - email
@@ -526,9 +626,8 @@ components:
           description: User email
           example: andre@pascoa.org
 
-    Sport:
+    CreateSportRequest:
       type: object
-      description: Sport object
       required:
         - name
         - uid
@@ -544,61 +643,132 @@ components:
           example: andre@pascoa.org
 
         uid:
+          type: integer
+          description: User id
+
+    User:
+      type: object
+      description: User object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: integer
+          description: User Id
+        name:
           type: string
+          description: User name
+          example: André Páscoa
+        email:
+          type: string
+          description: User email
+          example: andre@pascoa.org
+
+    Sport:
+      type: object
+      description: Sport object
+      required:
+        - id
+        - name
+        - uid
+      properties:
+        id:
+          type: integer
+          description: Sport id
+        name:
+          type: string
+          description: Sport name
+          example: Powerlifting
+
+        description:
+          type: string
+          description: Sport Description
+          example: andre@pascoa.org
+
+        uid:
+          type: integer
           description: User id
 
     Route:
       type: object
       description: Route object
       required:
+        - id
         - start_location
         - end_location
         - distance
         - uid
       properties:
+        id:
+          type: integer
+          description: Route id
+
         start_location:
           type: string
           description: Route start location
+          example: "Porto, Portugal"
 
         end_location:
           type: string
           description: Route end location
+          example: "Lisboa, Portugal"
 
         distance:
-          type: string
+          type: number
           description: Route distance in km
           example: 15.2
 
         uid:
-          type: string
+          type: integer
           description: User id
 
     Activity:
       type: object
       description: Activity object
       required:
+        - id
         - date
         - duration
         - uid
         - sid
       properties:
+        id:
+          type: integer
+          description: Activity id
+
         date:
-          type: string
-          description: Activity date
+          $ref: '#/components/schemas/Date'
 
         duration:
-          type: string
-          description: Activity duration
-          pattern: ^[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}$
+          $ref: '#/components/schemas/Duration'
 
         uid:
-          type: string
-          description: Sport id
+          type: integer
+          description: User id
 
         sid:
-          type: string
+          type: integer
           description: Sport id
 
         rid:
-          type: string
+          type: integer
           description: Route id
+
+    Duration:
+      type: string
+      description: Duration (HH:MM:SS.FFF)
+      pattern: ^(?:[01]\d|2[0123])\:(?:[012345]\d)\:(?:[012345]\d)\.\d{3}$
+      example: "01:23:45.678"
+
+    Date:
+      type: string
+      description: Date (YYYY-MM-DD)
+      pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+      example: "2001-09-26"
+
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
