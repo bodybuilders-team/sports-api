@@ -1,6 +1,10 @@
 package pt.isel.ls.sports
 
 import pt.isel.ls.sports.data.SportsDatabase
+import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.domain.Route
+import pt.isel.ls.sports.domain.Sport
+import pt.isel.ls.sports.domain.User
 
 class SportsServices(private val db: SportsDatabase) {
     fun createUser(token: String, name: String, email: String): Int {

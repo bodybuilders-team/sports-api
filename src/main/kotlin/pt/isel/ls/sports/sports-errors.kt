@@ -12,41 +12,65 @@ import org.http4k.core.Status
  */
 class NotFoundException(override val message: String) : Exception(message)
 
+
+/**
+ * Represents an application error.
+ * @property code error code
+ * @property name error name
+ * @property description short description of the error
+ * @property extraInfo other info related to the error
+ */
 @Serializable
-data class AppError(val code: Int, val error: String, val description: String, val extraInfo: String? = null) {
+data class AppError(val code: Int, val name: String, val description: String, var extraInfo: String? = null) {
 
-    companion object {
-        val BAD_REQUEST = AppError(1000, "BAD_REQUEST", "The request was malformed")
-        val NOT_FOUND = AppError(1001, "NOT_FOUND", "The requested resource was not found")
-        val DATABASE_ERROR = AppError(1002, "DATABASE_ERROR", "There was an error accessing the database")
-        val INTERNAL_ERROR = AppError(1003, "INTERNAL_ERROR", "There was an internal error")
-        val INVALID_CREDENTIALS = AppError(1004, "INVALID_CREDENTIALS", "The provided credentials are invalid")
-        val NO_CREDENTIALS = AppError(1005, "NO_CREDENTIALS", "No credentials were provided")
-    }
+	companion object {
+		fun badRequest(extraInfo: String? = null) =
+			AppError(1000, "BAD_REQUEST", "The request was malformed", extraInfo)
+
+		fun notFound(extraInfo: String? = null) =
+			AppError(1001, "NOT_FOUND", "The requested resource was not found", extraInfo)
+
+		fun databaseError(extraInfo: String? = null) =
+			AppError(1002, "DATABASE_ERROR", "There was an error accessing the database", extraInfo)
+
+		fun internalError(extraInfo: String? = null) =
+			AppError(1003, "INTERNAL_ERROR", "There was an internal error", extraInfo)
+
+		fun invalidCredentials(extraInfo: String? = null) =
+			AppError(1004, "INVALID_CREDENTIALS", "The provided credentials are invalid", extraInfo)
+
+		fun noCredentials(extraInfo: String? = null) =
+			AppError(1005, "NO_CREDENTIALS", "No credentials were provided", extraInfo)
+	}
+
+	/**
+	 * Gets the HTTP status for each AppError.
+	 * @return HTTP status
+	 */
+	private fun getStatus(): Status = when (this) {
+		badRequest() -> Status.BAD_REQUEST
+		invalidCredentials() -> Status.UNAUTHORIZED
+		notFound() -> Status.NOT_FOUND
+		databaseError() -> Status.INTERNAL_SERVER_ERROR
+		else -> Status.INTERNAL_SERVER_ERROR
+	}
+
+
+	/**
+	 * Converts the AppError to an HTTP Response
+	 * @return HTTP response
+	 */
+	fun toResponse() = Response(status = getStatus()).body(Json.encodeToString(this))
 }
 
-fun AppError.getStatus(): Status = when (this) {
-    AppError.BAD_REQUEST -> Status.BAD_REQUEST
-    AppError.INVALID_CREDENTIALS -> Status.UNAUTHORIZED
 
-    AppError.NOT_FOUND -> Status.NOT_FOUND
-    AppError.DATABASE_ERROR -> Status.INTERNAL_SERVER_ERROR
-
-    else -> Status.INTERNAL_SERVER_ERROR
-}
-
-fun errorResponse(error: Throwable): Response = when (error) {
-    is NotFoundException -> errorResponse(AppError.NOT_FOUND)
-    else -> errorResponse(AppError.INTERNAL_ERROR)
-}
-
-fun errorResponse(error: AppError, errorMessage: (() -> String)? = null): Response {
-    val newError = if (errorMessage != null)
-        error.copy(extraInfo = errorMessage())
-    else
-        error
-
-    return Response(newError.getStatus()).body(Json.encodeToString(newError))
-}
-
-
+/**
+ * Gets the HTTP response associated with the [error]
+ * @param error application error
+ * @return HTTP response
+ */
+fun getErrorResponse(error: Throwable): Response =
+	when (error) {
+		is NotFoundException -> AppError.notFound()
+		else -> AppError.internalError()
+	}.toResponse()

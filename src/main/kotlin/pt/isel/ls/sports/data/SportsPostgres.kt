@@ -2,6 +2,10 @@ package pt.isel.ls.sports.data
 
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.*
+import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.domain.Route
+import pt.isel.ls.sports.domain.Sport
+import pt.isel.ls.sports.domain.User
 import java.sql.*
 
 

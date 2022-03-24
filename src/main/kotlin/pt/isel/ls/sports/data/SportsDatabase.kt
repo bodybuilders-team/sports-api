@@ -1,9 +1,9 @@
 package pt.isel.ls.sports.data
 
-import pt.isel.ls.sports.Activity
-import pt.isel.ls.sports.Route
-import pt.isel.ls.sports.Sport
-import pt.isel.ls.sports.User
+import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.domain.Route
+import pt.isel.ls.sports.domain.Sport
+import pt.isel.ls.sports.domain.User
 import java.util.*
 
 

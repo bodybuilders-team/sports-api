@@ -1,9 +1,9 @@
 package pt.isel.ls
 
 import pt.isel.ls.sports.NotFoundException
-import pt.isel.ls.sports.Route
-import pt.isel.ls.sports.Sport
-import pt.isel.ls.sports.User
+import pt.isel.ls.sports.domain.Route
+import pt.isel.ls.sports.domain.Sport
+import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.data.SportsDataMem
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,7 +23,7 @@ class SportsDataMemTests {
 	}
 
 	@Test
-	fun `createNewUser returns correct identifier`(){
+	fun `createNewUser returns correct identifier`() {
 		val db = SportsDataMem()
 
 		val uid0 = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -38,7 +38,7 @@ class SportsDataMemTests {
 	// getUser
 
 	@Test
-	fun `getUser returns the user object`(){
+	fun `getUser returns the user object`() {
 		val db = SportsDataMem()
 
 		val user = User(0, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -49,7 +49,7 @@ class SportsDataMemTests {
 	}
 
 	@Test
-	fun `getUser throws NotFoundException if the user with the uid doesn't exist`(){
+	fun `getUser throws NotFoundException if the user with the uid doesn't exist`() {
 		val db = SportsDataMem()
 
 		assertFailsWith<NotFoundException> {
@@ -60,7 +60,7 @@ class SportsDataMemTests {
 	// getAllUsers
 
 	@Test
-	fun `getAllUsers returns list of identifiers`(){
+	fun `getAllUsers returns list of identifiers`() {
 		val db = SportsDataMem()
 
 		db.users[0] = User(0, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -71,7 +71,7 @@ class SportsDataMemTests {
 	}
 
 	@Test
-	fun `getAllUsers with no created users returns empty list`(){
+	fun `getAllUsers with no created users returns empty list`() {
 		val db = SportsDataMem()
 
 		assertEquals(emptyList(), db.getAllUsers())
@@ -80,7 +80,7 @@ class SportsDataMemTests {
 	// createNewRoute
 
 	@Test
-	fun `createNewRoute creates route correctly in the database`(){
+	fun `createNewRoute creates route correctly in the database`() {
 		val db = SportsDataMem()
 
 		db.users[0] = User(0, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -91,7 +91,7 @@ class SportsDataMemTests {
 	}
 
 	@Test
-	fun `createNewRoute returns correct identifier`(){
+	fun `createNewRoute returns correct identifier`() {
 		val db = SportsDataMem()
 
 		db.users[0] = User(0, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -108,7 +108,7 @@ class SportsDataMemTests {
 	// getRoute
 
 	@Test
-	fun `getRoute returns the route object`(){
+	fun `getRoute returns the route object`() {
 		val db = SportsDataMem()
 
 		db.users[0] = User(0, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -121,7 +121,7 @@ class SportsDataMemTests {
 	}
 
 	@Test
-	fun `getRoute throws NotFoundException if the route with the rid doesn't exist`(){
+	fun `getRoute throws NotFoundException if the route with the rid doesn't exist`() {
 		val db = SportsDataMem()
 
 		assertFailsWith<NotFoundException> {
@@ -132,7 +132,7 @@ class SportsDataMemTests {
 	// getAllRoutes
 
 	@Test
-	fun `getAllRoutes returns list of all route identifiers`(){
+	fun `getAllRoutes returns list of all route identifiers`() {
 		val db = SportsDataMem()
 
 		db.users[0] = User(0, "André Jesus", "andrejesus@mail.com")
@@ -145,7 +145,7 @@ class SportsDataMemTests {
 	}
 
 	@Test
-	fun `getAllRoutes with no created routes returns empty list`(){
+	fun `getAllRoutes with no created routes returns empty list`() {
 		val db = SportsDataMem()
 
 		assertEquals(emptyList(), db.getAllRoutes())
@@ -154,7 +154,7 @@ class SportsDataMemTests {
 	// createNewSport
 
 	@Test
-	fun `createNewSport creates sport correctly in the database`(){
+	fun `createNewSport creates sport correctly in the database`() {
 		val db = SportsDataMem()
 
 		db.users[0] = User(0, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -165,7 +165,7 @@ class SportsDataMemTests {
 	}
 
 	@Test
-	fun `createNewSport returns correct identifier`(){
+	fun `createNewSport returns correct identifier`() {
 		val db = SportsDataMem()
 
 		db.users[0] = User(0, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
