@@ -2,7 +2,6 @@ package pt.isel.ls.sports.routers.users
 
 import kotlinx.serialization.Serializable
 
-
 /**
  * Represents a User creation request.
  *

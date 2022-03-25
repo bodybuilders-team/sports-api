@@ -2,7 +2,6 @@ package pt.isel.ls.sports.routers.activities
 
 import kotlinx.serialization.Serializable
 
-
 /**
  * Represents an activity creation response.
  *

@@ -2,7 +2,6 @@ package pt.isel.ls.sports.routers.sports
 
 import kotlinx.serialization.Serializable
 
-
 /**
  * Represents a Sport creation request.
  *
@@ -12,7 +11,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class CreateSportRequest(
-	val name: String,
-	val description: String?,
-	val uid: Int
+    val name: String,
+    val description: String?,
+    val uid: Int
 )

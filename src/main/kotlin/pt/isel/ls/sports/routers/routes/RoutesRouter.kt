@@ -1,18 +1,21 @@
 package pt.isel.ls.sports.routers.routes
 
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.http4k.core.Method.*
+import org.http4k.core.Method.GET
+import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
-import org.http4k.routing.path
 import org.http4k.routing.routes
-import pt.isel.ls.sports.*
-
+import pt.isel.ls.sports.SportsServices
+import pt.isel.ls.sports.getErrorResponse
+import pt.isel.ls.sports.routers.json
+import pt.isel.ls.sports.routers.pathOrThrow
+import pt.isel.ls.sports.routers.tokenOrThrow
+import pt.isel.ls.sports.toIntOrThrow
 
 /**
  * Represents the routes' router for the Web API.
@@ -22,85 +25,62 @@ import pt.isel.ls.sports.*
  */
 class RoutesRouter(private val services: SportsServices) {
 
-	companion object {
+    companion object {
 
-		/**
-		 * Returns the router routes.
-		 * @param services router services
-		 * @return router routes
-		 */
-		fun routes(services: SportsServices) = RoutesRouter(services).routes
-	}
+        /**
+         * Returns the router routes.
+         * @param services router services
+         * @return router routes
+         */
+        fun routes(services: SportsServices) = RoutesRouter(services).routes
+    }
 
+    val routes = routes(
+        "/" bind POST to ::createRoute,
+        "/" bind GET to ::getRoutes,
+        "/{id}" bind GET to ::getRoute
+    )
 
-	val routes = routes(
-		"/routes" bind POST to ::createRoute,
-		"/routes" bind GET to ::getRoutes,
-		"/routes/{id}" bind GET to ::getRoute
-	)
+    /**
+     * Creates a route.
+     * @param request route creation HTTP request
+     * @return route creation HTTP response
+     */
+    private fun createRoute(request: Request): Response = runCatching {
+        val token = request.tokenOrThrow()
 
+        val routeRequest = Json.decodeFromString<CreateRouteRequest>(request.bodyString())
+        val uid = services.createNewRoute(
+            token,
+            routeRequest.start_location,
+            routeRequest.end_location,
+            routeRequest.distance
+        )
 
-	/**
-	 * Creates a route.
-	 * @param request route creation HTTP request
-	 * @return route creation HTTP response
-	 */
-	private fun createRoute(request: Request): Response = runCatching {
-		val token = request.header("Authorization")
-			?: return AppError.noCredentials().toResponse()
-		authenticate(token)
+        return Response(CREATED).json(CreateRouteResponse(uid))
+    }.getOrElse(::getErrorResponse)
 
-		val routeRequest = Json.decodeFromString<CreateRouteRequest>(request.bodyString())
-		val uid = services.createNewRoute(
-			token,
-			routeRequest.start_location,
-			routeRequest.end_location,
-			routeRequest.distance
-		)
+    /**
+     * Gets all routes.
+     * @param request HTTP request
+     * @return HTTP response
+     */
+    private fun getRoutes(request: Request): Response = runCatching {
+        val routes = services.getAllRoutes()
 
-		return Response(CREATED)
-			.header("Content-Type", "application/json")
-			.body(Json.encodeToString(CreateRouteResponse(uid)))
+        return Response(OK).json(routes)
+    }.getOrElse(::getErrorResponse)
 
-	}.getOrElse {
-		return getErrorResponse(it)
-	}
+    /**
+     * Gets a specific route.
+     * @param request HTTP request
+     * @return HTTP response
+     */
+    private fun getRoute(request: Request): Response = runCatching {
+        val rid = request.pathOrThrow("id").toIntOrThrow { "Invalid Route Id" }
 
+        val route = services.getRoute(rid)
 
-	/**
-	 * Gets all routes.
-	 * @param request HTTP request
-	 * @return HTTP response
-	 */
-	private fun getRoutes(request: Request): Response = runCatching {
-		val routes = services.getAllRoutes()
-
-		return Response(OK)
-			.header("Content-Type", "application/json")
-			.body(Json.encodeToString(routes))
-
-	}.getOrElse {
-		return getErrorResponse(it)
-	}
-
-
-	/**
-	 * Gets a specific route.
-	 * @param request HTTP request
-	 * @return HTTP response
-	 */
-	private fun getRoute(request: Request): Response = runCatching {
-		//TODO: remove code repetition
-		val rid = request.path("id")?.toInt()
-			?: return AppError.badRequest("Invalid Route Id").toResponse()
-
-		val route = services.getRoute(rid)
-
-		return Response(OK)
-			.header("Content-Type", "application/json")
-			.body(Json.encodeToString(route))
-
-	}.getOrElse {
-		return getErrorResponse(it)
-	}
+        return Response(OK).json(route)
+    }.getOrElse(::getErrorResponse)
 }

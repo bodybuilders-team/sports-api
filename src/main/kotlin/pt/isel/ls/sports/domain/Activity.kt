@@ -14,10 +14,10 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Activity(
-	val id: Int,
-	val date: String,
-	val duration: String,
-	val uid: Int,
-	val sid: Int,
-	val rid: Int?
+    val id: Int,
+    val date: String,
+    val duration: String,
+    val uid: Int,
+    val sid: Int,
+    val rid: Int?
 )

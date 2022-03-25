@@ -2,7 +2,6 @@ package pt.isel.ls.sports.domain
 
 import kotlinx.serialization.Serializable
 
-
 /**
  * Sport representation.
  *
@@ -13,8 +12,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Sport(
-	val id: Int,
-	val name: String,
-	val description: String = "",
-	val uid: Int
+    val id: Int,
+    val name: String,
+    val description: String = "",
+    val uid: Int
 )

@@ -2,7 +2,6 @@ package pt.isel.ls.sports.routers.routes
 
 import kotlinx.serialization.Serializable
 
-
 /**
  * Represents a Route creation response.
  *

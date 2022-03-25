@@ -13,13 +13,13 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Route(
-	val id: Int,
-	val start_location: String,
-	val end_location: String,
-	val distance: Int,
-	val uid: Int
+    val id: Int,
+    val start_location: String,
+    val end_location: String,
+    val distance: Int,
+    val uid: Int
 ) {
-	init {
-		require(distance > 0) { "Distance in route must be positive" }
-	}
+    init {
+        require(distance > 0) { "Distance in route must be positive" }
+    }
 }

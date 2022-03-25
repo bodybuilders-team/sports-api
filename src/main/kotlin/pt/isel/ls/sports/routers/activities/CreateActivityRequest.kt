@@ -12,8 +12,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class CreateActivityRequest(
-	val date: String,
-	val duration: String,
-	val sid: Int,
-	val rid: Int?
+    val date: String,
+    val duration: String,
+    val sid: Int,
+    val rid: Int?
 )

@@ -2,7 +2,6 @@ package pt.isel.ls.sports.routers.routes
 
 import kotlinx.serialization.Serializable
 
-
 /**
  * Represents a Route creation request.
  *
@@ -12,7 +11,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class CreateRouteRequest(
-	val start_location: String,
-	val end_location: String,
-	val distance: Double
+    val start_location: String,
+    val end_location: String,
+    val distance: Double
 )
