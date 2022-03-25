@@ -4,9 +4,9 @@ import kotlinx.serialization.Serializable
 
 
 /**
- * Represents an activity delete response.
+ * Represents a message response.
  *
  * @property message response message
  */
 @Serializable
-data class DeleteActivityResponse(val message: String)
+data class MessageResponse(val message: String)
