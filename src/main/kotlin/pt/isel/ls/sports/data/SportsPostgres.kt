@@ -157,7 +157,7 @@ object SportsPostgres : SportsDatabase {
             if (rs.next())
                 return rs.getInt(1)
             else
-                throw SportsError.notFound("User with the token $token not found")
+                throw SportsError.notFound("Token $token isn't associated to any user")
         }
     }
 

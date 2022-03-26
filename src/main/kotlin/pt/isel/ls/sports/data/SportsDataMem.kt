@@ -10,19 +10,19 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 class SportsDataMem : SportsDatabase {
-    private val userTokens = ConcurrentHashMap<String, Int>()
+    val tokens = ConcurrentHashMap<String, Int>()
 
     val users = ConcurrentHashMap<Int, User>()
-    private var usersLastValue: AtomicInteger = AtomicInteger(0)
+    private var usersLastValue: AtomicInteger = AtomicInteger(1)
 
     val routes = ConcurrentHashMap<Int, Route>()
-    private var routesLastValue: AtomicInteger = AtomicInteger(0)
+    private var routesLastValue: AtomicInteger = AtomicInteger(1)
 
     val sports = ConcurrentHashMap<Int, Sport>()
-    private var sportsLastValue: AtomicInteger = AtomicInteger(0)
+    private var sportsLastValue: AtomicInteger = AtomicInteger(1)
 
     val activities = ConcurrentHashMap<Int, Activity>()
-    private var activitiesLastValue: AtomicInteger = AtomicInteger(0)
+    private var activitiesLastValue: AtomicInteger = AtomicInteger(1)
 
     /**
      * Creates a new user in the database.
@@ -33,11 +33,11 @@ class SportsDataMem : SportsDatabase {
      * @return user's unique identifier
      */
     override fun createNewUser(name: String, email: String): Int {
-        val identifier = usersLastValue.getAndIncrement()
+        val id = usersLastValue.getAndIncrement()
 
-        users[identifier] = User(id = identifier, name, email)
+        users[id] = User(id, name, email)
 
-        return identifier
+        return id
     }
 
     /**
@@ -69,7 +69,7 @@ class SportsDataMem : SportsDatabase {
      */
     override fun createUserToken(uid: Int): String {
         val token = UUID.randomUUID().toString()
-        userTokens[token] = uid
+        tokens[token] = uid
         return token
     }
 
@@ -81,7 +81,7 @@ class SportsDataMem : SportsDatabase {
      * @return uid
      */
     override fun getUID(token: String): Int {
-        return userTokens[token] ?: throw SportsError.notFound("User with the token $token not found")
+        return tokens[token] ?: throw SportsError.notFound("Token $token isn't associated to any user")
     }
 
     /**
@@ -95,14 +95,14 @@ class SportsDataMem : SportsDatabase {
      * @return the route's unique identifier
      */
     override fun createNewRoute(startLocation: String, endLocation: String, distance: Int, uid: Int): Int {
-        val identifier = routesLastValue.getAndIncrement()
+        val id = routesLastValue.getAndIncrement()
 
         if (users[uid] == null) throw SportsError.notFound("User with id $uid not found") // TODO: 23/03/2022 this VS. getUser(uid)
 
-        routes[identifier] =
-            Route(id = identifier, start_location = startLocation, end_location = endLocation, distance, uid)
+        routes[id] =
+            Route(id, start_location = startLocation, end_location = endLocation, distance, uid)
 
-        return identifier
+        return id
     }
 
     /**
@@ -135,13 +135,13 @@ class SportsDataMem : SportsDatabase {
      * @return the sport's unique identifier
      */
     override fun createNewSport(name: String, description: String, uid: Int): Int {
-        val identifier = sportsLastValue.getAndIncrement()
+        val id = sportsLastValue.getAndIncrement()
 
         if (users[uid] == null) throw SportsError.notFound("User with id $uid not found") // TODO: 23/03/2022 this VS. getUser(uid)
 
-        sports[identifier] = Sport(id = identifier, name, description, uid)
+        sports[id] = Sport(id = id, name, description, uid)
 
-        return identifier
+        return id
     }
 
     /**
@@ -176,11 +176,11 @@ class SportsDataMem : SportsDatabase {
      * @return activity's unique identifier
      */
     override fun createNewActivity(date: String, duration: String, uid: Int, sid: Int, rid: Int?): Int {
-        val identifier = activitiesLastValue.getAndIncrement()
+        val id = activitiesLastValue.getAndIncrement()
 
-        activities[identifier] = Activity(id = identifier, date, duration, uid, sid, rid)
+        activities[id] = Activity(id = id, date, duration, uid, sid, rid)
 
-        return identifier
+        return id
     }
 
     /**

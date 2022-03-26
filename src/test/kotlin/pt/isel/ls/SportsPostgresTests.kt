@@ -62,7 +62,7 @@ class SportsPostgresTests {
     }
 
     @Test
-    fun `getUser throws NotFoundException if the user with the uid doesn't exist`() {
+    fun `getUser throws SportsError (Not found) if the user with the uid doesn't exist`() {
         assertFailsWith<SportsError> {
             SportsPostgres.getUser(0)
         }
@@ -92,7 +92,7 @@ class SportsPostgresTests {
     // createUserToken
 
     @Test
-    fun `createUserToken creates sport correctly in the database`() {
+    fun `createUserToken creates token correctly in the database`() {
         val token = SportsPostgres.createUserToken(1)
 
         dataSource.connection.use {
@@ -111,6 +111,13 @@ class SportsPostgresTests {
     fun `getUID returns the uid correctly`() {
         val uid = SportsPostgres.getUID("49698b60-12ca-4df7-8950-d783124f5fas")
         assertEquals(1, uid)
+    }
+
+    @Test
+    fun `getUID throws SportsError (Not Found) if the token isn't associated to any user`() {
+        assertFailsWith<SportsError> {
+            SportsPostgres.getUID("T-o-k-e-n")
+        }
     }
 
     // createNewRoute
@@ -147,7 +154,7 @@ class SportsPostgresTests {
     }
 
     @Test
-    fun `getRoute throws NotFoundException if the route with the rid doesn't exist`() {
+    fun `getRoute throws SportsError (Not Found) if the route with the rid doesn't exist`() {
         assertFailsWith<SportsError> {
             SportsPostgres.getRoute(0)
         }
@@ -207,7 +214,7 @@ class SportsPostgresTests {
     }
 
     @Test
-    fun `getSport throws NotFoundException if the sport with the sid doesn't exist`() {
+    fun `getSport throws SportsError (Not Found) if the sport with the sid doesn't exist`() {
         assertFailsWith<SportsError> {
             SportsPostgres.getSport(0)
         }
@@ -269,7 +276,7 @@ class SportsPostgresTests {
     }
 
     @Test
-    fun `getActivity throws NotFoundException if the activity with the sid doesn't exist`() {
+    fun `getActivity throws SportsError (Not Found) if the activity with the sid doesn't exist`() {
         assertFailsWith<SportsError> {
             SportsPostgres.getActivity(0)
         }
@@ -278,7 +285,7 @@ class SportsPostgresTests {
     // deleteActivity
 
     @Test
-    fun `deleteActivity deletes and activity successfully`() {
+    fun `deleteActivity deletes an activity successfully`() {
         SportsPostgres.deleteActivity(1)
 
         assertFailsWith<SportsError> {
@@ -307,8 +314,8 @@ class SportsPostgresTests {
     @Test
     fun `getActivities returns the activities list`() {
         val activities = SportsPostgres.getActivities(sid = 2, "descending", "2022-11-20", rid = 1)
-        assertEquals(activities, listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 2, 1)))
+        assertEquals(listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 2, 1)), activities)
     }
 
-    // TODO: 26/03/2022 Add more tests
+    // TODO: 26/03/2022 Add more tests (synchronize with SportDataMemTests?)
 }

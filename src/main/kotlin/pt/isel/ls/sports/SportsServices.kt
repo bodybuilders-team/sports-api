@@ -16,13 +16,13 @@ class SportsServices(private val db: SportsDatabase) {
      * @param name user's name
      * @param email user's email
      *
-     * @return user's token and the user's unique identifier
+     * @return a createUser response (user's token and the user's unique identifier)
      */
     fun createNewUser(name: String, email: String): CreateUserResponse {
         val uid = db.createNewUser(name, email)
-        val utoken = db.createUserToken(uid)
+        val token = db.createUserToken(uid)
 
-        return CreateUserResponse(utoken, uid)
+        return CreateUserResponse(token, uid)
     }
 
     /**
@@ -48,21 +48,24 @@ class SportsServices(private val db: SportsDatabase) {
     /**
      * Creates a new route.
      *
+     * The [distance] is converted from km to m (meters).
+     *
      * @param token user's token
      * @param startLocation
      * @param endLocation
-     * @param distance
+     * @param distance distance of the route in km
+     *
      *
      * @return the route's unique identifier
      */
     fun createNewRoute(token: String, startLocation: String, endLocation: String, distance: Double): Int {
-        authenticate(token)
+        val uid = authenticate(token)
 
         return db.createNewRoute(
             startLocation,
             endLocation,
             distance = (distance * 1000).toInt(),
-            uid = db.getUID(token)
+            uid
         )
     }
 
@@ -96,9 +99,9 @@ class SportsServices(private val db: SportsDatabase) {
      * @return the sport's unique identifier
      */
     fun createNewSport(token: String, name: String, description: String?): Int {
-        authenticate(token)
+        val uid = authenticate(token)
 
-        return db.createNewSport(name, description ?: "", db.getUID(token))
+        return db.createNewSport(name, description ?: "", uid)
     }
 
     /**
@@ -133,9 +136,9 @@ class SportsServices(private val db: SportsDatabase) {
      * @return activity's unique identifier
      */
     fun createNewActivity(token: String, date: String, duration: String, sid: Int, rid: Int?): Int {
-        authenticate(token)
+        val uid = authenticate(token)
 
-        return db.createNewActivity(date, duration, db.getUID(token), sid, rid)
+        return db.createNewActivity(date, duration, uid, sid, rid)
     }
 
     /**
@@ -201,7 +204,7 @@ class SportsServices(private val db: SportsDatabase) {
      *
      * @return user's unique identifier associated with the [token]
      *
-     * @throws SportsError.invalidCredentials if a user with the [token] was not found"
+     * @throws SportsError.invalidCredentials if a user with the [token] was not found
      */
     private fun authenticate(token: String) = runCatching {
         db.getUID(token)
