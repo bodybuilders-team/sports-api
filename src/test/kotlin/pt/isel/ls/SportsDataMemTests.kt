@@ -1,10 +1,10 @@
 package pt.isel.ls
 
-import pt.isel.ls.sports.NotFoundException
 import pt.isel.ls.sports.data.SportsDataMem
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
+import pt.isel.ls.sports.errors.SportsError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -52,7 +52,7 @@ class SportsDataMemTests {
     fun `getUser throws NotFoundException if the user with the uid doesn't exist`() {
         val db = SportsDataMem()
 
-        assertFailsWith<NotFoundException> {
+        assertFailsWith<SportsError> {
             db.getUser(0)
         }
     }
@@ -128,7 +128,7 @@ class SportsDataMemTests {
     fun `getRoute throws NotFoundException if the route with the rid doesn't exist`() {
         val db = SportsDataMem()
 
-        assertFailsWith<NotFoundException> {
+        assertFailsWith<SportsError> {
             db.getRoute(0)
         }
     }

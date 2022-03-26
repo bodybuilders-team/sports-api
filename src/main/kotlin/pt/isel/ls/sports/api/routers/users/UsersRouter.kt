@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.routers.users
+package pt.isel.ls.sports.api.routers.users
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -11,9 +11,9 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.sports.SportsServices
-import pt.isel.ls.sports.getErrorResponse
-import pt.isel.ls.sports.routers.json
-import pt.isel.ls.sports.routers.pathOrThrow
+import pt.isel.ls.sports.api.routers.utils.json
+import pt.isel.ls.sports.api.routers.utils.pathOrThrow
+import pt.isel.ls.sports.errors.getErrorResponse
 import pt.isel.ls.sports.toIntOrThrow
 
 /**

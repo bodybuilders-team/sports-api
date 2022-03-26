@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.routers.users
+package pt.isel.ls.sports.api.routers.users
 
 import kotlinx.serialization.Serializable
 

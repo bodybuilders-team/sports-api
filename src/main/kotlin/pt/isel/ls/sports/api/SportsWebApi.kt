@@ -1,13 +1,14 @@
-package pt.isel.ls.sports
+package pt.isel.ls.sports.api
 
-import org.http4k.core.*
+import org.http4k.core.HttpHandler
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import pt.isel.ls.sports.routers.activities.ActivitiesRouter
-import pt.isel.ls.sports.routers.routes.RoutesRouter
-import pt.isel.ls.sports.routers.sports.SportsRouter
-import pt.isel.ls.sports.routers.users.UsersRouter
+import pt.isel.ls.sports.SportsServices
+import pt.isel.ls.sports.api.routers.activities.ActivitiesRouter
+import pt.isel.ls.sports.api.routers.routes.RoutesRouter
+import pt.isel.ls.sports.api.routers.sports.SportsRouter
+import pt.isel.ls.sports.api.routers.users.UsersRouter
 
 /**
  * Represents the Sports API Web API.
@@ -31,6 +32,7 @@ class SportsWebApi(services: SportsServices) {
 
     /**
      * Gets the Web API application.
+     *
      * @return Web API routes
      */
     fun getApp(): HttpHandler = routes

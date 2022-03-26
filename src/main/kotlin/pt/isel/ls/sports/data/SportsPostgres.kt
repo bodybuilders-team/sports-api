@@ -1,15 +1,17 @@
 package pt.isel.ls.sports.data
 
 import org.postgresql.ds.PGSimpleDataSource
-import pt.isel.ls.sports.AppError
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
+import pt.isel.ls.sports.errors.SportsError
 import java.sql.Date
+import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.sql.Statement
 import java.sql.Types
+import java.util.UUID
 
 object SportsPostgres : SportsDatabase {
 
@@ -73,7 +75,7 @@ object SportsPostgres : SportsDatabase {
                     email = rs.getString(3)
                 )
             else
-                throw AppError.notFound("User with id $uid not found")
+                throw SportsError.notFound("User with id $uid not found")
         }
     }
 
@@ -115,7 +117,21 @@ object SportsPostgres : SportsDatabase {
      * @return user's token
      */
     override fun createUserToken(uid: Int): String {
-        TODO("Not yet implemented")
+        val token = UUID.randomUUID().toString()
+        dataSource.connection.use { conn ->
+            val stm = conn.prepareStatement(
+                """
+                INSERT INTO tokens(token, uid)
+                VALUES (?, ?)
+                """.trimIndent()
+            )
+            stm.setString(1, token)
+            stm.setInt(2, uid)
+
+            if (stm.executeUpdate() == 0)
+                throw SQLException("Creating token failed, no rows affected.")
+        }
+        return token
     }
 
     /**
@@ -126,7 +142,23 @@ object SportsPostgres : SportsDatabase {
      * @return uid
      */
     override fun getUID(token: String): Int {
-        TODO("Not yet implemented")
+        dataSource.connection.use { conn ->
+            val stm = conn.prepareStatement(
+                """
+                SELECT uid
+                FROM tokens
+                WHERE token = ?
+                """.trimIndent()
+            )
+            stm.setString(1, token)
+
+            val rs = stm.executeQuery()
+
+            if (rs.next())
+                return rs.getInt(1)
+            else
+                throw SportsError.notFound("User with the token $token not found")
+        }
     }
 
     /**
@@ -190,7 +222,7 @@ object SportsPostgres : SportsDatabase {
                     uid = rs.getInt(5)
                 )
             else
-                throw AppError.notFound("Route with id $rid not found")
+                throw SportsError.notFound("Route with id $rid not found")
         }
     }
 
@@ -284,7 +316,7 @@ object SportsPostgres : SportsDatabase {
                     uid = rs.getInt(4)
                 )
             else
-                throw AppError.notFound("Sport with id $sid not found")
+                throw SportsError.notFound("Sport with id $sid not found")
         }
     }
 
@@ -297,7 +329,7 @@ object SportsPostgres : SportsDatabase {
         dataSource.connection.use { conn ->
             val stm = conn.prepareStatement(
                 """
-                SELECT id
+                SELECT *
                 FROM sports
                 """.trimIndent()
             )
@@ -383,7 +415,7 @@ object SportsPostgres : SportsDatabase {
                     rid = rs.getInt(6)
                 )
             else
-                throw AppError.notFound("Activity with id $aid not found")
+                throw SportsError.notFound("Activity with id $aid not found")
         }
     }
 
@@ -416,29 +448,14 @@ object SportsPostgres : SportsDatabase {
         dataSource.connection.use { conn ->
             val stm = conn.prepareStatement(
                 """
-                SELECT id
+                SELECT *
                 FROM activities
                 WHERE sid = ?
                 """.trimIndent()
             )
             stm.setInt(1, sid)
 
-            val rs = stm.executeQuery()
-            val activities = mutableListOf<Activity>()
-
-            while (rs.next())
-                activities.add(
-                    Activity(
-                        id = rs.getInt(1),
-                        date = rs.getDate(2).toString(),
-                        duration = rs.getString(3),
-                        uid = rs.getInt(4),
-                        sid = rs.getInt(5),
-                        rid = rs.getInt(6)
-                    )
-                )
-
-            return activities
+            return getActivities(stm)
         }
     }
 
@@ -460,22 +477,7 @@ object SportsPostgres : SportsDatabase {
             )
             stm.setInt(1, uid)
 
-            val rs = stm.executeQuery()
-            val activities = mutableListOf<Activity>()
-
-            while (rs.next())
-                activities.add(
-                    Activity(
-                        id = rs.getInt(1),
-                        date = rs.getDate(2).toString(),
-                        duration = rs.getString(3),
-                        uid = rs.getInt(4),
-                        sid = rs.getInt(5),
-                        rid = rs.getInt(6)
-                    )
-                )
-
-            return activities
+            return getActivities(stm)
         }
     }
 
@@ -493,7 +495,7 @@ object SportsPostgres : SportsDatabase {
         dataSource.connection.use { conn ->
             val stm = conn.prepareStatement(
                 """
-                SELECT id
+                SELECT *
                 FROM activities
                 WHERE sid = ? AND date = ? AND rid = ?
                 ORDER BY duration 
@@ -502,24 +504,38 @@ object SportsPostgres : SportsDatabase {
             stm.setInt(1, sid)
             stm.setDate(2, Date.valueOf(date))
 
-            if (rid == null) stm.setNull(3, Types.INTEGER) else stm.setInt(3, rid) // TODO: 24/03/2022 See setNull
+            if (rid == null)
+                stm.setNull(3, Types.INTEGER)
+            else
+                stm.setInt(3, rid)
 
-            val rs = stm.executeQuery()
-            val activities = mutableListOf<Activity>()
-
-            while (rs.next())
-                activities.add(
-                    Activity(
-                        id = rs.getInt(1),
-                        date = rs.getDate(2).toString(),
-                        duration = rs.getString(3),
-                        uid = rs.getInt(4),
-                        sid = rs.getInt(5),
-                        rid = rs.getInt(6)
-                    )
-                )
-
-            return activities
+            return getActivities(stm)
         }
+    }
+
+    /**
+     * Gets a list of activities returned from the execution of the statement [stm]
+     *
+     * @param stm statement
+     *
+     * @return list of activities
+     */
+    private fun getActivities(stm: PreparedStatement): MutableList<Activity> {
+        val rs = stm.executeQuery()
+        val activities = mutableListOf<Activity>()
+
+        while (rs.next())
+            activities.add(
+                Activity(
+                    id = rs.getInt(1),
+                    date = rs.getDate(2).toString(),
+                    duration = rs.getString(3),
+                    uid = rs.getInt(4),
+                    sid = rs.getInt(5),
+                    rid = rs.getInt(6)
+                )
+            )
+
+        return activities
     }
 }

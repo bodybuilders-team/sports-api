@@ -1,22 +1,15 @@
 package pt.isel.ls.sports
 
-import kotlinx.serialization.Serializable
+import pt.isel.ls.sports.api.routers.users.CreateUserResponse
 import pt.isel.ls.sports.data.SportsDatabase
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
-
-/**
- * Response for the createUser method of services.
- *
- * @property token user's token
- * @property uid user's unique identifier
- */
-@Serializable
-data class CreateUserResponse(val token: String, val uid: Int)
+import pt.isel.ls.sports.errors.SportsError
 
 class SportsServices(private val db: SportsDatabase) {
+
     /**
      * Creates a new user in the database.
      *
@@ -66,8 +59,10 @@ class SportsServices(private val db: SportsDatabase) {
         authenticate(token)
 
         return db.createNewRoute(
-            startLocation, endLocation,
-            distance = (distance * 1000).toInt(), db.getUID(token)
+            startLocation,
+            endLocation,
+            distance = (distance * 1000).toInt(),
+            uid = db.getUID(token)
         )
     }
 
@@ -102,6 +97,7 @@ class SportsServices(private val db: SportsDatabase) {
      */
     fun createNewSport(token: String, name: String, description: String?): Int {
         authenticate(token)
+
         return db.createNewSport(name, description ?: "", db.getUID(token))
     }
 
@@ -138,6 +134,7 @@ class SportsServices(private val db: SportsDatabase) {
      */
     fun createNewActivity(token: String, date: String, duration: String, sid: Int, rid: Int?): Int {
         authenticate(token)
+
         return db.createNewActivity(date, duration, db.getUID(token), sid, rid)
     }
 
@@ -197,7 +194,16 @@ class SportsServices(private val db: SportsDatabase) {
         return db.getActivities(sid, orderBy, date, rid)
     }
 
+    /**
+     * Gets the user's unique identifier associate with the [token]
+     *
+     * @param token user token
+     *
+     * @return user's unique identifier associated with the [token]
+     *
+     * @throws SportsError.invalidCredentials if a user with the [token] was not found"
+     */
     private fun authenticate(token: String) = runCatching {
         db.getUID(token)
-    }.getOrElse { throw AppError.invalidCredentials() }
+    }.getOrElse { throw SportsError.invalidCredentials() }
 }

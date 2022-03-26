@@ -3,6 +3,7 @@ package pt.isel.ls.sports
 import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
+import pt.isel.ls.sports.api.SportsWebApi
 import pt.isel.ls.sports.data.SportsDatabase
 
 /**

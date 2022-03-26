@@ -173,4 +173,5 @@ interface SportsDatabase {
      * @return list of activities
      */
     fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?): List<Activity>
+    // TODO: 26/03/2022 Maybe change orderBy type to Boolean or Enum
 }

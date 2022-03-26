@@ -5,7 +5,6 @@ import java.sql.Connection
 import java.sql.ResultSet
 import kotlin.test.assertEquals
 
-
 /**
  * Traverses both mock and real tables while asserting that
  * number of rows and columns are the same.
@@ -14,19 +13,19 @@ import kotlin.test.assertEquals
  * @param rowAssertionCb Callback for assertion of mock and real row data
  */
 fun tableAsserter(
-	mockTable: Array<Array<Any>>,
-	rs: ResultSet,
-	rowAssertionCb: (Array<Any>, ResultSet) -> Unit
+    mockTable: Array<Array<Any>>,
+    rs: ResultSet,
+    rowAssertionCb: (Array<Any>, ResultSet) -> Unit
 ) {
-	val mockTableIt = mockTable.iterator()
+    val mockTableIt = mockTable.iterator()
 
-	while (rs.next().also { assertEquals(it, mockTableIt.hasNext()) }) {
-		val mockRow = mockTableIt.next()
+    while (rs.next().also { assertEquals(it, mockTableIt.hasNext()) }) {
+        val mockRow = mockTableIt.next()
 
-		assertEquals(mockRow.size, rs.metaData.columnCount)
+        assertEquals(mockRow.size, rs.metaData.columnCount)
 
-		rowAssertionCb(mockRow, rs)
-	}
+        rowAssertionCb(mockRow, rs)
+    }
 }
 
 /**
@@ -34,10 +33,10 @@ fun tableAsserter(
  * @param filepath path of the script to run
  */
 fun Connection.runScript(filepath: String) {
-	File(filepath)
-		.readText()
-		.also {
-			this.prepareStatement(it)
-				.executeUpdate()
-		}
+    File(filepath)
+        .readText()
+        .also {
+            this.prepareStatement(it)
+                .executeUpdate()
+        }
 }

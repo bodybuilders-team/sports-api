@@ -1,10 +1,10 @@
 package pt.isel.ls.sports.data
 
-import pt.isel.ls.sports.AppError
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
+import pt.isel.ls.sports.errors.SportsError
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
@@ -48,7 +48,7 @@ class SportsDataMem : SportsDatabase {
      * @return user object
      */
     override fun getUser(uid: Int): User {
-        return users[uid] ?: throw AppError.notFound("User with id $uid not found")
+        return users[uid] ?: throw SportsError.notFound("User with id $uid not found")
     }
 
     /**
@@ -81,7 +81,7 @@ class SportsDataMem : SportsDatabase {
      * @return uid
      */
     override fun getUID(token: String): Int {
-        return userTokens[token] ?: throw AppError.notFound("User with the token $token not found")
+        return userTokens[token] ?: throw SportsError.notFound("User with the token $token not found")
     }
 
     /**
@@ -97,7 +97,7 @@ class SportsDataMem : SportsDatabase {
     override fun createNewRoute(startLocation: String, endLocation: String, distance: Int, uid: Int): Int {
         val identifier = routesLastValue.getAndIncrement()
 
-        if (users[uid] == null) throw AppError.notFound("User with id $uid not found") // TODO: 23/03/2022 this VS. getUser(uid)
+        if (users[uid] == null) throw SportsError.notFound("User with id $uid not found") // TODO: 23/03/2022 this VS. getUser(uid)
 
         routes[identifier] =
             Route(id = identifier, start_location = startLocation, end_location = endLocation, distance, uid)
@@ -113,7 +113,7 @@ class SportsDataMem : SportsDatabase {
      * @return the route object
      */
     override fun getRoute(rid: Int): Route {
-        return routes[rid] ?: throw AppError.notFound("Route with id $rid not found")
+        return routes[rid] ?: throw SportsError.notFound("Route with id $rid not found")
     }
 
     /**
@@ -137,7 +137,7 @@ class SportsDataMem : SportsDatabase {
     override fun createNewSport(name: String, description: String, uid: Int): Int {
         val identifier = sportsLastValue.getAndIncrement()
 
-        if (users[uid] == null) throw AppError.notFound("User with id $uid not found") // TODO: 23/03/2022 this VS. getUser(uid)
+        if (users[uid] == null) throw SportsError.notFound("User with id $uid not found") // TODO: 23/03/2022 this VS. getUser(uid)
 
         sports[identifier] = Sport(id = identifier, name, description, uid)
 
@@ -152,7 +152,7 @@ class SportsDataMem : SportsDatabase {
      * @return the sport object
      */
     override fun getSport(sid: Int): Sport {
-        return sports[sid] ?: throw AppError.notFound("Sport with id $sid not found")
+        return sports[sid] ?: throw SportsError.notFound("Sport with id $sid not found")
     }
 
     /**
@@ -191,7 +191,7 @@ class SportsDataMem : SportsDatabase {
      * @return the activity object
      */
     override fun getActivity(aid: Int): Activity {
-        return activities[aid] ?: throw AppError.notFound("Activity with id $aid not found")
+        return activities[aid] ?: throw SportsError.notFound("Activity with id $aid not found")
     }
 
     /**
@@ -200,7 +200,7 @@ class SportsDataMem : SportsDatabase {
      * @param aid activity's unique identifier
      */
     override fun deleteActivity(aid: Int) {
-        activities.remove(aid) ?: throw AppError.notFound("Activity with id $aid not found")
+        activities.remove(aid) ?: throw SportsError.notFound("Activity with id $aid not found")
     }
 
     /**
