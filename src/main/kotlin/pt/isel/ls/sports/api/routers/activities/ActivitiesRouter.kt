@@ -91,7 +91,6 @@ class ActivitiesRouter(private val services: SportsServices) {
         return Response(OK).json(MessageResponse("Activity deleted"))
     }.getOrElse(::getErrorResponse)
 
-    // TODO: 24/03/2022 Add skip and limit for pagination with search
     /**
      * Gets all activities, given some parameters in the request query.
      * @param request HTTP request
@@ -103,8 +102,10 @@ class ActivitiesRouter(private val services: SportsServices) {
 
         val date = request.query("date")
         val rid = request.query("rid")?.toInt()
+        val skip = request.query("skip")?.toInt()
+        val limit = request.query("limit")?.toInt()
 
-        val activities = services.getActivities(sid, orderBy, date, rid)
+        val activities = services.getActivities(sid, orderBy, date, rid, limit, skip)
 
         return Response(OK).json(activities)
     }.getOrElse(::getErrorResponse)

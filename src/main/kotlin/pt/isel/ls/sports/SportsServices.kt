@@ -1,6 +1,7 @@
 package pt.isel.ls.sports
 
 import pt.isel.ls.sports.api.routers.users.CreateUserResponse
+import pt.isel.ls.sports.data.SortOrder
 import pt.isel.ls.sports.data.SportsDatabase
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
@@ -190,11 +191,20 @@ class SportsServices(private val db: SportsDatabase) {
      * @param orderBy order by duration time, only has two possible values - "ascending" or "descending"
      * @param date activity date (optional)
      * @param rid route's unique identifier (optional)
+     * @param limit limits the number of results returned (optional)
+     * @param skip skips the number of results provided (optional)
      *
      * @return list of activities identifiers
      */
-    fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?): List<Activity> {
-        return db.getActivities(sid, orderBy, date, rid)
+    fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?, limit: Int?, skip: Int?): List<Activity> {
+        val order =
+            if (orderBy == "ascending")
+                SortOrder.ASCENDING
+            else
+                SortOrder.DESCENDING
+
+        return db.getActivities(sid, order, date, rid)
+            .run { return@run subList(fromIndex = skip ?: 0, toIndex = (limit ?: lastIndex) + 1) }
     }
 
     /**

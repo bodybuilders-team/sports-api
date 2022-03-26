@@ -235,13 +235,18 @@ class SportsDataMem : SportsDatabase {
      *
      * @return list of activities identifiers
      */
-    override fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?): List<Activity> {
-        // TODO: 23/03/2022 Check ifs
-        // TODO: 23/03/2022 Order by
-        return activities.filter {
-            it.value.sid == sid &&
-                (if (date != null) it.value.date == date else true) &&
-                (if (rid != null) it.value.rid == rid else true)
-        }.values.toList()
-    }
+    override fun getActivities(sid: Int, orderBy: SortOrder, date: String?, rid: Int?) =
+        activities
+            .filter {
+                it.value.sid == sid &&
+                    it.value.date == date &&
+                    it.value.rid == rid
+            }
+            .values.toList()
+            .sortedWith(
+                if (orderBy == SortOrder.ASCENDING)
+                    compareBy { it.duration }
+                else
+                    compareByDescending { it.duration }
+            )
 }

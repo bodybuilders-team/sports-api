@@ -1,12 +1,13 @@
 package pt.isel.ls
 
+import pt.isel.ls.sports.data.SortOrder
 import pt.isel.ls.sports.data.SportsDataMem
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.SportsError
-import java.util.*
+import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -387,7 +388,7 @@ class SportsDataMemTests {
 
         db.activities[1] = Activity(1, "2022-11-20", "72:44:63.903", 1, 1, 1)
 
-        val activities = db.getActivities(sid = 1, "descending", "2022-11-20", rid = 1)
+        val activities = db.getActivities(sid = 1, SortOrder.ASCENDING, "2022-11-20", rid = 1)
 
         assertEquals(listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 1, 1)), activities)
     }

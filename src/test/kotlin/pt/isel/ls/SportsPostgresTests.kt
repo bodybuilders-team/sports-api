@@ -1,6 +1,7 @@
 package pt.isel.ls
 
 import org.postgresql.ds.PGSimpleDataSource
+import pt.isel.ls.sports.data.SortOrder
 import pt.isel.ls.sports.data.SportsPostgres
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
@@ -253,7 +254,7 @@ class SportsPostgresTests {
             val rs = stm.executeQuery()
 
             val mockTable: Array<Array<Any>> = arrayOf(
-                arrayOf(2, "2022-11-05", "14:66:27.903", 1, 1, 1)
+                arrayOf(4, "2022-11-05", "14:66:27.903", 1, 1, 1)
             )
 
             tableAsserter(mockTable, rs) { mockRow, row ->
@@ -272,7 +273,7 @@ class SportsPostgresTests {
     @Test
     fun `getActivity returns the activity object`() {
         val activity = SportsPostgres.getActivity(1)
-        assertEquals(Activity(1, "2022-11-20", "72:44:63.903", 1, 2, 1), activity)
+        assertEquals(Activity(1, "2022-11-20", "72:44:63.903", 1, 1, null), activity)
     }
 
     @Test
@@ -297,8 +298,8 @@ class SportsPostgresTests {
 
     @Test
     fun `getSportActivities returns the activities list`() {
-        val activities = SportsPostgres.getSportActivities(2)
-        assertEquals(listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 2, 1)), activities)
+        val activities = SportsPostgres.getSportActivities(1)
+        assertEquals(listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 1, null)), activities)
     }
 
     // getUserActivities
@@ -306,15 +307,32 @@ class SportsPostgresTests {
     @Test
     fun `getUserActivities returns the activities list`() {
         val activities = SportsPostgres.getUserActivities(1)
-        assertEquals(listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 2, 1)), activities)
+        assertEquals(listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 1, null)), activities)
     }
 
     // getActivities
 
     @Test
-    fun `getActivities returns the activities list`() {
-        val activities = SportsPostgres.getActivities(sid = 2, "descending", "2022-11-20", rid = 1)
-        assertEquals(listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 2, 1)), activities)
+    fun `getActivities with descending order returns the activities list`() {
+        val activities = SportsPostgres.getActivities(sid = 2, SortOrder.DESCENDING, "2022-11-21", rid = 1)
+
+        val mockActivities = listOf(
+            Activity(id = 3, date = "2022-11-21", duration = "50:24:26.263", uid = 3, sid = 2, rid = 1),
+            Activity(id = 2, date = "2022-11-21", duration = "10:10:10.100", uid = 2, sid = 2, rid = 1)
+        )
+        assertEquals(mockActivities, activities)
+    }
+
+    @Test
+    fun `getActivities with ascending order returns the activities list`() {
+        val activities = SportsPostgres.getActivities(sid = 2, SortOrder.ASCENDING, "2022-11-21", rid = 1)
+
+        val mockActivities = listOf(
+            Activity(id = 2, date = "2022-11-21", duration = "10:10:10.100", uid = 2, sid = 2, rid = 1),
+            Activity(id = 3, date = "2022-11-21", duration = "50:24:26.263", uid = 3, sid = 2, rid = 1)
+
+        )
+        assertEquals(mockActivities, activities)
     }
 
     // TODO: 26/03/2022 Add more tests (synchronize with SportDataMemTests?)

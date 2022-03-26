@@ -8,6 +8,7 @@ import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.SportsError
 import java.sql.Date
 import java.sql.PreparedStatement
+import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 import java.sql.Types
@@ -69,11 +70,7 @@ object SportsPostgres : SportsDatabase {
             val rs = stm.executeQuery()
 
             if (rs.next())
-                return User(
-                    id = rs.getInt(1),
-                    name = rs.getString(2),
-                    email = rs.getString(3)
-                )
+                return getUserFromTable(rs)
             else
                 throw SportsError.notFound("User with id $uid not found")
         }
@@ -97,17 +94,22 @@ object SportsPostgres : SportsDatabase {
             val users = mutableListOf<User>()
 
             while (rs.next())
-                users.add(
-                    User(
-                        id = rs.getInt(1),
-                        name = rs.getString(2),
-                        email = rs.getString(3)
-                    )
-                )
+                users.add(getUserFromTable(rs))
 
             return users
         }
     }
+
+    /**
+     * Gets a User object from a ResultSet.
+     * @param rs table
+     * @return user
+     */
+    private fun getUserFromTable(rs: ResultSet) = User(
+        id = rs.getInt(1),
+        name = rs.getString(2),
+        email = rs.getString(3)
+    )
 
     /**
      * Creates a user token and associates it with the [uid].
@@ -214,13 +216,7 @@ object SportsPostgres : SportsDatabase {
             val rs = stm.executeQuery()
 
             if (rs.next())
-                return Route(
-                    id = rs.getInt(1),
-                    start_location = rs.getString(2),
-                    end_location = rs.getString(3),
-                    distance = rs.getInt(4),
-                    uid = rs.getInt(5)
-                )
+                return getRouteFromTable(rs)
             else
                 throw SportsError.notFound("Route with id $rid not found")
         }
@@ -245,18 +241,25 @@ object SportsPostgres : SportsDatabase {
 
             while (rs.next())
                 routes.add(
-                    Route(
-                        id = rs.getInt(1),
-                        start_location = rs.getString(2),
-                        end_location = rs.getString(3),
-                        distance = rs.getInt(4),
-                        uid = rs.getInt(5)
-                    )
+                    getRouteFromTable(rs)
                 )
 
             return routes
         }
     }
+
+    /**
+     * Gets a Route object from a ResultSet.
+     * @param rs table
+     * @return route
+     */
+    private fun getRouteFromTable(rs: ResultSet) = Route(
+        id = rs.getInt(1),
+        start_location = rs.getString(2),
+        end_location = rs.getString(3),
+        distance = rs.getInt(4),
+        uid = rs.getInt(5)
+    )
 
     /**
      * Create a new sport.
@@ -309,12 +312,7 @@ object SportsPostgres : SportsDatabase {
             val rs = stm.executeQuery()
 
             if (rs.next())
-                return Sport(
-                    id = rs.getInt(1),
-                    name = rs.getString(2),
-                    description = rs.getString(3),
-                    uid = rs.getInt(4)
-                )
+                return getSportFromTable(rs)
             else
                 throw SportsError.notFound("Sport with id $sid not found")
         }
@@ -339,17 +337,24 @@ object SportsPostgres : SportsDatabase {
 
             while (rs.next())
                 sports.add(
-                    Sport(
-                        id = rs.getInt(1),
-                        name = rs.getString(2),
-                        description = rs.getString(3),
-                        uid = rs.getInt(4)
-                    )
+                    getSportFromTable(rs)
                 )
 
             return sports
         }
     }
+
+    /**
+     * Gets a Sport object from a ResultSet.
+     * @param rs table
+     * @return sport
+     */
+    private fun getSportFromTable(rs: ResultSet) = Sport(
+        id = rs.getInt(1),
+        name = rs.getString(2),
+        description = rs.getString(3),
+        uid = rs.getInt(4)
+    )
 
     /**
      * Create a new activity.
@@ -406,14 +411,7 @@ object SportsPostgres : SportsDatabase {
             val rs = stm.executeQuery()
 
             if (rs.next())
-                return Activity(
-                    id = rs.getInt(1),
-                    date = rs.getDate(2).toString(),
-                    duration = rs.getString(3),
-                    uid = rs.getInt(4),
-                    sid = rs.getInt(5),
-                    rid = rs.getInt(6)
-                )
+                return getActivityFromTable(rs)
             else
                 throw SportsError.notFound("Activity with id $aid not found")
         }
@@ -491,7 +489,7 @@ object SportsPostgres : SportsDatabase {
      *
      * @return list of activities identifiers
      */
-    override fun getActivities(sid: Int, orderBy: String, date: String?, rid: Int?): List<Activity> {
+    override fun getActivities(sid: Int, orderBy: SortOrder, date: String?, rid: Int?): List<Activity> {
         dataSource.connection.use { conn ->
             val stm = conn.prepareStatement(
                 """
@@ -499,7 +497,7 @@ object SportsPostgres : SportsDatabase {
                 FROM activities
                 WHERE sid = ? AND date = ? AND rid = ?
                 ORDER BY duration 
-                """.trimIndent() + if (orderBy == "ascending") "ASC" else "DESC"
+                """.trimIndent() + orderBy.str
             )
             stm.setInt(1, sid)
             stm.setDate(2, Date.valueOf(date))
@@ -524,18 +522,25 @@ object SportsPostgres : SportsDatabase {
         val rs = stm.executeQuery()
         val activities = mutableListOf<Activity>()
 
-        while (rs.next())
+        while (rs.next()) {
             activities.add(
-                Activity(
-                    id = rs.getInt(1),
-                    date = rs.getDate(2).toString(),
-                    duration = rs.getString(3),
-                    uid = rs.getInt(4),
-                    sid = rs.getInt(5),
-                    rid = rs.getInt(6)
-                )
+                getActivityFromTable(rs)
             )
-
+        }
         return activities
     }
+
+    /**
+     * Gets an Activity object from a ResultSet.
+     * @param rs table
+     * @return activity
+     */
+    private fun getActivityFromTable(rs: ResultSet) = Activity(
+        id = rs.getInt(1),
+        date = rs.getDate(2).toString(),
+        duration = rs.getString(3),
+        uid = rs.getInt(4),
+        sid = rs.getInt(5),
+        rid = rs.getInt(6).let { if (rs.wasNull()) null else it }
+    )
 }

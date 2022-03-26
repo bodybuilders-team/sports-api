@@ -19,4 +19,6 @@ VALUES ('Odivelas', 'Chelas', 150, 1),
        ('Lisboa', 'Porto', 1500, 3);
 
 INSERT INTO activities(date, duration, uid, sid, rid)
-VALUES (date '2022-11-20', '72:44:63.903', 1, 2, 1);
+VALUES (date '2022-11-20', '72:44:63.903', 1, 1, NULL),
+       (date '2022-11-21', '10:10:10.100', 2, 2, 1),
+       (date '2022-11-21', '50:24:26.263', 3, 2, 1);
