@@ -1,3 +1,5 @@
+@file:Suppress("EqualsOrHashCode")
+
 package pt.isel.ls.sports.errors
 
 import kotlinx.serialization.Serializable
@@ -15,7 +17,7 @@ import org.http4k.core.Status
  */
 @Serializable
 data class SportsError(val code: Int, val name: String, val description: String, var extraInfo: String? = null) :
-    Throwable() {
+    Exception() {
 
     companion object {
         fun badRequest(extraInfo: String? = null) =
@@ -35,6 +37,12 @@ data class SportsError(val code: Int, val name: String, val description: String,
 
         fun noCredentials(extraInfo: String? = null) =
             SportsError(1005, "NO_CREDENTIALS", "No credentials were provided", extraInfo)
+
+        fun invalidArgument(extraInfo: String? = null): Throwable =
+            SportsError(1006, "INVALID_ARGUMENT", "An argument is invalid", extraInfo)
+
+        fun forbidden(extraInfo: String? = null): Throwable =
+            SportsError(1007, "FORBIDDEN", "User is not authorized", extraInfo)
     }
 
     /**
@@ -43,9 +51,13 @@ data class SportsError(val code: Int, val name: String, val description: String,
      */
     private fun getStatus(): Status = when (this) {
         badRequest() -> Status.BAD_REQUEST
-        invalidCredentials() -> Status.UNAUTHORIZED
         notFound() -> Status.NOT_FOUND
         databaseError() -> Status.INTERNAL_SERVER_ERROR
+        internalError() -> Status.INTERNAL_SERVER_ERROR
+        invalidCredentials() -> Status.UNAUTHORIZED
+        noCredentials() -> Status.BAD_REQUEST
+        invalidArgument() -> Status.BAD_REQUEST
+        forbidden() -> Status.FORBIDDEN
         else -> Status.INTERNAL_SERVER_ERROR
     }
 

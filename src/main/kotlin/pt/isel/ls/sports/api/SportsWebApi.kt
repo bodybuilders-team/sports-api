@@ -4,11 +4,11 @@ import org.http4k.core.HttpHandler
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import pt.isel.ls.sports.SportsServices
 import pt.isel.ls.sports.api.routers.activities.ActivitiesRouter
 import pt.isel.ls.sports.api.routers.routes.RoutesRouter
 import pt.isel.ls.sports.api.routers.sports.SportsRouter
 import pt.isel.ls.sports.api.routers.users.UsersRouter
+import pt.isel.ls.sports.services.SportsServices
 
 /**
  * Represents the Sports API Web API.

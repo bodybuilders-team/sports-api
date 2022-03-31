@@ -1,5 +1,6 @@
 package pt.isel.ls
 
+import org.http4k.core.Request
 import java.io.File
 import java.sql.Connection
 import java.sql.ResultSet
@@ -40,3 +41,20 @@ fun Connection.runScript(filepath: String) {
                 .executeUpdate()
         }
 }
+
+/**
+ * Sets body of the request as JSON with given data and content type header
+ * @param requestBody JSON data
+ * @return Request with JSON body
+ */
+fun Request.json(requestBody: String) =
+    this.header("Content-Type", "application/json")
+        .body(requestBody)
+
+/**
+ * Set request bearer token in authorization header
+ * @param token bearer token
+ * @return Request with bearer token
+ */
+fun Request.token(token: String): Request =
+    this.header("Authorization", "Bearer $token")

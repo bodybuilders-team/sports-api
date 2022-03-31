@@ -11,13 +11,13 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import pt.isel.ls.sports.SportsServices
 import pt.isel.ls.sports.api.routers.utils.MessageResponse
 import pt.isel.ls.sports.api.routers.utils.json
 import pt.isel.ls.sports.api.routers.utils.pathOrThrow
 import pt.isel.ls.sports.api.routers.utils.queryOrThrow
 import pt.isel.ls.sports.api.routers.utils.tokenOrThrow
 import pt.isel.ls.sports.errors.getErrorResponse
+import pt.isel.ls.sports.services.SportsServices
 import pt.isel.ls.sports.toIntOrThrow
 
 /**
@@ -84,9 +84,10 @@ class ActivitiesRouter(private val services: SportsServices) {
      * @return HTTP response
      */
     private fun deleteActivity(request: Request): Response = runCatching {
+        val token = request.tokenOrThrow()
         val aid = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
 
-        services.deleteActivity(aid)
+        services.deleteActivity(token, aid)
 
         return Response(OK).json(MessageResponse("Activity deleted"))
     }.getOrElse(::getErrorResponse)
@@ -107,6 +108,6 @@ class ActivitiesRouter(private val services: SportsServices) {
 
         val activities = services.getActivities(sid, orderBy, date, rid, limit, skip)
 
-        return Response(OK).json(activities)
+        return Response(OK).json(ActivitiesResponse(activities))
     }.getOrElse(::getErrorResponse)
 }

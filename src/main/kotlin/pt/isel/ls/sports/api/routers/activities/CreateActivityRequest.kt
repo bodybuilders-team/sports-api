@@ -15,5 +15,5 @@ data class CreateActivityRequest(
     val date: String,
     val duration: String,
     val sid: Int,
-    val rid: Int?
+    val rid: Int? = null
 )

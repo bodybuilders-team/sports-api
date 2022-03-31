@@ -7,11 +7,9 @@ import kotlinx.serialization.Serializable
  *
  * @property name name of the sport
  * @property description description of the sport (optional)
- * @property uid unique identifier of the user who created the sport
  */
 @Serializable
 data class CreateSportRequest(
     val name: String,
-    val description: String?,
-    val uid: Int
+    val description: String? = null
 )

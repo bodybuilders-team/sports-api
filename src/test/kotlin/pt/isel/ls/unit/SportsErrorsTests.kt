@@ -1,4 +1,4 @@
-package pt.isel.ls
+package pt.isel.ls.unit
 
 import org.http4k.core.Body
 import org.http4k.core.Status

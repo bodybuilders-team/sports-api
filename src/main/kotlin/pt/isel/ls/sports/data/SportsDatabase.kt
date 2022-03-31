@@ -9,7 +9,6 @@ import pt.isel.ls.sports.domain.User
  * Sports API database representation.
  */
 interface SportsDatabase {
-
     // ------------ Users ------------
 
     /**
@@ -20,7 +19,9 @@ interface SportsDatabase {
      *
      * @return user's unique identifier
      */
-    fun createNewUser(name: String, email: String): Int
+    fun createNewUser(name: String, email: String): Int {
+        return 0
+    }
 
     /**
      * Gets the user identified by [uid].
@@ -91,13 +92,13 @@ interface SportsDatabase {
     /**
      * Create a new sport.
      *
+     * @param uid user's unique identifier
      * @param name the sport's name
      * @param description the sport's description
-     * @param uid user's unique identifier
      *
      * @return the sport's unique identifier
      */
-    fun createNewSport(name: String, description: String, uid: Int): Int
+    fun createNewSport(uid: Int, name: String, description: String? = null): Int
 
     /**
      * Get a sport.
@@ -128,7 +129,7 @@ interface SportsDatabase {
      *
      * @return activity's unique identifier
      */
-    fun createNewActivity(date: String, duration: String, uid: Int, sid: Int, rid: Int?): Int
+    fun createNewActivity(uid: Int, date: String, duration: String, sid: Int, rid: Int? = null): Int
 
     /**
      * Get the detailed information of an activity.
@@ -172,5 +173,57 @@ interface SportsDatabase {
      *
      * @return list of activities
      */
-    fun getActivities(sid: Int, orderBy: SortOrder, date: String?, rid: Int?): List<Activity>
+    fun getActivities(
+        sid: Int,
+        orderBy: SortOrder,
+        date: String? = null,
+        rid: Int? = null,
+        skip: Int? = null,
+        limit: Int? = null
+    ): List<Activity>
+
+    /**
+     * Verifies if a user exists with the given [email]
+     *
+     * @param email user's email
+     *
+     * @return true if the user exists, false otherwise
+     */
+    fun hasUserWithEmail(email: String): Boolean
+
+    /**
+     * Verifies if a user exists with the given [uid]
+     *
+     * @param uid user's unique identifier
+     *
+     * @return true if the user exists, false otherwise
+     */
+    fun hasUser(uid: Int): Boolean
+
+    /**
+     * Verifies if a sport exists with the given [sid]
+     *
+     * @param sid sport's unique identifier
+     *
+     * @return true if the sport exists, false otherwise
+     */
+    fun hasSport(sid: Int): Boolean
+
+    /**
+     * Verifies if a route exists with the given [rid]
+     *
+     * @param rid route's unique identifier
+     *
+     * @return true if the route exists, false otherwise
+     */
+    fun hasRoute(rid: Int): Boolean
+
+    /**
+     * Verifies if an activity exists with the given [aid]
+     *
+     * @param aid activity's unique identifier
+     *
+     * @return true if the activity exists, false otherwise
+     */
+    fun hasActivity(aid: Int): Boolean
 }

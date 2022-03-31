@@ -10,11 +10,12 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import pt.isel.ls.sports.SportsServices
+import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
 import pt.isel.ls.sports.api.routers.utils.json
 import pt.isel.ls.sports.api.routers.utils.pathOrThrow
 import pt.isel.ls.sports.api.routers.utils.tokenOrThrow
 import pt.isel.ls.sports.errors.getErrorResponse
+import pt.isel.ls.sports.services.SportsServices
 import pt.isel.ls.sports.toIntOrThrow
 
 /**
@@ -67,7 +68,7 @@ class SportsRouter(private val services: SportsServices) {
     private fun getSports(request: Request): Response = runCatching {
         val sports = services.getAllSports()
 
-        return Response(OK).json(sports)
+        return Response(OK).json(SportsResponse(sports))
     }.getOrElse(::getErrorResponse)
 
     /**
@@ -88,6 +89,6 @@ class SportsRouter(private val services: SportsServices) {
 
         val activities = services.getSportActivities(sid)
 
-        return Response(OK).json(activities)
+        return Response(OK).json(ActivitiesResponse(activities))
     }.getOrElse(::getErrorResponse)
 }

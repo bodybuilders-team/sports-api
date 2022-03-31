@@ -59,9 +59,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UsersResponse'
         500:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
@@ -122,9 +120,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Activity'
+                $ref: '#/components/schemas/ActivitiesResponse'
         400:
           description: Invalid user id
           content:
@@ -173,9 +169,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Route'
+                $ref: '#/components/schemas/RoutesResponse'
         500:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
@@ -255,9 +249,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Sport'
+                $ref: '#/components/schemas/SportsResponse'
         500:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
@@ -341,9 +333,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Activity'
+                $ref: '#/components/schemas/ActivitiesResponse'
         400:
           description: Invalid sport id
           content:
@@ -412,7 +402,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteActivityResponse'
+                $ref: '#/components/schemas/MessageResponse'
         400:
           description: Invalid activity id
           content:
@@ -468,9 +458,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Activity'
+                $ref: '#/components/schemas/ActivitiesResponse'
         400:
           description: Invalid query params
           content:
@@ -503,6 +491,46 @@ components:
             $ref: '#/components/schemas/AppError'
 
   schemas:
+    UsersResponse:
+      type: object
+      required:
+        - users
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    RoutesResponse:
+      type: object
+      required:
+        - routes
+      properties:
+        routes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Route'
+
+    SportsResponse:
+      type: object
+      required:
+        - sports
+      properties:
+        sports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sport'
+
+    ActivitiesResponse:
+      type: object
+      required:
+        - activities
+      properties:
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+
     CreateUserResponse:
       type: object
       required:
@@ -513,7 +541,7 @@ components:
           type: integer
           description: User Id
         token:
-          type: String
+          type: string
           description: User Token
 
     CreateRouteResponse:
@@ -543,7 +571,7 @@ components:
           type: integer
           description: Activity Id
 
-    DeleteActivityResponse:
+    MessageResponse:
       type: object
       required:
         - id
@@ -551,8 +579,6 @@ components:
         message:
           type: string
           description: Message
-          enum:
-            - Activity deleted
 
     AppError:
       type: object

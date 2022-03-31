@@ -5,6 +5,7 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import pt.isel.ls.sports.api.SportsWebApi
 import pt.isel.ls.sports.data.SportsDatabase
+import pt.isel.ls.sports.services.SportsServices
 
 /**
  * Represents a Sports API application server.

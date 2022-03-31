@@ -1,23 +1,29 @@
-package pt.isel.ls
+package pt.isel.ls.unit
 
-import org.junit.Test
-import pt.isel.ls.sports.SportsServices
 import pt.isel.ls.sports.data.SportsDataMem
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.SportsError
+import pt.isel.ls.sports.services.SportsServices
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class SportsServicesTests {
 
-    // createNewUser
+    private var db: SportsDataMem = SportsDataMem()
 
+    @BeforeTest
+    fun initializeDataMem() {
+        db = SportsDataMem()
+    }
+
+    // createNewUser
     @Test
     fun `createNewUser creates user correctly in the database`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val createUserResponse = services.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -30,7 +36,6 @@ class SportsServicesTests {
 
     @Test
     fun `createNewUser returns correct identifier`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val createUserResponse1 = services.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -46,7 +51,6 @@ class SportsServicesTests {
 
     @Test
     fun `getUser returns the user object`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val user = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -58,7 +62,6 @@ class SportsServicesTests {
 
     @Test
     fun `getUser throws SportsError (Not Found) if the user with the uid doesn't exist`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         assertFailsWith<SportsError> {
@@ -70,7 +73,6 @@ class SportsServicesTests {
 
     @Test
     fun `getAllUsers returns list of user objects`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -86,17 +88,13 @@ class SportsServicesTests {
 
     @Test
     fun `getAllUsers with no created users returns empty list`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         assertEquals(emptyList(), services.getAllUsers())
     }
 
-    // createNewRoute
-
     @Test
     fun `createNewRoute creates route correctly in the database`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -104,12 +102,11 @@ class SportsServicesTests {
 
         val rid = services.createNewRoute(token, "Odivelas", "Chelas", 0.150)
 
-        assertEquals(Route(rid, "Odivelas", "Chelas", 150, 1), db.getRoute(rid))
+        assertEquals(Route(rid, "Odivelas", "Chelas", 0.15, 1), db.getRoute(rid))
     }
 
     @Test
     fun `createNewRoute returns correct identifier`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -128,7 +125,6 @@ class SportsServicesTests {
 
     @Test
     fun `getRoute returns the route object`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -136,12 +132,11 @@ class SportsServicesTests {
 
         val rid = services.createNewRoute(token, "Odivelas", "Chelas", 0.150)
 
-        assertEquals(Route(1, "Odivelas", "Chelas", 150, 1), db.getRoute(rid))
+        assertEquals(Route(1, "Odivelas", "Chelas", 0.15, 1), db.getRoute(rid))
     }
 
     @Test
     fun `getRoute throws SportsError (Not Found) if the route with the rid doesn't exist`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         assertFailsWith<SportsError> {
@@ -153,15 +148,14 @@ class SportsServicesTests {
 
     @Test
     fun `getAllRoutes returns list of all route objects`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.createUserToken(uid)
 
-        val route0 = Route(1, "Odivelas", "Chelas", 150, 1)
-        val route1 = Route(2, "Chelas", "Odivelas", 150, 1)
-        val route2 = Route(3, "Lisboa", "Chelas", 150, 1)
+        val route0 = Route(1, "Odivelas", "Chelas", 0.15, 1)
+        val route1 = Route(2, "Chelas", "Odivelas", 0.15, 1)
+        val route2 = Route(3, "Lisboa", "Chelas", 0.15, 1)
 
         db.createNewRoute("Odivelas", "Chelas", 150, 1)
         db.createNewRoute("Chelas", "Odivelas", 150, 1)
@@ -172,7 +166,6 @@ class SportsServicesTests {
 
     @Test
     fun `getAllRoutes with no created routes returns empty list`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         assertEquals(emptyList(), services.getAllRoutes())
@@ -182,7 +175,6 @@ class SportsServicesTests {
 
     @Test
     fun `createNewSport creates sport correctly in the database`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -190,12 +182,11 @@ class SportsServicesTests {
 
         val sid = services.createNewSport(token, "Powerlifting", "Get big")
 
-        assertEquals(Sport(sid, "Powerlifting", "Get big", uid), db.getSport(sid))
+        assertEquals(Sport(sid, "Powerlifting", uid, "Get big"), db.getSport(sid))
     }
 
     @Test
     fun `createNewSport returns correct identifier`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
@@ -214,19 +205,17 @@ class SportsServicesTests {
 
     @Test
     fun `getSport returns the sport object`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        db.createNewSport("Soccer", "Kick a ball to score a goal", 1)
+        db.createNewSport(1, "Soccer", "Kick a ball to score a goal")
 
-        assertEquals(Sport(1, "Soccer", "Kick a ball to score a goal", 1), services.getSport(1))
+        assertEquals(Sport(1, "Soccer", 1, "Kick a ball to score a goal"), services.getSport(1))
     }
 
     @Test
     fun `getSport throws SportsError (Not Found) if the sport with the sid doesn't exist`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         assertFailsWith<SportsError> {
@@ -238,25 +227,23 @@ class SportsServicesTests {
 
     @Test
     fun `getAllSports returns list of all sport objects`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        db.createNewSport("Soccer", "Kick a ball to score a goal", 1)
-        db.createNewSport("Powerlifting", "Get big", 1)
-        db.createNewSport("Basketball", "Shoot a ball through a hoop", 1)
+        db.createNewSport(1, "Soccer", "Kick a ball to score a goal")
+        db.createNewSport(1, "Powerlifting", "Get big")
+        db.createNewSport(1, "Basketball", "Shoot a ball through a hoop")
 
-        val sport1 = Sport(1, "Soccer", "Kick a ball to score a goal", 1)
-        val sport2 = Sport(2, "Powerlifting", "Get big", 1)
-        val sport3 = Sport(3, "Basketball", "Shoot a ball through a hoop", 1)
+        val sport1 = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
+        val sport2 = Sport(2, "Powerlifting", 1, "Get big")
+        val sport3 = Sport(3, "Basketball", 1, "Shoot a ball through a hoop")
 
         assertEquals(listOf(sport1, sport2, sport3), services.getAllSports())
     }
 
     @Test
     fun `getAllSports with no created sports returns empty list`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         assertEquals(emptyList(), services.getAllSports())
@@ -266,34 +253,31 @@ class SportsServicesTests {
 
     @Test
     fun `createNewActivity creates activity correctly in the database`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.createUserToken(uid)
 
-        val aid = services.createNewActivity(token, "2022-11-05", "14:66:27.903", 1, 1)
+        val aid = services.createNewActivity(token, "2022-11-05", "14:59:27.903", 1, 1)
 
-        assertEquals(Activity(aid, "2022-11-05", "14:66:27.903", 1, 1, 1), db.getActivity(aid))
+        assertEquals(Activity(aid, "2022-11-05", "14:59:27.903", 1, 1, 1), db.getActivity(aid))
     }
 
     // getActivity
 
     @Test
     fun `getActivity returns the activity object`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        db.createNewActivity("2022-11-20", "72:44:63.903", 1, 1, 1)
+        db.createNewActivity(1, "2022-11-20", "20:23:55.263", 1, 1)
 
-        assertEquals(Activity(1, "2022-11-20", "72:44:63.903", 1, 1, 1), services.getActivity(1))
+        assertEquals(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1), services.getActivity(1))
     }
 
     @Test
     fun `getActivity throws SportsError (Not Found) if the activity with the sid doesn't exist`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         assertFailsWith<SportsError> {
@@ -305,14 +289,13 @@ class SportsServicesTests {
 
     @Test
     fun `deleteActivity deletes an activity successfully`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
-        db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val mockId = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.createUserToken(mockId)
+        db.createNewActivity(1, "2022-11-20", "23:44:59.903", 1, 1)
 
-        db.createNewActivity("2022-11-20", "72:44:63.903", 1, 1, 1)
-
-        services.deleteActivity(1)
+        services.deleteActivity(token, 1)
 
         assertFailsWith<SportsError> {
             db.getActivity(1)
@@ -323,51 +306,48 @@ class SportsServicesTests {
 
     @Test
     fun `getSportActivities returns the activities list`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        db.createNewSport("Soccer", "Kick a ball to score a goal", 1)
+        db.createNewSport(1, "Soccer", "Kick a ball to score a goal")
 
-        db.createNewActivity("2022-11-20", "72:44:63.903", 1, 1, 1)
+        db.createNewActivity(1, "2022-11-20", "20:23:55.263", 1, 1)
 
         val activities = services.getSportActivities(1)
 
-        assertEquals(listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 1, 1)), activities)
+        assertEquals(listOf(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)), activities)
     }
 
     // getUserActivities
 
     @Test
     fun `getUserActivities returns the activities list`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        db.createNewSport("Soccer", "Kick a ball to score a goal", 1)
+        db.createNewSport(1, "Soccer", "Kick a ball to score a goal")
 
-        db.createNewActivity("2022-11-20", "72:44:63.903", 1, 1, 1)
+        db.createNewActivity(1, "2022-11-20", "20:23:55.263", 1, 1)
 
         val activities = services.getUserActivities(1)
 
-        assertEquals(listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 1, 1)), activities)
+        assertEquals(listOf(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)), activities)
     }
 
     // getActivities
 
     @Test
     fun `getActivities returns the activities list`() {
-        val db = SportsDataMem()
         val services = SportsServices(db)
 
         db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        db.createNewSport("Soccer", "Kick a ball to score a goal", 1)
+        db.createNewSport(1, "Soccer", "Kick a ball to score a goal")
 
-        db.createNewActivity("2022-11-20", "72:44:63.903", 1, 1, 1)
+        db.createNewActivity(1, "2022-11-20", "20:23:55.263", 1, 1)
 
         val activities = services.getActivities(sid = 1, "descending", "2022-11-20", rid = 1, limit = null, skip = null)
 
-        assertEquals(listOf(Activity(1, "2022-11-20", "72:44:63.903", 1, 1, 1)), activities)
+        assertEquals(listOf(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)), activities)
     }
 
     // TODO: 26/03/2022 Add more tests

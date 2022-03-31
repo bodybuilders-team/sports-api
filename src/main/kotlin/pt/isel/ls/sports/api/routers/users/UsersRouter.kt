@@ -10,10 +10,11 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import pt.isel.ls.sports.SportsServices
+import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
 import pt.isel.ls.sports.api.routers.utils.json
 import pt.isel.ls.sports.api.routers.utils.pathOrThrow
 import pt.isel.ls.sports.errors.getErrorResponse
+import pt.isel.ls.sports.services.SportsServices
 import pt.isel.ls.sports.toIntOrThrow
 
 /**
@@ -38,7 +39,7 @@ class UsersRouter(private val services: SportsServices) {
         "/" bind POST to ::createUser,
         "/" bind GET to ::getUsers,
         "/{id}" bind GET to ::getUser,
-        "/{id}" bind GET to ::getUserActivities,
+        "/{id}/activities" bind GET to ::getUserActivities,
     )
 
     /**
@@ -61,7 +62,7 @@ class UsersRouter(private val services: SportsServices) {
     private fun getUsers(request: Request): Response = runCatching {
         val users = services.getAllUsers()
 
-        return Response(OK).json(users)
+        return Response(OK).json(UsersResponse(users))
     }.getOrElse(::getErrorResponse)
 
     /**
@@ -87,6 +88,6 @@ class UsersRouter(private val services: SportsServices) {
 
         val activities = services.getUserActivities(uid)
 
-        return Response(OK).json(activities)
+        return Response(OK).json(ActivitiesResponse(activities))
     }.getOrElse(::getErrorResponse)
 }

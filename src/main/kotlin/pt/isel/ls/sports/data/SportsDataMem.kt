@@ -35,6 +35,13 @@ class SportsDataMem : SportsDatabase {
     override fun createNewUser(name: String, email: String): Int {
         val id = usersLastValue.getAndIncrement()
 
+        if (users.containsKey(id))
+            throw SportsError.internalError()
+
+        // TODO Maybe meter hashset para optimizar pesquisa
+        if (users.values.any { it.email == email })
+            throw SportsError.invalidArgument("Email already in use")
+
         users[id] = User(id, name, email)
 
         return id
@@ -50,6 +57,21 @@ class SportsDataMem : SportsDatabase {
     override fun getUser(uid: Int): User {
         return users[uid] ?: throw SportsError.notFound("User with id $uid not found")
     }
+
+    override fun hasUserWithEmail(email: String): Boolean =
+        users.values.any { it.email == email }
+
+    override fun hasUser(uid: Int): Boolean =
+        users.containsKey(uid)
+
+    override fun hasSport(sid: Int): Boolean =
+        sports.containsKey(sid)
+
+    override fun hasRoute(rid: Int): Boolean =
+        routes.containsKey(rid)
+
+    override fun hasActivity(aid: Int): Boolean =
+        activities.containsKey(aid)
 
     /**
      * Get the list of users.
@@ -100,7 +122,7 @@ class SportsDataMem : SportsDatabase {
         if (users[uid] == null) throw SportsError.notFound("User with id $uid not found") // TODO: 23/03/2022 this VS. getUser(uid)
 
         routes[id] =
-            Route(id, start_location = startLocation, end_location = endLocation, distance, uid)
+            Route(id, start_location = startLocation, end_location = endLocation, distance / 1000.0, uid)
 
         return id
     }
@@ -134,12 +156,12 @@ class SportsDataMem : SportsDatabase {
      *
      * @return the sport's unique identifier
      */
-    override fun createNewSport(name: String, description: String, uid: Int): Int {
+    override fun createNewSport(uid: Int, name: String, description: String?): Int {
         val id = sportsLastValue.getAndIncrement()
 
         if (users[uid] == null) throw SportsError.notFound("User with id $uid not found") // TODO: 23/03/2022 this VS. getUser(uid)
 
-        sports[id] = Sport(id = id, name, description, uid)
+        sports[id] = Sport(id = id, name, uid, description)
 
         return id
     }
@@ -175,7 +197,7 @@ class SportsDataMem : SportsDatabase {
      *
      * @return activity's unique identifier
      */
-    override fun createNewActivity(date: String, duration: String, uid: Int, sid: Int, rid: Int?): Int {
+    override fun createNewActivity(uid: Int, date: String, duration: String, sid: Int, rid: Int?): Int {
         val id = activitiesLastValue.getAndIncrement()
 
         activities[id] = Activity(id = id, date, duration, uid, sid, rid)
@@ -235,7 +257,7 @@ class SportsDataMem : SportsDatabase {
      *
      * @return list of activities identifiers
      */
-    override fun getActivities(sid: Int, orderBy: SortOrder, date: String?, rid: Int?) =
+    override fun getActivities(sid: Int, orderBy: SortOrder, date: String?, rid: Int?, skip: Int?, limit: Int?) =
         activities
             .filter {
                 it.value.sid == sid &&

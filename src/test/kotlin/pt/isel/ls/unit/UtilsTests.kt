@@ -1,4 +1,4 @@
-package pt.isel.ls
+package pt.isel.ls.unit
 
 import pt.isel.ls.sports.errors.SportsError
 import pt.isel.ls.sports.substringOrNull
