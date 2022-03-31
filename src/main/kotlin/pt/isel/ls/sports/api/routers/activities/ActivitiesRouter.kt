@@ -40,9 +40,9 @@ class ActivitiesRouter(private val services: SportsServices) {
 
     val routes = routes(
         "/" bind POST to ::createActivity,
+        "/search" bind GET to ::searchActivities,
         "/{id}" bind GET to ::getActivity,
-        "/{id}" bind DELETE to ::deleteActivity,
-        "/search" bind GET to ::searchActivities
+        "/{id}" bind DELETE to ::deleteActivity
     )
 
     /**

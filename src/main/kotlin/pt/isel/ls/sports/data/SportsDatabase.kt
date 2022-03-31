@@ -4,6 +4,7 @@ import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
+import java.util.UUID
 
 /**
  * Sports API database representation.
@@ -42,13 +43,14 @@ interface SportsDatabase {
     // ----------- User Tokens -----------
 
     /**
-     * Creates a user token and associates it with the [uid].
+     * Associates a user [token] with the [uid].
      *
+     * @param token user token
      * @param uid user's identifier
      *
      * @return user's token
      */
-    fun createUserToken(uid: Int): String
+    fun createUserToken(token: UUID, uid: Int): String
 
     /**
      * Gets the uid associated with the [token].

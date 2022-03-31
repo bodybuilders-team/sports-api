@@ -1,8 +1,3 @@
-@file:Suppress(
-    "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted",
-    "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted"
-)
-
 package pt.isel.ls.sports.domain
 
 import kotlinx.serialization.Serializable
@@ -16,10 +11,6 @@ import pt.isel.ls.sports.services.isValidId
  * @property description description of the sport (optional)
  * @property uid unique identifier of the user who created the sport
  */
-@Suppress(
-    "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted",
-    "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted"
-)
 @Serializable
 data class Sport(
     val id: Int,
@@ -34,9 +25,19 @@ data class Sport(
         const val MIN_DESCRIPTION_LENGTH = 0
         const val MAX_DESCRIPTION_LENGTH = 1000
 
+        /**
+         * Checks if a name e valid.
+         * @param name name to check
+         * @return true if its valid
+         */
         fun isValidName(name: String) =
             name.length in MIN_NAME_LENGTH..MAX_NAME_LENGTH
 
+        /**
+         * Checks if a description e valid.
+         * @param description description to check
+         * @return true if its valid
+         */
         fun isValidDescription(description: String) =
             description.length in MIN_DESCRIPTION_LENGTH..MAX_DESCRIPTION_LENGTH
     }

@@ -9,6 +9,9 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
+/**
+ * Represents the Memory implementation of the Sports API database
+ */
 class SportsDataMem : SportsDatabase {
     val tokens = ConcurrentHashMap<String, Int>()
 
@@ -35,12 +38,10 @@ class SportsDataMem : SportsDatabase {
     override fun createNewUser(name: String, email: String): Int {
         val id = usersLastValue.getAndIncrement()
 
-        if (users.containsKey(id))
-            throw SportsError.internalError()
+        check(!users.containsKey(id)) { "Serial ID already exists" }
 
-        // TODO Maybe meter hashset para optimizar pesquisa
         if (users.values.any { it.email == email })
-            throw SportsError.invalidArgument("Email already in use")
+            throw SportsError.conflict("Email already in use")
 
         users[id] = User(id, name, email)
 
@@ -54,9 +55,9 @@ class SportsDataMem : SportsDatabase {
      *
      * @return user object
      */
-    override fun getUser(uid: Int): User {
-        return users[uid] ?: throw SportsError.notFound("User with id $uid not found")
-    }
+    override fun getUser(uid: Int): User =
+        users[uid]
+            ?: throw SportsError.notFound("User with id $uid not found")
 
     override fun hasUserWithEmail(email: String): Boolean =
         users.values.any { it.email == email }
@@ -83,16 +84,17 @@ class SportsDataMem : SportsDatabase {
     }
 
     /**
-     * Creates a user token and associates it with the [uid].
+     * Associates a user [token] with the [uid].
      *
+     * @param token user token
      * @param uid user's identifier
      *
      * @return user's token
      */
-    override fun createUserToken(uid: Int): String {
-        val token = UUID.randomUUID().toString()
-        tokens[token] = uid
-        return token
+    override fun createUserToken(token: UUID, uid: Int): String {
+        val stringToken = token.toString()
+        tokens[stringToken] = uid
+        return stringToken
     }
 
     /**
@@ -119,7 +121,7 @@ class SportsDataMem : SportsDatabase {
     override fun createNewRoute(startLocation: String, endLocation: String, distance: Int, uid: Int): Int {
         val id = routesLastValue.getAndIncrement()
 
-        if (users[uid] == null) throw SportsError.notFound("User with id $uid not found") // TODO: 23/03/2022 this VS. getUser(uid)
+        if (users[uid] == null) throw SportsError.notFound("User with id $uid not found")
 
         routes[id] =
             Route(id, start_location = startLocation, end_location = endLocation, distance / 1000.0, uid)
@@ -159,7 +161,7 @@ class SportsDataMem : SportsDatabase {
     override fun createNewSport(uid: Int, name: String, description: String?): Int {
         val id = sportsLastValue.getAndIncrement()
 
-        if (users[uid] == null) throw SportsError.notFound("User with id $uid not found") // TODO: 23/03/2022 this VS. getUser(uid)
+        if (users[uid] == null) throw SportsError.notFound("User with id $uid not found")
 
         sports[id] = Sport(id = id, name, uid, description)
 

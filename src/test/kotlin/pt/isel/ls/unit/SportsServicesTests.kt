@@ -7,6 +7,7 @@ import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.SportsError
 import pt.isel.ls.sports.services.SportsServices
+import java.util.UUID
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -98,7 +99,7 @@ class SportsServicesTests {
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
 
         val rid = services.createNewRoute(token, "Odivelas", "Chelas", 0.150)
 
@@ -110,7 +111,7 @@ class SportsServicesTests {
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
 
         val rid0 = services.createNewRoute(token, "Odivelas", "Chelas", 0.150)
         val rid1 = services.createNewRoute(token, "Chelas", "Odivelas", 0.150)
@@ -128,7 +129,7 @@ class SportsServicesTests {
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
 
         val rid = services.createNewRoute(token, "Odivelas", "Chelas", 0.150)
 
@@ -151,7 +152,7 @@ class SportsServicesTests {
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.createUserToken(uid)
+        db.createUserToken(UUID.randomUUID(), uid)
 
         val route0 = Route(1, "Odivelas", "Chelas", 0.15, 1)
         val route1 = Route(2, "Chelas", "Odivelas", 0.15, 1)
@@ -178,7 +179,7 @@ class SportsServicesTests {
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
 
         val sid = services.createNewSport(token, "Powerlifting", "Get big")
 
@@ -190,7 +191,7 @@ class SportsServicesTests {
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
 
         val uid1 = services.createNewSport(token, "Powerlifting", "Get big")
         val uid2 = services.createNewSport(token, "Swimming", "Be like a fish")
@@ -256,7 +257,7 @@ class SportsServicesTests {
         val services = SportsServices(db)
 
         val uid = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
 
         val aid = services.createNewActivity(token, "2022-11-05", "14:59:27.903", 1, 1)
 
@@ -292,7 +293,7 @@ class SportsServicesTests {
         val services = SportsServices(db)
 
         val mockId = db.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.createUserToken(mockId)
+        val token = db.createUserToken(UUID.randomUUID(), mockId)
         db.createNewActivity(1, "2022-11-20", "23:44:59.903", 1, 1)
 
         services.deleteActivity(token, 1)

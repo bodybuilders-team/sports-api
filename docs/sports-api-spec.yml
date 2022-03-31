@@ -452,6 +452,22 @@ paths:
           schema:
             type: integer
 
+        - name: limit
+          in: query
+          description: Activities limit
+          required: false
+          schema:
+            type: integer
+
+
+        - name: skip
+          in: query
+          description: Activities skip
+          required: false
+          schema:
+            type: integer
+
+
       responses:
         200:
           description: Activity was found
@@ -745,7 +761,7 @@ components:
         end_location:
           type: string
           description: Route end location
-          example: "Lisboa, Portugal"
+          example: "Lisbon, Portugal"
 
         distance:
           type: number

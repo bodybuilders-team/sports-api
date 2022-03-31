@@ -1,5 +1,3 @@
-@file:Suppress("EqualsOrHashCode")
-
 package pt.isel.ls.sports.errors
 
 import kotlinx.serialization.Serializable
@@ -43,6 +41,9 @@ data class SportsError(val code: Int, val name: String, val description: String,
 
         fun forbidden(extraInfo: String? = null): Throwable =
             SportsError(1007, "FORBIDDEN", "User is not authorized", extraInfo)
+
+        fun conflict(extraInfo: String? = null): Throwable =
+            SportsError(1008, "CONFLICT", "There was a conflict", extraInfo)
     }
 
     /**
@@ -58,6 +59,7 @@ data class SportsError(val code: Int, val name: String, val description: String,
         noCredentials() -> Status.BAD_REQUEST
         invalidArgument() -> Status.BAD_REQUEST
         forbidden() -> Status.FORBIDDEN
+        conflict() -> Status.CONFLICT
         else -> Status.INTERNAL_SERVER_ERROR
     }
 
@@ -79,5 +81,13 @@ data class SportsError(val code: Int, val name: String, val description: String,
         if (this.code != other.code) return false
 
         return true
+    }
+
+    override fun hashCode(): Int {
+        var result = code
+        result = 31 * result + name.hashCode()
+        result = 31 * result + description.hashCode()
+        result = 31 * result + (extraInfo?.hashCode() ?: 0)
+        return result
     }
 }

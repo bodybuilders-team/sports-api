@@ -10,6 +10,7 @@ import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.SportsError
 import pt.isel.ls.tableAsserter
+import java.util.UUID
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -98,7 +99,7 @@ class SportsPostgresTests {
 
     @Test
     fun `createUserToken creates token correctly in the database`() {
-        val token = db.createUserToken(1)
+        val token = db.createUserToken(UUID.randomUUID(), 1)
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM tokens WHERE token = ?")

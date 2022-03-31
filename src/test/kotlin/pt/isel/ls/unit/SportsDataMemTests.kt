@@ -83,7 +83,7 @@ class SportsDataMemTests {
     fun `createUserToken creates token correctly in the database`() {
         db.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        val token = db.createUserToken(1)
+        val token = db.createUserToken(UUID.randomUUID(), 1)
 
         assertEquals(1, db.tokens[token])
     }
@@ -92,10 +92,10 @@ class SportsDataMemTests {
     fun `Having multiple tokens for the same user is allowed`() {
         db.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        val token0 = db.createUserToken(1)
-        val token1 = db.createUserToken(1)
-        val token2 = db.createUserToken(1)
-        val token3 = db.createUserToken(1)
+        val token0 = db.createUserToken(UUID.randomUUID(), 1)
+        val token1 = db.createUserToken(UUID.randomUUID(), 1)
+        val token2 = db.createUserToken(UUID.randomUUID(), 1)
+        val token3 = db.createUserToken(UUID.randomUUID(), 1)
 
         assertEquals(1, db.tokens[token0])
         assertEquals(1, db.tokens[token1])

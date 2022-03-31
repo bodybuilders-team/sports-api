@@ -8,6 +8,7 @@ import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.SportsError
+import java.util.UUID
 
 class SportsServices(private val db: SportsDatabase) {
 
@@ -43,7 +44,7 @@ class SportsServices(private val db: SportsDatabase) {
             throw SportsError.invalidArgument("Email already in use")
 
         val uid = db.createNewUser(name, email)
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
 
         return CreateUserResponse(token, uid)
     }

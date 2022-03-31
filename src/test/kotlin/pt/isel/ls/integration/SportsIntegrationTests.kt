@@ -16,6 +16,7 @@ import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.errors.SportsError
 import pt.isel.ls.sports.services.isValidId
 import pt.isel.ls.token
+import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -27,7 +28,7 @@ class SportsIntegrationTests : IntegrationTests() {
     @Test
     fun `Create new sport with valid data`() {
         val uid = db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
 
         val requestBody = """
             {
@@ -54,7 +55,7 @@ class SportsIntegrationTests : IntegrationTests() {
     @Test
     fun `Create new sport with empty description`() {
         val uid = db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
 
         val requestBody = """
             {
@@ -124,7 +125,7 @@ class SportsIntegrationTests : IntegrationTests() {
     @Test
     fun `Create new sport with invalid data`() {
         val uid = db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
         val requestBody = """
             {
                 "name": "S"
@@ -152,7 +153,7 @@ class SportsIntegrationTests : IntegrationTests() {
 
         val mockSports = listOf(
             CreateSportRequest("Sprint", "100 Meters Sprint"),
-            CreateSportRequest("PowerLifting", "LIGHT WEIGHT BABYYYY"),
+            CreateSportRequest("PowerLifting", "LIGHT WEIGHT BABY!"),
         ).associateBy {
             db.createNewSport(uid, it.name, it.description)
         }

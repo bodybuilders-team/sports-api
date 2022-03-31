@@ -27,15 +27,15 @@ class SportsServer(private val port: Int, private val dataSource: SportsDatabase
      * Starts the server.
      */
     fun start() {
-        println("Starting server on port $port")
         server.start()
+        logger.info("starting server on port $port")
     }
 
     /**
      * Stops the server.
      */
     fun stop() {
-        println("Stopping server")
         server.stop()
+        logger.info("stopping server")
     }
 }

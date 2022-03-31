@@ -8,6 +8,12 @@ enum class SortOrder(val str: String) {
     DESCENDING("DESC");
 
     companion object {
+
+        /**
+         * Parses a string into a SortOrder or null.
+         * @param sortOrder string to parse
+         * @return SortOrder or null
+         */
         fun parse(sortOrder: String): SortOrder? =
             values().firstOrNull { it.name.lowercase() == sortOrder }
     }

@@ -12,7 +12,6 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
-import java.sql.Types
 import java.util.UUID
 
 class SportsPostgres(databaseUrl: String) : SportsDatabase {
@@ -21,7 +20,13 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
         setURL(databaseUrl)
     }
 
-    private fun getConnection(): Connection =
+    /**
+     * Gets a connection and uses it with [block].
+     * @param block a function to process in use
+     * @return the result of block function invoked
+     * @throws SportsError.databaseError if an error occurs while acessing the database
+     */
+    private inline fun <R> useConnection(block: (connection: Connection) -> R): R =
         runCatching {
             dataSource.connection
         }.getOrElse {
@@ -30,7 +35,7 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
                     throw SportsError.databaseError("Error accessing database")
                 else -> throw it
             }
-        }
+        }.use(block)
 
     /**
      * Creates a new user in the database.
@@ -40,8 +45,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return user's unique identifier
      */
-    override fun createNewUser(name: String, email: String): Int {
-        dataSource.connection.use { conn ->
+    override fun createNewUser(name: String, email: String): Int =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 INSERT INTO users(name, email)
@@ -58,7 +63,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
             val generatedKeys = stm.generatedKeys
             return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
         }
-    }
 
     /**
      * Gets the user object.
@@ -67,8 +71,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return user object
      */
-    override fun getUser(uid: Int): User {
-        dataSource.connection.use { conn ->
+    override fun getUser(uid: Int): User =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 SELECT *
@@ -85,90 +89,94 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
             else
                 throw SportsError.notFound("User with id $uid not found")
         }
-    }
 
-    override fun hasUserWithEmail(email: String): Boolean = getConnection().use { conn ->
-        val stm = conn.prepareStatement(
-            """
+    override fun hasUserWithEmail(email: String): Boolean =
+        useConnection { conn ->
+            val stm = conn.prepareStatement(
+                """
                 SELECT *
                 FROM users
                 WHERE email = ?
-            """.trimIndent()
-        )
-        stm.setString(1, email)
+                """.trimIndent()
+            )
+            stm.setString(1, email)
 
-        val rs = stm.executeQuery()
+            val rs = stm.executeQuery()
 
-        return rs.next()
-    }
+            return rs.next()
+        }
 
-    override fun hasUser(uid: Int): Boolean = getConnection().use { conn ->
-        val stm = conn.prepareStatement(
-            """
+    override fun hasUser(uid: Int): Boolean =
+        useConnection { conn ->
+            val stm = conn.prepareStatement(
+                """
                 SELECT *
                 FROM users
                 WHERE id = ?
-            """.trimIndent()
-        )
-        stm.setInt(1, uid)
+                """.trimIndent()
+            )
+            stm.setInt(1, uid)
 
-        val rs = stm.executeQuery()
+            val rs = stm.executeQuery()
 
-        return rs.next()
-    }
+            return rs.next()
+        }
 
-    override fun hasSport(sid: Int): Boolean = getConnection().use { conn ->
-        val stm = conn.prepareStatement(
-            """
+    override fun hasSport(sid: Int): Boolean =
+        useConnection { conn ->
+            val stm = conn.prepareStatement(
+                """
                 SELECT *
                 FROM sports
                 WHERE id = ?
-            """.trimIndent()
-        )
-        stm.setInt(1, sid)
+                """.trimIndent()
+            )
+            stm.setInt(1, sid)
 
-        val rs = stm.executeQuery()
+            val rs = stm.executeQuery()
 
-        return rs.next()
-    }
+            return rs.next()
+        }
 
-    override fun hasRoute(rid: Int): Boolean = getConnection().use { conn ->
-        val stm = conn.prepareStatement(
-            """
+    override fun hasRoute(rid: Int): Boolean =
+        useConnection { conn ->
+            val stm = conn.prepareStatement(
+                """
                 SELECT *
                 FROM routes
                 WHERE id = ?
-            """.trimIndent()
-        )
-        stm.setInt(1, rid)
+                """.trimIndent()
+            )
+            stm.setInt(1, rid)
 
-        val rs = stm.executeQuery()
+            val rs = stm.executeQuery()
 
-        return rs.next()
-    }
+            return rs.next()
+        }
 
-    override fun hasActivity(aid: Int): Boolean = getConnection().use { conn ->
-        val stm = conn.prepareStatement(
-            """
+    override fun hasActivity(aid: Int): Boolean =
+        useConnection { conn ->
+            val stm = conn.prepareStatement(
+                """
                 SELECT *
                 FROM activities
                 WHERE id = ?
-            """.trimIndent()
-        )
-        stm.setInt(1, aid)
+                """.trimIndent()
+            )
+            stm.setInt(1, aid)
 
-        val rs = stm.executeQuery()
+            val rs = stm.executeQuery()
 
-        return rs.next()
-    }
+            return rs.next()
+        }
 
     /**
      * Get the list of users.
      *
      * @return list of user identifiers
      */
-    override fun getAllUsers(): List<User> {
-        dataSource.connection.use { conn ->
+    override fun getAllUsers(): List<User> =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 SELECT *
@@ -184,7 +192,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
 
             return users
         }
-    }
 
     /**
      * Gets a User object from a ResultSet.
@@ -198,29 +205,31 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
     )
 
     /**
-     * Creates a user token and associates it with the [uid].
+     * Associates a user [token] with the [uid].
      *
+     * @param token user token
      * @param uid user's identifier
      *
      * @return user's token
      */
-    override fun createUserToken(uid: Int): String {
-        val token = UUID.randomUUID().toString()
-        dataSource.connection.use { conn ->
+    override fun createUserToken(token: UUID, uid: Int): String =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 INSERT INTO tokens(token, uid)
                 VALUES (?, ?)
                 """.trimIndent()
             )
-            stm.setString(1, token)
+            val stringToken = token.toString()
+
+            stm.setString(1, stringToken)
             stm.setInt(2, uid)
 
             if (stm.executeUpdate() == 0)
                 throw SQLException("Creating token failed, no rows affected.")
+
+            return stringToken
         }
-        return token
-    }
 
     /**
      * Gets the uid associated with the [token].
@@ -229,8 +238,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return uid
      */
-    override fun getUID(token: String): Int {
-        dataSource.connection.use { conn ->
+    override fun getUID(token: String): Int =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 SELECT uid
@@ -247,7 +256,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
             else
                 throw SportsError.notFound("Token $token isn't associated to any user")
         }
-    }
 
     /**
      * Creates a new route.
@@ -259,8 +267,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return the route's unique identifier
      */
-    override fun createNewRoute(startLocation: String, endLocation: String, distance: Int, uid: Int): Int {
-        dataSource.connection.use { conn ->
+    override fun createNewRoute(startLocation: String, endLocation: String, distance: Int, uid: Int): Int =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 INSERT INTO routes(uid, start_location, end_location, distance)
@@ -279,7 +287,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
             val generatedKeys = stm.generatedKeys
             return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
         }
-    }
 
     /**
      * Get the details of a route.
@@ -288,8 +295,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return the route
      */
-    override fun getRoute(rid: Int): Route {
-        dataSource.connection.use { conn ->
+    override fun getRoute(rid: Int): Route =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 SELECT *
@@ -306,15 +313,14 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
             else
                 throw SportsError.notFound("Route with id $rid not found")
         }
-    }
 
     /**
      * Get the list of routes.
      *
      * @return list of route identifiers
      */
-    override fun getAllRoutes(): List<Route> {
-        dataSource.connection.use { conn ->
+    override fun getAllRoutes(): List<Route> =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 SELECT *
@@ -332,7 +338,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
 
             return routes
         }
-    }
 
     /**
      * Gets a Route object from a ResultSet.
@@ -356,8 +361,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return the sport's unique identifier
      */
-    override fun createNewSport(uid: Int, name: String, description: String?): Int {
-        dataSource.connection.use { conn ->
+    override fun createNewSport(uid: Int, name: String, description: String?): Int =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 INSERT INTO sports(name, description, uid)
@@ -375,7 +380,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
             val generatedKeys = stm.generatedKeys
             return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
         }
-    }
 
     /**
      * Get a sport.
@@ -384,8 +388,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return the sport object
      */
-    override fun getSport(sid: Int): Sport {
-        dataSource.connection.use { conn ->
+    override fun getSport(sid: Int): Sport =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 SELECT *
@@ -402,15 +406,14 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
             else
                 throw SportsError.notFound("Sport with id $sid not found")
         }
-    }
 
     /**
      * Get the list of all sports.
      *
      * @return list of identifiers of all sports
      */
-    override fun getAllSports(): List<Sport> {
-        dataSource.connection.use { conn ->
+    override fun getAllSports(): List<Sport> =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 SELECT *
@@ -428,7 +431,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
 
             return sports
         }
-    }
 
     /**
      * Gets a Sport object from a ResultSet.
@@ -453,8 +455,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return activity's unique identifier
      */
-    override fun createNewActivity(uid: Int, date: String, duration: String, sid: Int, rid: Int?): Int {
-        dataSource.connection.use { conn ->
+    override fun createNewActivity(uid: Int, date: String, duration: String, sid: Int, rid: Int?): Int =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 INSERT INTO activities(date, duration, uid, sid, rid)
@@ -474,7 +476,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
             val generatedKeys = stm.generatedKeys
             return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
         }
-    }
 
     /**
      * Get an activity.
@@ -483,8 +484,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return the activity object
      */
-    override fun getActivity(aid: Int): Activity {
-        dataSource.connection.use { conn ->
+    override fun getActivity(aid: Int): Activity =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 SELECT *
@@ -501,7 +502,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
             else
                 throw SportsError.notFound("Activity with id $aid not found")
         }
-    }
 
     /**
      * Delete an activity.
@@ -509,7 +509,7 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      * @param aid activity's unique identifier
      */
     override fun deleteActivity(aid: Int) {
-        dataSource.connection.use { conn ->
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 DELETE FROM activities
@@ -528,8 +528,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return list of identifiers of activities of a sport
      */
-    override fun getSportActivities(sid: Int): List<Activity> {
-        dataSource.connection.use { conn ->
+    override fun getSportActivities(sid: Int): List<Activity> =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 SELECT *
@@ -541,7 +541,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
 
             return getActivities(stm)
         }
-    }
 
     /**
      * Get all the activities made from a user.
@@ -550,8 +549,8 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
      *
      * @return list of identifiers of activities made from a user
      */
-    override fun getUserActivities(uid: Int): List<Activity> {
-        dataSource.connection.use { conn ->
+    override fun getUserActivities(uid: Int): List<Activity> =
+        useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
                 SELECT *
@@ -563,7 +562,6 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
 
             return getActivities(stm)
         }
-    }
 
     /**
      * Get a list with the activities, given the parameters.
@@ -582,30 +580,35 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
         rid: Int?,
         skip: Int?,
         limit: Int?
-    ): List<Activity> {
-        dataSource.connection.use { conn ->
+    ): List<Activity> =
+        useConnection { conn ->
+            val queryDate = if (date != null) "AND date = ?" else ""
+            val queryRid = if (date != null) "AND rid = ?" else ""
+
             val stm = conn.prepareStatement(
                 """
                 SELECT *
                 FROM activities
-                WHERE sid = ? AND date = ? AND rid = ?
+                WHERE sid = ? $queryDate  $queryRid
                 ORDER BY duration ${orderBy.str} 
                 LIMIT ?
                 OFFSET ?
                 """.trimIndent()
             )
             stm.setInt(1, sid)
-            stm.setDate(2, Date.valueOf(date))
 
-            stm.setIntOrNull(3, rid)
+            var counter = 1
+            if (date != null)
+                stm.setDate(++counter, Date.valueOf(date))
 
-            stm.setIntOrNull(4, skip)
+            if (rid != null)
+                stm.setInt(++counter, rid)
 
-            stm.setIntOrNull(5, limit)
+            stm.setIntOrNull(++counter, skip)
+            stm.setIntOrNull(++counter, limit)
 
             return getActivities(stm)
         }
-    }
 
     /**
      * Gets a list of activities returned from the execution of the statement [stm]
@@ -640,15 +643,3 @@ class SportsPostgres(databaseUrl: String) : SportsDatabase {
         rid = rs.getInt(6).let { if (rs.wasNull()) null else it }
     )
 }
-
-private fun PreparedStatement.setStringOrNull(index: Int, value: String?) =
-    when (value) {
-        null -> setNull(index, Types.INTEGER)
-        else -> setString(index, value)
-    }
-
-private fun PreparedStatement.setIntOrNull(index: Int, value: Int?) =
-    when (value) {
-        null -> setNull(index, Types.INTEGER)
-        else -> setInt(index, value)
-    }

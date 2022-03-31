@@ -14,6 +14,7 @@ import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.errors.SportsError
 import pt.isel.ls.sports.services.isValidId
 import pt.isel.ls.token
+import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -25,7 +26,7 @@ class RoutesIntegrationTests : IntegrationTests() {
     @Test
     fun `Create new route with valid data`() {
         val uid = db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
 
         val requestBody = """
             {
@@ -98,7 +99,7 @@ class RoutesIntegrationTests : IntegrationTests() {
     @Test
     fun `Create new route with invalid data`() {
         val uid = db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.createUserToken(uid)
+        val token = db.createUserToken(UUID.randomUUID(), uid)
         val requestBody = """
             {
                 "start_location": "Porto",

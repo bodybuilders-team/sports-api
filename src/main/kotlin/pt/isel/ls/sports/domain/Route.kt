@@ -1,8 +1,3 @@
-@file:Suppress(
-    "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted",
-    "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted"
-)
-
 package pt.isel.ls.sports.domain
 
 import kotlinx.serialization.Serializable
@@ -17,10 +12,6 @@ import pt.isel.ls.sports.services.isValidId
  * @property distance distance between [start_location] and [end_location] in meters
  * @property uid unique identifier of the user who created the route
  */
-@Suppress(
-    "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted",
-    "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted", "BooleanMethodIsAlwaysInverted"
-)
 @Serializable
 data class Route(
     val id: Int,
@@ -30,6 +21,12 @@ data class Route(
     val uid: Int
 ) {
     companion object {
+
+        /**
+         * Checks if a distance e valid.
+         * @param distance distance to check
+         * @return true if its valid
+         */
         fun isValidDistance(distance: Double) =
             distance >= 0
     }
