@@ -1,14 +1,14 @@
 package pt.isel.ls.unit
 
-import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.runScript
+import pt.isel.ls.sports.JDBC_DATABASE_URL_ENV
+import pt.isel.ls.sports.data.AppPostgres
 import pt.isel.ls.sports.data.SortOrder
-import pt.isel.ls.sports.data.SportsPostgres
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.SportsError
+import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.tableAsserter
 import java.util.UUID
 import kotlin.test.BeforeTest
@@ -19,12 +19,10 @@ import kotlin.test.assertFailsWith
 class SportsPostgresTests {
 
     companion object {
-        private val jdbcDatabaseURL: String = System.getenv("JDBC_DATABASE_URL")
-        private val db = SportsPostgres(jdbcDatabaseURL)
+        private val jdbcDatabaseURL: String = System.getenv(JDBC_DATABASE_URL_ENV)
 
-        val dataSource = PGSimpleDataSource().apply {
-            this.setURL(jdbcDatabaseURL)
-        }
+        private val dataSource = AppPostgres.createPostgresDataSource(jdbcDatabaseURL)
+        private val db = AppPostgres(dataSource)
     }
 
     @BeforeTest
@@ -39,7 +37,7 @@ class SportsPostgresTests {
 
     @Test
     fun `createNewUser creates user correctly in the database`() {
-        val uid = db.createNewUser("Paulão", "paulao@mail.com")
+        val uid = db.users.createNewUser("Paulão", "paulao@mail.com")
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM users WHERE id = ?")
@@ -62,15 +60,15 @@ class SportsPostgresTests {
 
     @Test
     fun `getUser returns the user object`() {
-        val user = db.getUser(1)
+        val user = db.users.getUser(1)
 
         assertEquals(User(1, "André Jesus", "A48280@alunos.isel.pt"), user)
     }
 
     @Test
     fun `getUser throws SportsError (Not found) if the user with the uid doesn't exist`() {
-        assertFailsWith<SportsError> {
-            db.getUser(0)
+        assertFailsWith<AppError> {
+            db.users.getUser(0)
         }
     }
 
@@ -84,7 +82,7 @@ class SportsPostgresTests {
             User(3, "Nyckollas Brandão", "A48287@alunos.isel.pt")
         )
 
-        assertEquals(users, db.getAllUsers())
+        assertEquals(users, db.users.getAllUsers())
     }
 
     @Test
@@ -92,14 +90,14 @@ class SportsPostgresTests {
         dataSource.connection.use {
             it.runScript("src/main/sql/cleanData.sql")
         }
-        assertEquals(emptyList(), db.getAllUsers())
+        assertEquals(emptyList(), db.users.getAllUsers())
     }
 
     // createUserToken
 
     @Test
     fun `createUserToken creates token correctly in the database`() {
-        val token = db.createUserToken(UUID.randomUUID(), 1)
+        val token = db.tokens.createUserToken(UUID.randomUUID(), 1)
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM tokens WHERE token = ?")
@@ -115,14 +113,14 @@ class SportsPostgresTests {
 
     @Test
     fun `getUID returns the uid correctly`() {
-        val uid = db.getUID("49698b60-12ca-4df7-8950-d783124f5fas")
+        val uid = db.tokens.getUID("49698b60-12ca-4df7-8950-d783124f5fas")
         assertEquals(1, uid)
     }
 
     @Test
     fun `getUID throws SportsError (Not Found) if the token isn't associated to any user`() {
-        assertFailsWith<SportsError> {
-            db.getUID("T-o-k-e-n")
+        assertFailsWith<AppError> {
+            db.tokens.getUID("T-o-k-e-n")
         }
     }
 
@@ -130,7 +128,7 @@ class SportsPostgresTests {
 
     @Test
     fun `createNewRoute creates route correctly in the database`() {
-        val rid = db.createNewRoute("Odivelas", "Chelas", 150, 1)
+        val rid = db.routes.createNewRoute("Odivelas", "Chelas", 150, 1)
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM routes WHERE id = ?")
@@ -155,14 +153,14 @@ class SportsPostgresTests {
 
     @Test
     fun `getRoute returns the route object`() {
-        val route = db.getRoute(1)
+        val route = db.routes.getRoute(1)
         assertEquals(Route(1, "Odivelas", "Chelas", 0.15, 1), route)
     }
 
     @Test
     fun `getRoute throws SportsError (Not Found) if the route with the rid doesn't exist`() {
-        assertFailsWith<SportsError> {
-            db.getRoute(0)
+        assertFailsWith<AppError> {
+            db.routes.getRoute(0)
         }
     }
 
@@ -176,7 +174,7 @@ class SportsPostgresTests {
             Route(3, "Lisboa", "Porto", 1.5, 3)
         )
 
-        assertEquals(routes, db.getAllRoutes())
+        assertEquals(routes, db.routes.getAllRoutes())
     }
 
     @Test
@@ -184,14 +182,14 @@ class SportsPostgresTests {
         dataSource.connection.use {
             it.runScript("src/main/sql/cleanData.sql")
         }
-        assertEquals(emptyList(), db.getAllRoutes())
+        assertEquals(emptyList(), db.routes.getAllRoutes())
     }
 
     // createNewSport
 
     @Test
     fun `createNewSport creates sport correctly in the database`() {
-        val sid = db.createNewSport(1, "Badminton", "idk")
+        val sid = db.sports.createNewSport(1, "Badminton", "idk")
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM sports WHERE id = ?")
@@ -215,14 +213,14 @@ class SportsPostgresTests {
 
     @Test
     fun `getSport returns the sport object`() {
-        val sport = db.getSport(1)
+        val sport = db.sports.getSport(1)
         assertEquals(Sport(1, "Soccer", 1, "Kick a ball to score a goal"), sport)
     }
 
     @Test
     fun `getSport throws SportsError (Not Found) if the sport with the sid doesn't exist`() {
-        assertFailsWith<SportsError> {
-            db.getSport(0)
+        assertFailsWith<AppError> {
+            db.sports.getSport(0)
         }
     }
 
@@ -236,7 +234,7 @@ class SportsPostgresTests {
             Sport(3, "Basketball", 3, "Shoot a ball through a hoop")
         )
 
-        assertEquals(sports, db.getAllSports())
+        assertEquals(sports, db.sports.getAllSports())
     }
 
     @Test
@@ -244,14 +242,14 @@ class SportsPostgresTests {
         dataSource.connection.use {
             it.runScript("src/main/sql/cleanData.sql")
         }
-        assertEquals(emptyList(), db.getAllSports())
+        assertEquals(emptyList(), db.sports.getAllSports())
     }
 
     // createNewActivity
 
     @Test
     fun `createNewActivity creates activity correctly in the database`() {
-        val aid = db.createNewActivity(1, "2022-11-05", "14:59:27.903", 1, 1)
+        val aid = db.activities.createNewActivity(1, "2022-11-05", "14:59:27.903", 1, 1)
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM activities WHERE id = ?")
@@ -277,14 +275,14 @@ class SportsPostgresTests {
 
     @Test
     fun `getActivity returns the activity object`() {
-        val activity = db.getActivity(1)
+        val activity = db.activities.getActivity(1)
         assertEquals(Activity(1, "2022-11-20", "23:44:59.903", 1, 1, null), activity)
     }
 
     @Test
     fun `getActivity throws SportsError (Not Found) if the activity with the sid doesn't exist`() {
-        assertFailsWith<SportsError> {
-            db.getActivity(0)
+        assertFailsWith<AppError> {
+            db.activities.getActivity(0)
         }
     }
 
@@ -292,10 +290,10 @@ class SportsPostgresTests {
 
     @Test
     fun `deleteActivity deletes an activity successfully`() {
-        db.deleteActivity(1)
+        db.activities.deleteActivity(1)
 
-        assertFailsWith<SportsError> {
-            db.getActivity(1)
+        assertFailsWith<AppError> {
+            db.activities.getActivity(1)
         }
     }
 
@@ -303,7 +301,7 @@ class SportsPostgresTests {
 
     @Test
     fun `getSportActivities returns the activities list`() {
-        val activities = db.getSportActivities(1)
+        val activities = db.sports.getSportActivities(1)
         assertEquals(listOf(Activity(1, "2022-11-20", "23:44:59.903", 1, 1, null)), activities)
     }
 
@@ -311,7 +309,7 @@ class SportsPostgresTests {
 
     @Test
     fun `getUserActivities returns the activities list`() {
-        val activities = db.getUserActivities(1)
+        val activities = db.users.getUserActivities(1)
         assertEquals(listOf(Activity(1, "2022-11-20", "23:44:59.903", 1, 1, null)), activities)
     }
 
@@ -319,7 +317,7 @@ class SportsPostgresTests {
 
     @Test
     fun `getActivities with descending order returns the activities list`() {
-        val activities = db.getActivities(sid = 2, SortOrder.DESCENDING, "2022-11-21", rid = 1)
+        val activities = db.activities.getActivities(sid = 2, SortOrder.DESCENDING, "2022-11-21", rid = 1)
 
         val mockActivities = listOf(
             Activity(id = 3, date = "2022-11-21", duration = "20:23:55.263", uid = 3, sid = 2, rid = 1),
@@ -330,7 +328,7 @@ class SportsPostgresTests {
 
     @Test
     fun `getActivities with ascending order returns the activities list`() {
-        val activities = db.getActivities(sid = 2, SortOrder.ASCENDING, "2022-11-21", rid = 1)
+        val activities = db.activities.getActivities(sid = 2, SortOrder.ASCENDING, "2022-11-21", rid = 1)
 
         val mockActivities = listOf(
             Activity(id = 2, date = "2022-11-21", duration = "10:10:10.100", uid = 2, sid = 2, rid = 1),

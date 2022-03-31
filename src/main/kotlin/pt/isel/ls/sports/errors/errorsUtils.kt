@@ -10,7 +10,7 @@ import org.http4k.core.Response
  */
 fun getErrorResponse(error: Throwable): Response =
     when (error) {
-        is SerializationException -> SportsError.badRequest(error.message)
-        is SportsError -> error
-        else -> SportsError.internalError(error.message)
+        is SerializationException -> AppError.badRequest(error.message)
+        is AppError -> error
+        else -> AppError.internalError(error.message)
     }.toResponse()

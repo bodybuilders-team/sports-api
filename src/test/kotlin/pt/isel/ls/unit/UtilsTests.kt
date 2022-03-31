@@ -1,6 +1,6 @@
 package pt.isel.ls.unit
 
-import pt.isel.ls.sports.errors.SportsError
+import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.substringOrNull
 import pt.isel.ls.sports.toIntOrThrow
 import kotlin.test.Test
@@ -33,7 +33,7 @@ class UtilsTests {
 
     @Test
     fun `toIntOrThrow throws SportsError badRequest if string is not a valid representation of a number`() {
-        assertFailsWith<SportsError> {
+        assertFailsWith<AppError> {
             "Hey".toIntOrThrow()
         }
     }

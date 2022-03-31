@@ -11,7 +11,7 @@ import pt.isel.ls.sports.api.routers.routes.CreateRouteRequest
 import pt.isel.ls.sports.api.routers.routes.CreateRouteResponse
 import pt.isel.ls.sports.api.routers.routes.RoutesResponse
 import pt.isel.ls.sports.domain.Route
-import pt.isel.ls.sports.errors.SportsError
+import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.isValidId
 import pt.isel.ls.token
 import java.util.UUID
@@ -25,13 +25,13 @@ class RoutesIntegrationTests : IntegrationTests() {
 
     @Test
     fun `Create new route with valid data`() {
-        val uid = db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.createUserToken(UUID.randomUUID(), uid)
+        val uid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
+        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
 
         val requestBody = """
             {
                 "start_location": "Porto",
-                "end_location": "Lisboa",
+                "end_location": "Lisbon",
                 "distance": 10
             }
         """.trimIndent()
@@ -47,7 +47,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 val rid = Json.decodeFromString<CreateRouteResponse>(bodyString()).rid
                 assertTrue(isValidId(rid))
 
-                assertTrue(db.hasRoute(rid))
+                assertTrue(db.routes.hasRoute(rid))
             }
     }
 
@@ -56,7 +56,7 @@ class RoutesIntegrationTests : IntegrationTests() {
         val requestBody = """
             {
                 "start_location": "Porto",
-                "end_location": "Lisboa",
+                "end_location": "Lisbon",
                 "distance": 10
             }
         """.trimIndent()
@@ -68,8 +68,8 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<SportsError>(bodyString())
-                assertEquals(SportsError.noCredentials(), error)
+                val error = Json.decodeFromString<AppError>(bodyString())
+                assertEquals(AppError.noCredentials(), error)
             }
     }
 
@@ -78,7 +78,7 @@ class RoutesIntegrationTests : IntegrationTests() {
         val requestBody = """
             {
                 "start_location": "Porto",
-                "end_location": "Lisboa",
+                "end_location": "Lisbon",
                 "distance": 10
             }
         """.trimIndent()
@@ -91,19 +91,19 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.UNAUTHORIZED, status)
 
-                val error = Json.decodeFromString<SportsError>(bodyString())
-                assertEquals(SportsError.invalidCredentials(), error)
+                val error = Json.decodeFromString<AppError>(bodyString())
+                assertEquals(AppError.invalidCredentials(), error)
             }
     }
 
     @Test
     fun `Create new route with invalid data`() {
-        val uid = db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.createUserToken(UUID.randomUUID(), uid)
+        val uid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
+        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
         val requestBody = """
             {
                 "start_location": "Porto",
-                "end_location": "Lisboa"
+                "end_location": "Lisbon"
             }
         """.trimIndent()
 
@@ -115,8 +115,8 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<SportsError>(bodyString())
-                assertEquals(SportsError.badRequest(), error)
+                val error = Json.decodeFromString<AppError>(bodyString())
+                assertEquals(AppError.badRequest(), error)
             }
     }
 
@@ -124,12 +124,12 @@ class RoutesIntegrationTests : IntegrationTests() {
 
     @Test
     fun `Get all routes`() {
-        val uid = db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
+        val uid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
 
         val mockRoutes = listOf(
             CreateRouteRequest(
                 "Russia",
-                "Lisboa",
+                "Lisbon",
                 10.0
             ),
             CreateRouteRequest(
@@ -138,7 +138,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 10.0
             )
         ).associateBy {
-            db.createNewRoute(it.start_location, it.end_location, (it.distance * 1000).toInt(), uid)
+            db.routes.createNewRoute(it.start_location, it.end_location, (it.distance * 1000).toInt(), uid)
         }
 
         val request = Request(Method.GET, "$uriPrefix/routes")
@@ -180,12 +180,12 @@ class RoutesIntegrationTests : IntegrationTests() {
     fun `Get route by id`() {
         val mockRoute = CreateRouteRequest(
             "Russia",
-            "Lisboa",
+            "Lisbon",
             10.0
         )
 
-        val mockId = db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val rid = db.createNewRoute(
+        val mockId = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
+        val rid = db.routes.createNewRoute(
             mockRoute.start_location,
             mockRoute.end_location,
             (mockRoute.distance * 1000.0).toInt(),
@@ -217,8 +217,8 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<SportsError>(bodyString())
-                assertEquals(SportsError.invalidArgument(), error)
+                val error = Json.decodeFromString<AppError>(bodyString())
+                assertEquals(AppError.invalidArgument(), error)
             }
     }
 
@@ -231,8 +231,8 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.NOT_FOUND, status)
 
-                val error = Json.decodeFromString<SportsError>(bodyString())
-                assertEquals(SportsError.notFound(), error)
+                val error = Json.decodeFromString<AppError>(bodyString())
+                assertEquals(AppError.notFound(), error)
             }
     }
 }

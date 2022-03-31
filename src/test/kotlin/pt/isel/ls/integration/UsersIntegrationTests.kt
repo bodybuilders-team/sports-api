@@ -12,7 +12,7 @@ import pt.isel.ls.sports.api.routers.users.CreateUserRequest
 import pt.isel.ls.sports.api.routers.users.CreateUserResponse
 import pt.isel.ls.sports.api.routers.users.UsersResponse
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.SportsError
+import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.isValidId
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -42,13 +42,13 @@ class UsersIntegrationTests : IntegrationTests() {
                 val uid = Json.decodeFromString<CreateUserResponse>(bodyString()).uid
                 assertTrue(isValidId(uid))
 
-                assertTrue(db.hasUser(uid))
+                assertTrue(db.users.hasUser(uid))
             }
     }
 
     @Test
     fun `Create new user with already existing email`() {
-        db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
+        db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
 
         val requestBody = """
             {
@@ -65,8 +65,8 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<SportsError>(bodyString())
-                assertEquals(SportsError.invalidArgument(), error)
+                val error = Json.decodeFromString<AppError>(bodyString())
+                assertEquals(AppError.invalidArgument(), error)
             }
     }
 
@@ -86,8 +86,8 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<SportsError>(bodyString())
-                assertEquals(SportsError.invalidArgument(), error)
+                val error = Json.decodeFromString<AppError>(bodyString())
+                assertEquals(AppError.invalidArgument(), error)
             }
     }
 
@@ -99,7 +99,7 @@ class UsersIntegrationTests : IntegrationTests() {
             CreateUserRequest("Johnny", "JohnnyBoy@gmail.com"),
             CreateUserRequest("Jesus", "JesusSenpai@gmail.com")
         ).associateBy {
-            db.createNewUser(it.name, it.email)
+            db.users.createNewUser(it.name, it.email)
         }
 
         val request = Request(Method.GET, "$uriPrefix/users")
@@ -139,7 +139,7 @@ class UsersIntegrationTests : IntegrationTests() {
     @Test
     fun `Get user by id`() {
         val mockUser = CreateUserRequest("Johnny", "JohnnyBoy@gmail.com")
-        val mockId = db.createNewUser(mockUser.name, mockUser.email)
+        val mockId = db.users.createNewUser(mockUser.name, mockUser.email)
 
         val request = Request(Method.GET, "$uriPrefix/users/$mockId")
 
@@ -163,8 +163,8 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<SportsError>(bodyString())
-                assertEquals(SportsError.invalidArgument(), error)
+                val error = Json.decodeFromString<AppError>(bodyString())
+                assertEquals(AppError.invalidArgument(), error)
             }
     }
 
@@ -177,8 +177,8 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.NOT_FOUND, status)
 
-                val error = Json.decodeFromString<SportsError>(bodyString())
-                assertEquals(SportsError.notFound(), error)
+                val error = Json.decodeFromString<AppError>(bodyString())
+                assertEquals(AppError.notFound(), error)
             }
     }
 
@@ -186,14 +186,14 @@ class UsersIntegrationTests : IntegrationTests() {
 
     @Test
     fun `Get user activities by valid id`() {
-        val mockUid = db.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val sid = db.createNewSport(mockUid, "Running", "Running")
+        val mockUid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
+        val sid = db.sports.createNewSport(mockUid, "Running", "Running")
 
         val mockActivities = listOf(
             CreateActivityRequest("2019-01-01", "23:59:59.555", sid),
             CreateActivityRequest("2019-01-02", "20:59:59.555", sid)
         ).associateBy {
-            db.createNewActivity(mockUid, it.date, it.duration, it.sid)
+            db.activities.createNewActivity(mockUid, it.date, it.duration, it.sid)
         }
 
         val request = Request(Method.GET, "$uriPrefix/users/$mockUid/activities")
@@ -226,8 +226,8 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<SportsError>(bodyString())
-                assertEquals(SportsError.invalidArgument(), error)
+                val error = Json.decodeFromString<AppError>(bodyString())
+                assertEquals(AppError.invalidArgument(), error)
             }
     }
 }

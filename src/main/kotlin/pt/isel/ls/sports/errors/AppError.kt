@@ -14,36 +14,36 @@ import org.http4k.core.Status
  * @property extraInfo other info related to the error
  */
 @Serializable
-data class SportsError(val code: Int, val name: String, val description: String, var extraInfo: String? = null) :
+data class AppError(val code: Int, val name: String, val description: String, var extraInfo: String? = null) :
     Exception() {
 
     companion object {
         fun badRequest(extraInfo: String? = null) =
-            SportsError(1000, "BAD_REQUEST", "The request was malformed", extraInfo)
+            AppError(1000, "BAD_REQUEST", "The request was malformed", extraInfo)
 
         fun notFound(extraInfo: String? = null) =
-            SportsError(1001, "NOT_FOUND", "The requested resource was not found", extraInfo)
+            AppError(1001, "NOT_FOUND", "The requested resource was not found", extraInfo)
 
         fun databaseError(extraInfo: String? = null) =
-            SportsError(1002, "DATABASE_ERROR", "There was an error accessing the database", extraInfo)
+            AppError(1002, "DATABASE_ERROR", "There was an error accessing the database", extraInfo)
 
         fun internalError(extraInfo: String? = null) =
-            SportsError(1003, "INTERNAL_ERROR", "There was an internal error", extraInfo)
+            AppError(1003, "INTERNAL_ERROR", "There was an internal error", extraInfo)
 
         fun invalidCredentials(extraInfo: String? = null) =
-            SportsError(1004, "INVALID_CREDENTIALS", "The provided credentials are invalid", extraInfo)
+            AppError(1004, "INVALID_CREDENTIALS", "The provided credentials are invalid", extraInfo)
 
         fun noCredentials(extraInfo: String? = null) =
-            SportsError(1005, "NO_CREDENTIALS", "No credentials were provided", extraInfo)
+            AppError(1005, "NO_CREDENTIALS", "No credentials were provided", extraInfo)
 
         fun invalidArgument(extraInfo: String? = null): Throwable =
-            SportsError(1006, "INVALID_ARGUMENT", "An argument is invalid", extraInfo)
+            AppError(1006, "INVALID_ARGUMENT", "An argument is invalid", extraInfo)
 
         fun forbidden(extraInfo: String? = null): Throwable =
-            SportsError(1007, "FORBIDDEN", "User is not authorized", extraInfo)
+            AppError(1007, "FORBIDDEN", "User is not authorized", extraInfo)
 
         fun conflict(extraInfo: String? = null): Throwable =
-            SportsError(1008, "CONFLICT", "There was a conflict", extraInfo)
+            AppError(1008, "CONFLICT", "There was a conflict", extraInfo)
     }
 
     /**
@@ -76,7 +76,7 @@ data class SportsError(val code: Int, val name: String, val description: String,
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
 
-        other as SportsError
+        other as AppError
 
         if (this.code != other.code) return false
 

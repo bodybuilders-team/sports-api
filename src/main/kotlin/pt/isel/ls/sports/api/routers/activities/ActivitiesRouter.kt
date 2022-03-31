@@ -17,7 +17,7 @@ import pt.isel.ls.sports.api.routers.utils.pathOrThrow
 import pt.isel.ls.sports.api.routers.utils.queryOrThrow
 import pt.isel.ls.sports.api.routers.utils.tokenOrThrow
 import pt.isel.ls.sports.errors.getErrorResponse
-import pt.isel.ls.sports.services.SportsServices
+import pt.isel.ls.sports.services.ActivitiesServices
 import pt.isel.ls.sports.toIntOrThrow
 
 /**
@@ -26,7 +26,7 @@ import pt.isel.ls.sports.toIntOrThrow
  * @property services router services
  * @property routes router routes
  */
-class ActivitiesRouter(private val services: SportsServices) {
+class ActivitiesRouter(private val services: ActivitiesServices) {
 
     companion object {
 
@@ -35,7 +35,7 @@ class ActivitiesRouter(private val services: SportsServices) {
          * @param services router services
          * @return router routes
          */
-        fun routes(services: SportsServices) = ActivitiesRouter(services).routes
+        fun routes(services: ActivitiesServices) = ActivitiesRouter(services).routes
     }
 
     val routes = routes(

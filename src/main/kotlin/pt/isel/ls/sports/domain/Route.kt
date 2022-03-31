@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import pt.isel.ls.sports.services.isValidId
 
 /**
- * Route  representation.
+ * Route representation.
  *
  * @property id route unique identifier
  * @property start_location start location of the route
