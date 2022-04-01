@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.database.sections.users
+package pt.isel.ls.sports.database.tables.users
 
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.database.postgres.AbstractPostgresDB

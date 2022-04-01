@@ -21,6 +21,7 @@ private fun AppError.getStatus(): Status = when (this) {
     is AppError.InvalidArgument -> Status.BAD_REQUEST
     is AppError.Forbidden -> Status.FORBIDDEN
     is AppError.Conflict -> Status.CONFLICT
+    else -> Status.INTERNAL_SERVER_ERROR
 }
 
 /**

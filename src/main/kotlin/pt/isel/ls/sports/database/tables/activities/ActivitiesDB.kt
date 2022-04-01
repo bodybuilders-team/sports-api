@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.database.sections.activities
+package pt.isel.ls.sports.database.tables.activities
 
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity

@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.database.sections.sports
+package pt.isel.ls.sports.database.tables.sports
 
 import pt.isel.ls.sports.database.memory.AppMemoryDBSource
 import pt.isel.ls.sports.domain.Sport

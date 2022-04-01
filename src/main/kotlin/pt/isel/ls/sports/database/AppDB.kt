@@ -1,10 +1,10 @@
 package pt.isel.ls.sports.database
 
-import pt.isel.ls.sports.database.sections.activities.ActivitiesDB
-import pt.isel.ls.sports.database.sections.routes.RoutesDB
-import pt.isel.ls.sports.database.sections.sports.SportsDB
-import pt.isel.ls.sports.database.sections.tokens.TokensDB
-import pt.isel.ls.sports.database.sections.users.UsersDB
+import pt.isel.ls.sports.database.tables.activities.ActivitiesDB
+import pt.isel.ls.sports.database.tables.routes.RoutesDB
+import pt.isel.ls.sports.database.tables.sports.SportsDB
+import pt.isel.ls.sports.database.tables.tokens.TokensDB
+import pt.isel.ls.sports.database.tables.users.UsersDB
 
 /**
  * App database representation, an aggregate of all database sections.

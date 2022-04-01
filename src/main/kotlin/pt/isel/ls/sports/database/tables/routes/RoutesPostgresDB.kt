@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.database.sections.routes
+package pt.isel.ls.sports.database.tables.routes
 
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.database.postgres.AbstractPostgresDB

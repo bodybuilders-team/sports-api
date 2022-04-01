@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.database.sections.tokens
+package pt.isel.ls.sports.database.tables.tokens
 
 import pt.isel.ls.sports.database.memory.AppMemoryDBSource
 import pt.isel.ls.sports.errors.AppError

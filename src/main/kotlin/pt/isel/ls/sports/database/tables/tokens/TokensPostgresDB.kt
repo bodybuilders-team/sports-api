@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.database.sections.tokens
+package pt.isel.ls.sports.database.tables.tokens
 
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.database.postgres.AbstractPostgresDB

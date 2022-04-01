@@ -13,6 +13,7 @@ import pt.isel.ls.sports.services.utils.isValidId
  * @property uid unique identifier of the user who created the route
  */
 @Serializable
+// TODO change to startLocation
 data class Route(
     val id: Int,
     val start_location: String,

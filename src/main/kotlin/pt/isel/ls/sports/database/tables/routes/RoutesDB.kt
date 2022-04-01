@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.database.sections.routes
+package pt.isel.ls.sports.database.tables.routes
 
 import pt.isel.ls.sports.domain.Route
 

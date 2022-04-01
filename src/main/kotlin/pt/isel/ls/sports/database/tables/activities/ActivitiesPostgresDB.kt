@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.database.sections.activities
+package pt.isel.ls.sports.database.tables.activities
 
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.database.postgres.AbstractPostgresDB

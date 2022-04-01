@@ -1,11 +1,11 @@
 package pt.isel.ls.sports.database
 
 import org.postgresql.ds.PGSimpleDataSource
-import pt.isel.ls.sports.database.sections.activities.ActivitiesPostgresDB
-import pt.isel.ls.sports.database.sections.routes.RoutesPostgresDB
-import pt.isel.ls.sports.database.sections.sports.SportsPostgresDB
-import pt.isel.ls.sports.database.sections.tokens.TokensPostgresDB
-import pt.isel.ls.sports.database.sections.users.UsersPostgresDB
+import pt.isel.ls.sports.database.tables.activities.ActivitiesPostgresDB
+import pt.isel.ls.sports.database.tables.routes.RoutesPostgresDB
+import pt.isel.ls.sports.database.tables.sports.SportsPostgresDB
+import pt.isel.ls.sports.database.tables.tokens.TokensPostgresDB
+import pt.isel.ls.sports.database.tables.users.UsersPostgresDB
 
 /**
  * Implementation of a Postgres database representation, an aggregate of all Postgres database sections.

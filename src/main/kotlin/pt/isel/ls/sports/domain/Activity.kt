@@ -16,7 +16,7 @@ import pt.isel.ls.sports.services.utils.isValidId
 @Serializable
 data class Activity(
     val id: Int,
-    val date: String,
+    val date: String, // Should be a kotlin-datetime class
     val duration: String,
     val uid: Int,
     val sid: Int,

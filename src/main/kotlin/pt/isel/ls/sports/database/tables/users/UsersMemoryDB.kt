@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.database.sections.users
+package pt.isel.ls.sports.database.tables.users
 
 import pt.isel.ls.sports.database.memory.AppMemoryDBSource
 import pt.isel.ls.sports.domain.User

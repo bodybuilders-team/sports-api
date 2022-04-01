@@ -321,7 +321,8 @@ class AppServicesTests {
 
         db.activities.createNewActivity(1, "2022-11-20", "20:23:55.263", 1, 1)
 
-        val activities = services.activities.getActivities(sid = 1, "descending", "2022-11-20", rid = 1, limit = null, skip = null)
+        val activities =
+            services.activities.getActivities(sid = 1, "descending", "2022-11-20", rid = 1, limit = null, skip = null)
 
         assertEquals(listOf(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)), activities)
     }
