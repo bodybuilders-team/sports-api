@@ -4,7 +4,7 @@ import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import pt.isel.ls.sports.api.AppWebApi
-import pt.isel.ls.sports.data.AppDatabase
+import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.services.AppServices
 
 /**
@@ -13,7 +13,7 @@ import pt.isel.ls.sports.services.AppServices
  * @property database application database
  * @property server HTTP4K server
  */
-class AppServer(private val port: Int, private val database: AppDatabase) {
+class AppServer(private val port: Int, private val database: AppDB) {
 
     private val server: Http4kServer
 

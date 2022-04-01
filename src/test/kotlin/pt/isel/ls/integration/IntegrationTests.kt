@@ -8,7 +8,7 @@ import pt.isel.ls.sports.AppServer
 import pt.isel.ls.sports.DEFAULT_PORT
 import pt.isel.ls.sports.JDBC_DATABASE_URL_ENV
 import pt.isel.ls.sports.PORT_ENV
-import pt.isel.ls.sports.data.AppPostgres
+import pt.isel.ls.sports.database.AppPostgresDB
 import kotlin.test.BeforeTest
 
 abstract class IntegrationTests {
@@ -17,8 +17,8 @@ abstract class IntegrationTests {
         private val jdbcDatabaseURL: String = System.getenv(JDBC_DATABASE_URL_ENV)
         private val port = System.getenv(PORT_ENV)?.toIntOrNull() ?: DEFAULT_PORT
 
-        val dataSource = AppPostgres.createPostgresDataSource(jdbcDatabaseURL)
-        val db = AppPostgres(dataSource)
+        val dataSource = AppPostgresDB.createPostgresDataSource(jdbcDatabaseURL)
+        val db = AppPostgresDB(dataSource)
         val send = JavaHttpClient()
         val uriPrefix = "http://localhost:$port/api"
 

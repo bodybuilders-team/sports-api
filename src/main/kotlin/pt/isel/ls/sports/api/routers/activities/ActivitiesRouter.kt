@@ -11,13 +11,13 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import pt.isel.ls.sports.api.routers.utils.MessageResponse
-import pt.isel.ls.sports.api.routers.utils.json
-import pt.isel.ls.sports.api.routers.utils.pathOrThrow
-import pt.isel.ls.sports.api.routers.utils.queryOrThrow
-import pt.isel.ls.sports.api.routers.utils.tokenOrThrow
+import pt.isel.ls.sports.api.utils.MessageResponse
+import pt.isel.ls.sports.api.utils.json
+import pt.isel.ls.sports.api.utils.pathOrThrow
+import pt.isel.ls.sports.api.utils.queryOrThrow
+import pt.isel.ls.sports.api.utils.tokenOrThrow
 import pt.isel.ls.sports.errors.getErrorResponse
-import pt.isel.ls.sports.services.ActivitiesServices
+import pt.isel.ls.sports.services.sections.ActivitiesServices
 import pt.isel.ls.sports.toIntOrThrow
 
 /**

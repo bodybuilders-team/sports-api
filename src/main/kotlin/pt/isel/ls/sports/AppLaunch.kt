@@ -1,7 +1,7 @@
 package pt.isel.ls.sports
 
-import pt.isel.ls.sports.data.AppDataMem
-import pt.isel.ls.sports.data.AppDataMemSource
+import pt.isel.ls.sports.database.AppMemoryDB
+import pt.isel.ls.sports.database.memory.AppMemoryDBSource
 
 const val PORT_ENV = "PORT"
 const val DEFAULT_PORT = 8888
@@ -12,7 +12,7 @@ const val JDBC_DATABASE_URL_ENV = "JDBC_DATABASE_URL"
  */
 fun main() {
     val port = System.getenv(PORT_ENV)?.toIntOrNull() ?: DEFAULT_PORT
-    val database = AppDataMem(AppDataMemSource())
+    val database = AppMemoryDB(AppMemoryDBSource())
 
     val server = AppServer(port, database).also { it.start() }
 

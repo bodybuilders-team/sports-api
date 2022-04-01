@@ -10,7 +10,7 @@ import pt.isel.ls.json
 import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
 import pt.isel.ls.sports.api.routers.activities.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.activities.CreateActivityResponse
-import pt.isel.ls.sports.api.routers.utils.MessageResponse
+import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.isValidId
