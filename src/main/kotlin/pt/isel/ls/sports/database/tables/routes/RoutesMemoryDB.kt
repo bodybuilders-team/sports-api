@@ -11,8 +11,7 @@ class RoutesMemoryDB(private val source: AppMemoryDBSource) : RoutesDB {
 
         if (source.users[uid] == null) throw AppError.NotFound("User with id $uid not found")
 
-        source.routes[id] =
-            Route(id, start_location = startLocation, end_location = endLocation, distance / 1000.0, uid)
+        source.routes[id] = Route(id, startLocation, endLocation, distance / 1000.0, uid)
 
         return id
     }

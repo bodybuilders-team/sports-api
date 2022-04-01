@@ -6,6 +6,7 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Response
 import org.http4k.core.Status
 import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.logger
 
 /**
  * Gets the HTTP status for each AppError.
@@ -37,7 +38,18 @@ fun AppError.toResponse() = Response(status = getStatus()).body(Json.encodeToStr
  */
 fun getErrorResponse(error: Throwable): Response =
     when (error) {
-        is SerializationException -> AppError.BadRequest(error.message)
-        is AppError -> error
-        else -> AppError.InternalError(error.message)
+        is SerializationException -> {
+            logger.warn(error.message)
+            AppError.BadRequest(error.message)
+        }
+
+        is AppError -> {
+            logger.warn(error.message)
+            error
+        }
+
+        else -> {
+            logger.error(error.stackTraceToString())
+            AppError.InternalError()
+        }
     }.toResponse()

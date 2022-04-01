@@ -154,8 +154,8 @@ class RoutesIntegrationTests : IntegrationTests() {
                     val mockRoute = mockRoutes[route.id]
                     assertNotNull(mockRoute)
 
-                    assertEquals(mockRoute.start_location, route.start_location)
-                    assertEquals(mockRoute.end_location, route.end_location)
+                    assertEquals(mockRoute.start_location, route.startLocation)
+                    assertEquals(mockRoute.end_location, route.endLocation)
                     assertEquals(mockRoute.distance, route.distance)
                 }
             }
@@ -202,8 +202,8 @@ class RoutesIntegrationTests : IntegrationTests() {
                 assertEquals(rid, route.id)
                 assertEquals(mockId, route.uid)
 
-                assertEquals(mockRoute.start_location, route.start_location)
-                assertEquals(mockRoute.end_location, route.end_location)
+                assertEquals(mockRoute.start_location, route.startLocation)
+                assertEquals(mockRoute.end_location, route.endLocation)
                 assertEquals(mockRoute.distance, route.distance)
             }
     }

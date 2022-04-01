@@ -11,7 +11,7 @@ class SportsMemoryDB(private val source: AppMemoryDBSource) : SportsDB {
 
         if (source.users[uid] == null) throw AppError.NotFound("User with id $uid not found")
 
-        source.sports[id] = Sport(id = id, name, uid, description)
+        source.sports[id] = Sport(id, name, uid, description)
 
         return id
     }

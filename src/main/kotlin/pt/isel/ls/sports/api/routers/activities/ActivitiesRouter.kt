@@ -17,6 +17,7 @@ import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.api.utils.queryOrThrow
 import pt.isel.ls.sports.api.utils.tokenOrThrow
+import pt.isel.ls.sports.logRequest
 import pt.isel.ls.sports.services.sections.ActivitiesServices
 import pt.isel.ls.sports.toIntOrThrow
 
@@ -51,6 +52,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) {
      * @return activity creation HTTP response
      */
     private fun createActivity(request: Request): Response = runCatching {
+        logRequest(request)
         val token = request.tokenOrThrow()
 
         val activityReq = Json.decodeFromString<CreateActivityRequest>(request.bodyString())
@@ -71,6 +73,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) {
      * @return HTTP response
      */
     private fun getActivity(request: Request): Response = runCatching {
+        logRequest(request)
         val aid = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
 
         val activity = services.getActivity(aid)
@@ -84,6 +87,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) {
      * @return HTTP response
      */
     private fun deleteActivity(request: Request): Response = runCatching {
+        logRequest(request)
         val token = request.tokenOrThrow()
         val aid = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
 
@@ -98,6 +102,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) {
      * @return HTTP response
      */
     private fun searchActivities(request: Request): Response = runCatching {
+        logRequest(request)
         val sid = request.queryOrThrow("sid").toIntOrThrow { "Invalid Sport Id" }
         val orderBy = request.queryOrThrow("orderBy")
 

@@ -19,5 +19,5 @@ fun main() {
     readln()
     server.stop()
 
-    logger.info("leaving Main")
+    logger.info("leaving main")
 }

@@ -7,17 +7,16 @@ import pt.isel.ls.sports.services.utils.isValidId
  * Route representation.
  *
  * @property id route unique identifier
- * @property start_location start location of the route
- * @property end_location end location of the route
- * @property distance distance between [start_location] and [end_location] in meters
+ * @property startLocation start location of the route
+ * @property endLocation end location of the route
+ * @property distance distance between [startLocation] and [endLocation] in meters
  * @property uid unique identifier of the user who created the route
  */
 @Serializable
-// TODO change to startLocation
 data class Route(
     val id: Int,
-    val start_location: String,
-    val end_location: String,
+    val startLocation: String,
+    val endLocation: String,
     val distance: Double,
     val uid: Int
 ) {

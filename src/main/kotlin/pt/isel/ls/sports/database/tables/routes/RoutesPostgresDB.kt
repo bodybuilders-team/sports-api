@@ -94,8 +94,8 @@ class RoutesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
          */
         private fun getRouteFromTable(rs: ResultSet) = Route(
             id = rs.getInt(1),
-            start_location = rs.getString(2),
-            end_location = rs.getString(3),
+            startLocation = rs.getString(2),
+            endLocation = rs.getString(3),
             distance = rs.getInt(4) / 1000.0,
             uid = rs.getInt(5)
         )

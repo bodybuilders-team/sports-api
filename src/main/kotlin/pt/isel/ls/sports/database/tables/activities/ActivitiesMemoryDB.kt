@@ -10,7 +10,7 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
     override fun createNewActivity(uid: Int, date: String, duration: String, sid: Int, rid: Int?): Int {
         val id = source.nextActivityId.getAndIncrement()
 
-        source.activities[id] = Activity(id = id, date, duration, uid, sid, rid)
+        source.activities[id] = Activity(id, date, duration, uid, sid, rid)
 
         return id
     }
