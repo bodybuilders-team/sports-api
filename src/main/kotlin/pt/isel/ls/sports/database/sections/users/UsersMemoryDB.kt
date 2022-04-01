@@ -12,7 +12,7 @@ class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
         check(!source.users.containsKey(id)) { "Serial ID already exists" }
 
         if (source.users.values.any { it.email == email })
-            throw AppError.conflict("Email already in use")
+            throw AppError.Conflict("Email already in use")
 
         source.users[id] = User(id, name, email)
 
@@ -21,7 +21,7 @@ class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
 
     override fun getUser(uid: Int): User =
         source.users[uid]
-            ?: throw AppError.notFound("User with id $uid not found")
+            ?: throw AppError.NotFound("User with id $uid not found")
 
     override fun getAllUsers(): List<User> {
         return source.users.values.toList()

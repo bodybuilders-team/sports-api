@@ -4,7 +4,7 @@ import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.AbstractServices
-import pt.isel.ls.sports.services.isValidId
+import pt.isel.ls.sports.services.utils.isValidId
 
 class RoutesServices(db: AppDB) : AbstractServices(db) {
     /**
@@ -23,7 +23,7 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
     fun createNewRoute(token: String, startLocation: String, endLocation: String, distance: Double): Int {
         val uid = authenticate(token)
         if (!Route.isValidDistance(distance))
-            throw AppError.invalidArgument("Distance must be positive")
+            throw AppError.InvalidArgument("Distance must be positive")
 
         return db.routes.createNewRoute(
             startLocation,
@@ -42,7 +42,7 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
      */
     fun getRoute(rid: Int): Route {
         if (!isValidId(rid))
-            throw AppError.invalidArgument("Route id must be positive")
+            throw AppError.InvalidArgument("Route id must be positive")
 
         return db.routes.getRoute(rid)
     }

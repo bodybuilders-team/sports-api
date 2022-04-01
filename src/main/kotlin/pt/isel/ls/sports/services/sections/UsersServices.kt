@@ -6,7 +6,7 @@ import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.AbstractServices
-import pt.isel.ls.sports.services.isValidId
+import pt.isel.ls.sports.services.utils.isValidId
 import java.util.UUID
 
 class UsersServices(db: AppDB) : AbstractServices(db) {
@@ -20,13 +20,13 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      */
     fun createNewUser(name: String, email: String): CreateUserResponse {
         if (!User.isValidName(name))
-            throw AppError.invalidArgument("Name must be between ${User.MIN_NAME_LENGTH} and ${User.MAX_NAME_LENGTH} characters")
+            throw AppError.InvalidArgument("Name must be between ${User.MIN_NAME_LENGTH} and ${User.MAX_NAME_LENGTH} characters")
 
         if (!User.isValidEmail(email))
-            throw AppError.invalidArgument("Invalid email")
+            throw AppError.InvalidArgument("Invalid email")
 
         if (db.users.hasUserWithEmail(email))
-            throw AppError.invalidArgument("Email already in use")
+            throw AppError.InvalidArgument("Email already in use")
 
         val uid = db.users.createNewUser(name, email)
         val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
@@ -43,7 +43,7 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      */
     fun getUser(uid: Int): User {
         if (!isValidId(uid))
-            throw AppError.invalidArgument("User id must be positive")
+            throw AppError.InvalidArgument("User id must be positive")
 
         return db.users.getUser(uid)
     }
@@ -66,7 +66,7 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      */
     fun getUserActivities(uid: Int): List<Activity> {
         if (!isValidId(uid))
-            throw AppError.invalidArgument("User id must be positive")
+            throw AppError.InvalidArgument("User id must be positive")
 
         return db.activities.getUserActivities(uid)
     }

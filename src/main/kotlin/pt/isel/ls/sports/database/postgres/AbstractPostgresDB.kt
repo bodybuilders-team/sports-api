@@ -10,7 +10,7 @@ abstract class AbstractPostgresDB(protected val dataSource: PGSimpleDataSource) 
      * Gets a connection and uses it with [block].
      * @param block a function to process in use
      * @return the result of block function invoked
-     * @throws AppError.databaseError if an error occurs while accessing the database
+     * @throws AppError.DatabaseError if an error occurs while accessing the database
      */
     protected inline fun <R> useConnection(block: (connection: Connection) -> R): R =
         runCatching {
@@ -18,7 +18,7 @@ abstract class AbstractPostgresDB(protected val dataSource: PGSimpleDataSource) 
         }.getOrElse {
             when (it) {
                 is SQLException ->
-                    throw AppError.databaseError("Error accessing database")
+                    throw AppError.DatabaseError("Error accessing database")
                 else -> throw it
             }
         }.use(block)

@@ -16,11 +16,11 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
     }
 
     override fun getActivity(aid: Int): Activity {
-        return source.activities[aid] ?: throw AppError.notFound("Activity with id $aid not found")
+        return source.activities[aid] ?: throw AppError.NotFound("Activity with id $aid not found")
     }
 
     override fun deleteActivity(aid: Int) {
-        source.activities.remove(aid) ?: throw AppError.notFound("Activity with id $aid not found")
+        source.activities.remove(aid) ?: throw AppError.NotFound("Activity with id $aid not found")
     }
 
     override fun getActivities(sid: Int, orderBy: SortOrder, date: String?, rid: Int?, skip: Int?, limit: Int?) =

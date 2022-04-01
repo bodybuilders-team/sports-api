@@ -13,7 +13,7 @@ import pt.isel.ls.sports.api.routers.activities.CreateActivityResponse
 import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.errors.AppError
-import pt.isel.ls.sports.services.isValidId
+import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.token
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -70,7 +70,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             assertEquals(Status.BAD_REQUEST, status)
 
             val error = Json.decodeFromString<AppError>(bodyString())
-            assertEquals(AppError.noCredentials(), error)
+            assertEquals(AppError.NoCredentials(), error)
         }
     }
 
@@ -93,7 +93,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             assertEquals(Status.UNAUTHORIZED, status)
 
             val error = Json.decodeFromString<AppError>(bodyString())
-            assertEquals(AppError.invalidCredentials(), error)
+            assertEquals(AppError.InvalidCredentials(), error)
         }
     }
 
@@ -117,7 +117,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             assertEquals(Status.BAD_REQUEST, status)
 
             val error = Json.decodeFromString<AppError>(bodyString())
-            assertEquals(AppError.invalidArgument(), error)
+            assertEquals(AppError.InvalidArgument(), error)
         }
     }
 
@@ -158,7 +158,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             assertEquals(Status.BAD_REQUEST, status)
 
             val error = Json.decodeFromString<AppError>(bodyString())
-            assertEquals(AppError.invalidArgument(), error)
+            assertEquals(AppError.InvalidArgument(), error)
         }
     }
 
@@ -171,7 +171,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             assertEquals(Status.NOT_FOUND, status)
 
             val error = Json.decodeFromString<AppError>(bodyString())
-            assertEquals(AppError.notFound(), error)
+            assertEquals(AppError.NotFound(), error)
         }
     }
 
@@ -214,7 +214,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             assertEquals(Status.NOT_FOUND, status)
 
             val error = Json.decodeFromString<AppError>(bodyString())
-            assertEquals(AppError.notFound(), error)
+            assertEquals(AppError.NotFound(), error)
         }
     }
 
@@ -238,7 +238,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             assertEquals(Status.FORBIDDEN, status)
 
             val error = Json.decodeFromString<AppError>(bodyString())
-            assertEquals(AppError.forbidden(), error)
+            assertEquals(AppError.Forbidden(), error)
         }
     }
 

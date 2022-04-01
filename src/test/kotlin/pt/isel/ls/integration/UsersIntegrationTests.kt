@@ -13,7 +13,7 @@ import pt.isel.ls.sports.api.routers.users.CreateUserResponse
 import pt.isel.ls.sports.api.routers.users.UsersResponse
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
-import pt.isel.ls.sports.services.isValidId
+import pt.isel.ls.sports.services.utils.isValidId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -66,7 +66,7 @@ class UsersIntegrationTests : IntegrationTests() {
                 assertEquals(Status.BAD_REQUEST, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.invalidArgument(), error)
+                assertEquals(AppError.InvalidArgument(), error)
             }
     }
 
@@ -87,7 +87,7 @@ class UsersIntegrationTests : IntegrationTests() {
                 assertEquals(Status.BAD_REQUEST, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.invalidArgument(), error)
+                assertEquals(AppError.InvalidArgument(), error)
             }
     }
 
@@ -164,7 +164,7 @@ class UsersIntegrationTests : IntegrationTests() {
                 assertEquals(Status.BAD_REQUEST, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.invalidArgument(), error)
+                assertEquals(AppError.InvalidArgument(), error)
             }
     }
 
@@ -178,7 +178,7 @@ class UsersIntegrationTests : IntegrationTests() {
                 assertEquals(Status.NOT_FOUND, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.notFound(), error)
+                assertEquals(AppError.NotFound(), error)
             }
     }
 
@@ -227,7 +227,7 @@ class UsersIntegrationTests : IntegrationTests() {
                 assertEquals(Status.BAD_REQUEST, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.invalidArgument(), error)
+                assertEquals(AppError.InvalidArgument(), error)
             }
     }
 }

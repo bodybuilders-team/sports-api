@@ -42,6 +42,6 @@ class TokensPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
             if (rs.next())
                 return rs.getInt(1)
             else
-                throw AppError.notFound("Token $token isn't associated to any user")
+                throw AppError.NotFound("Token $token isn't associated to any user")
         }
 }

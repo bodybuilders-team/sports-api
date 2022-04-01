@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.services
+package pt.isel.ls.sports.services.utils
 
 /**
  * Validates a serial ID.

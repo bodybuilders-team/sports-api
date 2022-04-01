@@ -12,7 +12,7 @@ import pt.isel.ls.sports.api.routers.routes.CreateRouteResponse
 import pt.isel.ls.sports.api.routers.routes.RoutesResponse
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.errors.AppError
-import pt.isel.ls.sports.services.isValidId
+import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.token
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -69,7 +69,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 assertEquals(Status.BAD_REQUEST, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.noCredentials(), error)
+                assertEquals(AppError.NoCredentials(), error)
             }
     }
 
@@ -92,7 +92,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 assertEquals(Status.UNAUTHORIZED, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.invalidCredentials(), error)
+                assertEquals(AppError.InvalidCredentials(), error)
             }
     }
 
@@ -116,7 +116,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 assertEquals(Status.BAD_REQUEST, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.badRequest(), error)
+                assertEquals(AppError.BadRequest(), error)
             }
     }
 
@@ -218,7 +218,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 assertEquals(Status.BAD_REQUEST, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.invalidArgument(), error)
+                assertEquals(AppError.InvalidArgument(), error)
             }
     }
 
@@ -232,7 +232,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 assertEquals(Status.NOT_FOUND, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.notFound(), error)
+                assertEquals(AppError.NotFound(), error)
             }
     }
 }

@@ -2,6 +2,7 @@ package pt.isel.ls.unit
 
 import org.http4k.core.Body
 import org.http4k.core.Status
+import pt.isel.ls.sports.api.utils.toResponse
 import pt.isel.ls.sports.errors.AppError
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,7 +14,7 @@ class AppErrorsTests {
     fun `throw SportsErrors badRequest works`() {
         val msg = "badRequest message"
         val error = assertFailsWith<AppError> {
-            throw AppError.badRequest(msg)
+            throw AppError.BadRequest(msg)
         }
 
         assertEquals(1000, error.code)
@@ -26,7 +27,7 @@ class AppErrorsTests {
     fun `throw SportsErrors notFound works`() {
         val msg = "notFound message"
         val error = assertFailsWith<AppError> {
-            throw AppError.notFound(msg)
+            throw AppError.NotFound(msg)
         }
 
         assertEquals(1001, error.code)
@@ -39,7 +40,7 @@ class AppErrorsTests {
     fun `throw SportsErrors databaseError works`() {
         val msg = "databaseError message"
         val error = assertFailsWith<AppError> {
-            throw AppError.databaseError(msg)
+            throw AppError.DatabaseError(msg)
         }
 
         assertEquals(1002, error.code)
@@ -52,7 +53,7 @@ class AppErrorsTests {
     fun `throw SportsErrors internalError works`() {
         val msg = "internalError message"
         val error = assertFailsWith<AppError> {
-            throw AppError.internalError(msg)
+            throw AppError.InternalError(msg)
         }
 
         assertEquals(1003, error.code)
@@ -65,7 +66,7 @@ class AppErrorsTests {
     fun `throw SportsErrors invalidCredentials works`() {
         val msg = "invalidCredentials message"
         val error = assertFailsWith<AppError> {
-            throw AppError.invalidCredentials(msg)
+            throw AppError.InvalidCredentials(msg)
         }
 
         assertEquals(1004, error.code)
@@ -78,7 +79,7 @@ class AppErrorsTests {
     fun `throw SportsErrors noCredentials works`() {
         val msg = "noCredentials message"
         val error = assertFailsWith<AppError> {
-            throw AppError.noCredentials(msg)
+            throw AppError.NoCredentials(msg)
         }
 
         assertEquals(1005, error.code)
@@ -91,7 +92,7 @@ class AppErrorsTests {
 
     @Test
     fun `badRequest toResponse`() {
-        val res = AppError.badRequest().toResponse()
+        val res = AppError.BadRequest().toResponse()
         assertEquals(Status.BAD_REQUEST, res.status)
         assertEquals(
             Body("{\"code\":1000,\"name\":\"BAD_REQUEST\",\"description\":\"The request was malformed\"}"),
@@ -101,7 +102,7 @@ class AppErrorsTests {
 
     @Test
     fun `notFound toResponse`() {
-        val res = AppError.notFound().toResponse()
+        val res = AppError.NotFound().toResponse()
         assertEquals(Status.NOT_FOUND, res.status)
         assertEquals(
             Body("{\"code\":1001,\"name\":\"NOT_FOUND\",\"description\":\"The requested resource was not found\"}"),
@@ -111,7 +112,7 @@ class AppErrorsTests {
 
     @Test
     fun `invalidCredentials toResponse`() {
-        val res = AppError.invalidCredentials().toResponse()
+        val res = AppError.InvalidCredentials().toResponse()
         assertEquals(Status.UNAUTHORIZED, res.status)
         assertEquals(
             Body("{\"code\":1004,\"name\":\"INVALID_CREDENTIALS\",\"description\":\"The provided credentials are invalid\"}"),
@@ -121,7 +122,7 @@ class AppErrorsTests {
 
     @Test
     fun `databaseError toResponse`() {
-        val res = AppError.databaseError().toResponse()
+        val res = AppError.DatabaseError().toResponse()
         assertEquals(Status.INTERNAL_SERVER_ERROR, res.status)
         assertEquals(
             Body("{\"code\":1002,\"name\":\"DATABASE_ERROR\",\"description\":\"There was an error accessing the database\"}"),

@@ -1,10 +1,6 @@
 package pt.isel.ls.sports.errors
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import org.http4k.core.Response
-import org.http4k.core.Status
 
 /**
  * Represents an application error.
@@ -14,80 +10,47 @@ import org.http4k.core.Status
  * @property extraInfo other info related to the error
  */
 @Serializable
-data class AppError(val code: Int, val name: String, val description: String, var extraInfo: String? = null) :
+sealed class AppError(val code: Int, val name: String, val description: String) :
     Exception() {
 
-    companion object {
-        fun badRequest(extraInfo: String? = null) =
-            AppError(1000, "BAD_REQUEST", "The request was malformed", extraInfo)
-
-        fun notFound(extraInfo: String? = null) =
-            AppError(1001, "NOT_FOUND", "The requested resource was not found", extraInfo)
-
-        fun databaseError(extraInfo: String? = null) =
-            AppError(1002, "DATABASE_ERROR", "There was an error accessing the database", extraInfo)
-
-        fun internalError(extraInfo: String? = null) =
-            AppError(1003, "INTERNAL_ERROR", "There was an internal error", extraInfo)
-
-        fun invalidCredentials(extraInfo: String? = null) =
-            AppError(1004, "INVALID_CREDENTIALS", "The provided credentials are invalid", extraInfo)
-
-        fun noCredentials(extraInfo: String? = null) =
-            AppError(1005, "NO_CREDENTIALS", "No credentials were provided", extraInfo)
-
-        fun invalidArgument(extraInfo: String? = null): Throwable =
-            AppError(1006, "INVALID_ARGUMENT", "An argument is invalid", extraInfo)
-
-        fun forbidden(extraInfo: String? = null): Throwable =
-            AppError(1007, "FORBIDDEN", "User is not authorized", extraInfo)
-
-        fun conflict(extraInfo: String? = null): Throwable =
-            AppError(1008, "CONFLICT", "There was a conflict", extraInfo)
-    }
+    abstract val extraInfo: String?
 
     /**
-     * Gets the HTTP status for each AppError.
-     * @return HTTP status
+     * Error when the request is malformed.
      */
-    private fun getStatus(): Status = when (this) {
-        badRequest() -> Status.BAD_REQUEST
-        notFound() -> Status.NOT_FOUND
-        databaseError() -> Status.INTERNAL_SERVER_ERROR
-        internalError() -> Status.INTERNAL_SERVER_ERROR
-        invalidCredentials() -> Status.UNAUTHORIZED
-        noCredentials() -> Status.BAD_REQUEST
-        invalidArgument() -> Status.BAD_REQUEST
-        forbidden() -> Status.FORBIDDEN
-        conflict() -> Status.CONFLICT
-        else -> Status.INTERNAL_SERVER_ERROR
-    }
+    @Serializable
+    class BadRequest(override val extraInfo: String? = null) :
+        AppError(1000, "BAD_REQUEST", "The request was malformed")
 
-    /**
-     * Converts the AppError to an HTTP Response
-     * @return HTTP response
-     */
-    fun toResponse() = Response(status = getStatus()).body(Json.encodeToString(this))
+    @Serializable
+    class NotFound(override val extraInfo: String? = null) :
+        AppError(1001, "NOT_FOUND", "The requested resource was not found")
 
-    /**
-     * Needed for comparing AppErrors based on code only.
-     */
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other?.javaClass != javaClass) return false
+    @Serializable
+    class DatabaseError(override val extraInfo: String? = null) :
+        AppError(1002, "DATABASE_ERROR", "There was an error accessing the database")
 
-        other as AppError
+    @Serializable
+    class InternalError(override val extraInfo: String? = null) :
+        AppError(1003, "INTERNAL_ERROR", "There was an internal error")
 
-        if (this.code != other.code) return false
+    @Serializable
+    class InvalidCredentials(override val extraInfo: String? = null) :
+        AppError(1004, "INVALID_CREDENTIALS", "The provided credentials are invalid")
 
-        return true
-    }
+    @Serializable
+    class NoCredentials(override val extraInfo: String? = null) :
+        AppError(1005, "NO_CREDENTIALS", "No credentials were provided")
 
-    override fun hashCode(): Int {
-        var result = code
-        result = 31 * result + name.hashCode()
-        result = 31 * result + description.hashCode()
-        result = 31 * result + (extraInfo?.hashCode() ?: 0)
-        return result
-    }
+    @Serializable
+    class InvalidArgument(override val extraInfo: String? = null) :
+        AppError(1006, "INVALID_ARGUMENT", "An argument is invalid")
+
+    @Serializable
+    class Forbidden(override val extraInfo: String? = null) :
+        AppError(1007, "FORBIDDEN", "User is not authorized")
+
+    @Serializable
+    class Conflict(override val extraInfo: String? = null) :
+        AppError(1008, "CONFLICT", "There was a conflict")
 }

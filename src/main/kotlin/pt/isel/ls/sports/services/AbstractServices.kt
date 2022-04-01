@@ -12,16 +12,13 @@ abstract class AbstractServices(protected val db: AppDB) {
      *
      * @return user's unique identifier associated with the [token]
      *
-     * @throws AppError.invalidCredentials if a user with the [token] was not found
+     * @throws AppError.InvalidCredentials if a user with the [token] was not found
      */
     protected fun authenticate(token: String) = runCatching {
         db.tokens.getUID(token)
     }.getOrElse {
         when (it) {
-            is AppError -> {
-                if (it == AppError.notFound()) throw AppError.invalidCredentials()
-                else throw it
-            }
+            is AppError.NotFound -> throw AppError.InvalidCredentials("Invalid token")
             else -> throw it
         }
     }

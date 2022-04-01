@@ -26,10 +26,10 @@ inline fun <reified T> Response.json(data: T): Response =
  * @param param query param to search
  *
  * @return value of the [param]
- * @throws AppError.badRequest if the param doesn't exist
+ * @throws AppError.BadRequest if the param doesn't exist
  */
 fun Request.queryOrThrow(param: String): String =
-    this.query(param) ?: throw AppError.badRequest("Missing query parameter: $param")
+    this.query(param) ?: throw AppError.BadRequest("Missing query parameter: $param")
 
 /**
  * Returns the value of the [param] in the request path.
@@ -37,10 +37,10 @@ fun Request.queryOrThrow(param: String): String =
  * @param param path param to search
  *
  * @return value of the [param]
- * @throws AppError.badRequest if the param doesn't exist
+ * @throws AppError.BadRequest if the param doesn't exist
  */
 fun Request.pathOrThrow(param: String): String =
-    this.path(param) ?: throw AppError.badRequest("Missing path parameter: $param")
+    this.path(param) ?: throw AppError.BadRequest("Missing path parameter: $param")
 
 private const val TOKEN_START_INDEX = 7
 
@@ -48,8 +48,8 @@ private const val TOKEN_START_INDEX = 7
  * Returns the request token.
  *
  * @return token
- * @throws AppError.noCredentials if the token doesn't exist
+ * @throws AppError.NoCredentials if the token doesn't exist
  */
 fun Request.tokenOrThrow(): String =
     this.header("Authorization")?.substringOrNull(TOKEN_START_INDEX)
-        ?: throw AppError.noCredentials()
+        ?: throw AppError.NoCredentials()

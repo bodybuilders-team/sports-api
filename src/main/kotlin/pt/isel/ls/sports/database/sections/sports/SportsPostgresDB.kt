@@ -62,7 +62,7 @@ class SportsPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
             if (rs.next())
                 return getSportFromTable(rs)
             else
-                throw AppError.notFound("Sport with id $sid not found")
+                throw AppError.NotFound("Sport with id $sid not found")
         }
 
     /**

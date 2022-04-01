@@ -20,4 +20,4 @@ fun String.substringOrNull(startIndex: Int): String? =
  */
 fun String.toIntOrThrow(errorInfo: (() -> String)? = null): Int =
     this.toIntOrNull()
-        ?: throw AppError.badRequest(errorInfo?.invoke() ?: "Error parsing $this to Int")
+        ?: throw AppError.BadRequest(errorInfo?.invoke() ?: "Error parsing $this to Int")

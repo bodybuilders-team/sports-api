@@ -47,7 +47,7 @@ class RoutesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
             if (rs.next())
                 return getRouteFromTable(rs)
             else
-                throw AppError.notFound("Route with id $rid not found")
+                throw AppError.NotFound("Route with id $rid not found")
         }
 
     override fun getAllRoutes(): List<Route> =

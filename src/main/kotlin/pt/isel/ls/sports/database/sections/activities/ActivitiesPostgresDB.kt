@@ -52,7 +52,7 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
             if (rs.next())
                 return getActivityFromTable(rs)
             else
-                throw AppError.notFound("Activity with id $aid not found")
+                throw AppError.NotFound("Activity with id $aid not found")
         }
 
     override fun deleteActivity(aid: Int) {

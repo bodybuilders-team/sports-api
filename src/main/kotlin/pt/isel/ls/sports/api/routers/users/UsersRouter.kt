@@ -11,9 +11,9 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
+import pt.isel.ls.sports.api.utils.getErrorResponse
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
-import pt.isel.ls.sports.errors.getErrorResponse
 import pt.isel.ls.sports.services.sections.UsersServices
 import pt.isel.ls.sports.toIntOrThrow
 
@@ -59,6 +59,7 @@ class UsersRouter(private val services: UsersServices) {
      * @param request HTTP request
      * @return HTTP response
      */
+    @Suppress("UNUSED_PARAMETER")
     private fun getUsers(request: Request): Response = runCatching {
         val users = services.getAllUsers()
 

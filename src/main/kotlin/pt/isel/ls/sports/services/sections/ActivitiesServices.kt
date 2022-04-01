@@ -5,7 +5,7 @@ import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.AbstractServices
-import pt.isel.ls.sports.services.isValidId
+import pt.isel.ls.sports.services.utils.isValidId
 
 class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     /**
@@ -23,16 +23,16 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         val uid = authenticate(token)
 
         if (!Activity.isValidDate(date))
-            throw AppError.invalidArgument("Date must be in the format yyyy-mm-dd")
+            throw AppError.InvalidArgument("Date must be in the format yyyy-mm-dd")
 
         if (!Activity.isValidDuration(duration))
-            throw AppError.invalidArgument("Duration must be in the format hh:mm:ss.fff")
+            throw AppError.InvalidArgument("Duration must be in the format hh:mm:ss.fff")
 
         if (!isValidId(sid))
-            throw AppError.invalidArgument("Sport id must be positive")
+            throw AppError.InvalidArgument("Sport id must be positive")
 
         if (rid != null && !isValidId(rid))
-            throw AppError.invalidArgument("Route id must be positive")
+            throw AppError.InvalidArgument("Route id must be positive")
 
         return db.activities.createNewActivity(uid, date, duration, sid, rid)
     }
@@ -46,7 +46,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      */
     fun getActivity(aid: Int): Activity {
         if (!isValidId(aid))
-            throw AppError.invalidArgument("Activity id must be positive")
+            throw AppError.InvalidArgument("Activity id must be positive")
 
         return db.activities.getActivity(aid)
     }
@@ -61,10 +61,10 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         val activity = db.activities.getActivity(aid)
 
         if (uid != activity.uid)
-            throw AppError.forbidden("You are not allowed to delete this activity")
+            throw AppError.Forbidden("You are not allowed to delete this activity")
 
         if (!isValidId(aid))
-            throw AppError.invalidArgument("Activity id must be positive")
+            throw AppError.InvalidArgument("Activity id must be positive")
 
         return db.activities.deleteActivity(aid)
     }
@@ -90,10 +90,10 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         skip: Int?
     ): List<Activity> {
         if (!isValidId(sid))
-            throw AppError.invalidArgument("Sport id must be positive")
+            throw AppError.InvalidArgument("Sport id must be positive")
 
         val order = SortOrder.parse(orderBy)
-            ?: throw AppError.invalidArgument("Order by must be either ascending or descending")
+            ?: throw AppError.InvalidArgument("Order by must be either ascending or descending")
 
         return db.activities.getActivities(sid, order, date, rid, skip, limit)
     }

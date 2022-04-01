@@ -5,7 +5,7 @@ import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.AbstractServices
-import pt.isel.ls.sports.services.isValidId
+import pt.isel.ls.sports.services.utils.isValidId
 
 class SportsServices(db: AppDB) : AbstractServices(db) {
     /**
@@ -21,10 +21,10 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
         val uid = authenticate(token)
 
         if (!Sport.isValidName(name))
-            throw AppError.invalidArgument("Name must be between ${Sport.MIN_NAME_LENGTH} and ${Sport.MAX_NAME_LENGTH} characters")
+            throw AppError.InvalidArgument("Name must be between ${Sport.MIN_NAME_LENGTH} and ${Sport.MAX_NAME_LENGTH} characters")
 
         if (description != null && !Sport.isValidDescription(description))
-            throw AppError.invalidArgument("Description must be between ${Sport.MIN_DESCRIPTION_LENGTH} and ${Sport.MAX_DESCRIPTION_LENGTH} characters")
+            throw AppError.InvalidArgument("Description must be between ${Sport.MIN_DESCRIPTION_LENGTH} and ${Sport.MAX_DESCRIPTION_LENGTH} characters")
 
         return db.sports.createNewSport(uid, name, description)
     }
@@ -38,7 +38,7 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      */
     fun getSport(sid: Int): Sport {
         if (!isValidId(sid))
-            throw AppError.invalidArgument("Sport id must be positive")
+            throw AppError.InvalidArgument("Sport id must be positive")
 
         return db.sports.getSport(sid)
     }
@@ -61,7 +61,7 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      */
     fun getSportActivities(sid: Int): List<Activity> {
         if (!isValidId(sid))
-            throw AppError.invalidArgument("Sport id must be positive")
+            throw AppError.InvalidArgument("Sport id must be positive")
 
         return db.activities.getSportActivities(sid)
     }

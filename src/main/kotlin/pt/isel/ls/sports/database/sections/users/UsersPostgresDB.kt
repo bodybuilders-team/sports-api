@@ -45,7 +45,7 @@ class UsersPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(dataS
             if (rs.next())
                 return getUserFromTable(rs)
             else
-                throw AppError.notFound("User with id $uid not found")
+                throw AppError.NotFound("User with id $uid not found")
         }
 
     override fun getAllUsers(): List<User> =
