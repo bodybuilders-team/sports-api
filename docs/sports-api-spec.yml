@@ -389,6 +389,8 @@ paths:
       tags:
         - Activities
       summary: Deletes an activity by id
+      security:
+        - token: [ ]
       parameters:
         - name: id
           in: path
