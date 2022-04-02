@@ -10,7 +10,7 @@
  - [André Jesus](https://github.com/Andre-J3sus)
  - [Nyckollas Brandão](https://github.com/Nyckoka)
 
-Professor: Eng. Filipe Freitas
+Professors: Engs. Filipe Freitas, Luís Falcão and Daniel Dias
 
 ISEL<br>
 Bachelor in Computer Science and Computer Engineering<br>
