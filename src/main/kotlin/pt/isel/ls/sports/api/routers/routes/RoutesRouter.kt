@@ -85,6 +85,6 @@ class RoutesRouter(private val services: RoutesServices) {
 
         val route = services.getRoute(rid)
 
-        return Response(OK).json(route)
+        return Response(OK).json(RouteDTO(route))
     }.getOrElse(::getErrorResponse)
 }

@@ -245,6 +245,28 @@ class AppServicesTests {
         assertEquals(Activity(aid, "2022-11-05", "14:59:27.903", 1, 1, 1), db.activities.getActivity(aid))
     }
 
+    @Test
+    fun `createNewActivity throws InvalidArgument if sid is not positive`() {
+
+        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+
+        assertFailsWith<AppError.InvalidArgument> {
+            services.activities.createNewActivity(token, "2022-11-05", "14:59:27.903", -5, 1)
+        }
+    }
+
+    @Test
+    fun `createNewActivity throws InvalidArgument if rid is not positive`() {
+
+        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+
+        assertFailsWith<AppError.InvalidArgument> {
+            services.activities.createNewActivity(token, "2022-11-05", "14:59:27.903", -5, 1)
+        }
+    }
+
     // getActivity
 
     @Test

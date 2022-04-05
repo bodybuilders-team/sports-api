@@ -1,5 +1,9 @@
 package pt.isel.ls.sports.database.tables.activities
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toJavaInstant
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.database.postgres.AbstractPostgresDB
 import pt.isel.ls.sports.database.utils.SortOrder
@@ -11,10 +15,11 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
+import kotlin.time.Duration
 
 class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(dataSource), ActivitiesDB {
 
-    override fun createNewActivity(uid: Int, date: String, duration: String, sid: Int, rid: Int?): Int =
+    override fun createNewActivity(uid: Int, date: LocalDateTime, duration: Duration, sid: Int, rid: Int?): Int =
         useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
@@ -23,7 +28,10 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
                 """.trimIndent(),
                 Statement.RETURN_GENERATED_KEYS
             )
-            stm.setDate(1, Date.valueOf(date))
+
+            val sqlDate = Date.from(date.toInstant(TimeZone.UTC).toJavaInstant())
+
+            stm.setDate(1, sqlDate as Date?)
             stm.setString(2, duration)
             stm.setInt(3, uid)
             stm.setInt(4, sid)
@@ -71,7 +79,7 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
     override fun getActivities(
         sid: Int,
         orderBy: SortOrder,
-        date: String?,
+        date: LocalDateTime?,
         rid: Int?,
         skip: Int?,
         limit: Int?
@@ -93,6 +101,7 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
             stm.setInt(1, sid)
 
             var counter = 1
+
             if (date != null)
                 stm.setDate(++counter, Date.valueOf(date))
 
@@ -176,7 +185,7 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
          */
         private fun getActivityFromTable(rs: ResultSet) = Activity(
             id = rs.getInt(1),
-            date = rs.getDate(2).toString(),
+            date = rs.getDate(2),
             duration = rs.getString(3),
             uid = rs.getInt(4),
             sid = rs.getInt(5),

@@ -9,4 +9,4 @@ import pt.isel.ls.sports.domain.User
  * @property users list of users
  */
 @Serializable
-data class UsersResponse(val users: List<User>)
+data class UsersResponse(val users: List<UserDTO>)

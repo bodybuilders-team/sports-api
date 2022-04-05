@@ -1,6 +1,5 @@
 package pt.isel.ls.sports.domain
 
-import kotlinx.serialization.Serializable
 import pt.isel.ls.sports.services.utils.isValidId
 
 /**
@@ -10,7 +9,6 @@ import pt.isel.ls.sports.services.utils.isValidId
  * @property name name of the user
  * @property email email of the user
  */
-@Serializable
 data class User(
     val id: Int,
     val name: String,

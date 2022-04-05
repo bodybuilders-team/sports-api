@@ -129,4 +129,19 @@ class AppErrorsTests {
             res.body
         )
     }
+
+    @Test
+    fun `conflict toResponse`() {
+        val res = AppError.Conflict().toResponse()
+        assertEquals(Status.CONFLICT, res.status)
+        assertEquals(
+            Body("{\"code\":1008,\"name\":\"CONFLICT\",\"description\":\"There was a conflict\"}"),
+            res.body
+        )
+    }
+
+    @Test
+    fun `Error comparison using hashCode`() {
+        assertEquals(AppError.BadRequest().hashCode(), AppError.BadRequest().hashCode())
+    }
 }

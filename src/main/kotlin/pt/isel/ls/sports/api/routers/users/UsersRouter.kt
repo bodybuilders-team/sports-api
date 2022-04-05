@@ -11,6 +11,7 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
+import pt.isel.ls.sports.api.routers.activities.ActivityDTO
 import pt.isel.ls.sports.api.utils.getErrorResponse
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
@@ -66,7 +67,7 @@ class UsersRouter(private val services: UsersServices) {
         logRequest(request)
         val users = services.getAllUsers()
 
-        return Response(OK).json(UsersResponse(users))
+        return Response(OK).json(UsersResponse(users.map { UserDTO(it) }))
     }.getOrElse(::getErrorResponse)
 
     /**
@@ -94,6 +95,6 @@ class UsersRouter(private val services: UsersServices) {
 
         val activities = services.getUserActivities(uid)
 
-        return Response(OK).json(ActivitiesResponse(activities))
+        return Response(OK).json(ActivitiesResponse(activities.map { ActivityDTO(it) }))
     }.getOrElse(::getErrorResponse)
 }

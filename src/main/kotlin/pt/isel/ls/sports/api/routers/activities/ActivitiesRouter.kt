@@ -1,5 +1,7 @@
 package pt.isel.ls.sports.api.routers.activities
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method.DELETE
@@ -17,9 +19,11 @@ import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.api.utils.queryOrThrow
 import pt.isel.ls.sports.api.utils.tokenOrThrow
+import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.logRequest
 import pt.isel.ls.sports.services.sections.ActivitiesServices
 import pt.isel.ls.sports.toIntOrThrow
+import kotlin.time.Duration
 
 /**
  * Represents the activity's router for the Web API.
@@ -56,10 +60,11 @@ class ActivitiesRouter(private val services: ActivitiesServices) {
         val token = request.tokenOrThrow()
 
         val activityReq = Json.decodeFromString<CreateActivityRequest>(request.bodyString())
+
         val aid = services.createNewActivity(
             token,
-            activityReq.date,
-            activityReq.duration,
+            activityReq.date.toLocalDateTime(),
+            Duration.parse(activityReq.duration),
             activityReq.sid,
             activityReq.rid
         )
@@ -78,7 +83,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) {
 
         val activity = services.getActivity(aid)
 
-        return Response(OK).json(activity)
+        return Response(OK).json(ActivityDTO(activity))
     }.getOrElse(::getErrorResponse)
 
     /**
@@ -111,8 +116,13 @@ class ActivitiesRouter(private val services: ActivitiesServices) {
         val skip = request.query("skip")?.toInt()
         val limit = request.query("limit")?.toInt()
 
-        val activities = services.getActivities(sid, orderBy, date, rid, limit, skip)
+        if (date != null && !ActivityDTO.isValidDate(date))
+            throw AppError.InvalidArgument("Date must be in the format yyyy-mm-dd")
 
-        return Response(OK).json(ActivitiesResponse(activities))
+        val dateLDT = if (date != null) LocalDateTime.parse(date) else null
+
+        val activities = services.getActivities(sid, orderBy, dateLDT, rid, limit, skip)
+
+        return Response(OK).json(ActivitiesResponse(activities.map { ActivityDTO(it) }))
     }.getOrElse(::getErrorResponse)
 }

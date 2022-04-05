@@ -1,11 +1,13 @@
 package pt.isel.ls.sports.services.sections
 
+import kotlinx.datetime.LocalDateTime
 import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.AbstractServices
 import pt.isel.ls.sports.services.utils.isValidId
+import kotlin.time.Duration
 
 class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     /**
@@ -19,14 +21,8 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      *
      * @return activity's unique identifier
      */
-    fun createNewActivity(token: String, date: String, duration: String, sid: Int, rid: Int?): Int {
+    fun createNewActivity(token: String, date: LocalDateTime, duration: Duration, sid: Int, rid: Int?): Int {
         val uid = authenticate(token)
-
-        if (!Activity.isValidDate(date))
-            throw AppError.InvalidArgument("Date must be in the format yyyy-mm-dd")
-
-        if (!Activity.isValidDuration(duration))
-            throw AppError.InvalidArgument("Duration must be in the format hh:mm:ss.fff")
 
         if (!isValidId(sid))
             throw AppError.InvalidArgument("Sport id must be positive")
@@ -84,7 +80,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     fun getActivities(
         sid: Int,
         orderBy: String,
-        date: String?,
+        date: LocalDateTime?,
         rid: Int?,
         limit: Int?,
         skip: Int?
