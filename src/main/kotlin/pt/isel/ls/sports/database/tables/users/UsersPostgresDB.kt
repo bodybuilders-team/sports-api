@@ -4,6 +4,7 @@ import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.database.postgres.AbstractPostgresDB
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
+import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -31,16 +32,7 @@ class UsersPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(dataS
 
     override fun getUser(uid: Int): User =
         useConnection { conn ->
-            val stm = conn.prepareStatement(
-                """
-                SELECT *
-                FROM users
-                WHERE id = ?
-                """.trimIndent()
-            )
-            stm.setInt(1, uid)
-
-            val rs = stm.executeQuery()
+            val rs = doUserQuery(conn, uid)
 
             if (rs.next())
                 return getUserFromTable(rs)
@@ -84,16 +76,7 @@ class UsersPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(dataS
 
     override fun hasUser(uid: Int): Boolean =
         useConnection { conn ->
-            val stm = conn.prepareStatement(
-                """
-                SELECT *
-                FROM users
-                WHERE id = ?
-                """.trimIndent()
-            )
-            stm.setInt(1, uid)
-
-            val rs = stm.executeQuery()
+            val rs = doUserQuery(conn, uid)
 
             return rs.next()
         }
@@ -109,5 +92,24 @@ class UsersPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(dataS
             name = rs.getString(2),
             email = rs.getString(3)
         )
+
+        /**
+         * Executes a query on the users table given the [uid].
+         *
+         * @param conn connection
+         * @param uid user id
+         * @return result set
+         */
+        private fun doUserQuery(conn: Connection, uid: Int): ResultSet =
+            conn.prepareStatement(
+                """
+                SELECT *
+                FROM users
+                WHERE id = ?
+                """.trimIndent()
+            ).use { stm ->
+                stm.setInt(1, uid)
+                stm.executeQuery()
+            }
     }
 }

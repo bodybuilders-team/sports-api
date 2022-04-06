@@ -6,7 +6,6 @@ import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.AbstractServices
-import pt.isel.ls.sports.services.utils.isValidId
 import kotlin.time.Duration
 
 class ActivitiesServices(db: AppDB) : AbstractServices(db) {
@@ -22,13 +21,12 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @return activity's unique identifier
      */
     fun createNewActivity(token: String, date: LocalDate, duration: Duration, sid: Int, rid: Int?): Int {
+        validateSid(sid)
+        if (rid != null) validateRid(rid)
+
         val uid = authenticate(token)
-
-        if (!isValidId(sid))
-            throw AppError.InvalidArgument("Sport id must be positive")
-
-        if (rid != null && !isValidId(rid))
-            throw AppError.InvalidArgument("Route id must be positive")
+        validateSportExists(sid)
+        if (rid != null) validateRouteExists(rid)
 
         return db.activities.createNewActivity(uid, date, duration, sid, rid)
     }
@@ -41,8 +39,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @return the activity object
      */
     fun getActivity(aid: Int): Activity {
-        if (!isValidId(aid))
-            throw AppError.InvalidArgument("Activity id must be positive")
+        validateAid(aid)
 
         return db.activities.getActivity(aid)
     }
@@ -53,14 +50,13 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @param aid activity's unique identifier
      */
     fun deleteActivity(token: String, aid: Int) {
+        validateAid(aid)
+
         val uid = authenticate(token)
         val activity = db.activities.getActivity(aid)
 
         if (uid != activity.uid)
             throw AppError.Forbidden("You are not allowed to delete this activity")
-
-        if (!isValidId(aid))
-            throw AppError.InvalidArgument("Activity id must be positive")
 
         return db.activities.deleteActivity(aid)
     }
@@ -85,8 +81,14 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         limit: Int?,
         skip: Int?
     ): List<Activity> {
-        if (!isValidId(sid))
-            throw AppError.InvalidArgument("Sport id must be positive")
+        validateSid(sid)
+        if (rid != null) validateRid(rid)
+
+        if (limit != null && limit <= 0)
+            throw AppError.InvalidArgument("Limit must be higher than 0")
+
+        if (skip != null && if (limit != null) skip < limit else skip <= 0)
+            throw AppError.InvalidArgument("Skip must be higher than 0 and less than limit")
 
         val order = SortOrder.parse(orderBy)
             ?: throw AppError.InvalidArgument("Order by must be either ascending or descending")

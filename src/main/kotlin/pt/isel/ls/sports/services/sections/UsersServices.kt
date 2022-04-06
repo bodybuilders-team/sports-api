@@ -6,7 +6,6 @@ import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.AbstractServices
-import pt.isel.ls.sports.services.utils.isValidId
 import java.util.UUID
 
 class UsersServices(db: AppDB) : AbstractServices(db) {
@@ -26,7 +25,7 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
             throw AppError.InvalidArgument("Invalid email")
 
         if (db.users.hasUserWithEmail(email))
-            throw AppError.InvalidArgument("Email already in use")
+            throw AppError.Conflict("Email already in use")
 
         val uid = db.users.createNewUser(name, email)
         val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
@@ -42,8 +41,7 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      * @return user object
      */
     fun getUser(uid: Int): User {
-        if (!isValidId(uid))
-            throw AppError.InvalidArgument("User id must be positive")
+        validateUid(uid)
 
         return db.users.getUser(uid)
     }
@@ -65,8 +63,7 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      * @return list of activities made from a user
      */
     fun getUserActivities(uid: Int): List<Activity> {
-        if (!isValidId(uid))
-            throw AppError.InvalidArgument("User id must be positive")
+        validateUid(uid)
 
         return db.activities.getUserActivities(uid)
     }

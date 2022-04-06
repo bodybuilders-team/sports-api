@@ -2,6 +2,7 @@ package pt.isel.ls.sports.services
 
 import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.services.utils.isValidId
 
 abstract class AbstractServices(protected val db: AppDB) {
 
@@ -21,5 +22,93 @@ abstract class AbstractServices(protected val db: AppDB) {
             is AppError.NotFound -> throw AppError.InvalidCredentials("Invalid token")
             else -> throw it
         }
+    }
+
+    /**
+     * Validates a sport id.
+     *
+     * @param sid sport's unique identifier
+     * @throws AppError.InvalidArgument if [sid] is negative
+     */
+    protected fun validateSid(sid: Int) {
+        if (!isValidId(sid))
+            throw AppError.InvalidArgument("Sport id must be positive")
+    }
+
+    /**
+     * Validates a route id.
+     *
+     * @param rid route's unique identifier
+     * @throws AppError.InvalidArgument if [rid] is negative
+     */
+    protected fun validateRid(rid: Int) {
+        if (!isValidId(rid))
+            throw AppError.InvalidArgument("Route id must be positive")
+    }
+
+    /**
+     * Validates an activity id.
+     *
+     * @param aid activity's unique identifier
+     * @throws AppError.InvalidArgument if [aid] is negative
+     */
+    protected fun validateAid(aid: Int) {
+        if (!isValidId(aid))
+            throw AppError.InvalidArgument("Activity id must be positive")
+    }
+
+    /**
+     * Validates a user id.
+     *
+     * @param uid user's unique identifier
+     * @throws AppError.InvalidArgument if [uid] is negative
+     */
+    protected fun validateUid(uid: Int) {
+        if (!isValidId(uid))
+            throw AppError.InvalidArgument("User id must be positive")
+    }
+
+    /**
+     * Validates the existence of a user with the [uid].
+     * @param uid user's unique identifier
+     *
+     * @throws AppError.NotFound if there's no user with the [uid]
+     */
+    protected fun validateUserExists(uid: Int) {
+        if (!db.users.hasUser(uid))
+            throw AppError.NotFound("User id not found")
+    }
+
+    /**
+     * Validates the existence of a sport with the [sid].
+     * @param sid sport's unique identifier
+     *
+     * @throws AppError.NotFound if there's no sport with the [sid]
+     */
+    protected fun validateSportExists(sid: Int) {
+        if (!db.sports.hasSport(sid))
+            throw AppError.NotFound("Sport id not found")
+    }
+
+    /**
+     * Validates the existence of a route with the [rid].
+     * @param rid route's unique identifier
+     *
+     * @throws AppError.NotFound if there's no route with the [rid]
+     */
+    protected fun validateRouteExists(rid: Int) {
+        if (!db.routes.hasRoute(rid))
+            throw AppError.NotFound("Route id not found")
+    }
+
+    /**
+     * Validates the existence of an activity with the [aid].
+     * @param aid activity's unique identifier
+     *
+     * @throws AppError.NotFound if there's no activity with the [aid]
+     */
+    protected fun validateActivityExists(aid: Int) {
+        if (!db.activities.hasActivity(aid))
+            throw AppError.NotFound("Activity id not found")
     }
 }

@@ -5,6 +5,7 @@ import pt.isel.ls.sports.database.postgres.AbstractPostgresDB
 import pt.isel.ls.sports.database.utils.setStringOrNull
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.errors.AppError
+import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -48,16 +49,7 @@ class SportsPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
      */
     override fun getSport(sid: Int): Sport =
         useConnection { conn ->
-            val stm = conn.prepareStatement(
-                """
-                SELECT *
-                FROM sports
-                WHERE id = ?
-                """.trimIndent()
-            )
-            stm.setInt(1, sid)
-
-            val rs = stm.executeQuery()
+            val rs = doSportQuery(conn, sid)
 
             if (rs.next())
                 return getSportFromTable(rs)
@@ -92,16 +84,7 @@ class SportsPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
 
     override fun hasSport(sid: Int): Boolean =
         useConnection { conn ->
-            val stm = conn.prepareStatement(
-                """
-                SELECT *
-                FROM sports
-                WHERE id = ?
-                """.trimIndent()
-            )
-            stm.setInt(1, sid)
-
-            val rs = stm.executeQuery()
+            val rs = doSportQuery(conn, sid)
 
             return rs.next()
         }
@@ -118,5 +101,25 @@ class SportsPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
             description = rs.getString(3),
             uid = rs.getInt(4)
         )
+
+        /**
+         * Executes a query on the sports table given the [sid].
+         *
+         * @param conn connection
+         * @param sid sport id
+         *
+         * @return result set
+         */
+        private fun doSportQuery(conn: Connection, sid: Int): ResultSet =
+            conn.prepareStatement(
+                """
+                SELECT *
+                FROM sports
+                WHERE id = ?
+                """.trimIndent()
+            ).use { stm ->
+                stm.setInt(1, sid)
+                stm.executeQuery()
+            }
     }
 }

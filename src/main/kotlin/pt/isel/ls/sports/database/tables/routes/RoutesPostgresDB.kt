@@ -4,6 +4,7 @@ import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.database.postgres.AbstractPostgresDB
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.errors.AppError
+import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -33,16 +34,7 @@ class RoutesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
 
     override fun getRoute(rid: Int): Route =
         useConnection { conn ->
-            val stm = conn.prepareStatement(
-                """
-                SELECT *
-                FROM routes
-                WHERE id = ?
-                """.trimIndent()
-            )
-            stm.setInt(1, rid)
-
-            val rs = stm.executeQuery()
+            val rs = doRouteQuery(conn, rid)
 
             if (rs.next())
                 return getRouteFromTable(rs)
@@ -72,16 +64,7 @@ class RoutesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
 
     override fun hasRoute(rid: Int): Boolean =
         useConnection { conn ->
-            val stm = conn.prepareStatement(
-                """
-                SELECT *
-                FROM routes
-                WHERE id = ?
-                """.trimIndent()
-            )
-            stm.setInt(1, rid)
-
-            val rs = stm.executeQuery()
+            val rs = doRouteQuery(conn, rid)
 
             return rs.next()
         }
@@ -99,5 +82,25 @@ class RoutesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
             distance = rs.getInt(4) / 1000.0,
             uid = rs.getInt(5)
         )
+
+        /**
+         * Executes a query on the routes table given the [rid].
+         *
+         * @param conn connection
+         * @param rid route id
+         * @return result set
+         */
+        private fun doRouteQuery(conn: Connection, rid: Int): ResultSet {
+            conn.prepareStatement(
+                """
+                SELECT *
+                FROM routes
+                WHERE id = ?
+                """.trimIndent()
+            ).use { stm ->
+                stm.setInt(1, rid)
+                return stm.executeQuery()
+            }
+        }
     }
 }

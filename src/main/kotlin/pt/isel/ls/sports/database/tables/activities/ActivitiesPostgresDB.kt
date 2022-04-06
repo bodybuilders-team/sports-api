@@ -11,6 +11,7 @@ import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.toDTOString
 import pt.isel.ls.sports.toDuration
+import java.sql.Connection
 import java.sql.Date
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -45,16 +46,7 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
 
     override fun getActivity(aid: Int): Activity =
         useConnection { conn ->
-            val stm = conn.prepareStatement(
-                """
-                SELECT *
-                FROM activities
-                WHERE id = ?
-                """.trimIndent()
-            )
-            stm.setInt(1, aid)
-
-            val rs = stm.executeQuery()
+            val rs = doActivityQuery(conn, aid)
 
             if (rs.next())
                 return getActivityFromTable(rs)
@@ -145,16 +137,7 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
 
     override fun hasActivity(aid: Int): Boolean =
         useConnection { conn ->
-            val stm = conn.prepareStatement(
-                """
-                SELECT *
-                FROM activities
-                WHERE id = ?
-                """.trimIndent()
-            )
-            stm.setInt(1, aid)
-
-            val rs = stm.executeQuery()
+            val rs = doActivityQuery(conn, aid)
 
             return rs.next()
         }
@@ -192,5 +175,24 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
             sid = rs.getInt(5),
             rid = rs.getInt(6).let { if (rs.wasNull()) null else it }
         )
+
+        /**
+         * Executes a query on the activities table given the [aid].
+         *
+         * @param conn connection
+         * @param aid activity id
+         * @return result set
+         */
+        private fun doActivityQuery(conn: Connection, aid: Int): ResultSet =
+            conn.prepareStatement(
+                """
+                SELECT *
+                FROM activities
+                WHERE id = ?
+                """.trimIndent()
+            ).use { stm ->
+                stm.setInt(1, aid)
+                stm.executeQuery()
+            }
     }
 }
