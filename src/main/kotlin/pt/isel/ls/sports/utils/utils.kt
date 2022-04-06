@@ -1,4 +1,4 @@
-package pt.isel.ls.sports
+package pt.isel.ls.sports.utils
 
 import pt.isel.ls.sports.errors.AppError
 

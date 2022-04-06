@@ -10,7 +10,7 @@ import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
-import pt.isel.ls.sports.toDuration
+import pt.isel.ls.sports.utils.toDuration
 import pt.isel.ls.tableAsserter
 import java.util.UUID
 import kotlin.test.BeforeTest

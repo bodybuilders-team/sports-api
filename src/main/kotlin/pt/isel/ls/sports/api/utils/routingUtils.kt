@@ -6,7 +6,7 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.routing.path
 import pt.isel.ls.sports.errors.AppError
-import pt.isel.ls.sports.substringOrNull
+import pt.isel.ls.sports.utils.substringOrNull
 
 /**
  * Changes the 'Content-Type' header to 'application/json' and adds [data] to the response body.

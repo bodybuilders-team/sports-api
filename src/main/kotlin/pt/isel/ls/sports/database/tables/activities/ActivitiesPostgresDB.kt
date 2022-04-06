@@ -9,8 +9,8 @@ import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.database.utils.setIntOrNull
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.errors.AppError
-import pt.isel.ls.sports.toDTOString
-import pt.isel.ls.sports.toDuration
+import pt.isel.ls.sports.utils.toDTOString
+import pt.isel.ls.sports.utils.toDuration
 import java.sql.Connection
 import java.sql.Date
 import java.sql.PreparedStatement
@@ -143,6 +143,7 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
         }
 
     companion object {
+
         /**
          * Gets a list of activities returned from the execution of the statement [stm]
          *
@@ -183,16 +184,17 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
          * @param aid activity id
          * @return result set
          */
-        private fun doActivityQuery(conn: Connection, aid: Int): ResultSet =
-            conn.prepareStatement(
+        private fun doActivityQuery(conn: Connection, aid: Int): ResultSet {
+            val stm = conn.prepareStatement(
                 """
                 SELECT *
                 FROM activities
                 WHERE id = ?
                 """.trimIndent()
-            ).use { stm ->
-                stm.setInt(1, aid)
-                stm.executeQuery()
-            }
+            )
+            stm.setInt(1, aid)
+
+            return stm.executeQuery()
+        }
     }
 }

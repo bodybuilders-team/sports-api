@@ -90,6 +90,7 @@ class SportsPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
         }
 
     companion object {
+
         /**
          * Gets a Sport object from a ResultSet.
          * @param rs table
@@ -110,16 +111,17 @@ class SportsPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
          *
          * @return result set
          */
-        private fun doSportQuery(conn: Connection, sid: Int): ResultSet =
-            conn.prepareStatement(
+        private fun doSportQuery(conn: Connection, sid: Int): ResultSet {
+            val stm = conn.prepareStatement(
                 """
                 SELECT *
                 FROM sports
                 WHERE id = ?
                 """.trimIndent()
-            ).use { stm ->
-                stm.setInt(1, sid)
-                stm.executeQuery()
-            }
+            )
+            stm.setInt(1, sid)
+
+            return stm.executeQuery()
+        }
     }
 }

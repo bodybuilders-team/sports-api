@@ -16,7 +16,7 @@ import pt.isel.ls.sports.api.routers.sports.SportDTO
 import pt.isel.ls.sports.api.routers.sports.SportsResponse
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
-import pt.isel.ls.sports.toDuration
+import pt.isel.ls.sports.utils.toDuration
 import pt.isel.ls.token
 import java.util.UUID
 import kotlin.test.assertEquals

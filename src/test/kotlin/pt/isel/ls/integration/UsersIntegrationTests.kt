@@ -15,7 +15,7 @@ import pt.isel.ls.sports.api.routers.users.UserDTO
 import pt.isel.ls.sports.api.routers.users.UsersResponse
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
-import pt.isel.ls.sports.toDuration
+import pt.isel.ls.sports.utils.toDuration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -65,10 +65,10 @@ class UsersIntegrationTests : IntegrationTests() {
 
         send(request)
             .apply {
-                assertEquals(Status.BAD_REQUEST, status)
+                assertEquals(Status.CONFLICT, status)
 
                 val error = Json.decodeFromString<AppError>(bodyString())
-                assertEquals(AppError.InvalidArgument(), error)
+                assertEquals(AppError.Conflict(), error)
             }
     }
 

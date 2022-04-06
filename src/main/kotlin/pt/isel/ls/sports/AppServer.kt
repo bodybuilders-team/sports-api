@@ -6,6 +6,7 @@ import org.http4k.server.asServer
 import pt.isel.ls.sports.api.AppWebApi
 import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.services.AppServices
+import pt.isel.ls.sports.utils.logger
 
 /**
  * Represents a Sports API application server.

@@ -70,6 +70,7 @@ class RoutesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
         }
 
     companion object {
+
         /**
          * Gets a Route object from a ResultSet.
          * @param rs table
@@ -91,16 +92,16 @@ class RoutesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(data
          * @return result set
          */
         private fun doRouteQuery(conn: Connection, rid: Int): ResultSet {
-            conn.prepareStatement(
+            val stm = conn.prepareStatement(
                 """
                 SELECT *
                 FROM routes
                 WHERE id = ?
                 """.trimIndent()
-            ).use { stm ->
-                stm.setInt(1, rid)
-                return stm.executeQuery()
-            }
+            )
+
+            stm.setInt(1, rid)
+            return stm.executeQuery()
         }
     }
 }

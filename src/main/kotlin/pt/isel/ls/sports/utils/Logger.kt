@@ -1,4 +1,4 @@
-package pt.isel.ls.sports
+package pt.isel.ls.sports.utils
 
 import org.http4k.core.Request
 import org.slf4j.Logger

@@ -9,7 +9,7 @@ import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.AppServices
-import pt.isel.ls.sports.toDuration
+import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -241,12 +241,14 @@ class AppServicesTests {
 
         val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+        val sid = db.sports.createNewSport(1, "Soccer", "Kick a ball to score a goal")
+        val rid = db.routes.createNewRoute("Pontinha", "Chelas", 100, uid)
 
         val aid = services.activities.createNewActivity(
             token,
             "2022-11-05".toLocalDate(),
             "14:59:27.903".toDuration(),
-            1,
+            sid,
             1
         )
 

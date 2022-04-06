@@ -14,9 +14,9 @@ import pt.isel.ls.sports.api.utils.getErrorResponse
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.api.utils.tokenOrThrow
-import pt.isel.ls.sports.logRequest
 import pt.isel.ls.sports.services.sections.RoutesServices
-import pt.isel.ls.sports.toIntOrThrow
+import pt.isel.ls.sports.utils.logRequest
+import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
  * Represents the routes' router for the Web API.

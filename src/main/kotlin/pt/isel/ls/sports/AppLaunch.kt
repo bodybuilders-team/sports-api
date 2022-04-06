@@ -2,6 +2,7 @@ package pt.isel.ls.sports
 
 import pt.isel.ls.sports.database.AppMemoryDB
 import pt.isel.ls.sports.database.memory.AppMemoryDBSource
+import pt.isel.ls.sports.utils.logger
 
 const val PORT_ENV = "PORT"
 const val DEFAULT_PORT = 8888

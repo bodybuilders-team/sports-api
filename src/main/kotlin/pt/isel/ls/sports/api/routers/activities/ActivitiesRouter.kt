@@ -19,10 +19,10 @@ import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.api.utils.queryOrThrow
 import pt.isel.ls.sports.api.utils.tokenOrThrow
 import pt.isel.ls.sports.errors.AppError
-import pt.isel.ls.sports.logRequest
 import pt.isel.ls.sports.services.sections.ActivitiesServices
-import pt.isel.ls.sports.toDuration
-import pt.isel.ls.sports.toIntOrThrow
+import pt.isel.ls.sports.utils.logRequest
+import pt.isel.ls.sports.utils.toDuration
+import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
  * Represents the activity's router for the Web API.

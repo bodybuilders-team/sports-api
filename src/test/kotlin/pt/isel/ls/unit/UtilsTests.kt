@@ -1,8 +1,8 @@
 package pt.isel.ls.unit
 
 import pt.isel.ls.sports.errors.AppError
-import pt.isel.ls.sports.substringOrNull
-import pt.isel.ls.sports.toIntOrThrow
+import pt.isel.ls.sports.utils.substringOrNull
+import pt.isel.ls.sports.utils.toIntOrThrow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

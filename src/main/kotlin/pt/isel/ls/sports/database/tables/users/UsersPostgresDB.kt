@@ -100,16 +100,17 @@ class UsersPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(dataS
          * @param uid user id
          * @return result set
          */
-        private fun doUserQuery(conn: Connection, uid: Int): ResultSet =
-            conn.prepareStatement(
+        private fun doUserQuery(conn: Connection, uid: Int): ResultSet {
+            val stm = conn.prepareStatement(
                 """
                 SELECT *
                 FROM users
                 WHERE id = ?
                 """.trimIndent()
-            ).use { stm ->
-                stm.setInt(1, uid)
-                stm.executeQuery()
-            }
+            )
+            stm.setInt(1, uid)
+
+            return stm.executeQuery()
+        }
     }
 }

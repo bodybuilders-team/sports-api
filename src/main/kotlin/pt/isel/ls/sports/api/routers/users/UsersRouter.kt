@@ -15,9 +15,9 @@ import pt.isel.ls.sports.api.routers.activities.ActivityDTO
 import pt.isel.ls.sports.api.utils.getErrorResponse
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
-import pt.isel.ls.sports.logRequest
 import pt.isel.ls.sports.services.sections.UsersServices
-import pt.isel.ls.sports.toIntOrThrow
+import pt.isel.ls.sports.utils.logRequest
+import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
  * Represents the users' router for the Web API.

@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Response
 import org.http4k.core.Status
 import pt.isel.ls.sports.errors.AppError
-import pt.isel.ls.sports.logger
+import pt.isel.ls.sports.utils.logger
 
 /**
  * Gets the HTTP status for each AppError.
