@@ -1,15 +1,16 @@
 package pt.isel.ls.sports.database.tables.activities
 
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toJavaInstant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toKotlinLocalDate
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.database.postgres.AbstractPostgresDB
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.database.utils.setIntOrNull
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.toDTOString
+import pt.isel.ls.sports.toDuration
 import java.sql.Date
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -19,7 +20,7 @@ import kotlin.time.Duration
 
 class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(dataSource), ActivitiesDB {
 
-    override fun createNewActivity(uid: Int, date: LocalDateTime, duration: Duration, sid: Int, rid: Int?): Int =
+    override fun createNewActivity(uid: Int, date: LocalDate, duration: Duration, sid: Int, rid: Int?): Int =
         useConnection { conn ->
             val stm = conn.prepareStatement(
                 """
@@ -29,10 +30,8 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
                 Statement.RETURN_GENERATED_KEYS
             )
 
-            val sqlDate = Date.from(date.toInstant(TimeZone.UTC).toJavaInstant())
-
-            stm.setDate(1, sqlDate as Date?)
-            stm.setString(2, duration)
+            stm.setDate(1, getSQLDate(date))
+            stm.setString(2, duration.toDTOString())
             stm.setInt(3, uid)
             stm.setInt(4, sid)
             stm.setIntOrNull(5, rid)
@@ -79,7 +78,7 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
     override fun getActivities(
         sid: Int,
         orderBy: SortOrder,
-        date: LocalDateTime?,
+        date: LocalDate?,
         rid: Int?,
         skip: Int?,
         limit: Int?
@@ -103,7 +102,7 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
             var counter = 1
 
             if (date != null)
-                stm.setDate(++counter, Date.valueOf(date))
+                stm.setDate(++counter, getSQLDate(date))
 
             if (rid != null)
                 stm.setInt(++counter, rid)
@@ -113,6 +112,8 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
 
             return getActivities(stm)
         }
+
+    private fun getSQLDate(date: LocalDate) = Date.valueOf(date.toJavaLocalDate())
 
     override fun getSportActivities(sid: Int): List<Activity> =
         useConnection { conn ->
@@ -185,8 +186,8 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
          */
         private fun getActivityFromTable(rs: ResultSet) = Activity(
             id = rs.getInt(1),
-            date = rs.getDate(2),
-            duration = rs.getString(3),
+            date = rs.getDate(2).toLocalDate().toKotlinLocalDate(),
+            duration = rs.getString(3).toDuration(),
             uid = rs.getInt(4),
             sid = rs.getInt(5),
             rid = rs.getInt(6).let { if (rs.wasNull()) null else it }

@@ -1,5 +1,6 @@
 package pt.isel.ls.unit
 
+import kotlinx.datetime.toLocalDate
 import pt.isel.ls.runScript
 import pt.isel.ls.sports.JDBC_DATABASE_URL_ENV
 import pt.isel.ls.sports.database.AppPostgresDB
@@ -9,6 +10,7 @@ import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.toDuration
 import pt.isel.ls.tableAsserter
 import java.util.UUID
 import kotlin.test.BeforeTest
@@ -249,7 +251,8 @@ class AppPostgresDBTests {
 
     @Test
     fun `createNewActivity creates activity correctly in the database`() {
-        val aid = db.activities.createNewActivity(1, "2022-11-05", "14:59:27.903", 1, 1)
+        val aid =
+            db.activities.createNewActivity(1, "2022-11-05".toLocalDate(), "14:59:27.903".toDuration(), 1, 1)
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM activities WHERE id = ?")
@@ -276,7 +279,7 @@ class AppPostgresDBTests {
     @Test
     fun `getActivity returns the activity object`() {
         val activity = db.activities.getActivity(1)
-        assertEquals(Activity(1, "2022-11-20", "23:44:59.903", 1, 1, null), activity)
+        assertEquals(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null), activity)
     }
 
     @Test
@@ -302,7 +305,10 @@ class AppPostgresDBTests {
     @Test
     fun `getSportActivities returns the activities list`() {
         val activities = db.activities.getSportActivities(1)
-        assertEquals(listOf(Activity(1, "2022-11-20", "23:44:59.903", 1, 1, null)), activities)
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
+            activities
+        )
     }
 
     // getUserActivities
@@ -310,29 +316,62 @@ class AppPostgresDBTests {
     @Test
     fun `getUserActivities returns the activities list`() {
         val activities = db.activities.getUserActivities(1)
-        assertEquals(listOf(Activity(1, "2022-11-20", "23:44:59.903", 1, 1, null)), activities)
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
+            activities
+        )
     }
 
     // getActivities
 
     @Test
     fun `getActivities with descending order returns the activities list`() {
-        val activities = db.activities.getActivities(sid = 2, SortOrder.DESCENDING, "2022-11-21", rid = 1)
+        val activities =
+            db.activities.getActivities(sid = 2, SortOrder.DESCENDING, "2022-11-21".toLocalDate(), rid = 1)
 
         val mockActivities = listOf(
-            Activity(id = 3, date = "2022-11-21", duration = "20:23:55.263", uid = 3, sid = 2, rid = 1),
-            Activity(id = 2, date = "2022-11-21", duration = "10:10:10.100", uid = 2, sid = 2, rid = 1)
+            Activity(
+                id = 3,
+                date = "2022-11-21".toLocalDate(),
+                duration = "20:23:55.263".toDuration(),
+                uid = 3,
+                sid = 2,
+                rid = 1
+            ),
+            Activity(
+                id = 2,
+                date = "2022-11-21".toLocalDate(),
+                duration = "10:10:10.100".toDuration(),
+                uid = 2,
+                sid = 2,
+                rid = 1
+            )
         )
         assertEquals(mockActivities, activities)
     }
 
     @Test
     fun `getActivities with ascending order returns the activities list`() {
-        val activities = db.activities.getActivities(sid = 2, SortOrder.ASCENDING, "2022-11-21", rid = 1)
+        val activities =
+            db.activities.getActivities(sid = 2, SortOrder.ASCENDING, "2022-11-21".toLocalDate(), rid = 1)
 
         val mockActivities = listOf(
-            Activity(id = 2, date = "2022-11-21", duration = "10:10:10.100", uid = 2, sid = 2, rid = 1),
-            Activity(id = 3, date = "2022-11-21", duration = "20:23:55.263", uid = 3, sid = 2, rid = 1)
+            Activity(
+                id = 2,
+                date = "2022-11-21".toLocalDate(),
+                duration = "10:10:10.100".toDuration(),
+                uid = 2,
+                sid = 2,
+                rid = 1
+            ),
+            Activity(
+                id = 3,
+                date = "2022-11-21".toLocalDate(),
+                duration = "20:23:55.263".toDuration(),
+                uid = 3,
+                sid = 2,
+                rid = 1
+            )
 
         )
         assertEquals(mockActivities, activities)

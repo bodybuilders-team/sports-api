@@ -1,5 +1,6 @@
 package pt.isel.ls.integration
 
+import kotlinx.datetime.toLocalDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
@@ -8,12 +9,13 @@ import org.http4k.core.Status
 import org.junit.Test
 import pt.isel.ls.json
 import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
+import pt.isel.ls.sports.api.routers.activities.ActivityDTO
 import pt.isel.ls.sports.api.routers.activities.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.activities.CreateActivityResponse
 import pt.isel.ls.sports.api.utils.MessageResponse
-import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
+import pt.isel.ls.sports.toDuration
 import pt.isel.ls.token
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -132,14 +134,19 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             date = "2020-01-01", duration = "01:00:00.000", sid = sid
         )
 
-        val aid = db.activities.createNewActivity(mockId, mockActivity.date, mockActivity.duration, mockActivity.sid)
+        val aid = db.activities.createNewActivity(
+            mockId,
+            mockActivity.date.toLocalDate(),
+            mockActivity.duration.toDuration(),
+            mockActivity.sid
+        )
 
         val request = Request(Method.GET, "$uriPrefix/activities/$aid")
 
         send(request).apply {
             assertEquals(Status.OK, status)
 
-            val activity = Json.decodeFromString<Activity>(bodyString())
+            val activity = Json.decodeFromString<ActivityDTO>(bodyString())
             assertEquals(mockId, activity.id)
             assertEquals(mockId, activity.uid)
 
@@ -188,7 +195,12 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             date = "2020-01-01", duration = "01:00:00.000", sid = sid
         )
 
-        val aid = db.activities.createNewActivity(mockId, mockActivity.date, mockActivity.duration, mockActivity.sid)
+        val aid = db.activities.createNewActivity(
+            mockId,
+            mockActivity.date.toLocalDate(),
+            mockActivity.duration.toDuration(),
+            mockActivity.sid
+        )
 
         val request = Request(Method.DELETE, "$uriPrefix/activities/$aid").token(token)
 
@@ -230,7 +242,12 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         )
 
         val mockId2 = db.users.createNewUser("Johnny2", "JohnnyBoy2@gmail.com")
-        val aid = db.activities.createNewActivity(mockId2, mockActivity.date, mockActivity.duration, mockActivity.sid)
+        val aid = db.activities.createNewActivity(
+            mockId2,
+            mockActivity.date.toLocalDate(),
+            mockActivity.duration.toDuration(),
+            mockActivity.sid
+        )
 
         val request = Request(Method.DELETE, "$uriPrefix/activities/$aid").token(token)
 
@@ -253,7 +270,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             CreateActivityRequest("2019-01-01", "23:59:59.555", mockSid),
             CreateActivityRequest("2019-01-02", "20:59:59.555", mockSid)
         ).associateBy {
-            db.activities.createNewActivity(mockUid, it.date, it.duration, it.sid)
+            db.activities.createNewActivity(mockUid, it.date.toLocalDate(), it.duration.toDuration(), it.sid)
         }
 
         val request = Request(Method.GET, "$uriPrefix/activities/search?sid=$mockSid&orderBy=$orderBy")

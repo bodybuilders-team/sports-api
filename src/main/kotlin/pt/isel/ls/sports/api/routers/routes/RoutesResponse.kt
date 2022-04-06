@@ -1,7 +1,6 @@
 package pt.isel.ls.sports.api.routers.routes
 
 import kotlinx.serialization.Serializable
-import pt.isel.ls.sports.domain.Route
 
 /**
  * Represents a response with routes.
@@ -9,4 +8,4 @@ import pt.isel.ls.sports.domain.Route
  * @property routes list of routes
  */
 @Serializable
-data class RoutesResponse(val routes: List<Route>)
+data class RoutesResponse(val routes: List<RouteDTO>)

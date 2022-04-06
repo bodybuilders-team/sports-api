@@ -9,8 +9,8 @@ import org.junit.Test
 import pt.isel.ls.json
 import pt.isel.ls.sports.api.routers.routes.CreateRouteRequest
 import pt.isel.ls.sports.api.routers.routes.CreateRouteResponse
+import pt.isel.ls.sports.api.routers.routes.RouteDTO
 import pt.isel.ls.sports.api.routers.routes.RoutesResponse
-import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.token
@@ -198,7 +198,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val route = Json.decodeFromString<Route>(bodyString())
+                val route = Json.decodeFromString<RouteDTO>(bodyString())
                 assertEquals(rid, route.id)
                 assertEquals(mockId, route.uid)
 

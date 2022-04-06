@@ -3,6 +3,7 @@ package pt.isel.ls.sports.api.routers.activities
 import kotlinx.serialization.Serializable
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.services.utils.isValidId
+import pt.isel.ls.sports.toDTOString
 
 /**
  * Activity representation.
@@ -29,7 +30,7 @@ data class ActivityDTO(
 
         operator fun invoke(activity: Activity): ActivityDTO {
             val dateInString = activity.date.toString()
-            val durationInString = activity.duration.toString() // TODO("Probably not working")
+            val durationInString = activity.duration.toDTOString()
 
             return ActivityDTO(activity.id, dateInString, durationInString, activity.uid, activity.sid, activity.rid)
         }

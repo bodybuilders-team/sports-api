@@ -1,6 +1,6 @@
 package pt.isel.ls.sports.services.sections
 
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
@@ -21,7 +21,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      *
      * @return activity's unique identifier
      */
-    fun createNewActivity(token: String, date: LocalDateTime, duration: Duration, sid: Int, rid: Int?): Int {
+    fun createNewActivity(token: String, date: LocalDate, duration: Duration, sid: Int, rid: Int?): Int {
         val uid = authenticate(token)
 
         if (!isValidId(sid))
@@ -80,7 +80,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     fun getActivities(
         sid: Int,
         orderBy: String,
-        date: LocalDateTime?,
+        date: LocalDate?,
         rid: Int?,
         limit: Int?,
         skip: Int?

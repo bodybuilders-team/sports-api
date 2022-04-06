@@ -1,5 +1,6 @@
 package pt.isel.ls.unit
 
+import kotlinx.datetime.toLocalDate
 import pt.isel.ls.sports.database.AppMemoryDB
 import pt.isel.ls.sports.database.memory.AppMemoryDBSource
 import pt.isel.ls.sports.domain.Activity
@@ -8,6 +9,7 @@ import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.AppServices
+import pt.isel.ls.sports.toDuration
 import java.util.UUID
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -240,9 +242,18 @@ class AppServicesTests {
         val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
 
-        val aid = services.activities.createNewActivity(token, "2022-11-05", "14:59:27.903", 1, 1)
+        val aid = services.activities.createNewActivity(
+            token,
+            "2022-11-05".toLocalDate(),
+            "14:59:27.903".toDuration(),
+            1,
+            1
+        )
 
-        assertEquals(Activity(aid, "2022-11-05", "14:59:27.903", 1, 1, 1), db.activities.getActivity(aid))
+        assertEquals(
+            Activity(aid, "2022-11-05".toLocalDate(), "14:59:27.903".toDuration(), 1, 1, 1),
+            db.activities.getActivity(aid)
+        )
     }
 
     @Test
@@ -252,7 +263,13 @@ class AppServicesTests {
         val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
 
         assertFailsWith<AppError.InvalidArgument> {
-            services.activities.createNewActivity(token, "2022-11-05", "14:59:27.903", -5, 1)
+            services.activities.createNewActivity(
+                token,
+                "2022-11-05".toLocalDate(),
+                "14:59:27.903".toDuration(),
+                -5,
+                1
+            )
         }
     }
 
@@ -263,7 +280,13 @@ class AppServicesTests {
         val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
 
         assertFailsWith<AppError.InvalidArgument> {
-            services.activities.createNewActivity(token, "2022-11-05", "14:59:27.903", -5, 1)
+            services.activities.createNewActivity(
+                token,
+                "2022-11-05".toLocalDate(),
+                "14:59:27.903".toDuration(),
+                -5,
+                1
+            )
         }
     }
 
@@ -274,9 +297,12 @@ class AppServicesTests {
 
         db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        db.activities.createNewActivity(1, "2022-11-20", "20:23:55.263", 1, 1)
+        db.activities.createNewActivity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
-        assertEquals(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1), services.activities.getActivity(1))
+        assertEquals(
+            Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1),
+            services.activities.getActivity(1)
+        )
     }
 
     @Test
@@ -294,7 +320,7 @@ class AppServicesTests {
 
         val mockId = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(UUID.randomUUID(), mockId)
-        db.activities.createNewActivity(1, "2022-11-20", "23:44:59.903", 1, 1)
+        db.activities.createNewActivity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
 
         services.activities.deleteActivity(token, 1)
 
@@ -311,11 +337,14 @@ class AppServicesTests {
         db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
         db.sports.createNewSport(1, "Soccer", "Kick a ball to score a goal")
 
-        db.activities.createNewActivity(1, "2022-11-20", "20:23:55.263", 1, 1)
+        db.activities.createNewActivity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
         val activities = services.sports.getSportActivities(1)
 
-        assertEquals(listOf(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)), activities)
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
+            activities
+        )
     }
 
     // getUserActivities
@@ -326,11 +355,14 @@ class AppServicesTests {
         db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
         db.sports.createNewSport(1, "Soccer", "Kick a ball to score a goal")
 
-        db.activities.createNewActivity(1, "2022-11-20", "20:23:55.263", 1, 1)
+        db.activities.createNewActivity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
         val activities = services.users.getUserActivities(1)
 
-        assertEquals(listOf(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)), activities)
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
+            activities
+        )
     }
 
     // getActivities
@@ -341,12 +373,22 @@ class AppServicesTests {
         db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
         db.sports.createNewSport(1, "Soccer", "Kick a ball to score a goal")
 
-        db.activities.createNewActivity(1, "2022-11-20", "20:23:55.263", 1, 1)
+        db.activities.createNewActivity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
         val activities =
-            services.activities.getActivities(sid = 1, "descending", "2022-11-20", rid = 1, limit = null, skip = null)
+            services.activities.getActivities(
+                sid = 1,
+                "descending",
+                "2022-11-20".toLocalDate(),
+                rid = 1,
+                limit = null,
+                skip = null
+            )
 
-        assertEquals(listOf(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)), activities)
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
+            activities
+        )
     }
 
     // TODO: 26/03/2022 Add more tests

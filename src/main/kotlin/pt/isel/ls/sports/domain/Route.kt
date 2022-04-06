@@ -1,6 +1,5 @@
 package pt.isel.ls.sports.domain
 
-import kotlinx.serialization.Serializable
 import pt.isel.ls.sports.services.utils.isValidId
 
 /**

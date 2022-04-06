@@ -1,5 +1,6 @@
 package pt.isel.ls.unit
 
+import kotlinx.datetime.toLocalDate
 import pt.isel.ls.sports.database.AppMemoryDB
 import pt.isel.ls.sports.database.memory.AppMemoryDBSource
 import pt.isel.ls.sports.database.utils.SortOrder
@@ -8,6 +9,7 @@ import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.toDuration
 import java.util.UUID
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -263,8 +265,12 @@ class AppDataMemTests {
     fun `createNewActivity creates activity correctly in the database`() {
         source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        val aid = db.activities.createNewActivity(1, "2022-11-05", "14:56:27.903", 1, 1)
-        assertEquals(Activity(aid, "2022-11-05", "14:56:27.903", 1, 1, 1), source.activities[1])
+        val aid =
+            db.activities.createNewActivity(1, "2022-11-05".toLocalDate(), "14:56:27.903".toDuration(), 1, 1)
+        assertEquals(
+            Activity(aid, "2022-11-05".toLocalDate(), "14:56:27.903".toDuration(), 1, 1, 1),
+            source.activities[1]
+        )
     }
 
     // getActivity
@@ -273,7 +279,7 @@ class AppDataMemTests {
     fun `getActivity returns the activity object`() {
         source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        val activity = Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)
+        val activity = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 
         source.activities[1] = activity
 
@@ -293,7 +299,7 @@ class AppDataMemTests {
     fun `deleteActivity deletes an activity successfully`() {
         source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        source.activities[1] = Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)
+        source.activities[1] = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 
         db.activities.deleteActivity(1)
 
@@ -307,11 +313,14 @@ class AppDataMemTests {
         source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
-        source.activities[1] = Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)
+        source.activities[1] = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 
         val activities = db.activities.getSportActivities(1)
 
-        assertEquals(listOf(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)), activities)
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
+            activities
+        )
     }
 
     // getUserActivities
@@ -321,11 +330,14 @@ class AppDataMemTests {
         source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
-        source.activities[1] = Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)
+        source.activities[1] = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 
         val activities = db.activities.getUserActivities(1)
 
-        assertEquals(listOf(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)), activities)
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
+            activities
+        )
     }
 
     // getActivities
@@ -335,11 +347,21 @@ class AppDataMemTests {
         source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
-        source.activities[1] = Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)
+        source.activities[1] = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 
-        val activities = db.activities.getActivities(sid = 1, SortOrder.ASCENDING, "2022-11-20", rid = 1, null, null)
+        val activities = db.activities.getActivities(
+            sid = 1,
+            SortOrder.ASCENDING,
+            "2022-11-20".toLocalDate(),
+            rid = 1,
+            null,
+            null
+        )
 
-        assertEquals(listOf(Activity(1, "2022-11-20", "20:23:55.263", 1, 1, 1)), activities)
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
+            activities
+        )
     }
 
     // TODO: 26/03/2022 Add more tests (synchronize with SportPostgresTests?)

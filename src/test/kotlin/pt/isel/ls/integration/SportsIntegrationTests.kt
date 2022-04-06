@@ -1,5 +1,6 @@
 package pt.isel.ls.integration
 
+import kotlinx.datetime.toLocalDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
@@ -11,10 +12,11 @@ import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
 import pt.isel.ls.sports.api.routers.activities.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.sports.CreateSportRequest
 import pt.isel.ls.sports.api.routers.sports.CreateSportResponse
+import pt.isel.ls.sports.api.routers.sports.SportDTO
 import pt.isel.ls.sports.api.routers.sports.SportsResponse
-import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
+import pt.isel.ls.sports.toDuration
 import pt.isel.ls.token
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -206,7 +208,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val sport = Json.decodeFromString<Sport>(bodyString())
+                val sport = Json.decodeFromString<SportDTO>(bodyString())
                 assertEquals(mockId, sport.uid)
                 assertEquals(sid, sport.id)
 
@@ -228,7 +230,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val sport = Json.decodeFromString<Sport>(bodyString())
+                val sport = Json.decodeFromString<SportDTO>(bodyString())
                 assertEquals(mockId, sport.id)
                 assertEquals(mockSport.name, sport.name)
                 assertNull(sport.description)
@@ -274,7 +276,7 @@ class SportsIntegrationTests : IntegrationTests() {
             CreateActivityRequest("2019-01-01", "23:59:59.555", mockSid),
             CreateActivityRequest("2019-01-02", "20:59:59.555", mockSid)
         ).associateBy {
-            db.activities.createNewActivity(mockUid, it.date, it.duration, it.sid)
+            db.activities.createNewActivity(mockUid, it.date.toLocalDate(), it.duration.toDuration(), it.sid)
         }
 
         val request = Request(Method.GET, "$uriPrefix/sports/$mockSid/activities")

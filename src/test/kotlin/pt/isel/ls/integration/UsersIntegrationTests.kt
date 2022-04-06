@@ -1,5 +1,6 @@
 package pt.isel.ls.integration
 
+import kotlinx.datetime.toLocalDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
@@ -10,10 +11,11 @@ import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
 import pt.isel.ls.sports.api.routers.activities.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.users.CreateUserRequest
 import pt.isel.ls.sports.api.routers.users.CreateUserResponse
+import pt.isel.ls.sports.api.routers.users.UserDTO
 import pt.isel.ls.sports.api.routers.users.UsersResponse
-import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
+import pt.isel.ls.sports.toDuration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -147,7 +149,7 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val user = Json.decodeFromString<User>(bodyString())
+                val user = Json.decodeFromString<UserDTO>(bodyString())
                 assertEquals(mockId, user.id)
                 assertEquals(mockUser.name, user.name)
                 assertEquals(mockUser.email, user.email)
@@ -193,7 +195,7 @@ class UsersIntegrationTests : IntegrationTests() {
             CreateActivityRequest("2019-01-01", "23:59:59.555", sid),
             CreateActivityRequest("2019-01-02", "20:59:59.555", sid)
         ).associateBy {
-            db.activities.createNewActivity(mockUid, it.date, it.duration, it.sid)
+            db.activities.createNewActivity(mockUid, it.date.toLocalDate(), it.duration.toDuration(), it.sid)
         }
 
         val request = Request(Method.GET, "$uriPrefix/users/$mockUid/activities")

@@ -1,6 +1,6 @@
 package pt.isel.ls.sports.database.tables.activities
 
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.memory.AppMemoryDBSource
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
@@ -9,7 +9,7 @@ import kotlin.time.Duration
 
 class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
 
-    override fun createNewActivity(uid: Int, date: LocalDateTime, duration: Duration, sid: Int, rid: Int?): Int {
+    override fun createNewActivity(uid: Int, date: LocalDate, duration: Duration, sid: Int, rid: Int?): Int {
         val id = source.nextActivityId.getAndIncrement()
 
         source.activities[id] = Activity(id, date, duration, uid, sid, rid)
@@ -25,7 +25,7 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         source.activities.remove(aid) ?: throw AppError.NotFound("Activity with id $aid not found")
     }
 
-    override fun getActivities(sid: Int, orderBy: SortOrder, date: LocalDateTime?, rid: Int?, skip: Int?, limit: Int?) =
+    override fun getActivities(sid: Int, orderBy: SortOrder, date: LocalDate?, rid: Int?, skip: Int?, limit: Int?) =
         source.activities
             .filter {
                 it.value.sid == sid &&

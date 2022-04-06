@@ -81,7 +81,7 @@ class UsersRouter(private val services: UsersServices) {
 
         val user = services.getUser(uid)
 
-        return Response(OK).json(user)
+        return Response(OK).json(UserDTO(user))
     }.getOrElse(::getErrorResponse)
 
     /**

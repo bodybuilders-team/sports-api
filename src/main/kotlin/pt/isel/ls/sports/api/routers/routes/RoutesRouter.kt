@@ -71,7 +71,7 @@ class RoutesRouter(private val services: RoutesServices) {
         logRequest(request)
         val routes = services.getAllRoutes()
 
-        return Response(OK).json(RoutesResponse(routes))
+        return Response(OK).json(RoutesResponse(routes.map { RouteDTO(it) }))
     }.getOrElse(::getErrorResponse)
 
     /**

@@ -1,6 +1,6 @@
 package pt.isel.ls.sports.domain
 
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.services.utils.isValidId
 import kotlin.time.Duration
 
@@ -16,7 +16,7 @@ import kotlin.time.Duration
  */
 data class Activity(
     val id: Int,
-    val date: LocalDateTime,
+    val date: LocalDate,
     val duration: Duration,
     val uid: Int,
     val sid: Int,

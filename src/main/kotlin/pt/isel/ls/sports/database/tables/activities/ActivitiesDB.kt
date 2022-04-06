@@ -1,6 +1,6 @@
 package pt.isel.ls.sports.database.tables.activities
 
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import kotlin.time.Duration
@@ -20,7 +20,7 @@ interface ActivitiesDB {
      *
      * @return activity's unique identifier
      */
-    fun createNewActivity(uid: Int, date: LocalDateTime, duration: Duration, sid: Int, rid: Int? = null): Int
+    fun createNewActivity(uid: Int, date: LocalDate, duration: Duration, sid: Int, rid: Int? = null): Int
 
     /**
      * Get the detailed information of an activity.
@@ -49,7 +49,7 @@ interface ActivitiesDB {
     fun getActivities(
         sid: Int,
         orderBy: SortOrder,
-        date: LocalDateTime? = null,
+        date: LocalDate? = null,
         rid: Int? = null,
         skip: Int? = null,
         limit: Int? = null

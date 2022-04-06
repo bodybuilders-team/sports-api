@@ -1,7 +1,6 @@
 package pt.isel.ls.sports.api.routers.activities
 
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.toLocalDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method.DELETE
@@ -22,8 +21,8 @@ import pt.isel.ls.sports.api.utils.tokenOrThrow
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.logRequest
 import pt.isel.ls.sports.services.sections.ActivitiesServices
+import pt.isel.ls.sports.toDuration
 import pt.isel.ls.sports.toIntOrThrow
-import kotlin.time.Duration
 
 /**
  * Represents the activity's router for the Web API.
@@ -63,8 +62,8 @@ class ActivitiesRouter(private val services: ActivitiesServices) {
 
         val aid = services.createNewActivity(
             token,
-            activityReq.date.toLocalDateTime(),
-            Duration.parse(activityReq.duration),
+            activityReq.date.toLocalDate(),
+            activityReq.duration.toDuration(),
             activityReq.sid,
             activityReq.rid
         )
@@ -119,7 +118,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) {
         if (date != null && !ActivityDTO.isValidDate(date))
             throw AppError.InvalidArgument("Date must be in the format yyyy-mm-dd")
 
-        val dateLDT = if (date != null) LocalDateTime.parse(date) else null
+        val dateLDT = date?.toLocalDate()
 
         val activities = services.getActivities(sid, orderBy, dateLDT, rid, limit, skip)
 

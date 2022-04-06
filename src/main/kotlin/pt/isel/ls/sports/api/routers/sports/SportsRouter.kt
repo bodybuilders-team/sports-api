@@ -73,7 +73,7 @@ class SportsRouter(private val services: SportsServices) {
         logRequest(request)
         val sports = services.getAllSports()
 
-        return Response(OK).json(SportsResponse(sports))
+        return Response(OK).json(SportsResponse(sports.map { SportDTO(it) }))
     }.getOrElse(::getErrorResponse)
 
     /**
