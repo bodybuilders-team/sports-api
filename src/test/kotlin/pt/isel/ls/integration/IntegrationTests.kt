@@ -3,6 +3,7 @@ package pt.isel.ls.integration
 import org.http4k.client.JavaHttpClient
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.runScript
 import pt.isel.ls.sports.AppServer
 import pt.isel.ls.sports.DEFAULT_PORT
@@ -17,8 +18,7 @@ abstract class IntegrationTests {
         private val jdbcDatabaseURL: String = System.getenv(JDBC_DATABASE_URL_ENV)
         private val port = System.getenv(PORT_ENV)?.toIntOrNull() ?: DEFAULT_PORT
 
-        val dataSource = AppPostgresDB.createPostgresDataSource(jdbcDatabaseURL)
-        val db = AppPostgresDB(dataSource)
+        val db = AppPostgresDB(jdbcDatabaseURL)
         val send = JavaHttpClient()
         val uriPrefix = "http://localhost:$port/api"
 
@@ -39,7 +39,7 @@ abstract class IntegrationTests {
 
     @BeforeTest
     fun setupDatabase() {
-        dataSource.connection.use {
+        PGSimpleDataSource().apply { setUrl(jdbcDatabaseURL) }.connection.use {
             it.runScript("src/main/sql/createSchema.sql")
         }
     }

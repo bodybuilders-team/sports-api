@@ -12,6 +12,7 @@ import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
 import pt.isel.ls.sports.api.routers.activities.ActivityDTO
 import pt.isel.ls.sports.api.routers.activities.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.activities.CreateActivityResponse
+import pt.isel.ls.sports.api.utils.AppErrorDTO
 import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
@@ -27,11 +28,11 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     // Create new activity
 
     @Test
-    fun `Create new activity with valid data`() {
-        val uid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+    fun `Create new activity with valid data`(): Unit = db.connection.use { conn ->
+        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
-        val sid = db.sports.createNewSport(uid, "Running")
+        val sid = db.sports.createNewSport(conn, uid, "Running")
 
         val requestBody = """
             {
@@ -49,14 +50,15 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             val aid = Json.decodeFromString<CreateActivityResponse>(bodyString()).aid
             assertTrue(isValidId(aid))
 
-            assertTrue(db.activities.hasActivity(aid))
+            assertTrue(db.activities.hasActivity(conn, aid))
         }
+        conn.connection.close()
     }
 
     @Test
-    fun `Create new activity with no token`() {
-        val uid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val sid = db.sports.createNewSport(uid, "Running")
+    fun `Create new activity with no token`(): Unit = db.connection.use { conn ->
+        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val sid = db.sports.createNewSport(conn, uid, "Running")
 
         val requestBody = """
             {
@@ -71,15 +73,16 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.BAD_REQUEST, status)
 
-            val error = Json.decodeFromString<AppError>(bodyString())
+            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
             assertEquals(AppError.NoCredentials(), error)
         }
+        conn.connection.close()
     }
 
     @Test
-    fun `Create new activity with invalid token`() {
-        val uid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val sid = db.sports.createNewSport(uid, "Running")
+    fun `Create new activity with invalid token`(): Unit = db.connection.use { conn ->
+        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val sid = db.sports.createNewSport(conn, uid, "Running")
 
         val requestBody = """
             {
@@ -94,16 +97,16 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.UNAUTHORIZED, status)
 
-            val error = Json.decodeFromString<AppError>(bodyString())
+            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
             assertEquals(AppError.InvalidCredentials(), error)
         }
     }
 
     @Test
-    fun `Create new activity with invalid data`() {
-        val uid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
-        val sid = db.sports.createNewSport(uid, "Running")
+    fun `Create new activity with invalid data`(): Unit = db.connection.use { conn ->
+        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+        val sid = db.sports.createNewSport(conn, uid, "Running")
 
         val requestBody = """
             {
@@ -118,7 +121,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.BAD_REQUEST, status)
 
-            val error = Json.decodeFromString<AppError>(bodyString())
+            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
             assertEquals(AppError.InvalidArgument(), error)
         }
     }
@@ -126,15 +129,16 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     // Get activity
 
     @Test
-    fun `Get activity by id`() {
-        val mockId = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val sid = db.sports.createNewSport(mockId, "Running")
+    fun `Get activity by id`(): Unit = db.connection.use { conn ->
+        val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val sid = db.sports.createNewSport(conn, mockId, "Running")
 
         val mockActivity = CreateActivityRequest(
             date = "2020-01-01", duration = "01:00:00.000", sid = sid
         )
 
         val aid = db.activities.createNewActivity(
+            conn,
             mockId,
             mockActivity.date.toLocalDate(),
             mockActivity.duration.toDuration(),
@@ -164,7 +168,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.BAD_REQUEST, status)
 
-            val error = Json.decodeFromString<AppError>(bodyString())
+            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
             assertEquals(AppError.InvalidArgument(), error)
         }
     }
@@ -177,7 +181,8 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.NOT_FOUND, status)
 
-            val error = Json.decodeFromString<AppError>(bodyString())
+            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+
             assertEquals(AppError.NotFound(), error)
         }
     }
@@ -185,17 +190,18 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     // Delete activity
 
     @Test
-    fun `Delete activity`() {
-        val mockId = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), mockId)
+    fun `Delete activity`(): Unit = db.connection.use { conn ->
+        val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), mockId)
 
-        val sid = db.sports.createNewSport(mockId, "Running")
+        val sid = db.sports.createNewSport(conn, mockId, "Running")
 
         val mockActivity = CreateActivityRequest(
             date = "2020-01-01", duration = "01:00:00.000", sid = sid
         )
 
         val aid = db.activities.createNewActivity(
+            conn,
             mockId,
             mockActivity.date.toLocalDate(),
             mockActivity.duration.toDuration(),
@@ -210,13 +216,13 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             Json.decodeFromString<MessageResponse>(bodyString())
         }
 
-        assertFalse(db.activities.hasActivity(aid))
+        assertFalse(db.activities.hasActivity(conn, aid))
     }
 
     @Test
-    fun `Delete activity that does not exist`() {
-        val mockId = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), mockId)
+    fun `Delete activity that does not exist`(): Unit = db.connection.use { conn ->
+        val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), mockId)
 
         val aid = 1
 
@@ -225,24 +231,25 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.NOT_FOUND, status)
 
-            val error = Json.decodeFromString<AppError>(bodyString())
+            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
             assertEquals(AppError.NotFound(), error)
         }
     }
 
     @Test
-    fun `Delete activity with invalid token`() {
-        val mockId = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), mockId)
+    fun `Delete activity with invalid token`(): Unit = db.connection.use { conn ->
+        val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), mockId)
 
-        val sid = db.sports.createNewSport(mockId, "Running")
+        val sid = db.sports.createNewSport(conn, mockId, "Running")
 
         val mockActivity = CreateActivityRequest(
             date = "2020-01-01", duration = "01:00:00.000", sid = sid
         )
 
-        val mockId2 = db.users.createNewUser("Johnny2", "JohnnyBoy2@gmail.com")
+        val mockId2 = db.users.createNewUser(conn, "Johnny2", "JohnnyBoy2@gmail.com")
         val aid = db.activities.createNewActivity(
+            conn,
             mockId2,
             mockActivity.date.toLocalDate(),
             mockActivity.duration.toDuration(),
@@ -254,23 +261,23 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.FORBIDDEN, status)
 
-            val error = Json.decodeFromString<AppError>(bodyString())
+            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
             assertEquals(AppError.Forbidden(), error)
         }
     }
 
     // Search activity
     @Test
-    fun `Search activity by sid and orderBy`() {
-        val mockUid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val mockSid = db.sports.createNewSport(mockUid, "Running")
+    fun `Search activity by sid and orderBy`(): Unit = db.connection.use { conn ->
+        val mockUid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val mockSid = db.sports.createNewSport(conn, mockUid, "Running")
         val orderBy = "ascending"
 
         val mockActivities = listOf(
             CreateActivityRequest("2019-01-01", "23:59:59.555", mockSid),
             CreateActivityRequest("2019-01-02", "20:59:59.555", mockSid)
         ).associateBy {
-            db.activities.createNewActivity(mockUid, it.date.toLocalDate(), it.duration.toDuration(), it.sid)
+            db.activities.createNewActivity(conn, mockUid, it.date.toLocalDate(), it.duration.toDuration(), it.sid)
         }
 
         val request = Request(Method.GET, "$uriPrefix/activities/search?sid=$mockSid&orderBy=$orderBy")

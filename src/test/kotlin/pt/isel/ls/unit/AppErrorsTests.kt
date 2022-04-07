@@ -37,26 +37,13 @@ class AppErrorsTests {
     }
 
     @Test
-    fun `throw SportsErrors databaseError works`() {
-        val msg = "databaseError message"
-        val error = assertFailsWith<AppError> {
-            throw AppError.DatabaseError(msg)
-        }
-
-        assertEquals(1002, error.code)
-        assertEquals("DATABASE_ERROR", error.name)
-        assertEquals("There was an error accessing the database", error.description)
-        assertEquals(msg, error.extraInfo)
-    }
-
-    @Test
     fun `throw SportsErrors internalError works`() {
         val msg = "internalError message"
         val error = assertFailsWith<AppError> {
             throw AppError.InternalError(msg)
         }
 
-        assertEquals(1003, error.code)
+        assertEquals(1002, error.code)
         assertEquals("INTERNAL_ERROR", error.name)
         assertEquals("There was an internal error", error.description)
         assertEquals(msg, error.extraInfo)
@@ -69,7 +56,7 @@ class AppErrorsTests {
             throw AppError.InvalidCredentials(msg)
         }
 
-        assertEquals(1004, error.code)
+        assertEquals(1003, error.code)
         assertEquals("INVALID_CREDENTIALS", error.name)
         assertEquals("The provided credentials are invalid", error.description)
         assertEquals(msg, error.extraInfo)
@@ -82,7 +69,7 @@ class AppErrorsTests {
             throw AppError.NoCredentials(msg)
         }
 
-        assertEquals(1005, error.code)
+        assertEquals(1004, error.code)
         assertEquals("NO_CREDENTIALS", error.name)
         assertEquals("No credentials were provided", error.description)
         assertEquals(msg, error.extraInfo)
@@ -115,17 +102,7 @@ class AppErrorsTests {
         val res = AppError.InvalidCredentials().toResponse()
         assertEquals(Status.UNAUTHORIZED, res.status)
         assertEquals(
-            Body("{\"code\":1004,\"name\":\"INVALID_CREDENTIALS\",\"description\":\"The provided credentials are invalid\"}"),
-            res.body
-        )
-    }
-
-    @Test
-    fun `databaseError toResponse`() {
-        val res = AppError.DatabaseError().toResponse()
-        assertEquals(Status.INTERNAL_SERVER_ERROR, res.status)
-        assertEquals(
-            Body("{\"code\":1002,\"name\":\"DATABASE_ERROR\",\"description\":\"There was an error accessing the database\"}"),
+            Body("{\"code\":1003,\"name\":\"INVALID_CREDENTIALS\",\"description\":\"The provided credentials are invalid\"}"),
             res.body
         )
     }
@@ -135,7 +112,7 @@ class AppErrorsTests {
         val res = AppError.Conflict().toResponse()
         assertEquals(Status.CONFLICT, res.status)
         assertEquals(
-            Body("{\"code\":1008,\"name\":\"CONFLICT\",\"description\":\"There was a conflict\"}"),
+            Body("{\"code\":1007,\"name\":\"CONFLICT\",\"description\":\"There was a conflict\"}"),
             res.body
         )
     }

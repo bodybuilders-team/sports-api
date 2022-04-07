@@ -6,7 +6,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:8888
+  - url: http://localhost:8888/api
 
 
 tags:
@@ -41,7 +41,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/CreateUserResponse'
         400:
-          description: User with the same email already exists or invalid request body
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+        409:
+          description: User with the same email already exists
           content:
             application/json:
               schema:
@@ -152,7 +158,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CreateRouteResponse'
         400:
-          description: Route with the same name already exists or invalid request body
+          description: Invalid Request Body
           content:
             application/json:
               schema:
@@ -604,7 +610,7 @@ components:
       required:
         - code
         - name
-        - message
+        - description
       properties:
         code:
           type: number
@@ -615,11 +621,14 @@ components:
           type: string
           description: Internal error name
           example: FAIL
-        message:
+        description:
           type: string
           description: Error description message
           example: An error occurred
-
+        extraInfo:
+          type: string
+          description: Extra error info
+          example: "{message:\"User not found\"}"
 
     CreateRouteRequest:
       type: object

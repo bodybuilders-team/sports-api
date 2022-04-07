@@ -1,6 +1,7 @@
 package pt.isel.ls.sports.services
 
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
 
@@ -9,19 +10,17 @@ abstract class AbstractServices(protected val db: AppDB) {
     /**
      * Gets the user's unique identifier associate with the [token]
      *
+     * @param conn database Connection
      * @param token user token
      *
      * @return user's unique identifier associated with the [token]
      *
      * @throws AppError.InvalidCredentials if a user with the [token] was not found
      */
-    protected fun authenticate(token: String) = runCatching {
-        db.tokens.getUID(token)
-    }.getOrElse {
-        when (it) {
-            is AppError.NotFound -> throw AppError.InvalidCredentials("Invalid token")
-            else -> throw it
-        }
+    protected fun authenticate(conn: ConnectionDB, token: String) = try {
+        db.tokens.getUID(conn, token)
+    } catch (e: AppError.NotFound) {
+        throw AppError.InvalidCredentials("Invalid token")
     }
 
     /**
@@ -70,45 +69,49 @@ abstract class AbstractServices(protected val db: AppDB) {
 
     /**
      * Validates the existence of a user with the [uid].
+     * @param conn database Connection
      * @param uid user's unique identifier
      *
      * @throws AppError.NotFound if there's no user with the [uid]
      */
-    protected fun validateUserExists(uid: Int) {
-        if (!db.users.hasUser(uid))
+    protected fun validateUserExists(conn: ConnectionDB, uid: Int) {
+        if (!db.users.hasUser(conn, uid))
             throw AppError.NotFound("User id not found")
     }
 
     /**
      * Validates the existence of a sport with the [sid].
+     * @param conn database Connection
      * @param sid sport's unique identifier
      *
      * @throws AppError.NotFound if there's no sport with the [sid]
      */
-    protected fun validateSportExists(sid: Int) {
-        if (!db.sports.hasSport(sid))
+    protected fun validateSportExists(conn: ConnectionDB, sid: Int) {
+        if (!db.sports.hasSport(conn, sid))
             throw AppError.NotFound("Sport id not found")
     }
 
     /**
      * Validates the existence of a route with the [rid].
+     * @param conn database Connection
      * @param rid route's unique identifier
      *
      * @throws AppError.NotFound if there's no route with the [rid]
      */
-    protected fun validateRouteExists(rid: Int) {
-        if (!db.routes.hasRoute(rid))
+    protected fun validateRouteExists(conn: ConnectionDB, rid: Int) {
+        if (!db.routes.hasRoute(conn, rid))
             throw AppError.NotFound("Route id not found")
     }
 
     /**
      * Validates the existence of an activity with the [aid].
+     * @param conn database Connection
      * @param aid activity's unique identifier
      *
      * @throws AppError.NotFound if there's no activity with the [aid]
      */
-    protected fun validateActivityExists(aid: Int) {
-        if (!db.activities.hasActivity(aid))
+    protected fun validateActivityExists(conn: ConnectionDB, aid: Int) {
+        if (!db.activities.hasActivity(conn, aid))
             throw AppError.NotFound("Activity id not found")
     }
 }

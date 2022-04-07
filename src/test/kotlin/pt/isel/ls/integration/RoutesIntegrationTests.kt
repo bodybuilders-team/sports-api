@@ -11,6 +11,7 @@ import pt.isel.ls.sports.api.routers.routes.CreateRouteRequest
 import pt.isel.ls.sports.api.routers.routes.CreateRouteResponse
 import pt.isel.ls.sports.api.routers.routes.RouteDTO
 import pt.isel.ls.sports.api.routers.routes.RoutesResponse
+import pt.isel.ls.sports.api.utils.AppErrorDTO
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.token
@@ -24,9 +25,9 @@ class RoutesIntegrationTests : IntegrationTests() {
     // Create new route
 
     @Test
-    fun `Create new route with valid data`() {
-        val uid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+    fun `Create new route with valid data`(): Unit = db.connection.use { conn ->
+        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val requestBody = """
             {
@@ -47,7 +48,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 val rid = Json.decodeFromString<CreateRouteResponse>(bodyString()).rid
                 assertTrue(isValidId(rid))
 
-                assertTrue(db.routes.hasRoute(rid))
+                assertTrue(db.routes.hasRoute(conn, rid))
             }
     }
 
@@ -68,7 +69,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<AppError>(bodyString())
+                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
                 assertEquals(AppError.NoCredentials(), error)
             }
     }
@@ -91,15 +92,15 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.UNAUTHORIZED, status)
 
-                val error = Json.decodeFromString<AppError>(bodyString())
+                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
                 assertEquals(AppError.InvalidCredentials(), error)
             }
     }
 
     @Test
-    fun `Create new route with invalid data`() {
-        val uid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+    fun `Create new route with invalid data`(): Unit = db.connection.use { conn ->
+        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
         val requestBody = """
             {
                 "start_location": "Porto",
@@ -115,7 +116,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<AppError>(bodyString())
+                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
                 assertEquals(AppError.BadRequest(), error)
             }
     }
@@ -123,8 +124,8 @@ class RoutesIntegrationTests : IntegrationTests() {
     // Get all routes
 
     @Test
-    fun `Get all routes`() {
-        val uid = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
+    fun `Get all routes`(): Unit = db.connection.use { conn ->
+        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
 
         val mockRoutes = listOf(
             CreateRouteRequest(
@@ -138,7 +139,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 10.0
             )
         ).associateBy {
-            db.routes.createNewRoute(it.start_location, it.end_location, (it.distance * 1000).toInt(), uid)
+            db.routes.createNewRoute(conn, it.start_location, it.end_location, (it.distance * 1000).toInt(), uid)
         }
 
         val request = Request(Method.GET, "$uriPrefix/routes")
@@ -177,15 +178,16 @@ class RoutesIntegrationTests : IntegrationTests() {
     // Get route by id
 
     @Test
-    fun `Get route by id`() {
+    fun `Get route by id`(): Unit = db.connection.use { conn ->
         val mockRoute = CreateRouteRequest(
             "Russia",
             "Lisbon",
             10.0
         )
 
-        val mockId = db.users.createNewUser("Johnny", "JohnnyBoy@gmail.com")
+        val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
         val rid = db.routes.createNewRoute(
+            conn,
             mockRoute.start_location,
             mockRoute.end_location,
             (mockRoute.distance * 1000.0).toInt(),
@@ -217,7 +219,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<AppError>(bodyString())
+                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
                 assertEquals(AppError.InvalidArgument(), error)
             }
     }
@@ -231,7 +233,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.NOT_FOUND, status)
 
-                val error = Json.decodeFromString<AppError>(bodyString())
+                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
                 assertEquals(AppError.NotFound(), error)
             }
     }

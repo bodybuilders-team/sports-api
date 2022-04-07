@@ -1,25 +1,54 @@
 package pt.isel.ls.sports.database
 
 import org.postgresql.ds.PGSimpleDataSource
-import pt.isel.ls.sports.database.tables.activities.ActivitiesPostgresDB
-import pt.isel.ls.sports.database.tables.routes.RoutesPostgresDB
-import pt.isel.ls.sports.database.tables.sports.SportsPostgresDB
-import pt.isel.ls.sports.database.tables.tokens.TokensPostgresDB
-import pt.isel.ls.sports.database.tables.users.UsersPostgresDB
+import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.connection.PostgresConnectionDB
+import pt.isel.ls.sports.database.sections.activities.ActivitiesPostgresDB
+import pt.isel.ls.sports.database.sections.routes.RoutesPostgresDB
+import pt.isel.ls.sports.database.sections.sports.SportsPostgresDB
+import pt.isel.ls.sports.database.sections.tokens.TokensPostgresDB
+import pt.isel.ls.sports.database.sections.users.UsersPostgresDB
+import pt.isel.ls.sports.database.utils.rollbackTransaction
+import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.utils.Logger
+import java.sql.SQLException
 
 /**
  * Implementation of a Postgres database representation, an aggregate of all Postgres database sections.
  */
-class AppPostgresDB(source: PGSimpleDataSource) : AppDB {
-    override val users: UsersPostgresDB = UsersPostgresDB(source)
-    override val sports: SportsPostgresDB = SportsPostgresDB(source)
-    override val routes: RoutesPostgresDB = RoutesPostgresDB(source)
-    override val activities: ActivitiesPostgresDB = ActivitiesPostgresDB(source)
-    override val tokens = TokensPostgresDB(source)
+class AppPostgresDB(sourceURL: String) : AppDB {
+    private val source = PGSimpleDataSource().apply { setURL(sourceURL) }
 
-    companion object {
-        fun createPostgresDataSource(jdbcDatabaseURL: String) = PGSimpleDataSource().apply {
-            setURL(jdbcDatabaseURL)
+    override fun <R> execute(func: (ConnectionDB) -> R): R {
+        val conn = try {
+            source.connection
+        } catch (e: SQLException) {
+            throw AppError.DatabaseError("Could not access database")
+        }
+
+        conn.autoCommit = false
+
+        return try {
+            func(PostgresConnectionDB(conn)).also { conn.commit() }
+        } catch (e: Exception) {
+            rollbackTransaction(conn)
+
+            Logger.warn("Transaction rollback successful")
+            throw e
+        } finally {
+            conn.close()
         }
     }
+
+    /**
+     * Gets a new database connection.
+     */
+    val connection: PostgresConnectionDB
+        get() = PostgresConnectionDB(source.connection)
+
+    override val users: UsersPostgresDB = UsersPostgresDB()
+    override val sports: SportsPostgresDB = SportsPostgresDB()
+    override val routes: RoutesPostgresDB = RoutesPostgresDB()
+    override val activities: ActivitiesPostgresDB = ActivitiesPostgresDB()
+    override val tokens = TokensPostgresDB()
 }

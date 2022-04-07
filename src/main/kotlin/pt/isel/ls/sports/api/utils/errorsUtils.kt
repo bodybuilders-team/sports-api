@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Response
 import org.http4k.core.Status
 import pt.isel.ls.sports.errors.AppError
-import pt.isel.ls.sports.utils.logger
+import pt.isel.ls.sports.utils.Logger
 
 /**
  * Gets the HTTP status for each AppError.
@@ -15,7 +15,6 @@ import pt.isel.ls.sports.utils.logger
 private fun AppError.getStatus(): Status = when (this) {
     is AppError.BadRequest -> Status.BAD_REQUEST
     is AppError.NotFound -> Status.NOT_FOUND
-    is AppError.DatabaseError -> Status.INTERNAL_SERVER_ERROR
     is AppError.InternalError -> Status.INTERNAL_SERVER_ERROR
     is AppError.InvalidCredentials -> Status.UNAUTHORIZED
     is AppError.NoCredentials -> Status.BAD_REQUEST
@@ -29,7 +28,7 @@ private fun AppError.getStatus(): Status = when (this) {
  * Converts the AppError to an HTTP Response
  * @return HTTP response
  */
-fun AppError.toResponse() = Response(status = getStatus()).body(Json.encodeToString(this))
+fun AppError.toResponse() = Response(status = getStatus()).body(Json.encodeToString(AppErrorDTO(this)))
 
 /**
  * Gets the HTTP response associated with the [error]
@@ -39,17 +38,23 @@ fun AppError.toResponse() = Response(status = getStatus()).body(Json.encodeToStr
 fun getErrorResponse(error: Throwable): Response =
     when (error) {
         is SerializationException -> {
-            logger.warn(error.message)
+            Logger.warn(error.toString())
             AppError.BadRequest(error.message)
         }
-
-        is AppError -> {
-            logger.warn(error.message)
+        is AppError.DatabaseError -> {
+            Logger.error("${error.extraInfo}\n${error.stackTraceToString()}")
+            AppError.InternalError()
+        }
+        is AppError.InternalError -> {
+            Logger.error(error.stackTraceToString())
             error
         }
-
+        is AppError -> {
+            Logger.warn(error.toString())
+            error
+        }
         else -> {
-            logger.error(error.stackTraceToString())
+            Logger.error(error.stackTraceToString())
             AppError.InternalError()
         }
     }.toResponse()

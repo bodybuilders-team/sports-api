@@ -1,10 +1,10 @@
-package pt.isel.ls.sports.database.tables.activities
+package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
-import org.postgresql.ds.PGSimpleDataSource
-import pt.isel.ls.sports.database.postgres.AbstractPostgresDB
+import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.connection.getPostgresConnection
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.database.utils.setIntOrNull
 import pt.isel.ls.sports.domain.Activity
@@ -19,67 +19,81 @@ import java.sql.SQLException
 import java.sql.Statement
 import kotlin.time.Duration
 
-class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(dataSource), ActivitiesDB {
+class ActivitiesPostgresDB : ActivitiesDB {
 
-    override fun createNewActivity(uid: Int, date: LocalDate, duration: Duration, sid: Int, rid: Int?): Int =
-        useConnection { conn ->
-            val stm = conn.prepareStatement(
-                """
+    override fun createNewActivity(
+        conn: ConnectionDB,
+        uid: Int,
+        date: LocalDate,
+        duration: Duration,
+        sid: Int,
+        rid: Int?
+    ): Int {
+        val stm = conn.getPostgresConnection().prepareStatement(
+            """
                 INSERT INTO activities(date, duration, uid, sid, rid)
                 VALUES (?, ?, ?, ?, ?)
-                """.trimIndent(),
-                Statement.RETURN_GENERATED_KEYS
-            )
+            """.trimIndent(),
+            Statement.RETURN_GENERATED_KEYS
+        )
 
-            stm.setDate(1, getSQLDate(date))
-            stm.setString(2, duration.toDTOString())
-            stm.setInt(3, uid)
-            stm.setInt(4, sid)
-            stm.setIntOrNull(5, rid)
+        stm.setDate(1, getSQLDate(date))
+        stm.setString(2, duration.toDTOString())
+        stm.setInt(3, uid)
+        stm.setInt(4, sid)
+        stm.setIntOrNull(5, rid)
 
-            if (stm.executeUpdate() == 0)
-                throw SQLException("Creating activity failed, no rows affected.")
+        if (stm.executeUpdate() == 0)
+            throw SQLException("Creating activity failed, no rows affected.")
 
-            val generatedKeys = stm.generatedKeys
-            return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
-        }
+        val generatedKeys = stm.generatedKeys
+        return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
+    }
 
-    override fun getActivity(aid: Int): Activity =
-        useConnection { conn ->
-            val rs = doActivityQuery(conn, aid)
+    override fun getActivity(
+        conn: ConnectionDB,
+        aid: Int
+    ): Activity {
+        val pgConn = conn.getPostgresConnection()
+        val rs = doActivityQuery(pgConn, aid)
 
-            if (rs.next())
-                return getActivityFromTable(rs)
-            else
-                throw AppError.NotFound("Activity with id $aid not found")
-        }
+        if (rs.next())
+            return getActivityFromTable(rs)
+        else
+            throw AppError.NotFound("Activity with id $aid not found")
+    }
 
-    override fun deleteActivity(aid: Int) {
-        useConnection { conn ->
-            val stm = conn.prepareStatement(
+    override fun deleteActivity(
+        conn: ConnectionDB,
+        aid: Int
+    ) {
+        val stm = conn
+            .getPostgresConnection()
+            .prepareStatement(
                 """
                 DELETE FROM activities
                 WHERE id = ?
                 """.trimIndent()
             )
-            stm.setInt(1, aid)
-            stm.executeUpdate()
-        }
+        stm.setInt(1, aid)
+        stm.executeUpdate()
     }
 
     override fun getActivities(
+        conn: ConnectionDB,
         sid: Int,
         orderBy: SortOrder,
         date: LocalDate?,
         rid: Int?,
         skip: Int?,
         limit: Int?
-    ): List<Activity> =
-        useConnection { conn ->
-            val queryDate = if (date != null) "AND date = ?" else ""
-            val queryRid = if (date != null) "AND rid = ?" else ""
+    ): List<Activity> {
+        val queryDate = if (date != null) "AND date = ?" else ""
+        val queryRid = if (date != null) "AND rid = ?" else ""
 
-            val stm = conn.prepareStatement(
+        val stm = conn
+            .getPostgresConnection()
+            .prepareStatement(
                 """
                 SELECT *
                 FROM activities
@@ -89,58 +103,70 @@ class ActivitiesPostgresDB(dataSource: PGSimpleDataSource) : AbstractPostgresDB(
                 OFFSET ?
                 """.trimIndent()
             )
-            stm.setInt(1, sid)
+        stm.setInt(1, sid)
 
-            var counter = 1
+        var counter = 1
 
-            if (date != null)
-                stm.setDate(++counter, getSQLDate(date))
+        if (date != null)
+            stm.setDate(++counter, getSQLDate(date))
 
-            if (rid != null)
-                stm.setInt(++counter, rid)
+        if (rid != null)
+            stm.setInt(++counter, rid)
 
-            stm.setIntOrNull(++counter, skip)
-            stm.setIntOrNull(++counter, limit)
+        stm.setIntOrNull(++counter, skip)
+        stm.setIntOrNull(++counter, limit)
 
-            return getActivities(stm)
-        }
+        return getActivities(stm)
+    }
 
     private fun getSQLDate(date: LocalDate) = Date.valueOf(date.toJavaLocalDate())
 
-    override fun getSportActivities(sid: Int): List<Activity> =
-        useConnection { conn ->
-            val stm = conn.prepareStatement(
+    override fun getSportActivities(
+        conn: ConnectionDB,
+        sid: Int
+    ): List<Activity> {
+        val stm = conn
+            .getPostgresConnection()
+            .prepareStatement(
                 """
                 SELECT *
                 FROM activities
                 WHERE sid = ?
                 """.trimIndent()
             )
-            stm.setInt(1, sid)
+        stm.setInt(1, sid)
 
-            return getActivities(stm)
-        }
+        return getActivities(stm)
+    }
 
-    override fun getUserActivities(uid: Int): List<Activity> =
-        useConnection { conn ->
-            val stm = conn.prepareStatement(
+    override fun getUserActivities(
+        conn: ConnectionDB,
+        uid: Int
+    ): List<Activity> {
+        val stm = conn
+            .getPostgresConnection()
+            .prepareStatement(
                 """
                 SELECT *
                 FROM activities
                 WHERE uid = ?
                 """.trimIndent()
             )
-            stm.setInt(1, uid)
+        stm.setInt(1, uid)
 
-            return getActivities(stm)
-        }
+        return getActivities(stm)
+    }
 
-    override fun hasActivity(aid: Int): Boolean =
-        useConnection { conn ->
-            val rs = doActivityQuery(conn, aid)
+    override fun hasActivity(
+        conn: ConnectionDB,
+        aid: Int
+    ): Boolean {
+        val pgConn = conn
+            .getPostgresConnection()
+        val rs = doActivityQuery(pgConn, aid)
 
-            return rs.next()
-        }
+        return rs.next()
+    }
 
     companion object {
 

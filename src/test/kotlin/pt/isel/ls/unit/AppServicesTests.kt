@@ -2,7 +2,7 @@ package pt.isel.ls.unit
 
 import kotlinx.datetime.toLocalDate
 import pt.isel.ls.sports.database.AppMemoryDB
-import pt.isel.ls.sports.database.memory.AppMemoryDBSource
+import pt.isel.ls.sports.database.AppMemoryDBSource
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.Sport
@@ -29,12 +29,12 @@ class AppServicesTests {
 
     // createNewUser
     @Test
-    fun `createNewUser creates user correctly in the database`() {
+    fun `createNewUser creates user correctly in the database`(): Unit = db.execute { conn ->
         val createUserResponse = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
         assertEquals(
             User(createUserResponse.uid, "Nyckollas Brandão", "nyckollasbrandao@mail.com"),
-            db.users.getUser(createUserResponse.uid)
+            db.users.getUser(conn, createUserResponse.uid)
         )
     }
 
@@ -52,10 +52,10 @@ class AppServicesTests {
     // getUser
 
     @Test
-    fun `getUser returns the user object`() {
+    fun `getUser returns the user object`(): Unit = db.execute { conn ->
         val user = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
         assertEquals(user, services.users.getUser(1))
     }
@@ -71,15 +71,15 @@ class AppServicesTests {
     // getAllUsers
 
     @Test
-    fun `getAllUsers returns list of user objects`() {
+    fun `getAllUsers returns list of user objects`(): Unit = db.execute { conn ->
 
         val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val user2 = User(2, "André Jesus", "andrejesus@mail.com")
         val user3 = User(3, "André Páscoa", "andrepascoa@mail.com")
 
-        db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        db.users.createNewUser("André Jesus", "andrejesus@mail.com")
-        db.users.createNewUser("André Páscoa", "andrepascoa@mail.com")
+        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        db.users.createNewUser(conn, "André Jesus", "andrejesus@mail.com")
+        db.users.createNewUser(conn, "André Páscoa", "andrepascoa@mail.com")
 
         assertEquals(listOf(user1, user2, user3), services.users.getAllUsers())
     }
@@ -91,21 +91,21 @@ class AppServicesTests {
     }
 
     @Test
-    fun `createNewRoute creates route correctly in the database`() {
+    fun `createNewRoute creates route correctly in the database`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val rid = services.routes.createNewRoute(token, "Odivelas", "Chelas", 0.150)
 
-        assertEquals(Route(rid, "Odivelas", "Chelas", 0.15, 1), db.routes.getRoute(rid))
+        assertEquals(Route(rid, "Odivelas", "Chelas", 0.15, 1), db.routes.getRoute(conn, rid))
     }
 
     @Test
-    fun `createNewRoute returns correct identifier`() {
+    fun `createNewRoute returns correct identifier`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val rid0 = services.routes.createNewRoute(token, "Odivelas", "Chelas", 0.150)
         val rid1 = services.routes.createNewRoute(token, "Chelas", "Odivelas", 0.150)
@@ -119,14 +119,14 @@ class AppServicesTests {
     // getRoute
 
     @Test
-    fun `getRoute returns the route object`() {
+    fun `getRoute returns the route object`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val rid = services.routes.createNewRoute(token, "Odivelas", "Chelas", 0.150)
 
-        assertEquals(Route(1, "Odivelas", "Chelas", 0.15, 1), db.routes.getRoute(rid))
+        assertEquals(Route(1, "Odivelas", "Chelas", 0.15, 1), db.routes.getRoute(conn, rid))
     }
 
     @Test
@@ -140,18 +140,18 @@ class AppServicesTests {
     // getAllRoutes
 
     @Test
-    fun `getAllRoutes returns list of all route objects`() {
+    fun `getAllRoutes returns list of all route objects`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        db.tokens.createUserToken(UUID.randomUUID(), uid)
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val route0 = Route(1, "Odivelas", "Chelas", 0.15, 1)
         val route1 = Route(2, "Chelas", "Odivelas", 0.15, 1)
         val route2 = Route(3, "Lisboa", "Chelas", 0.15, 1)
 
-        db.routes.createNewRoute("Odivelas", "Chelas", 150, 1)
-        db.routes.createNewRoute("Chelas", "Odivelas", 150, 1)
-        db.routes.createNewRoute("Lisboa", "Chelas", 150, 1)
+        db.routes.createNewRoute(conn, "Odivelas", "Chelas", 150, 1)
+        db.routes.createNewRoute(conn, "Chelas", "Odivelas", 150, 1)
+        db.routes.createNewRoute(conn, "Lisboa", "Chelas", 150, 1)
 
         assertEquals(listOf(route0, route1, route2), services.routes.getAllRoutes())
     }
@@ -165,21 +165,21 @@ class AppServicesTests {
     // createNewSport
 
     @Test
-    fun `createNewSport creates sport correctly in the database`() {
+    fun `createNewSport creates sport correctly in the database`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val sid = services.sports.createNewSport(token, "Powerlifting", "Get big")
 
-        assertEquals(Sport(sid, "Powerlifting", uid, "Get big"), db.sports.getSport(sid))
+        assertEquals(Sport(sid, "Powerlifting", uid, "Get big"), db.sports.getSport(conn, sid))
     }
 
     @Test
-    fun `createNewSport returns correct identifier`() {
+    fun `createNewSport returns correct identifier`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val uid1 = services.sports.createNewSport(token, "Powerlifting", "Get big")
         val uid2 = services.sports.createNewSport(token, "Swimming", "Be like a fish")
@@ -193,11 +193,11 @@ class AppServicesTests {
     // getSport
 
     @Test
-    fun `getSport returns the sport object`() {
+    fun `getSport returns the sport object`(): Unit = db.execute { conn ->
 
-        db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        db.sports.createNewSport(1, "Soccer", "Kick a ball to score a goal")
+        db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
 
         assertEquals(Sport(1, "Soccer", 1, "Kick a ball to score a goal"), services.sports.getSport(1))
     }
@@ -213,13 +213,13 @@ class AppServicesTests {
     // getAllSports
 
     @Test
-    fun `getAllSports returns list of all sport objects`() {
+    fun `getAllSports returns list of all sport objects`(): Unit = db.execute { conn ->
 
-        db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        db.sports.createNewSport(1, "Soccer", "Kick a ball to score a goal")
-        db.sports.createNewSport(1, "Powerlifting", "Get big")
-        db.sports.createNewSport(1, "Basketball", "Shoot a ball through a hoop")
+        db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
+        db.sports.createNewSport(conn, 1, "Powerlifting", "Get big")
+        db.sports.createNewSport(conn, 1, "Basketball", "Shoot a ball through a hoop")
 
         val sport1 = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
         val sport2 = Sport(2, "Powerlifting", 1, "Get big")
@@ -237,32 +237,32 @@ class AppServicesTests {
     // createNewActivity
 
     @Test
-    fun `createNewActivity creates activity correctly in the database`() {
+    fun `createNewActivity creates activity correctly in the database`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
-        val sid = db.sports.createNewSport(1, "Soccer", "Kick a ball to score a goal")
-        val rid = db.routes.createNewRoute("Pontinha", "Chelas", 100, uid)
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+        val sid = db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
+        val rid = db.routes.createNewRoute(conn, "Pontinha", "Chelas", 100, uid)
 
         val aid = services.activities.createNewActivity(
             token,
             "2022-11-05".toLocalDate(),
             "14:59:27.903".toDuration(),
             sid,
-            1
+            rid
         )
 
         assertEquals(
             Activity(aid, "2022-11-05".toLocalDate(), "14:59:27.903".toDuration(), 1, 1, 1),
-            db.activities.getActivity(aid)
+            db.activities.getActivity(conn, aid)
         )
     }
 
     @Test
-    fun `createNewActivity throws InvalidArgument if sid is not positive`() {
+    fun `createNewActivity throws InvalidArgument if sid is not positive`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         assertFailsWith<AppError.InvalidArgument> {
             services.activities.createNewActivity(
@@ -276,10 +276,10 @@ class AppServicesTests {
     }
 
     @Test
-    fun `createNewActivity throws InvalidArgument if rid is not positive`() {
+    fun `createNewActivity throws InvalidArgument if rid is not positive`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         assertFailsWith<AppError.InvalidArgument> {
             services.activities.createNewActivity(
@@ -295,11 +295,11 @@ class AppServicesTests {
     // getActivity
 
     @Test
-    fun `getActivity returns the activity object`() {
+    fun `getActivity returns the activity object`(): Unit = db.execute { conn ->
 
-        db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        db.activities.createNewActivity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
+        db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
         assertEquals(
             Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1),
@@ -318,28 +318,28 @@ class AppServicesTests {
     // deleteActivity
 
     @Test
-    fun `deleteActivity deletes an activity successfully`() {
+    fun `deleteActivity deletes an activity successfully`(): Unit = db.execute { conn ->
 
-        val mockId = db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.tokens.createUserToken(UUID.randomUUID(), mockId)
-        db.activities.createNewActivity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
+        val mockId = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), mockId)
+        db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
 
         services.activities.deleteActivity(token, 1)
 
         assertFailsWith<AppError> {
-            db.activities.getActivity(1)
+            db.activities.getActivity(conn, 1)
         }
     }
 
     // getSportActivities
 
     @Test
-    fun `getSportActivities returns the activities list`() {
+    fun `getSportActivities returns the activities list`(): Unit = db.execute { conn ->
 
-        db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        db.sports.createNewSport(1, "Soccer", "Kick a ball to score a goal")
+        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
 
-        db.activities.createNewActivity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
+        db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
         val activities = services.sports.getSportActivities(1)
 
@@ -352,12 +352,12 @@ class AppServicesTests {
     // getUserActivities
 
     @Test
-    fun `getUserActivities returns the activities list`() {
+    fun `getUserActivities returns the activities list`(): Unit = db.execute { conn ->
 
-        db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        db.sports.createNewSport(1, "Soccer", "Kick a ball to score a goal")
+        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
 
-        db.activities.createNewActivity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
+        db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
         val activities = services.users.getUserActivities(1)
 
@@ -370,12 +370,11 @@ class AppServicesTests {
     // getActivities
 
     @Test
-    fun `getActivities returns the activities list`() {
+    fun `getActivities returns the activities list`(): Unit = db.execute { conn ->
+        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
 
-        db.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        db.sports.createNewSport(1, "Soccer", "Kick a ball to score a goal")
-
-        db.activities.createNewActivity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
+        db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
         val activities =
             services.activities.getActivities(

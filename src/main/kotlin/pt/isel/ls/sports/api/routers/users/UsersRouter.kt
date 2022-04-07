@@ -16,7 +16,6 @@ import pt.isel.ls.sports.api.utils.getErrorResponse
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.services.sections.UsersServices
-import pt.isel.ls.sports.utils.logRequest
 import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
@@ -50,7 +49,6 @@ class UsersRouter(private val services: UsersServices) {
      * @return user creation HTTP response
      */
     private fun createUser(request: Request): Response = runCatching {
-        logRequest(request)
         val userRequest = Json.decodeFromString<CreateUserRequest>(request.bodyString())
         val userResponse = services.createNewUser(userRequest.name, userRequest.email)
 
@@ -64,7 +62,6 @@ class UsersRouter(private val services: UsersServices) {
      */
     @Suppress("UNUSED_PARAMETER")
     private fun getUsers(request: Request): Response = runCatching {
-        logRequest(request)
         val users = services.getAllUsers()
 
         return Response(OK).json(UsersResponse(users.map { UserDTO(it) }))
@@ -76,7 +73,6 @@ class UsersRouter(private val services: UsersServices) {
      * @return HTTP response
      */
     private fun getUser(request: Request): Response = runCatching {
-        logRequest(request)
         val uid = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }
 
         val user = services.getUser(uid)
@@ -90,7 +86,6 @@ class UsersRouter(private val services: UsersServices) {
      * @return HTTP response
      */
     private fun getUserActivities(request: Request): Response = runCatching {
-        logRequest(request)
         val uid = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }
 
         val activities = services.getUserActivities(uid)

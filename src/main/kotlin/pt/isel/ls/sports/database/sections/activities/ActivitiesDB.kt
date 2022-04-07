@@ -1,6 +1,7 @@
-package pt.isel.ls.sports.database.tables.activities
+package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
+import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import kotlin.time.Duration
@@ -12,6 +13,7 @@ interface ActivitiesDB {
     /**
      * Create a new activity.
      *
+     * @param conn database Connection
      * @param uid user's unique identifier
      * @param sid sport's unique identifier
      * @param duration
@@ -20,25 +22,35 @@ interface ActivitiesDB {
      *
      * @return activity's unique identifier
      */
-    fun createNewActivity(uid: Int, date: LocalDate, duration: Duration, sid: Int, rid: Int? = null): Int
+    fun createNewActivity(
+        conn: ConnectionDB,
+        uid: Int,
+        date: LocalDate,
+        duration: Duration,
+        sid: Int,
+        rid: Int? = null
+    ): Int
 
     /**
      * Get the detailed information of an activity.
      *
+     * @param conn database Connection
      * @param aid activity's unique identifier
      */
-    fun getActivity(aid: Int): Activity
+    fun getActivity(conn: ConnectionDB, aid: Int): Activity
 
     /**
      * Delete an activity.
      *
+     * @param conn database Connection
      * @param aid activity's unique identifier
      */
-    fun deleteActivity(aid: Int)
+    fun deleteActivity(conn: ConnectionDB, aid: Int)
 
     /**
      * Get a list with the activities, given the parameters.
      *
+     * @param conn database Connection
      * @param sid sport's identifier
      * @param orderBy order by duration time, only has two possible values - "ascending" or "descending"
      * @param date activity date (optional)
@@ -47,6 +59,7 @@ interface ActivitiesDB {
      * @return list of activities
      */
     fun getActivities(
+        conn: ConnectionDB,
         sid: Int,
         orderBy: SortOrder,
         date: LocalDate? = null,
@@ -58,27 +71,30 @@ interface ActivitiesDB {
     /**
      * Get all the activities of a sport.
      *
+     * @param conn database Connection
      * @param sid sport's unique identifier
      *
      * @return list of identifiers of activities of a sport
      */
-    fun getSportActivities(sid: Int): List<Activity>
+    fun getSportActivities(conn: ConnectionDB, sid: Int): List<Activity>
 
     /**
      * Get all the activities made from a user.
      *
+     * @param conn database Connection
      * @param uid user's unique identifier
      *
      * @return list of identifiers of activities made from a user
      */
-    fun getUserActivities(uid: Int): List<Activity>
+    fun getUserActivities(conn: ConnectionDB, uid: Int): List<Activity>
 
     /**
      * Verifies if an activity exists with the given [aid]
      *
+     * @param conn database Connection
      * @param aid activity's unique identifier
      *
      * @return true if the activity exists, false otherwise
      */
-    fun hasActivity(aid: Int): Boolean
+    fun hasActivity(conn: ConnectionDB, aid: Int): Boolean
 }

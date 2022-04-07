@@ -17,7 +17,6 @@ import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.api.utils.tokenOrThrow
 import pt.isel.ls.sports.services.sections.SportsServices
-import pt.isel.ls.sports.utils.logRequest
 import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
@@ -51,7 +50,6 @@ class SportsRouter(private val services: SportsServices) {
      * @return sport creation HTTP response
      */
     private fun createSport(request: Request): Response = runCatching {
-        logRequest(request)
         val token = request.tokenOrThrow()
 
         val sportRequest = Json.decodeFromString<CreateSportRequest>(request.bodyString())
@@ -70,7 +68,6 @@ class SportsRouter(private val services: SportsServices) {
      */
     @Suppress("UNUSED_PARAMETER")
     private fun getSports(request: Request): Response = runCatching {
-        logRequest(request)
         val sports = services.getAllSports()
 
         return Response(OK).json(SportsResponse(sports.map { SportDTO(it) }))
@@ -82,7 +79,6 @@ class SportsRouter(private val services: SportsServices) {
      * @return HTTP response
      */
     private fun getSport(request: Request): Response = runCatching {
-        logRequest(request)
         val sid = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
 
         val sport = services.getSport(sid)
@@ -91,7 +87,6 @@ class SportsRouter(private val services: SportsServices) {
     }.getOrElse(::getErrorResponse)
 
     private fun getSportActivities(request: Request): Response = runCatching {
-        logRequest(request)
         val sid = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
 
         val activities = services.getSportActivities(sid)

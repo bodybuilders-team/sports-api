@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.database.memory
+package pt.isel.ls.sports.database
 
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route

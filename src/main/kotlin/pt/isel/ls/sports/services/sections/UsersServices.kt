@@ -24,13 +24,15 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
         if (!User.isValidEmail(email))
             throw AppError.InvalidArgument("Invalid email")
 
-        if (db.users.hasUserWithEmail(email))
-            throw AppError.Conflict("Email already in use")
+        return db.execute { conn ->
+            if (db.users.hasUserWithEmail(conn, email))
+                throw AppError.Conflict("Email already in use")
 
-        val uid = db.users.createNewUser(name, email)
-        val token = db.tokens.createUserToken(UUID.randomUUID(), uid)
+            val uid = db.users.createNewUser(conn, name, email)
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
-        return CreateUserResponse(token, uid)
+            CreateUserResponse(token, uid)
+        }
     }
 
     /**
@@ -43,7 +45,9 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
     fun getUser(uid: Int): User {
         validateUid(uid)
 
-        return db.users.getUser(uid)
+        return db.execute { conn ->
+            db.users.getUser(conn, uid)
+        }
     }
 
     /**
@@ -51,8 +55,8 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      *
      * @return list of user objects
      */
-    fun getAllUsers(): List<User> {
-        return db.users.getAllUsers()
+    fun getAllUsers(): List<User> = db.execute { conn ->
+        db.users.getAllUsers(conn)
     }
 
     /**
@@ -65,6 +69,8 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
     fun getUserActivities(uid: Int): List<Activity> {
         validateUid(uid)
 
-        return db.activities.getUserActivities(uid)
+        return db.execute { conn ->
+            db.activities.getUserActivities(conn, uid)
+        }
     }
 }

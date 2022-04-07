@@ -1,5 +1,8 @@
 package pt.isel.ls.sports.database.utils
 
+import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.utils.Logger
+import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.Types
 
@@ -26,3 +29,17 @@ fun PreparedStatement.setIntOrNull(index: Int, value: Int?) =
         null -> setNull(index, Types.INTEGER)
         else -> setInt(index, value)
     }
+
+/**
+ * Rollbacks a transaction and logs the error.
+ * @throws AppError.InternalError if the rollback failed.
+ */
+fun rollbackTransaction(conn: Connection) {
+    runCatching {
+        Logger.warn("Transaction is being rolled back")
+        conn.rollback()
+    }.getOrElse {
+        Logger.error("Could not rollback transaction")
+        throw AppError.InternalError()
+    }
+}

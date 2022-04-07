@@ -15,7 +15,6 @@ import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.api.utils.tokenOrThrow
 import pt.isel.ls.sports.services.sections.RoutesServices
-import pt.isel.ls.sports.utils.logRequest
 import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
@@ -48,7 +47,6 @@ class RoutesRouter(private val services: RoutesServices) {
      * @return route creation HTTP response
      */
     private fun createRoute(request: Request): Response = runCatching {
-        logRequest(request)
         val token = request.tokenOrThrow()
 
         val routeRequest = Json.decodeFromString<CreateRouteRequest>(request.bodyString())
@@ -68,7 +66,6 @@ class RoutesRouter(private val services: RoutesServices) {
      * @return HTTP response
      */
     private fun getRoutes(request: Request): Response = runCatching {
-        logRequest(request)
         val routes = services.getAllRoutes()
 
         return Response(OK).json(RoutesResponse(routes.map { RouteDTO(it) }))
@@ -80,7 +77,6 @@ class RoutesRouter(private val services: RoutesServices) {
      * @return HTTP response
      */
     private fun getRoute(request: Request): Response = runCatching {
-        logRequest(request)
         val rid = request.pathOrThrow("id").toIntOrThrow { "Invalid Route Id" }
 
         val route = services.getRoute(rid)

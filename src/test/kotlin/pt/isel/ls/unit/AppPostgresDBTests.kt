@@ -1,6 +1,8 @@
 package pt.isel.ls.unit
 
 import kotlinx.datetime.toLocalDate
+import org.postgresql.ds.PGSimpleDataSource
+import pt.isel.ls.integration.IntegrationTests
 import pt.isel.ls.runScript
 import pt.isel.ls.sports.JDBC_DATABASE_URL_ENV
 import pt.isel.ls.sports.database.AppPostgresDB
@@ -22,9 +24,8 @@ class AppPostgresDBTests {
 
     companion object {
         private val jdbcDatabaseURL: String = System.getenv(JDBC_DATABASE_URL_ENV)
-
-        private val dataSource = AppPostgresDB.createPostgresDataSource(jdbcDatabaseURL)
-        private val db = AppPostgresDB(dataSource)
+        private val dataSource = PGSimpleDataSource().apply { setURL(jdbcDatabaseURL) }
+        private val db = AppPostgresDB(jdbcDatabaseURL)
     }
 
     @BeforeTest
@@ -38,8 +39,8 @@ class AppPostgresDBTests {
     // createNewUser
 
     @Test
-    fun `createNewUser creates user correctly in the database`() {
-        val uid = db.users.createNewUser("Paulão", "paulao@mail.com")
+    fun `createNewUser creates user correctly in the database`(): Unit = db.connection.use { conn ->
+        val uid = db.users.createNewUser(conn, "Paulão", "paulao@mail.com")
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM users WHERE id = ?")
@@ -61,45 +62,46 @@ class AppPostgresDBTests {
     // getUser
 
     @Test
-    fun `getUser returns the user object`() {
-        val user = db.users.getUser(1)
+    fun `getUser returns the user object`(): Unit = IntegrationTests.db.connection.use { conn ->
+        val user = db.users.getUser(conn, 1)
 
         assertEquals(User(1, "André Jesus", "A48280@alunos.isel.pt"), user)
     }
 
     @Test
-    fun `getUser throws SportsError (Not found) if the user with the uid doesn't exist`() {
-        assertFailsWith<AppError> {
-            db.users.getUser(0)
+    fun `getUser throws SportsError (Not found) if the user with the uid doesn't exist`(): Unit =
+        IntegrationTests.db.connection.use { conn ->
+            assertFailsWith<AppError> {
+                db.users.getUser(conn, 0)
+            }
         }
-    }
 
     // getAllUsers
 
     @Test
-    fun `getAllUsers returns list of user objects`() {
+    fun `getAllUsers returns list of user objects`(): Unit = db.connection.use { conn ->
         val users = listOf(
             User(1, "André Jesus", "A48280@alunos.isel.pt"),
             User(2, "André Páscoa", "A48089@alunos.isel.pt"),
             User(3, "Nyckollas Brandão", "A48287@alunos.isel.pt")
         )
 
-        assertEquals(users, db.users.getAllUsers())
+        assertEquals(users, db.users.getAllUsers(conn))
     }
 
     @Test
-    fun `getAllUsers with no created users returns empty list`() {
+    fun `getAllUsers with no created users returns empty list`(): Unit = db.connection.use { conn ->
         dataSource.connection.use {
             it.runScript("src/main/sql/cleanData.sql")
         }
-        assertEquals(emptyList(), db.users.getAllUsers())
+        assertEquals(emptyList(), db.users.getAllUsers(conn))
     }
 
     // createUserToken
 
     @Test
-    fun `createUserToken creates token correctly in the database`() {
-        val token = db.tokens.createUserToken(UUID.randomUUID(), 1)
+    fun `createUserToken creates token correctly in the database`(): Unit = db.connection.use { conn ->
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), 1)
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM tokens WHERE token = ?")
@@ -114,23 +116,24 @@ class AppPostgresDBTests {
     // getUID
 
     @Test
-    fun `getUID returns the uid correctly`() {
-        val uid = db.tokens.getUID("49698b60-12ca-4df7-8950-d783124f5fas")
+    fun `getUID returns the uid correctly`(): Unit = db.connection.use { conn ->
+        val uid = db.tokens.getUID(conn, "49698b60-12ca-4df7-8950-d783124f5fas")
         assertEquals(1, uid)
     }
 
     @Test
-    fun `getUID throws SportsError (Not Found) if the token isn't associated to any user`() {
-        assertFailsWith<AppError> {
-            db.tokens.getUID("T-o-k-e-n")
+    fun `getUID throws SportsError (Not Found) if the token isn't associated to any user`(): Unit =
+        db.connection.use { conn ->
+            assertFailsWith<AppError> {
+                db.tokens.getUID(conn, "T-o-k-e-n")
+            }
         }
-    }
 
     // createNewRoute
 
     @Test
-    fun `createNewRoute creates route correctly in the database`() {
-        val rid = db.routes.createNewRoute("Odivelas", "Chelas", 150, 1)
+    fun `createNewRoute creates route correctly in the database`(): Unit = db.connection.use { conn ->
+        val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 150, 1)
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM routes WHERE id = ?")
@@ -154,44 +157,45 @@ class AppPostgresDBTests {
     // getRoute
 
     @Test
-    fun `getRoute returns the route object`() {
-        val route = db.routes.getRoute(1)
+    fun `getRoute returns the route object`(): Unit = db.connection.use { conn ->
+        val route = db.routes.getRoute(conn, 1)
         assertEquals(Route(1, "Odivelas", "Chelas", 0.15, 1), route)
     }
 
     @Test
-    fun `getRoute throws SportsError (Not Found) if the route with the rid doesn't exist`() {
-        assertFailsWith<AppError> {
-            db.routes.getRoute(0)
+    fun `getRoute throws SportsError (Not Found) if the route with the rid doesn't exist`(): Unit =
+        db.connection.use { conn ->
+            assertFailsWith<AppError> {
+                db.routes.getRoute(conn, 0)
+            }
         }
-    }
 
     // getAllRoutes
 
     @Test
-    fun `getAllRoutes returns list of all route objects`() {
+    fun `getAllRoutes returns list of all route objects`(): Unit = db.connection.use { conn ->
         val routes = listOf(
             Route(1, "Odivelas", "Chelas", 0.15, 1),
             Route(2, "Chelas", "Odivelas", 0.15, 2),
             Route(3, "Lisboa", "Porto", 1.5, 3)
         )
 
-        assertEquals(routes, db.routes.getAllRoutes())
+        assertEquals(routes, db.routes.getAllRoutes(conn))
     }
 
     @Test
-    fun `getAllRoutes with no created routes returns empty list`() {
+    fun `getAllRoutes with no created routes returns empty list`(): Unit = db.connection.use { conn ->
         dataSource.connection.use {
             it.runScript("src/main/sql/cleanData.sql")
         }
-        assertEquals(emptyList(), db.routes.getAllRoutes())
+        assertEquals(emptyList(), db.routes.getAllRoutes(conn))
     }
 
     // createNewSport
 
     @Test
-    fun `createNewSport creates sport correctly in the database`() {
-        val sid = db.sports.createNewSport(1, "Badminton", "idk")
+    fun `createNewSport creates sport correctly in the database`(): Unit = db.connection.use { conn ->
+        val sid = db.sports.createNewSport(conn, 1, "Badminton", "idk")
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM sports WHERE id = ?")
@@ -214,45 +218,46 @@ class AppPostgresDBTests {
     // getSport
 
     @Test
-    fun `getSport returns the sport object`() {
-        val sport = db.sports.getSport(1)
+    fun `getSport returns the sport object`(): Unit = db.connection.use { conn ->
+        val sport = db.sports.getSport(conn, 1)
         assertEquals(Sport(1, "Soccer", 1, "Kick a ball to score a goal"), sport)
     }
 
     @Test
-    fun `getSport throws SportsError (Not Found) if the sport with the sid doesn't exist`() {
-        assertFailsWith<AppError> {
-            db.sports.getSport(0)
+    fun `getSport throws SportsError (Not Found) if the sport with the sid doesn't exist`(): Unit =
+        db.connection.use { conn ->
+            assertFailsWith<AppError> {
+                db.sports.getSport(conn, 0)
+            }
         }
-    }
 
     // getAllSports
 
     @Test
-    fun `getAllSports returns list of all sport objects`() {
+    fun `getAllSports returns list of all sport objects`(): Unit = db.connection.use { conn ->
         val sports = listOf(
             Sport(1, "Soccer", 1, "Kick a ball to score a goal"),
             Sport(2, "Powerlifting", 2, "Get big"),
             Sport(3, "Basketball", 3, "Shoot a ball through a hoop")
         )
 
-        assertEquals(sports, db.sports.getAllSports())
+        assertEquals(sports, db.sports.getAllSports(conn))
     }
 
     @Test
-    fun `getAllSports with no created sports returns empty list`() {
+    fun `getAllSports with no created sports returns empty list`(): Unit = db.connection.use { conn ->
         dataSource.connection.use {
             it.runScript("src/main/sql/cleanData.sql")
         }
-        assertEquals(emptyList(), db.sports.getAllSports())
+        assertEquals(emptyList(), db.sports.getAllSports(conn))
     }
 
     // createNewActivity
 
     @Test
-    fun `createNewActivity creates activity correctly in the database`() {
+    fun `createNewActivity creates activity correctly in the database`(): Unit = db.connection.use { conn ->
         val aid =
-            db.activities.createNewActivity(1, "2022-11-05".toLocalDate(), "14:59:27.903".toDuration(), 1, 1)
+            db.activities.createNewActivity(conn, 1, "2022-11-05".toLocalDate(), "14:59:27.903".toDuration(), 1, 1)
 
         dataSource.connection.use {
             val stm = it.prepareStatement("SELECT * FROM activities WHERE id = ?")
@@ -277,34 +282,35 @@ class AppPostgresDBTests {
     // getActivity
 
     @Test
-    fun `getActivity returns the activity object`() {
-        val activity = db.activities.getActivity(1)
+    fun `getActivity returns the activity object`(): Unit = db.connection.use { conn ->
+        val activity = db.activities.getActivity(conn, 1)
         assertEquals(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null), activity)
     }
 
     @Test
-    fun `getActivity throws SportsError (Not Found) if the activity with the sid doesn't exist`() {
-        assertFailsWith<AppError> {
-            db.activities.getActivity(0)
+    fun `getActivity throws SportsError (Not Found) if the activity with the sid doesn't exist`(): Unit =
+        db.execute { conn ->
+            assertFailsWith<AppError> {
+                db.activities.getActivity(conn, 0)
+            }
         }
-    }
 
     // deleteActivity
 
     @Test
-    fun `deleteActivity deletes an activity successfully`() {
-        db.activities.deleteActivity(1)
+    fun `deleteActivity deletes an activity successfully`(): Unit = db.connection.use { conn ->
+        db.activities.deleteActivity(conn, 1)
 
         assertFailsWith<AppError> {
-            db.activities.getActivity(1)
+            db.activities.getActivity(conn, 1)
         }
     }
 
     // getSportActivities
 
     @Test
-    fun `getSportActivities returns the activities list`() {
-        val activities = db.activities.getSportActivities(1)
+    fun `getSportActivities returns the activities list`(): Unit = db.connection.use { conn ->
+        val activities = db.activities.getSportActivities(conn, 1)
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
             activities
@@ -314,8 +320,8 @@ class AppPostgresDBTests {
     // getUserActivities
 
     @Test
-    fun `getUserActivities returns the activities list`() {
-        val activities = db.activities.getUserActivities(1)
+    fun `getUserActivities returns the activities list`(): Unit = db.connection.use { conn ->
+        val activities = db.activities.getUserActivities(conn, 1)
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
             activities
@@ -325,9 +331,9 @@ class AppPostgresDBTests {
     // getActivities
 
     @Test
-    fun `getActivities with descending order returns the activities list`() {
+    fun `getActivities with descending order returns the activities list`(): Unit = db.connection.use { conn ->
         val activities =
-            db.activities.getActivities(sid = 2, SortOrder.DESCENDING, "2022-11-21".toLocalDate(), rid = 1)
+            db.activities.getActivities(conn, sid = 2, SortOrder.DESCENDING, "2022-11-21".toLocalDate(), rid = 1)
 
         val mockActivities = listOf(
             Activity(
@@ -351,9 +357,9 @@ class AppPostgresDBTests {
     }
 
     @Test
-    fun `getActivities with ascending order returns the activities list`() {
+    fun `getActivities with ascending order returns the activities list`(): Unit = db.connection.use { conn ->
         val activities =
-            db.activities.getActivities(sid = 2, SortOrder.ASCENDING, "2022-11-21".toLocalDate(), rid = 1)
+            db.activities.getActivities(conn, sid = 2, SortOrder.ASCENDING, "2022-11-21".toLocalDate(), rid = 1)
 
         val mockActivities = listOf(
             Activity(
@@ -378,4 +384,5 @@ class AppPostgresDBTests {
     }
 
     // TODO: 26/03/2022 Add more tests (synchronize with SportDataMemTests?)
+    // TODO: 06/04/2022 Add tests for db.execute transactions error handling
 }

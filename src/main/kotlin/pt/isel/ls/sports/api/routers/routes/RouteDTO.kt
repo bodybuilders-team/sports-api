@@ -5,7 +5,7 @@ import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.services.utils.isValidId
 
 /**
- * Route representation.
+ * Route data transfer object representation.
  *
  * @property id route unique identifier
  * @property startLocation start location of the route

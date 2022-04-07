@@ -6,7 +6,7 @@ import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.sports.utils.toDTOString
 
 /**
- * Activity representation.
+ * Activity data transfer object representation.
  *
  * @property id activity unique identifier
  * @property date activity date in string
@@ -25,6 +25,7 @@ data class ActivityDTO(
     val rid: Int? = null
 ) {
     companion object {
+        @Suppress("RegExpUnnecessaryNonCapturingGroup", "RegExpRedundantEscape")
         private const val DURATION_REGEX = "^(?:[01]\\d|2[0123])\\:(?:[012345]\\d)\\:(?:[012345]\\d)\\.\\d{3}$"
         private const val DATE_REGEX = "^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$"
 

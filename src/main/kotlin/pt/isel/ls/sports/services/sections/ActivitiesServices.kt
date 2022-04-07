@@ -24,11 +24,13 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         validateSid(sid)
         if (rid != null) validateRid(rid)
 
-        val uid = authenticate(token)
-        validateSportExists(sid)
-        if (rid != null) validateRouteExists(rid)
+        return db.execute { conn ->
+            val uid = authenticate(conn, token)
+            validateSportExists(conn, sid)
+            if (rid != null) validateRouteExists(conn, rid)
 
-        return db.activities.createNewActivity(uid, date, duration, sid, rid)
+            db.activities.createNewActivity(conn, uid, date, duration, sid, rid)
+        }
     }
 
     /**
@@ -41,7 +43,9 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     fun getActivity(aid: Int): Activity {
         validateAid(aid)
 
-        return db.activities.getActivity(aid)
+        return db.execute { conn ->
+            db.activities.getActivity(conn, aid)
+        }
     }
 
     /**
@@ -52,13 +56,15 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     fun deleteActivity(token: String, aid: Int) {
         validateAid(aid)
 
-        val uid = authenticate(token)
-        val activity = db.activities.getActivity(aid)
+        return db.execute { conn ->
+            val uid = authenticate(conn, token)
+            val activity = db.activities.getActivity(conn, aid)
 
-        if (uid != activity.uid)
-            throw AppError.Forbidden("You are not allowed to delete this activity")
+            if (uid != activity.uid)
+                throw AppError.Forbidden("You are not allowed to delete this activity")
 
-        return db.activities.deleteActivity(aid)
+            db.activities.deleteActivity(conn, aid)
+        }
     }
 
     /**
@@ -93,6 +99,8 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         val order = SortOrder.parse(orderBy)
             ?: throw AppError.InvalidArgument("Order by must be either ascending or descending")
 
-        return db.activities.getActivities(sid, order, date, rid, skip, limit)
+        return db.execute { conn ->
+            db.activities.getActivities(conn, sid, order, date, rid, skip, limit)
+        }
     }
 }

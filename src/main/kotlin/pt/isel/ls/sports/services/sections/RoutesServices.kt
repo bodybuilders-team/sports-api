@@ -22,14 +22,17 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
         if (!Route.isValidDistance(distance))
             throw AppError.InvalidArgument("Distance must be positive")
 
-        val uid = authenticate(token)
+        return db.execute { conn ->
+            val uid = authenticate(conn, token)
 
-        return db.routes.createNewRoute(
-            startLocation,
-            endLocation,
-            distance = (distance * 1000).toInt(),
-            uid
-        )
+            db.routes.createNewRoute(
+                conn,
+                startLocation,
+                endLocation,
+                distance = (distance * 1000).toInt(),
+                uid
+            )
+        }
     }
 
     /**
@@ -42,7 +45,9 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
     fun getRoute(rid: Int): Route {
         validateRid(rid)
 
-        return db.routes.getRoute(rid)
+        return db.execute { conn ->
+            db.routes.getRoute(conn, rid)
+        }
     }
 
     /**
@@ -50,7 +55,7 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
      *
      * @return list of route objects
      */
-    fun getAllRoutes(): List<Route> {
-        return db.routes.getAllRoutes()
+    fun getAllRoutes(): List<Route> = db.execute { conn ->
+        db.routes.getAllRoutes(conn)
     }
 }

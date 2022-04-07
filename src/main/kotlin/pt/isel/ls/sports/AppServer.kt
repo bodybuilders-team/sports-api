@@ -1,12 +1,17 @@
 package pt.isel.ls.sports
 
+import org.http4k.core.Filter
+import org.http4k.filter.CorsPolicy
+import org.http4k.filter.ServerFilters
+import org.http4k.routing.bind
+import org.http4k.routing.routes
 import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import pt.isel.ls.sports.api.AppWebApi
 import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.services.AppServices
-import pt.isel.ls.sports.utils.logger
+import pt.isel.ls.sports.utils.Logger
 
 /**
  * Represents a Sports API application server.
@@ -21,7 +26,26 @@ class AppServer(private val port: Int, private val database: AppDB) {
     init {
         val services = AppServices(database)
         val webApi = AppWebApi(services)
-        server = webApi.getApp().asServer(Jetty(port))
+
+        // Need Cross origin filter to allow requests from other domains (in this case the
+        // openApi documentation in the intellij plugin)
+        val corsFilter = ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive)
+
+        // Logs all requests
+        val logRequestFilter = Filter { next ->
+            { request ->
+                Logger.logRequest(request)
+                next(request)
+            }
+        }
+
+        val app = routes(
+            "/api" bind webApi.getHandler(),
+        )
+            .withFilter(corsFilter)
+            .withFilter(logRequestFilter)
+
+        server = app.asServer(Jetty(port))
     }
 
     /**
@@ -29,7 +53,7 @@ class AppServer(private val port: Int, private val database: AppDB) {
      */
     fun start() {
         server.start()
-        logger.info("starting server on port $port")
+        Logger.info("Starting server on port $port")
     }
 
     /**
@@ -37,6 +61,6 @@ class AppServer(private val port: Int, private val database: AppDB) {
      */
     fun stop() {
         server.stop()
-        logger.info("stopping server")
+        Logger.info("stopping server")
     }
 }

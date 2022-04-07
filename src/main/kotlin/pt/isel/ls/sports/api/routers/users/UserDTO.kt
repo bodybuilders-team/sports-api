@@ -5,7 +5,7 @@ import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.services.utils.isValidId
 
 /**
- * User representation.
+ * User data transfer object representation.
  *
  * @property id user's unique identifier
  * @property name name of the user

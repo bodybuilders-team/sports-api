@@ -5,7 +5,7 @@ import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.services.utils.isValidId
 
 /**
- * Sport representation.
+ * Sport data transfer object representation.
  *
  * @property id sport's unique identifier
  * @property name name of the sport

@@ -1,7 +1,8 @@
-package pt.isel.ls.sports.database.tables.activities
+package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
-import pt.isel.ls.sports.database.memory.AppMemoryDBSource
+import pt.isel.ls.sports.database.AppMemoryDBSource
+import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.errors.AppError
@@ -9,7 +10,14 @@ import kotlin.time.Duration
 
 class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
 
-    override fun createNewActivity(uid: Int, date: LocalDate, duration: Duration, sid: Int, rid: Int?): Int {
+    override fun createNewActivity(
+        conn: ConnectionDB,
+        uid: Int,
+        date: LocalDate,
+        duration: Duration,
+        sid: Int,
+        rid: Int?
+    ): Int {
         val id = source.nextActivityId.getAndIncrement()
 
         source.activities[id] = Activity(id, date, duration, uid, sid, rid)
@@ -17,15 +25,23 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         return id
     }
 
-    override fun getActivity(aid: Int): Activity {
+    override fun getActivity(conn: ConnectionDB, aid: Int): Activity {
         return source.activities[aid] ?: throw AppError.NotFound("Activity with id $aid not found")
     }
 
-    override fun deleteActivity(aid: Int) {
+    override fun deleteActivity(conn: ConnectionDB, aid: Int) {
         source.activities.remove(aid) ?: throw AppError.NotFound("Activity with id $aid not found")
     }
 
-    override fun getActivities(sid: Int, orderBy: SortOrder, date: LocalDate?, rid: Int?, skip: Int?, limit: Int?) =
+    override fun getActivities(
+        conn: ConnectionDB,
+        sid: Int,
+        orderBy: SortOrder,
+        date: LocalDate?,
+        rid: Int?,
+        skip: Int?,
+        limit: Int?
+    ) =
         source.activities
             .filter {
                 it.value.sid == sid &&
@@ -40,14 +56,14 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
                     compareByDescending { it.duration }
             )
 
-    override fun getSportActivities(sid: Int): List<Activity> {
+    override fun getSportActivities(conn: ConnectionDB, sid: Int): List<Activity> {
         return source.activities.filter { it.value.sid == sid }.values.toList()
     }
 
-    override fun getUserActivities(uid: Int): List<Activity> {
+    override fun getUserActivities(conn: ConnectionDB, uid: Int): List<Activity> {
         return source.activities.filter { it.value.uid == uid }.values.toList()
     }
 
-    override fun hasActivity(aid: Int): Boolean =
+    override fun hasActivity(conn: ConnectionDB, aid: Int): Boolean =
         source.activities.containsKey(aid)
 }

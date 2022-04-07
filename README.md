@@ -6,9 +6,9 @@
 
 ## Authors
 
- - [André Páscoa](https://github.com/devandrepascoa)
- - [André Jesus](https://github.com/Andre-J3sus)
- - [Nyckollas Brandão](https://github.com/Nyckoka)
+- [André Páscoa](https://github.com/devandrepascoa)
+- [André Jesus](https://github.com/Andre-J3sus)
+- [Nyckollas Brandão](https://github.com/Nyckoka)
 
 Professors: Engs. Filipe Freitas, Luís Falcão and Daniel Dias
 

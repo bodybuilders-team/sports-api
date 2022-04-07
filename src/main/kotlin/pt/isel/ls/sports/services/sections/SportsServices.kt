@@ -17,15 +17,18 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      * @return the sport's unique identifier
      */
     fun createNewSport(token: String, name: String, description: String?): Int {
+
         if (!Sport.isValidName(name))
             throw AppError.InvalidArgument("Name must be between ${Sport.MIN_NAME_LENGTH} and ${Sport.MAX_NAME_LENGTH} characters")
 
         if (description != null && !Sport.isValidDescription(description))
             throw AppError.InvalidArgument("Description must be between ${Sport.MIN_DESCRIPTION_LENGTH} and ${Sport.MAX_DESCRIPTION_LENGTH} characters")
 
-        val uid = authenticate(token)
+        return db.execute { conn ->
+            val uid = authenticate(conn, token)
 
-        return db.sports.createNewSport(uid, name, description)
+            db.sports.createNewSport(conn, uid, name, description)
+        }
     }
 
     /**
@@ -38,7 +41,9 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
     fun getSport(sid: Int): Sport {
         validateSid(sid)
 
-        return db.sports.getSport(sid)
+        return db.execute { conn ->
+            db.sports.getSport(conn, sid)
+        }
     }
 
     /**
@@ -46,8 +51,8 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      *
      * @return list of identifiers of all sports
      */
-    fun getAllSports(): List<Sport> {
-        return db.sports.getAllSports()
+    fun getAllSports(): List<Sport> = db.execute { conn ->
+        db.sports.getAllSports(conn)
     }
 
     /**
@@ -60,6 +65,9 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
     fun getSportActivities(sid: Int): List<Activity> {
         validateSid(sid)
 
-        return db.activities.getSportActivities(sid)
+        return db.execute { conn ->
+
+            db.activities.getSportActivities(conn, sid)
+        }
     }
 }
