@@ -17,7 +17,6 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      * @return the sport's unique identifier
      */
     fun createNewSport(token: String, name: String, description: String?): Int {
-
         if (!Sport.isValidName(name))
             throw AppError.InvalidArgument("Name must be between ${Sport.MIN_NAME_LENGTH} and ${Sport.MAX_NAME_LENGTH} characters")
 
@@ -66,7 +65,6 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
         validateSid(sid)
 
         return db.execute { conn ->
-
             db.activities.getSportActivities(conn, sid)
         }
     }
