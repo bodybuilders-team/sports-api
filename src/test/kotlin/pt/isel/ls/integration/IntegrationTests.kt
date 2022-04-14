@@ -3,22 +3,23 @@ package pt.isel.ls.integration
 import org.http4k.client.JavaHttpClient
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.postgresql.ds.PGSimpleDataSource
-import pt.isel.ls.runScript
 import pt.isel.ls.sports.AppServer
 import pt.isel.ls.sports.DEFAULT_PORT
 import pt.isel.ls.sports.JDBC_DATABASE_URL_ENV
 import pt.isel.ls.sports.PORT_ENV
+import pt.isel.ls.sports.database.AppMemoryDB
+import pt.isel.ls.sports.database.AppMemoryDBSource
 import pt.isel.ls.sports.database.AppPostgresDB
 import kotlin.test.BeforeTest
 
 abstract class IntegrationTests {
 
     companion object {
-        private val jdbcDatabaseURL: String = System.getenv(JDBC_DATABASE_URL_ENV)
         private val port = System.getenv(PORT_ENV)?.toIntOrNull() ?: DEFAULT_PORT
+        private val jdbcDatabaseURL: String = System.getenv(JDBC_DATABASE_URL_ENV)
 
-        val db = AppPostgresDB(jdbcDatabaseURL)
+        private val runPostgresTests = System.getenv("TEST_POSTGRES")?.toBoolean() ?: false
+        val db = if (runPostgresTests) AppPostgresDB(jdbcDatabaseURL) else AppMemoryDB(AppMemoryDBSource())
         val send = JavaHttpClient()
         val uriPrefix = "http://localhost:$port/api"
 
@@ -38,9 +39,7 @@ abstract class IntegrationTests {
     }
 
     @BeforeTest
-    fun setupDatabase() {
-        PGSimpleDataSource().apply { setUrl(jdbcDatabaseURL) }.connection.use {
-            it.runScript("src/main/sql/createSchema.sql")
-        }
+    fun initializeDataMem() {
+        db.reset()
     }
 }

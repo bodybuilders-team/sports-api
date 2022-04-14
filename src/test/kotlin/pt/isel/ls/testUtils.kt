@@ -1,8 +1,6 @@
 package pt.isel.ls
 
 import org.http4k.core.Request
-import java.io.File
-import java.sql.Connection
 import java.sql.ResultSet
 import kotlin.test.assertEquals
 
@@ -27,19 +25,6 @@ fun tableAsserter(
 
         rowAssertionCb(mockRow, rs)
     }
-}
-
-/**
- * Runs SQL script
- * @param filepath path of the script to run
- */
-fun Connection.runScript(filepath: String) {
-    File(filepath)
-        .readText()
-        .also {
-            this.prepareStatement(it)
-                .executeUpdate()
-        }
 }
 
 /**

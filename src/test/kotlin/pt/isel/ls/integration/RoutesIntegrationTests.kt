@@ -25,9 +25,15 @@ class RoutesIntegrationTests : IntegrationTests() {
     // Create new route
 
     @Test
-    fun `Create new route with valid data`(): Unit = db.connection.use { conn ->
-        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+    fun `Create new route with valid data`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+            object {
+                val token = token
+            }
+        }
 
         val requestBody = """
             {
@@ -38,7 +44,7 @@ class RoutesIntegrationTests : IntegrationTests() {
         """.trimIndent()
 
         val request = Request(Method.POST, "$uriPrefix/routes")
-            .token(token)
+            .token(mockData.token)
             .json(requestBody)
 
         send(request)
@@ -48,7 +54,9 @@ class RoutesIntegrationTests : IntegrationTests() {
                 val rid = Json.decodeFromString<CreateRouteResponse>(bodyString()).rid
                 assertTrue(isValidId(rid))
 
-                assertTrue(db.routes.hasRoute(conn, rid))
+                db.execute { conn ->
+                    assertTrue(db.routes.hasRoute(conn, rid))
+                }
             }
     }
 
@@ -98,9 +106,12 @@ class RoutesIntegrationTests : IntegrationTests() {
     }
 
     @Test
-    fun `Create new route with invalid data`(): Unit = db.connection.use { conn ->
-        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+    fun `Create new route with invalid data`() {
+        val token = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            token
+        }
         val requestBody = """
             {
                 "start_location": "Porto",
@@ -121,25 +132,29 @@ class RoutesIntegrationTests : IntegrationTests() {
             }
     }
 
-    // Get all routes
+// Get all routes
 
     @Test
-    fun `Get all routes`(): Unit = db.connection.use { conn ->
-        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+    fun `Get all routes`() {
+        val mockRoutes = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
 
-        val mockRoutes = listOf(
-            CreateRouteRequest(
-                "Russia",
-                "Lisbon",
-                10.0
-            ),
-            CreateRouteRequest(
-                "Dubai",
-                "Paris",
-                10.0
-            )
-        ).associateBy {
-            db.routes.createNewRoute(conn, it.start_location, it.end_location, (it.distance * 1000).toInt(), uid)
+            val mockRoutes = listOf(
+                CreateRouteRequest(
+                    "Russia",
+                    "Lisbon",
+                    10.0
+                ),
+                CreateRouteRequest(
+                    "Dubai",
+                    "Paris",
+                    10.0
+                )
+            ).associateBy {
+                db.routes.createNewRoute(conn, it.start_location, it.end_location, (it.distance * 1000).toInt(), uid)
+            }
+
+            mockRoutes
         }
 
         val request = Request(Method.GET, "$uriPrefix/routes")
@@ -175,38 +190,44 @@ class RoutesIntegrationTests : IntegrationTests() {
             }
     }
 
-    // Get route by id
+// Get route by id
 
     @Test
-    fun `Get route by id`(): Unit = db.connection.use { conn ->
-        val mockRoute = CreateRouteRequest(
-            "Russia",
-            "Lisbon",
-            10.0
-        )
+    fun `Get route by id`() {
+        val mockData = db.execute { conn ->
+            val route = CreateRouteRequest(
+                "Russia",
+                "Lisbon",
+                10.0
+            )
 
-        val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-        val rid = db.routes.createNewRoute(
-            conn,
-            mockRoute.start_location,
-            mockRoute.end_location,
-            (mockRoute.distance * 1000.0).toInt(),
-            mockId
-        )
-
-        val request = Request(Method.GET, "$uriPrefix/routes/$rid")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val rid = db.routes.createNewRoute(
+                conn,
+                route.start_location,
+                route.end_location,
+                (route.distance * 1000.0).toInt(),
+                uid
+            )
+            object {
+                val uid = uid
+                val rid = rid
+                val route = route
+            }
+        }
+        val request = Request(Method.GET, "$uriPrefix/routes/${mockData.rid}")
 
         send(request)
             .apply {
                 assertEquals(Status.OK, status)
 
                 val route = Json.decodeFromString<RouteDTO>(bodyString())
-                assertEquals(rid, route.id)
-                assertEquals(mockId, route.uid)
+                assertEquals(mockData.rid, route.id)
+                assertEquals(mockData.uid, route.uid)
 
-                assertEquals(mockRoute.start_location, route.startLocation)
-                assertEquals(mockRoute.end_location, route.endLocation)
-                assertEquals(mockRoute.distance, route.distance)
+                assertEquals(mockData.route.start_location, route.startLocation)
+                assertEquals(mockData.route.end_location, route.endLocation)
+                assertEquals(mockData.route.distance, route.distance)
             }
     }
 

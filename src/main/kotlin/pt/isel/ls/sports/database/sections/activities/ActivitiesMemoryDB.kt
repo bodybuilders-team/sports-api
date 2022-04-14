@@ -45,8 +45,8 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         source.activities
             .filter {
                 it.value.sid == sid &&
-                    it.value.date == date &&
-                    it.value.rid == rid
+                    (date == null || it.value.date == date) &&
+                    (rid == null || it.value.rid == rid)
             }
             .values.toList()
             .sortedWith(

@@ -2,6 +2,7 @@ package pt.isel.ls.sports.database.utils
 
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.utils.Logger
+import java.io.File
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.Types
@@ -42,4 +43,17 @@ fun rollbackTransaction(conn: Connection) {
         Logger.error("Could not rollback transaction")
         throw AppError.InternalError()
     }
+}
+
+/**
+ * Runs SQL script
+ * @param filepath path of the script to run
+ */
+fun Connection.runScript(filepath: String) {
+    File(filepath)
+        .readText()
+        .also {
+            this.prepareStatement(it)
+                .executeUpdate()
+        }
 }

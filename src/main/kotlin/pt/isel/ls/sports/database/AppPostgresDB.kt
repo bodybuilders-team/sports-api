@@ -9,6 +9,7 @@ import pt.isel.ls.sports.database.sections.sports.SportsPostgresDB
 import pt.isel.ls.sports.database.sections.tokens.TokensPostgresDB
 import pt.isel.ls.sports.database.sections.users.UsersPostgresDB
 import pt.isel.ls.sports.database.utils.rollbackTransaction
+import pt.isel.ls.sports.database.utils.runScript
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.utils.Logger
 import java.sql.SQLException
@@ -40,11 +41,11 @@ class AppPostgresDB(sourceURL: String) : AppDB {
         }
     }
 
-    /**
-     * Gets a new database connection.
-     */
-    val connection: PostgresConnectionDB
-        get() = PostgresConnectionDB(source.connection)
+    override fun reset() {
+        source.connection.use {
+            it.runScript("src/main/sql/cleanData.sql")
+        }
+    }
 
     override val users: UsersPostgresDB = UsersPostgresDB()
     override val sports: SportsPostgresDB = SportsPostgresDB()

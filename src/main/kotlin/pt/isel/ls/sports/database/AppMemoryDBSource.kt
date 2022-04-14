@@ -34,4 +34,20 @@ class AppMemoryDBSource {
 
     val activities = ConcurrentHashMap<Int, Activity>()
     var nextActivityId = AtomicInteger(1)
+
+    fun reset() {
+        tokens.clear()
+
+        users.clear()
+        nextUserId = AtomicInteger(1)
+
+        routes.clear()
+        nextRouteId = AtomicInteger(1)
+
+        sports.clear()
+        nextSportId = AtomicInteger(1)
+
+        activities.clear()
+        nextActivityId = AtomicInteger(1)
+    }
 }

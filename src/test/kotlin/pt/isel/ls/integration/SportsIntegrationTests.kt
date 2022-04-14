@@ -29,9 +29,12 @@ class SportsIntegrationTests : IntegrationTests() {
     // Create new sport
 
     @Test
-    fun `Create new sport with valid data`(): Unit = db.connection.use { conn ->
-        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+    fun `Create new sport with valid data`() {
+        val token = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            token
+        }
 
         val requestBody = """
             {
@@ -50,15 +53,19 @@ class SportsIntegrationTests : IntegrationTests() {
 
                 val sid = Json.decodeFromString<CreateSportResponse>(bodyString()).sid
                 assertTrue(isValidId(sid))
-
-                assertTrue(db.sports.hasSport(conn, sid))
+                db.execute { conn ->
+                    assertTrue(db.sports.hasSport(conn, sid))
+                }
             }
     }
 
     @Test
-    fun `Create new sport with empty description`(): Unit = db.connection.use { conn ->
-        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+    fun `Create new sport with empty description`() {
+        val token = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            token
+        }
 
         val requestBody = """
             {
@@ -78,7 +85,9 @@ class SportsIntegrationTests : IntegrationTests() {
                 val sid = Json.decodeFromString<CreateSportResponse>(bodyString()).sid
                 assertTrue(isValidId(sid))
 
-                assertTrue(db.sports.hasSport(conn, sid))
+                db.execute { conn ->
+                    assertTrue(db.sports.hasSport(conn, sid))
+                }
             }
     }
 
@@ -126,9 +135,12 @@ class SportsIntegrationTests : IntegrationTests() {
     }
 
     @Test
-    fun `Create new sport with invalid data`(): Unit = db.connection.use { conn ->
-        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+    fun `Create new sport with invalid data`() {
+        val token = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            token
+        }
         val requestBody = """
             {
                 "name": "S"
@@ -151,14 +163,21 @@ class SportsIntegrationTests : IntegrationTests() {
     // Get all sports
 
     @Test
-    fun `Get all sports`(): Unit = db.connection.use { conn ->
-        val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+    fun `Get all sports`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
 
-        val mockSports = listOf(
-            CreateSportRequest("Sprint", "100 Meters Sprint"),
-            CreateSportRequest("PowerLifting", "LIGHT WEIGHT BABY!"),
-        ).associateBy {
-            db.sports.createNewSport(conn, uid, it.name, it.description)
+            val sports = listOf(
+                CreateSportRequest("Sprint", "100 Meters Sprint"),
+                CreateSportRequest("PowerLifting", "LIGHT WEIGHT BABY!"),
+            ).associateBy {
+                db.sports.createNewSport(conn, uid, it.name, it.description)
+            }
+
+            object {
+                val uid = uid
+                val sports = sports
+            }
         }
 
         val request = Request(Method.GET, "$uriPrefix/sports")
@@ -168,15 +187,15 @@ class SportsIntegrationTests : IntegrationTests() {
                 assertEquals(Status.OK, status)
 
                 val sports = Json.decodeFromString<SportsResponse>(bodyString()).sports
-                assertEquals(mockSports.size, sports.size)
+                assertEquals(mockData.sports.size, sports.size)
 
                 sports.forEach { sport ->
-                    val mockSport = mockSports[sport.id]
+                    val mockSport = mockData.sports[sport.id]
                     assertNotNull(mockSport)
 
                     assertEquals(mockSport.name, sport.name)
                     assertEquals(mockSport.description, sport.description)
-                    assertEquals(uid, sport.uid)
+                    assertEquals(mockData.uid, sport.uid)
                 }
             }
     }
@@ -197,43 +216,57 @@ class SportsIntegrationTests : IntegrationTests() {
     // Get sport by id
 
     @Test
-    fun `Get sport by id`(): Unit = db.connection.use { conn ->
-        val mockSport = CreateSportRequest("Sprint", "100 Meters Sprint")
+    fun `Get sport by id`() {
+        val mockData = db.execute { conn ->
+            val sport = CreateSportRequest("Sprint", "100 Meters Sprint")
 
-        val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-        val sid = db.sports.createNewSport(conn, mockId, mockSport.name, mockSport.description)
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val sid = db.sports.createNewSport(conn, uid, sport.name, sport.description)
+            object {
+                val uid = uid
+                val sid = sid
+                val sport = sport
+            }
+        }
 
-        val request = Request(Method.GET, "$uriPrefix/sports/$sid")
+        val request = Request(Method.GET, "$uriPrefix/sports/${mockData.sid}")
 
         send(request)
             .apply {
                 assertEquals(Status.OK, status)
 
                 val sport = Json.decodeFromString<SportDTO>(bodyString())
-                assertEquals(mockId, sport.uid)
-                assertEquals(sid, sport.id)
+                assertEquals(mockData.uid, sport.uid)
+                assertEquals(mockData.sid, sport.id)
 
-                assertEquals(mockSport.name, sport.name)
-                assertEquals(mockSport.description, sport.description)
+                assertEquals(mockData.sport.name, sport.name)
+                assertEquals(mockData.sport.description, sport.description)
             }
     }
 
     @Test
-    fun `Get sport with empty description by id`(): Unit = db.connection.use { conn ->
-        val mockSport = CreateSportRequest("Sprint")
+    fun `Get sport with empty description by id`() {
+        val mockData = db.execute { conn ->
+            val sport = CreateSportRequest("Sprint")
 
-        val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-        val sid = db.sports.createNewSport(conn, mockId, mockSport.name, mockSport.description)
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val sid = db.sports.createNewSport(conn, uid, sport.name, sport.description)
+            object {
+                val uid = uid
+                val sid = sid
+                val sport = sport
+            }
+        }
 
-        val request = Request(Method.GET, "$uriPrefix/sports/$sid")
+        val request = Request(Method.GET, "$uriPrefix/sports/${mockData.sid}")
 
         send(request)
             .apply {
                 assertEquals(Status.OK, status)
 
                 val sport = Json.decodeFromString<SportDTO>(bodyString())
-                assertEquals(mockId, sport.id)
-                assertEquals(mockSport.name, sport.name)
+                assertEquals(mockData.uid, sport.id)
+                assertEquals(mockData.sport.name, sport.name)
                 assertNull(sport.description)
             }
     }
@@ -269,28 +302,34 @@ class SportsIntegrationTests : IntegrationTests() {
     // Get sport activities
 
     @Test
-    fun `Get sport activities by valid id`(): Unit = db.connection.use { conn ->
-        val mockUid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-        val mockSid = db.sports.createNewSport(conn, mockUid, "Running", "Running")
+    fun `Get sport activities by valid id`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
 
-        val mockActivities = listOf(
-            CreateActivityRequest("2019-01-01", "23:59:59.555", mockSid),
-            CreateActivityRequest("2019-01-02", "20:59:59.555", mockSid)
-        ).associateBy {
-            db.activities.createNewActivity(conn, mockUid, it.date.toLocalDate(), it.duration.toDuration(), it.sid)
+            val activities = listOf(
+                CreateActivityRequest("2019-01-01", "23:59:59.555", sid),
+                CreateActivityRequest("2019-01-02", "20:59:59.555", sid)
+            ).associateBy {
+                db.activities.createNewActivity(conn, uid, it.date.toLocalDate(), it.duration.toDuration(), it.sid)
+            }
+            object {
+                val sid = sid
+                val activities = activities
+            }
         }
 
-        val request = Request(Method.GET, "$uriPrefix/sports/$mockSid/activities")
+        val request = Request(Method.GET, "$uriPrefix/sports/${mockData.sid}/activities")
 
         send(request)
             .apply {
                 assertEquals(Status.OK, status)
 
                 val activities = Json.decodeFromString<ActivitiesResponse>(bodyString()).activities
-                assertEquals(mockActivities.size, activities.size)
+                assertEquals(mockData.activities.size, activities.size)
 
                 activities.forEach { activity ->
-                    val mockActivity = mockActivities[activity.id]
+                    val mockActivity = mockData.activities[activity.id]
                     assertNotNull(mockActivity)
 
                     assertEquals(mockActivity.date, activity.date)

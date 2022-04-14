@@ -11,9 +11,13 @@ import pt.isel.ls.sports.database.sections.users.UsersMemoryDB
 /**
  * Implementation of a memory database representation, an aggregate of all memory database sections.
  */
-class AppMemoryDB(source: AppMemoryDBSource) : AppDB {
+class AppMemoryDB(private val source: AppMemoryDBSource) : AppDB {
     override fun <R> execute(func: (ConnectionDB) -> R): R {
         return func(MemoryConnectionDB())
+    }
+
+    override fun reset() {
+        source.reset()
     }
 
     override val users = UsersMemoryDB(source)

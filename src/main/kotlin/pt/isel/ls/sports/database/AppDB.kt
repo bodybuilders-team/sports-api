@@ -21,6 +21,11 @@ interface AppDB {
      */
     fun <R> execute(func: (ConnectionDB) -> R): R
 
+    /**
+     * Reset database.
+     */
+    fun reset()
+
     val users: UsersDB
     val sports: SportsDB
     val routes: RoutesDB
