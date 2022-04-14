@@ -3,8 +3,10 @@ package pt.isel.ls.sports
 import org.http4k.core.Filter
 import org.http4k.filter.CorsPolicy
 import org.http4k.filter.ServerFilters
+import org.http4k.routing.ResourceLoader
 import org.http4k.routing.bind
 import org.http4k.routing.routes
+import org.http4k.routing.singlePageApp
 import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
@@ -41,6 +43,7 @@ class AppServer(private val port: Int, private val database: AppDB) {
 
         val app = routes(
             "/api" bind webApi.getHandler(),
+            "/" bind singlePageApp(ResourceLoader.Directory("static-content"))
         )
             .withFilter(corsFilter)
             .withFilter(logRequestFilter)
