@@ -316,7 +316,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             }
         }
         val request =
-            Request(Method.GET, "$uriPrefix/activities/search?sid=${mockData.sid}&orderBy=${mockData.orderBy}")
+            Request(Method.GET, "$uriPrefix/activities?sid=${mockData.sid}&orderBy=${mockData.orderBy}")
 
         send(request).apply {
             assertEquals(Status.OK, status)
