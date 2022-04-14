@@ -8,7 +8,7 @@ window.addEventListener("hashchange", hashChangeHandler);
  * @returns state object
  */
 function createState() {
-    return {path: "/", currentPath: "/", params: {}, props: {}};
+    return {path: "/", currentPath: "/", params: {}};
 }
 
 /**

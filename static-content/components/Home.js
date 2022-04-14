@@ -7,7 +7,7 @@ import {a, br, div, h1, img, p, strong} from "../js/dom/domTags.js";
  */
 async function Home(state) {
     return div(
-        h1("Home"),
+        h1({class:"app_icon"},"Home"),
         p("Add description..."),
         strong(
             "Authors: ",

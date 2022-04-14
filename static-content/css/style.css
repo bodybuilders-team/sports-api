@@ -3,7 +3,7 @@ body {
     padding: 20px;
 }
 
-.app_icon h1::before {
+.app_icon::before {
     content: '';
     padding-right: 48px;
     padding-left: 18px;

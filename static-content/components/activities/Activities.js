@@ -1,13 +1,14 @@
 import {API_BASE_URL} from "../../js/config.js";
-import {a, div, h1, h5, h3} from "../../js/dom/domTags.js";
+import {a, div, h3, h5} from "../../js/dom/domTags.js";
 
 /**
- * Activities page.
+ * Activities Component.
  * @param state application state
+ * @param props component properties
  * @returns activities page
  */
-async function Activities(state) {
-    let activities = state.props.activities;
+async function Activities(state, props) {
+    let activities = (props != null) ? props.activities : undefined;
 
     if (activities == null) {
         activities = await fetch(API_BASE_URL + "/activities?sid=1&orderBy=ascending")
@@ -22,8 +23,6 @@ async function Activities(state) {
     }
 
     return div(
-        {class: "row justify-content-evenly"},
-        h1({class: "app-icon"}, "Activities"),
         ...activities.map(activity =>
             div(
                 {class: "card user_card col-6"},

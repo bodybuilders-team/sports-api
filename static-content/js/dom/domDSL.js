@@ -14,10 +14,17 @@ export function createElement(tag, attributes, ...children) {
             attributes = document.createTextNode(attributes);
 
         element.appendChild(attributes);
-    } else if (attributes != null && typeof attributes === "object")
-        Object.keys(attributes).forEach((attribute) => {
-            element.setAttribute(attribute, attributes[attribute])
-        });
+    } else if (attributes != null && typeof attributes === "object") {
+        for (const attribute in attributes) {
+            switch (attribute) {
+                case "onClick":
+                    element.addEventListener("click", attributes[attribute]);
+                    break;
+                default:
+                    element.setAttribute(attribute, attributes[attribute]);
+            }
+        }
+    }
 
     children.forEach((child) => {
         if (typeof child === "string")

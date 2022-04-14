@@ -22,7 +22,7 @@ export function Router() {
         for (const param in handlerData.params)
             state.params[param] = handlerData.params[param];
 
-        state.currentPath = state.currentPath.substring(handlerPath.length);
+        state.currentPath = state.currentPath.substring(handlerPath.length)
 
         return handlerData.handler(state);
     }
