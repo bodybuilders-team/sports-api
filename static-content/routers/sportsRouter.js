@@ -5,8 +5,8 @@ import SportActivities from "../components/sports/SportActivities.js";
 
 const router = Router();
 
-router.addHandler('/', Sports);
-router.addHandler('/:id', Sport);
 router.addHandler('/:id/activities', SportActivities);
+router.addHandler('/:id', Sport);
+router.addHandler('/', Sports);
 
 export default router;

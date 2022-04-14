@@ -4,7 +4,7 @@ import Route from "../components/routes/Route.js";
 
 const router = Router();
 
-router.addHandler('/', Routes);
 router.addHandler('/:id', Route);
+router.addHandler('/', Routes);
 
 export default router;

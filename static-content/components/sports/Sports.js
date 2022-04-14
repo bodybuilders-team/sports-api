@@ -6,7 +6,7 @@ import {div, h1} from "../../js/dom/domTags.js";
  * @param state application state
  * @returns sports page
  */
-function Sports(state) {
+async function Sports(state) {
     return fetch(API_BASE_URL + "sports")
         .then(res => res.json())
         .then(json => json.sports)

@@ -6,7 +6,7 @@ import {div, h1} from "../../js/dom/domTags.js";
  * @param state application state
  * @returns users page
  */
-function Users(state) {
+async function Users(state) {
     return fetch(API_BASE_URL + "users")
         .then(res => res.json())
         .then(json => json.users)

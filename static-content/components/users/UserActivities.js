@@ -5,7 +5,7 @@ import {div, h1} from "../../js/dom/domTags.js";
  * @param state application state
  * @returns user activities page
  */
-function UserActivities(state) {
+async function UserActivities(state) {
     return div(
         h1("User " + state.params.id + " Activities")
     );

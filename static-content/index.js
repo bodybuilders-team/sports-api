@@ -5,11 +5,13 @@ window.addEventListener("hashchange", hashChangeHandler);
 
 /**
  * Renders a component.
- * @param component component to render
+ * @param componentPromise component to render
  */
-function render(component) {
-    const mainContent = document.getElementById("mainContent");
-    mainContent.replaceChildren(component);
+function render(componentPromise) {
+    componentPromise.then(component => {
+        const mainContent = document.getElementById("mainContent");
+        mainContent.replaceChildren(component);
+    });
 }
 
 /**

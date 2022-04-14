@@ -5,7 +5,7 @@ import {a, br, div, h1, img, p, strong} from "../js/dom/domTags.js";
  * @param state application state
  * @returns home page
  */
-function Home(state) {
+async function Home(state) {
     return div(
         h1("Home"),
         p("Add description..."),

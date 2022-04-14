@@ -5,7 +5,7 @@ import {h1} from "../../js/dom/domTags.js";
  * @param state application state
  * @returns sport page
  */
-function Sport(state) {
+async function Sport(state) {
     return h1("Sport " + state.params.id);
 }
 

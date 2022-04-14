@@ -6,7 +6,7 @@ import {div, h1} from "../../js/dom/domTags.js";
  * @param state application state
  * @returns activities page
  */
-function Activities(state) {
+async function Activities(state) {
     return fetch(API_BASE_URL + "activities")
         .then(res => res.json())
         .then(json => json.activities)

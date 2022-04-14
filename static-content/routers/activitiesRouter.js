@@ -5,8 +5,8 @@ import ActivitiesUsers from "../components/activities/ActivitiesUsers.js";
 
 const router = Router();
 
-router.addHandler('/', Activities);
-router.addHandler('/:id', Activity);
 router.addHandler('/users', ActivitiesUsers);
+router.addHandler('/:id', Activity);
+router.addHandler('/', Activities);
 
 export default router;

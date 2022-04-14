@@ -16,10 +16,13 @@ abstract class IntegrationTests {
 
     companion object {
         private val port = System.getenv(PORT_ENV)?.toIntOrNull() ?: DEFAULT_PORT
-        private val jdbcDatabaseURL: String = System.getenv(JDBC_DATABASE_URL_ENV)
+        private val jdbcDatabaseURL: String? = System.getenv(JDBC_DATABASE_URL_ENV)
 
-        private val runPostgresTests = System.getenv("TEST_POSTGRES")?.toBoolean() ?: false
-        val db = if (runPostgresTests) AppPostgresDB(jdbcDatabaseURL) else AppMemoryDB(AppMemoryDBSource())
+        val db = if (jdbcDatabaseURL != null)
+            AppPostgresDB(jdbcDatabaseURL)
+        else
+            AppMemoryDB(AppMemoryDBSource())
+
         val send = JavaHttpClient()
         val uriPrefix = "http://localhost:$port/api"
 

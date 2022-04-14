@@ -11,7 +11,7 @@ import NotFound from "./NotFound.js";
  * @param state application state
  * @returns application
  */
-function App(state) {
+async function App(state) {
     const router = Router();
 
     router.addHandler("/users", usersRouter);

@@ -5,7 +5,7 @@ import {h1} from "../../js/dom/domTags.js";
  * @param state application state
  * @returns user page
  */
-function User(state) {
+async function User(state) {
     return h1("User " + state.params.id);
 }
 

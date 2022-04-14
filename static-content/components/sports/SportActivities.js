@@ -5,7 +5,7 @@ import {div, h1} from "../../js/dom/domTags.js";
  * @param state application state
  * @returns sport activities page
  */
-function SportActivities(state) {
+async function SportActivities(state) {
     return div(
         h1("Sport " + state.params.id + " Activities")
     );
