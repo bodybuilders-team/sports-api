@@ -1,0 +1,13 @@
+body {
+    margin: 20px;
+    padding: 20px;
+}
+
+h1::before {
+    content: '';
+    padding-right: 48px;
+    padding-left: 18px;
+    background-image: url(../public/sports-api-icon.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}

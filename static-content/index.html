@@ -1,18 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Users</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
-    <script src="script.js" type="module"></script>
+    <title>Sports API</title>
+
+    <link rel='stylesheet' href='/css/style.css'>
+    <link rel="icon" type="image/x-icon" href="/public/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script src="index.js" type="module"></script>
 </head>
 <body>
-<a href="#home" class="link-secondary"> Home </a>
-<a href="#users" class="link-primary"> Users </a>
-<a href="#users/5" class="link-primary"> User 5</a>
 
-<div id="mainContent"> </div>
+<nav class="nav nav-pills">
+    <a class="navbar-brand" href="#home"><img src="/public/sports-api-icon.png" alt="Sports API ICON" width="44"></a>
+    <a class="nav-link" href="#home">Home</a>
+    <a class="nav-link" href="#users">Users</a>
+    <a class="nav-link" href="#sports">Sports</a>
+    <a class="nav-link" href="#activities">Activities</a>
+    <a class="nav-link" href="#routes">Routes</a>
+</nav>
 
-<p>Chelas 2022</p>
+<hr>
+
+<div id="mainContent"></div>
+
 </body>
 </html>

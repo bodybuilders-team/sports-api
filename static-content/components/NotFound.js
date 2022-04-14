@@ -1,7 +1,12 @@
+import {h1} from "../js/dom/domTags.js";
+
+/**
+ * Not Found page.
+ * @param state application state
+ * @returns not found page
+ */
 function NotFound(state) {
-    const element = document.createElement('h1');
-    element.innerHTML = 'Path ' + state.path + " not found";
-    return element
+    return h1("Path " + state.path + " not found");
 }
 
 export default NotFound;

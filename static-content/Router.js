@@ -1,3 +1,7 @@
+/**
+ * Creates a router.
+ * @returns created router
+ */
 export function Router() {
     function router(state) {
         return router.handle(state)
@@ -23,6 +27,11 @@ export function Router() {
         return handlerData.handler(state);
     }
 
+    /**
+     * Gets the handler associated with the given path.
+     * @param path handler path
+     * @returns object representing the handler
+     */
     router.getHandler = function (path) {
         if (path === "")
             path = "/"
@@ -80,6 +89,11 @@ export function Router() {
     }
 
 
+    /**
+     * Adds a new handler.
+     * @param path handler path
+     * @param handler new handler
+     */
     router.addHandler = function (path, handler) {
         if (typeof path !== 'string')
             throw new Error(`Path must be a string`)
@@ -90,6 +104,10 @@ export function Router() {
         this.handlers.push({path: path, handler: handler})
     }
 
+    /**
+     * Sets a default handler.
+     * @param handler new default handler
+     */
     router.addDefaultHandler = function (handler) {
         this.defaultHandler = handler;
     }
