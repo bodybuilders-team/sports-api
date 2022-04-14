@@ -293,34 +293,6 @@ paths:
         500:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
-  /activities:
-    post:
-      tags:
-        - Activities
-      summary: Creates a new activity for the sport identified by a sport id
-      security:
-        - token: [ ]
-      requestBody:
-        description: Activity object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateActivityRequest'
-      responses:
-        201:
-          description: Activity was created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateActivityResponse'
-
-        400:
-          $ref: '#/components/responses/InvalidRequestBodyResponse'
-
-        500:
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
   /sports/{id}/activities:
     get:
       tags:
@@ -356,6 +328,186 @@ paths:
         500:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
+
+  /activities:
+    post:
+      tags:
+        - Activities
+      summary: Creates a new activity for the sport identified by a sport id
+      security:
+        - token: [ ]
+      requestBody:
+        description: Activity object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateActivityRequest'
+      responses:
+        201:
+          description: Activity was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateActivityResponse'
+
+        400:
+          $ref: '#/components/responses/InvalidRequestBodyResponse'
+
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+    delete:
+      tags:
+        - Activities
+      summary: Deletes activities
+      security:
+        - token: [ ]
+      requestBody:
+        description: Activities to delete
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivitiesDeleteRequest'
+      responses:
+        200:
+          description: Activities deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        400:
+          description: Invalid activity ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+    get:
+      tags:
+        - Activities
+      summary: Searches for activities
+      parameters:
+        - name: sid
+          in: query
+          description: Sport Id
+          required: true
+          schema:
+            type: integer
+
+        - name: orderBy
+          in: query
+          description: Order by
+          required: true
+          schema:
+            type: string
+
+        - name: date
+          in: query
+          description: Activity date
+          required: false
+          schema:
+            type: string
+
+        - name: rid
+          in: query
+          description: Route id
+          required: false
+          schema:
+            type: integer
+
+        - name: limit
+          in: query
+          description: Activities limit
+          required: false
+          schema:
+            type: integer
+            default: 10
+
+        - name: skip
+          in: query
+          description: Activities skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+
+
+      responses:
+        200:
+          description: Activity was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivitiesResponse'
+        400:
+          description: Invalid query params
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+        404:
+          description: Activity was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /activities/users:
+    get:
+      tags:
+        - Activities
+      summary: Searches for all users that have an activity with a specified sport id and route id
+      parameters:
+        - name: sid
+          in: query
+          description: Sport Id
+          required: true
+          schema:
+            type: integer
+
+        - name: rid
+          in: query
+          description: Route id
+          required: true
+          schema:
+            type: integer
+
+        - name: limit
+          in: query
+          description: Activities limit
+          required: false
+          schema:
+            type: integer
+            default: 10
+
+        - name: skip
+          in: query
+          description: Activities skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+
+      responses:
+        200:
+          description: Users were found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityUsersResponse'
+        400:
+          description: Invalid query params
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
   /activities/{id}:
     get:
@@ -426,77 +578,6 @@ paths:
         500:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
-  /activities/search:
-    get:
-      tags:
-        - Activities
-      summary: Searches for activities
-      parameters:
-        - name: sid
-          in: query
-          description: Sport Id
-          required: true
-          schema:
-            type: integer
-
-        - name: orderBy
-          in: query
-          description: Order by
-          required: true
-          schema:
-            type: string
-
-        - name: date
-          in: query
-          description: Activity date
-          required: false
-          schema:
-            type: string
-
-        - name: rid
-          in: query
-          description: Route id
-          required: false
-          schema:
-            type: integer
-
-        - name: limit
-          in: query
-          description: Activities limit
-          required: false
-          schema:
-            type: integer
-
-
-        - name: skip
-          in: query
-          description: Activities skip
-          required: false
-          schema:
-            type: integer
-
-
-      responses:
-        200:
-          description: Activity was found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActivitiesResponse'
-        400:
-          description: Invalid query params
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AppError'
-        404:
-          description: Activity was not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AppError'
-        500:
-          $ref: '#/components/responses/InternalServerErrorResponse'
 
 components:
   responses:
@@ -567,6 +648,27 @@ components:
         token:
           type: string
           description: User Token
+
+    ActivityUsersResponse:
+      type: object
+      required:
+        - activityUsers
+      properties:
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivityUser'
+
+    ActivitiesDeleteRequest:
+      type: object
+      required:
+        - activityIds
+      properties:
+        activityIds:
+          type: array
+          items:
+            type: integer
+            description: Activity Id
 
     CreateRouteResponse:
       type: object
@@ -704,6 +806,30 @@ components:
         uid:
           type: integer
           description: User id
+
+    ActivityUser:
+      type: object
+      description: Activity User object
+      required:
+        - id
+        - activityId
+        - name
+        - email
+      properties:
+        id:
+          type: integer
+          description: User Id
+        activityId:
+          type: integer
+          description: Activity Id
+        name:
+          type: string
+          description: User name
+          example: André Páscoa
+        email:
+          type: string
+          description: User email
+          example: andre@pascoa.org
 
     User:
       type: object
