@@ -1,5 +1,5 @@
 import {API_BASE_URL} from "../../js/config.js";
-import {div, h1} from "../../js/dom/domTags.js";
+import {div, h1, h5, a} from "../../js/dom/domTags.js";
 
 /**
  * Users page.
@@ -7,17 +7,23 @@ import {div, h1} from "../../js/dom/domTags.js";
  * @returns users page
  */
 async function Users(state) {
-    return fetch(API_BASE_URL + "users")
+    const users = await fetch(API_BASE_URL + "/users")
         .then(res => res.json())
-        .then(json => json.users)
-        .then(users => {
+        .then(json => json.users);
+
+    return div(
+        {class: "row justify-content-evenly"},
+        h1({class: "app-icon"}, "Users"),
+        ...users.map(user =>
             div(
-                h1("Users")//,
-                /*users.map(user => {
-                    a({href: `#users/${user.id}`}, `User ${user.id}`)
-                })*/
+                {class: "card user_card col-6"},
+                div(
+                    {class: "card-body d-flex justify-content-center"},
+                    h5({class: "card-title"}, a({href: `#users/${user.id}`}, user.name))
+                )
             )
-        });
+        )
+    );
 }
 
 export default Users;

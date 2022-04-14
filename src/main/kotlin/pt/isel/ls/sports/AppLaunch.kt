@@ -1,5 +1,7 @@
 package pt.isel.ls.sports
 
+import pt.isel.ls.sports.database.AppMemoryDB
+import pt.isel.ls.sports.database.AppMemoryDBSource
 import pt.isel.ls.sports.database.AppPostgresDB
 import pt.isel.ls.sports.utils.Logger
 
@@ -11,10 +13,13 @@ const val JDBC_DATABASE_URL_ENV = "JDBC_DATABASE_URL"
  * Sports API application's entry point.
  */
 fun main() {
-    val jdbcDatabaseURL: String = System.getenv(JDBC_DATABASE_URL_ENV)
+    val jdbcDatabaseURL: String? = System.getenv(JDBC_DATABASE_URL_ENV)
     val port = System.getenv(PORT_ENV)?.toIntOrNull() ?: DEFAULT_PORT
 
-    val database = AppPostgresDB(jdbcDatabaseURL)
+    val database = if (jdbcDatabaseURL != null)
+        AppPostgresDB(jdbcDatabaseURL)
+    else
+        AppMemoryDB(AppMemoryDBSource())
 
     val server = AppServer(port, database).also { it.start() }
 

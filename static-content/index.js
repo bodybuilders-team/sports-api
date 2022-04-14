@@ -4,14 +4,20 @@ window.addEventListener("load", hashChangeHandler);
 window.addEventListener("hashchange", hashChangeHandler);
 
 /**
- * Renders a component.
- * @param componentPromise component to render
+ * Creates a state.
+ * @returns state object
  */
-function render(componentPromise) {
-    componentPromise.then(component => {
-        const mainContent = document.getElementById("mainContent");
-        mainContent.replaceChildren(component);
-    });
+function createState() {
+    return {path: "/", currentPath: "/", params: {}, props: {}};
+}
+
+/**
+ * Renders a component.
+ * @param component component to render
+ */
+function render(component) {
+    const mainContent = document.getElementById("mainContent");
+    mainContent.replaceChildren(component);
 }
 
 /**
@@ -20,7 +26,8 @@ function render(componentPromise) {
  */
 function hashChangeHandler() {
     const path = window.location.hash.replace("#", "/");
-    const state = {path: path, currentPath: path, params: {}};
+    const state = createState()
+    state.path = state.currentPath = path
 
-    render(App(state));
+    App(state).then(app => render(app));
 }

@@ -7,7 +7,7 @@ import {div, h1} from "../../js/dom/domTags.js";
  * @returns routes page
  */
 async function Routes(state) {
-    return fetch(API_BASE_URL + "routes")
+    return fetch(API_BASE_URL + "/routes")
         .then(res => res.json())
         .then(json => json.routes)
         .then(routes => {

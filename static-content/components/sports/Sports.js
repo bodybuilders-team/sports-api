@@ -7,7 +7,7 @@ import {div, h1} from "../../js/dom/domTags.js";
  * @returns sports page
  */
 async function Sports(state) {
-    return fetch(API_BASE_URL + "sports")
+    return fetch(API_BASE_URL + "/sports")
         .then(res => res.json())
         .then(json => json.sports)
         .then(sports => {

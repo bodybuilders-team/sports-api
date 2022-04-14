@@ -3,11 +3,16 @@ body {
     padding: 20px;
 }
 
-h1::before {
+.app_icon h1::before {
     content: '';
     padding-right: 48px;
     padding-left: 18px;
     background-image: url(../public/sports-api-icon.png);
     background-size: contain;
     background-repeat: no-repeat;
+}
+
+.user_card {
+    width: 18rem;
+    margin: 20px;
 }

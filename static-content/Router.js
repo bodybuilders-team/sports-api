@@ -8,21 +8,21 @@ export function Router() {
     }
 
     router.handle = function (state) {
-        const handlerData = this.getHandler(state.currentPath)
+        const handlerData = this.getHandler(state.currentPath);
         if (handlerData === undefined) {
-            const handler = this.defaultHandler(state)
+            const handler = this.defaultHandler(state);
 
             if (handler === undefined)
-                throw new Error(`No handler for path ${state.currentPath}`)
-            return handler
+                throw new Error(`No handler for path ${state.currentPath}`);
+            return handler;
         }
 
-        const handlerPath = handlerData.path
+        const handlerPath = handlerData.path;
 
         for (const param in handlerData.params)
-            state.params[param] = handlerData.params[param]
+            state.params[param] = handlerData.params[param];
 
-        state.currentPath = state.currentPath.substring(handlerPath.length)
+        state.currentPath = state.currentPath.substring(handlerPath.length);
 
         return handlerData.handler(state);
     }
@@ -34,58 +34,57 @@ export function Router() {
      */
     router.getHandler = function (path) {
         if (path === "")
-            path = "/"
+            path = "/";
 
         for (const handlerData of this.handlers) {
-            const handlerPath = handlerData.path
-            const params = {}
+            const handlerPath = handlerData.path;
+            const params = {};
 
-            const isMatch = matchHandlerPath(handlerPath, path, params)
+            const isMatch = matchHandlerPath(handlerPath, path, params);
             if (isMatch)
                 return {
                     handler: handlerData.handler,
                     path: handlerPath,
                     params: params
-                }
+                };
 
         }
 
-        return undefined
+        return undefined;
     }
 
     function matchHandlerPath(handlerPath, path, params) {
-        let lIdx = -1
-        let rIdx = path.indexOf('/')
+        let lIdx = -1;
+        let rIdx = path.indexOf('/');
 
-        let lHandlerIdx = -1
-        let rHandlerIdx = handlerPath.indexOf('/')
+        let lHandlerIdx = -1;
+        let rHandlerIdx = handlerPath.indexOf('/');
 
         while (lHandlerIdx < rHandlerIdx) {
             // /users/10/edit/20/dada
             // /users/:id/edit/:groupId
             // /
-            const currPath = path.substring(lIdx + 1, rIdx)
-            const currHandlerPath = handlerPath.substring(lHandlerIdx + 1, rHandlerIdx)
+            const currPath = path.substring(lIdx + 1, rIdx);
+            const currHandlerPath = handlerPath.substring(lHandlerIdx + 1, rHandlerIdx);
 
             if (currHandlerPath.startsWith(':')) {
-                const paramName = currHandlerPath.substring(1)
-                params[paramName] = currPath
+                const paramName = currHandlerPath.substring(1);
+                params[paramName] = currPath;
             } else if (currHandlerPath !== currPath)
-                return false
+                return false;
 
-            lIdx = rIdx
-            lHandlerIdx = rHandlerIdx
+            lIdx = rIdx;
+            lHandlerIdx = rHandlerIdx;
 
-            rIdx = path.indexOf('/', rIdx + 1)
-            rHandlerIdx = handlerPath.indexOf('/', rHandlerIdx + 1)
+            rIdx = path.indexOf('/', rIdx + 1);
+            rHandlerIdx = handlerPath.indexOf('/', rHandlerIdx + 1);
             if (rIdx === -1)
-                rIdx = path.length
+                rIdx = path.length;
             if (rHandlerIdx === -1)
-                rHandlerIdx = handlerPath.length
-
+                rHandlerIdx = handlerPath.length;
         }
 
-        return true
+        return true;
     }
 
 
@@ -96,12 +95,12 @@ export function Router() {
      */
     router.addHandler = function (path, handler) {
         if (typeof path !== 'string')
-            throw new Error(`Path must be a string`)
+            throw new Error(`Path must be a string`);
 
         if (typeof handler !== 'function')
-            throw new Error(`Handler for path ${path} is not a function`)
+            throw new Error(`Handler for path ${path} is not a function`);
 
-        this.handlers.push({path: path, handler: handler})
+        this.handlers.push({path: path, handler: handler});
     }
 
     /**
@@ -112,7 +111,7 @@ export function Router() {
         this.defaultHandler = handler;
     }
 
-    router.handlers = []
+    router.handlers = [];
 
     return router;
 }
