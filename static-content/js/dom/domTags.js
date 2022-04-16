@@ -1,4 +1,4 @@
-import { createElement } from "./domDSL.js"
+import {createElement} from "./domDSL.js"
 
 /**
  * Creates an 'a' HTML element.

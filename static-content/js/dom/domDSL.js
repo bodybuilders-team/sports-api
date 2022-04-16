@@ -6,34 +6,42 @@
  * @param children element children
  * @returns created element
  */
-export function createElement(tag, attributes, ...children) {
+export async function createElement(tag, attributes, ...children) {
     const element = document.createElement(tag);
 
-    if (isElement(attributes) || typeof attributes === "string") {
-        if (typeof attributes === "string")
-            attributes = document.createTextNode(attributes);
+    attributes = await attributes;
 
-        element.appendChild(attributes);
-    } else if (attributes != null && typeof attributes === "object") {
-        for (const attribute in attributes) {
-            switch (attribute) {
-                case "onClick":
-                    element.addEventListener("click", attributes[attribute]);
-                    break;
-                default:
-                    element.setAttribute(attribute, attributes[attribute]);
-            }
-        }
+    if (isElement(attributes) || typeof attributes === "string")
+        appendChild(element, attributes);
+    else if (attributes != null && typeof attributes === "object")
+        setAttributes(element, attributes);
+
+    for (let child of children) {
+        if (child != null)
+            appendChild(element, await child);
     }
 
-    children.forEach((child) => {
-        if (typeof child === "string")
-            child = document.createTextNode(child);
-
-        element.appendChild(child);
-    });
-
     return element;
+}
+
+
+function appendChild(element, child) {
+    if (typeof child === "string")
+        child = document.createTextNode(child);
+
+    element.appendChild(child);
+}
+
+function setAttributes(element, attributes) {
+    for (const attribute in attributes) {
+        switch (attribute) {
+            case "onClick":
+                element.addEventListener("click", attributes[attribute]);
+                break;
+            default:
+                element.setAttribute(attribute, attributes[attribute]);
+        }
+    }
 }
 
 /**

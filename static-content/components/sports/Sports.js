@@ -1,5 +1,6 @@
-import {API_BASE_URL} from "../../js/config.js";
-import {div, h1} from "../../js/dom/domTags.js";
+import {a, div, h1} from "../../js/dom/domTags.js";
+import Sport from "./Sport.js";
+import apiFetch from "../../js/apiFetch.js";
 
 /**
  * Sports page.
@@ -7,14 +8,22 @@ import {div, h1} from "../../js/dom/domTags.js";
  * @returns sports page
  */
 async function Sports(state) {
-    return fetch(API_BASE_URL + "/sports")
-        .then(res => res.json())
-        .then(json => json.sports)
-        .then(sports => {
-            div(
-                h1("Sports")
+    const sports = await apiFetch(`sports`)
+        .then(json => json.sports);
+
+
+    return div(
+        h1("Sports"),
+        div(
+            ...sports.map(sport =>
+                div(
+                    a({href: `#sports/${sport.id}`},
+                        Sport(state, {sport}),
+                    )
+                )
             )
-        });
+        )
+    )
 }
 
 export default Sports;

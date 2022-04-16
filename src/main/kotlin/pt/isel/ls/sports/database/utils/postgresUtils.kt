@@ -1,9 +1,12 @@
 package pt.isel.ls.sports.database.utils
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toJavaLocalDate
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.utils.Logger
 import java.io.File
 import java.sql.Connection
+import java.sql.Date
 import java.sql.PreparedStatement
 import java.sql.Types
 
@@ -57,3 +60,11 @@ fun Connection.runScript(filepath: String) {
                 .executeUpdate()
         }
 }
+
+/**
+ * Converts a [LocalDate] to a [Date].
+ *
+ * @param date the date to convert
+ * @return the converted date
+ */
+fun getSQLDate(date: LocalDate) = Date.valueOf(date.toJavaLocalDate())

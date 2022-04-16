@@ -101,28 +101,60 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests() {
         )
     }
 
-    // getActivities
+    // searchActivities
 
     @Test
-    fun `getActivities returns the activities list`(): Unit = db.execute { conn ->
+    fun `searchActivities returns the activities list`(): Unit = db.execute { conn ->
         source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
         source.activities[1] = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 
-        val activities = db.activities.getActivities(
+        val activities = db.activities.searchActivities(
             conn,
             sid = 1,
             SortOrder.ASCENDING,
             "2022-11-20".toLocalDate(),
             rid = 1,
-            null,
-            null
+            0,
+            10
         )
 
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
             activities
+        )
+    }
+
+    // searchUsersByActivity
+
+    @Test
+    fun `searchUsersByActivity returns the list of users`(): Unit = db.execute { conn ->
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[2] = User(2, "André Jesus", "andrejesus@mail.com")
+        source.users[3] = User(3, "André Páscoa", "andrepascoa@mail.com")
+
+        source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
+
+        source.activities[1] = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
+        source.activities[2] = Activity(2, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 2, 1, 1)
+        source.activities[3] = Activity(3, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 3, 1, 1)
+
+        val users = db.activities.searchUsersByActivity(
+            conn,
+            sid = 1,
+            rid = 1,
+            skip = 0,
+            limit = 10
+        )
+
+        assertEquals(
+            listOf(
+                User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com"),
+                User(2, "André Jesus", "andrejesus@mail.com"),
+                User(3, "André Páscoa", "andrepascoa@mail.com"),
+            ),
+            users
         )
     }
 }

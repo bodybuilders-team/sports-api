@@ -114,4 +114,20 @@ abstract class AbstractServices(protected val db: AppDB) {
         if (!db.activities.hasActivity(conn, aid))
             throw AppError.NotFound("Activity id not found")
     }
+
+    /**
+     * Validates if a limit is between the given [range].
+     */
+    protected fun validateLimit(limit: Int, range: IntRange) {
+        if (limit !in range)
+            throw AppError.InvalidArgument("Limit must be between $range")
+    }
+
+    /**
+     * Validates skip.
+     */
+    protected fun validateSkip(skip: Int) {
+        if (skip < 0)
+            throw AppError.InvalidArgument("Skip must be higher or equal to 0")
+    }
 }

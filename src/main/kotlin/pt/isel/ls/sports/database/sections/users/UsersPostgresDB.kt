@@ -5,6 +5,7 @@ import pt.isel.ls.sports.database.connection.getPostgresConnection
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
 import java.sql.Connection
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -52,13 +53,7 @@ class UsersPostgresDB : UsersDB {
                 """.trimIndent()
             )
 
-        val rs = stm.executeQuery()
-        val users = mutableListOf<User>()
-
-        while (rs.next())
-            users.add(getUserFromTable(rs))
-
-        return users
+        return getUsers(stm)
     }
 
     override fun hasUserWithEmail(conn: ConnectionDB, email: String): Boolean {
@@ -87,11 +82,28 @@ class UsersPostgresDB : UsersDB {
 
     companion object {
         /**
+         * Gets a list of users returned from the execution of the statement [stm]
+         *
+         * @param stm statement
+         *
+         * @return list of users
+         */
+        fun getUsers(stm: PreparedStatement): MutableList<User> {
+            val rs = stm.executeQuery()
+            val users = mutableListOf<User>()
+
+            while (rs.next())
+                users.add(getUserFromTable(rs))
+
+            return users
+        }
+
+        /**
          * Gets a User object from a ResultSet.
          * @param rs table
          * @return user
          */
-        private fun getUserFromTable(rs: ResultSet) = User(
+        fun getUserFromTable(rs: ResultSet) = User(
             id = rs.getInt(1),
             name = rs.getString(2),
             email = rs.getString(3)

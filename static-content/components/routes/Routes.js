@@ -1,20 +1,28 @@
-import {API_BASE_URL} from "../../js/config.js";
-import {div, h1} from "../../js/dom/domTags.js";
+import {a, div, h1} from "../../js/dom/domTags.js";
+import Route from "./Route.js";
+import apiFetch from "../../js/apiFetch.js";
 
 /**
- * Routes page.
+ * Routes component.
  * @param state application state
- * @returns routes page
+ * @returns routes component
  */
 async function Routes(state) {
-    return fetch(API_BASE_URL + "/routes")
-        .then(res => res.json())
+    const routes = await apiFetch(`routes`)
         .then(json => json.routes)
-        .then(routes => {
-            div(
-                h1("Routes")
+
+    return div(
+        h1("Routes"),
+        div(
+            ...routes.map(route =>
+                div(
+                    a({href: `#routes/${route.id}`},
+                        Route(state, {route}),
+                    )
+                )
             )
-        });
+        )
+    )
 }
 
 export default Routes;

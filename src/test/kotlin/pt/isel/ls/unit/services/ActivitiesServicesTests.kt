@@ -3,6 +3,7 @@ package pt.isel.ls.unit.services
 import kotlinx.datetime.toLocalDate
 import org.junit.Test
 import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
@@ -11,7 +12,7 @@ import kotlin.test.assertFailsWith
 
 class ActivitiesServicesTests : AppServicesTests() {
 
-// createNewActivity
+    // createNewActivity
 
     @Test
     fun `createNewActivity creates activity correctly in the database`(): Unit = db.execute { conn ->
@@ -69,7 +70,7 @@ class ActivitiesServicesTests : AppServicesTests() {
         }
     }
 
-// getActivity
+    // getActivity
 
     @Test
     fun `getActivity returns the activity object`(): Unit = db.execute { conn ->
@@ -92,11 +93,10 @@ class ActivitiesServicesTests : AppServicesTests() {
         }
     }
 
-// deleteActivity
+    // deleteActivity
 
     @Test
     fun `deleteActivity deletes an activity successfully`(): Unit = db.execute { conn ->
-
         val mockId = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), mockId)
         db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
@@ -108,28 +108,87 @@ class ActivitiesServicesTests : AppServicesTests() {
         }
     }
 
-// getActivities
+    // deleteActivities
 
     @Test
-    fun `getActivities returns the activities list`(): Unit = db.execute { conn ->
+    fun `deleteActivities deletes a set of activities successfully`(): Unit = db.execute { conn ->
+        val mockId = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), mockId)
+
+        val aid1 =
+            db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
+        val aid2 =
+            db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
+        val aid3 =
+            db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
+
+        services.activities.deleteActivities(token, setOf(aid1, aid2, aid3))
+
+        assertFailsWith<AppError> {
+            db.activities.getActivity(conn, aid1)
+        }
+        assertFailsWith<AppError> {
+            db.activities.getActivity(conn, aid2)
+        }
+        assertFailsWith<AppError> {
+            db.activities.getActivity(conn, aid3)
+        }
+    }
+
+    // searchActivities
+
+    @Test
+    fun `searchActivities returns the activities list`(): Unit = db.execute { conn ->
         db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
 
         db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
         val activities =
-            services.activities.getActivities(
+            services.activities.searchActivities(
                 sid = 1,
                 "descending",
                 "2022-11-20".toLocalDate(),
                 rid = 1,
-                limit = null,
-                skip = null
+                skip = 0,
+                limit = 10
             )
 
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
             activities
+        )
+    }
+
+    // searchUsersByActivity
+
+    @Test
+    fun `searchUsersByActivity returns the list of users`(): Unit = db.execute { conn ->
+        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid2 = db.users.createNewUser(conn, "André Jesus", "andrejesus@mail.com")
+        val uid3 = db.users.createNewUser(conn, "André Páscoa", "andrepascoa@mail.com")
+
+        db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
+
+        db.activities.createNewActivity(conn, uid1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
+        db.activities.createNewActivity(conn, uid2, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
+        db.activities.createNewActivity(conn, uid3, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
+
+        val users =
+            services.activities.searchUsersByActivity(
+                sid = 1,
+                rid = 1,
+                skip = 0,
+                limit = 10
+            )
+
+        assertEquals(
+            listOf(
+                User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com"),
+                User(2, "André Jesus", "andrejesus@mail.com"),
+                User(3, "André Páscoa", "andrepascoa@mail.com"),
+            ),
+            users
         )
     }
 }

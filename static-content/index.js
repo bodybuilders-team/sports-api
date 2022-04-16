@@ -1,4 +1,5 @@
 import App from "./components/App.js";
+import AppError, {isAppError} from "./components/AppError.js";
 
 window.addEventListener("load", hashChangeHandler);
 window.addEventListener("hashchange", hashChangeHandler);
@@ -29,5 +30,13 @@ function hashChangeHandler() {
     const state = createState()
     state.path = state.currentPath = path
 
-    App(state).then(app => render(app));
+    App(state)
+        .then(render)
+        .catch(error => {
+            if (isAppError(error)) {
+                AppError(state, error).then(render);
+            } else {
+                throw error;
+            }
+        });
 }

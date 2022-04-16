@@ -1,18 +1,19 @@
 package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.connection.getPostgresConnection
+import pt.isel.ls.sports.database.sections.users.UsersPostgresDB.Companion.getUsers
 import pt.isel.ls.sports.database.utils.SortOrder
+import pt.isel.ls.sports.database.utils.getSQLDate
 import pt.isel.ls.sports.database.utils.setIntOrNull
 import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.utils.toDTOString
 import pt.isel.ls.sports.utils.toDuration
 import java.sql.Connection
-import java.sql.Date
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
@@ -79,14 +80,14 @@ class ActivitiesPostgresDB : ActivitiesDB {
         stm.executeUpdate()
     }
 
-    override fun getActivities(
+    override fun searchActivities(
         conn: ConnectionDB,
         sid: Int,
         orderBy: SortOrder,
         date: LocalDate?,
         rid: Int?,
-        skip: Int?,
-        limit: Int?
+        skip: Int,
+        limit: Int
     ): List<Activity> {
         val queryDate = if (date != null) "AND date = ?" else ""
         val queryRid = if (date != null) "AND rid = ?" else ""
@@ -98,9 +99,9 @@ class ActivitiesPostgresDB : ActivitiesDB {
                 SELECT *
                 FROM activities
                 WHERE sid = ? $queryDate  $queryRid
-                ORDER BY duration ${orderBy.str} 
-                LIMIT ?
+                ORDER BY duration ${orderBy.str}
                 OFFSET ?
+                LIMIT ?
                 """.trimIndent()
             )
         stm.setInt(1, sid)
@@ -113,13 +114,42 @@ class ActivitiesPostgresDB : ActivitiesDB {
         if (rid != null)
             stm.setInt(++counter, rid)
 
-        stm.setIntOrNull(++counter, skip)
-        stm.setIntOrNull(++counter, limit)
+        stm.setInt(++counter, skip)
+        stm.setInt(++counter, limit)
 
         return getActivities(stm)
     }
 
-    private fun getSQLDate(date: LocalDate) = Date.valueOf(date.toJavaLocalDate())
+    override fun searchUsersByActivity(
+        conn: ConnectionDB,
+        sid: Int,
+        rid: Int,
+        skip: Int,
+        limit: Int
+    ): List<User> {
+        val stm = conn
+            .getPostgresConnection()
+            .prepareStatement(
+                """
+                SELECT *
+                FROM users
+                JOIN (
+                SELECT uid
+                FROM activities
+                WHERE sid = ? AND rid = ?
+                ORDER BY duration
+                OFFSET ?
+                LIMIT ?
+                ) AS activityUids ON users.id = activityUids.uid
+                """.trimIndent()
+            )
+        stm.setInt(1, sid)
+        stm.setInt(2, rid)
+        stm.setInt(3, skip)
+        stm.setInt(4, limit)
+
+        return getUsers(stm)
+    }
 
     override fun getSportActivities(
         conn: ConnectionDB,
@@ -169,7 +199,6 @@ class ActivitiesPostgresDB : ActivitiesDB {
     }
 
     companion object {
-
         /**
          * Gets a list of activities returned from the execution of the statement [stm]
          *

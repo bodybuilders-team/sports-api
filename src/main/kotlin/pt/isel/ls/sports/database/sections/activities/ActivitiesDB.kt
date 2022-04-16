@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.domain.User
 import kotlin.time.Duration
 
 /**
@@ -55,18 +56,39 @@ interface ActivitiesDB {
      * @param orderBy order by duration time, only has two possible values - "ascending" or "descending"
      * @param date activity date (optional)
      * @param rid route's unique identifier (optional)
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
      *
      * @return list of activities
      */
-    fun getActivities(
+    fun searchActivities(
         conn: ConnectionDB,
         sid: Int,
         orderBy: SortOrder,
         date: LocalDate? = null,
         rid: Int? = null,
-        skip: Int? = null,
-        limit: Int? = null
+        skip: Int,
+        limit: Int
     ): List<Activity>
+
+    /**
+     * Get a list with the users that have an activity, given the parameters.
+     *
+     * @param conn database Connection
+     * @param sid sport's identifier
+     * @param rid route's unique identifier
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
+     *
+     * @return list of users
+     */
+    fun searchUsersByActivity(
+        conn: ConnectionDB,
+        sid: Int,
+        rid: Int,
+        skip: Int,
+        limit: Int
+    ): List<User>
 
     /**
      * Get all the activities of a sport.

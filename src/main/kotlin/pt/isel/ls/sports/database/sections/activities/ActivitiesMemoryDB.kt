@@ -5,6 +5,7 @@ import pt.isel.ls.sports.database.AppMemoryDBSource
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
 import kotlin.time.Duration
 
@@ -33,14 +34,14 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         source.activities.remove(aid) ?: throw AppError.NotFound("Activity with id $aid not found")
     }
 
-    override fun getActivities(
+    override fun searchActivities(
         conn: ConnectionDB,
         sid: Int,
         orderBy: SortOrder,
         date: LocalDate?,
         rid: Int?,
-        skip: Int?,
-        limit: Int?
+        skip: Int,
+        limit: Int
     ) =
         source.activities
             .filter {
@@ -55,6 +56,27 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
                 else
                     compareByDescending { it.duration }
             )
+
+    override fun searchUsersByActivity(
+        conn: ConnectionDB,
+        sid: Int,
+        rid: Int,
+        skip: Int,
+        limit: Int
+    ): List<User> {
+        return source.activities
+            .filter {
+                it.value.sid == sid && it.value.rid == rid
+            }
+            .values.toList()
+            .sortedWith(
+                compareBy { it.duration }
+            )
+            .map {
+                source.users[it.uid] ?: throw AppError.NotFound("User with id ${it.uid} not found")
+            }
+            .distinct()
+    }
 
     override fun getSportActivities(conn: ConnectionDB, sid: Int): List<Activity> {
         return source.activities.filter { it.value.sid == sid }.values.toList()

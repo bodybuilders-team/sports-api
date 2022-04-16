@@ -1,5 +1,5 @@
-import {API_BASE_URL} from "../../js/config.js";
-import {div, h1, h5, a} from "../../js/dom/domTags.js";
+import {a, div, h1, h5} from "../../js/dom/domTags.js";
+import apiFetch from "../../js/apiFetch.js";
 
 /**
  * Users page.
@@ -7,13 +7,12 @@ import {div, h1, h5, a} from "../../js/dom/domTags.js";
  * @returns users page
  */
 async function Users(state) {
-    const users = await fetch(API_BASE_URL + "/users")
-        .then(res => res.json())
+    const users = await apiFetch(`users`)
         .then(json => json.users);
 
     return div(
         {class: "row justify-content-evenly"},
-        h1({class: "app-icon"}, "Users"),
+        h1({class: "app_icon"}, "Users"),
         ...users.map(user =>
             div(
                 {class: "card user_card col-6"},

@@ -1,5 +1,6 @@
 package pt.isel.ls.sports.api.utils
 
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.http4k.core.Request
@@ -53,3 +54,11 @@ private const val TOKEN_START_INDEX = 7
 fun Request.tokenOrThrow(): String =
     this.header("Authorization")?.substringOrNull(TOKEN_START_INDEX)
         ?: throw AppError.NoCredentials()
+
+/**
+ * Decodes the request body as a [T] object.
+ * @return [T] object
+ */
+inline fun <reified T> Request.decodeBodyAs(): T {
+    return Json.decodeFromString(this.bodyString())
+}

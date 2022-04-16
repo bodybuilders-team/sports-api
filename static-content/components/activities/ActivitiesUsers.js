@@ -1,9 +1,9 @@
 import {div, h1} from "../../js/dom/domTags.js";
 
 /**
- * Activities users activities page.
+ * Activities users activities component.
  * @param state application state
- * @returns activities users page
+ * @returns activities users component
  */
 async function ActivitiesUsers(state) {
     return div(

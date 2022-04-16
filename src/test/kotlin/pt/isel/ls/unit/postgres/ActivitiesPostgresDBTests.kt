@@ -4,6 +4,7 @@ import kotlinx.datetime.toLocalDate
 import org.junit.Test
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.utils.toDuration
 import pt.isel.ls.tableAsserter
@@ -54,7 +55,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests() {
             }
         }
 
-// deleteActivity
+    // deleteActivity
 
     @Test
     fun `deleteActivity deletes an activity successfully`(): Unit = db.execute { conn ->
@@ -65,12 +66,15 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests() {
         }
     }
 
-// getActivities
+    // getActivities
 
     @Test
     fun `getActivities with descending order returns the activities list`(): Unit = db.execute { conn ->
         val activities =
-            db.activities.getActivities(conn, sid = 2, SortOrder.DESCENDING, "2022-11-21".toLocalDate(), rid = 1)
+            db.activities.searchActivities(
+                conn, sid = 2, SortOrder.DESCENDING, "2022-11-21".toLocalDate(), rid = 1,
+                0, 10
+            )
 
         val mockActivities = listOf(
             Activity(
@@ -96,7 +100,10 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests() {
     @Test
     fun `getActivities with ascending order returns the activities list`(): Unit = db.execute { conn ->
         val activities =
-            db.activities.getActivities(conn, sid = 2, SortOrder.ASCENDING, "2022-11-21".toLocalDate(), rid = 1)
+            db.activities.searchActivities(
+                conn, sid = 2, SortOrder.ASCENDING, "2022-11-21".toLocalDate(), rid = 1,
+                0, 10
+            )
 
         val mockActivities = listOf(
             Activity(
@@ -119,4 +126,23 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests() {
         )
         assertEquals(mockActivities, activities)
     }
+
+    // searchUsersByActivity
+
+    @Test
+    fun `searchUsersByActivity returns a list of users`(): Unit = db.execute { conn ->
+        val activities =
+            db.activities.searchUsersByActivity(
+                conn, sid = 2, rid = 1,
+                skip = 0, limit = 10
+            )
+
+        val mockActivities = listOf(
+            User(id = 2, name = "André Páscoa", email = "A48089@alunos.isel.pt"),
+            User(id = 3, name = "Nyckollas Brandão", email = "A48287@alunos.isel.pt"),
+        )
+        assertEquals(mockActivities, activities)
+    }
+
+    // TODO: 16/04/2022 Skip and limit tests
 }
