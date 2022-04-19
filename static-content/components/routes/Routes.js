@@ -1,5 +1,4 @@
-import {a, div, h1} from "../../js/dom/domTags.js";
-import Route from "./Route.js";
+import {a, div, h1, h5} from "../../js/dom/domTags.js";
 import apiFetch from "../../js/apiFetch.js";
 
 /**
@@ -9,20 +8,21 @@ import apiFetch from "../../js/apiFetch.js";
  */
 async function Routes(state) {
     const routes = await apiFetch(`routes`)
-        .then(json => json.routes)
+        .then(json => json.routes);
 
     return div(
-        h1("Routes"),
-        div(
-            ...routes.map(route =>
+        {class: "row justify-content-evenly"},
+        h1({class: "app_icon"}, "Routes"),
+        ...routes.map(route =>
+            div(
+                {class: "card user_card col-6"},
                 div(
-                    a({href: `#routes/${route.id}`},
-                        Route(state, {route}),
-                    )
+                    {class: "card-body d-flex justify-content-center"},
+                    h5({class: "card-title"}, a({href: `#routes/${route.id}`}, `Route ${route.id}`))
                 )
             )
         )
-    )
+    );
 }
 
 export default Routes;

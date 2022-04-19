@@ -1,5 +1,4 @@
-import {a, div, h1} from "../../js/dom/domTags.js";
-import Sport from "./Sport.js";
+import {a, div, h1, h5} from "../../js/dom/domTags.js";
 import apiFetch from "../../js/apiFetch.js";
 
 /**
@@ -11,19 +10,19 @@ async function Sports(state) {
     const sports = await apiFetch(`sports`)
         .then(json => json.sports);
 
-
     return div(
-        h1("Sports"),
-        div(
-            ...sports.map(sport =>
+        {class: "row justify-content-evenly"},
+        h1({class: "app_icon"}, "Sports"),
+        ...sports.map(sport =>
+            div(
+                {class: "card user_card col-6"},
                 div(
-                    a({href: `#sports/${sport.id}`},
-                        Sport(state, {sport}),
-                    )
+                    {class: "card-body d-flex justify-content-center"},
+                    h5({class: "card-title"}, a({href: `#sports/${sport.id}`}, sport.name))
                 )
             )
         )
-    )
+    );
 }
 
 export default Sports;

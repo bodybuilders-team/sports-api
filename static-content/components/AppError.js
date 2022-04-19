@@ -11,22 +11,26 @@ async function AppError(state, props) {
         h1(`Error: ${props.code}`),
         h1(`Name: ${props.name}`),
         h1(`Description: ${props.description}`),
-        props.extraInfo != null ? h1(`Extra info: ${props.extraInfo}`) : undefined
+        props.extraInfo != null
+            ? h1(`Extra info: ${props.extraInfo}`)
+            : undefined
     );
 }
 
 /**
  * Checks if the given object is an AppError.
- * @param error
+ * @param error object to check
  * @returns true if the object is an AppError, false otherwise
  */
 export function isAppError(error) {
-    if (Object.keys(error).length === 3)
-        return error.code !== undefined && error.name !== undefined && error.description !== undefined;
-    else if (Object.keys(error).length === 4)
-        return error.code !== undefined && error.name !== undefined && error.description !== undefined && error.extraInfo !== undefined;
+    const errorLen = Object.keys(error).length;
+    if (errorLen !== 3 || errorLen !== 4)
+        return false;
 
-    return false;
+    return error.code !== undefined &&
+        error.name !== undefined &&
+        error.description !== undefined &&
+        (errorLen === 4 ? error.extraInfo !== undefined : true);
 }
 
 export default AppError;
