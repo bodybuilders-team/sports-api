@@ -16,3 +16,7 @@ body {
     width: 18rem;
     margin: 20px;
 }
+
+.center {
+    margin: auto;
+}

@@ -1,5 +1,4 @@
 import {div, h1, h3} from "../../js/dom/domTags.js";
-import apiFetch from "../../js/apiFetch.js";
 import Activities from "../activities/Activities.js";
 
 /**
@@ -9,28 +8,20 @@ import Activities from "../activities/Activities.js";
  * @returns sport page
  */
 async function Sport(state, props) {
-    const id = (state.params.id !== undefined)
-        ? state.params.id
-        : props.id;
-
-    const sport = (props != null && props.sport != null)
-        ? props.sport
-        : await apiFetch(`sports/${id}`);
-
-    const activitiesProps = await apiFetch(`sports/${sport.id}/activities`)
-        .then(json => json.activities);
+    if (props == null)
+        throw new Error("Sport props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},
-        h1({class: "app_icon"}, `Sport ${sport.id}`),
+        h1({class: "app_icon"}, `Sport ${props.id}`),
         div(
             {class: "card user_card col-6"},
             div(
                 {class: "card-body"},
-                h3("Name: ", sport.name),
-                h3("Description: ", sport.description),
+                h3("Name: ", props.name),
+                h3("Description: ", props.description),
                 h3("Activities:"),
-                Activities(state, {activities: activitiesProps})
+                Activities(state, {activities: props.activities})
             )
         )
     );

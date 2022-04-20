@@ -5,8 +5,8 @@ import {h1} from "../js/dom/domTags.js";
  * @param state application state
  * @returns not found page
  */
-async function NotFound(state) {
+async function NotFoundPage(state) {
     return h1("Path " + state.path + " not found");
 }
 
-export default NotFound;
+export default NotFoundPage;

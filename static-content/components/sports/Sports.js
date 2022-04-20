@@ -1,19 +1,19 @@
 import {a, div, h1, h5} from "../../js/dom/domTags.js";
-import apiFetch from "../../js/apiFetch.js";
 
 /**
  * Sports page.
  * @param state application state
+ * @param props component properties
  * @returns sports page
  */
-async function Sports(state) {
-    const sports = await apiFetch(`sports`)
-        .then(json => json.sports);
+async function Sports(state, props) {
+    if (props == null)
+        throw new Error("Sports props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},
         h1({class: "app_icon"}, "Sports"),
-        ...sports.map(sport =>
+        ...props.sports.map(sport =>
             div(
                 {class: "card user_card col-6"},
                 div(

@@ -1,6 +1,5 @@
 import {API_BASE_URL} from "./config.js";
-import {isAppError} from "../components/AppError.js";
-
+import {isAppError} from "./errorUtils.js";
 
 /**
  * Executes a fecth to the API.
@@ -9,7 +8,7 @@ import {isAppError} from "../components/AppError.js";
  */
 async function apiFetch(endpoint) {
     try {
-        const res = await fetch(`${API_BASE_URL}/${endpoint}`);
+        const res = await fetch(`${API_BASE_URL}${endpoint}`);
         const json = await res.json();
 
         if (res.ok)

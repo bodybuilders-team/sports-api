@@ -38,6 +38,9 @@ function setAttributes(element, attributes) {
             case "onClick":
                 element.addEventListener("click", attributes[attribute]);
                 break;
+            case "onSubmit":
+                element.addEventListener("submit", attributes[attribute]);
+                break;
             default:
                 element.setAttribute(attribute, attributes[attribute]);
         }

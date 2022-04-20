@@ -1,19 +1,19 @@
 import {Router} from "../Router.js";
-import usersRouter from "./users/usersRouter.js";
-import sportsRouter from "./sports/sportsRouter.js";
-import routesRouter from "./routes/routesRouter.js";
-import activitiesRouter from "./activities/activitiesRouter.js";
-import Home from "./Home.js";
-import NotFound from "./NotFound.js";
+import usersRouter from "../routers/usersRouter.js";
+import sportsRouter from "../routers/sportsRouter.js";
+import routesRouter from "../routers/routesRouter.js";
+import activitiesRouter from "../routers/activitiesRouter.js";
+import HomePage from "../pages/HomePage.js";
+import NotFoundPage from "../pages/NotFoundPage.js";
 
 const router = Router();
 
-router.addHandler("/", Home);
+router.addHandler("/", HomePage);
 router.addHandler("/users", usersRouter);
 router.addHandler("/sports", sportsRouter);
 router.addHandler("/routes", routesRouter);
 router.addHandler("/activities", activitiesRouter);
-router.addDefaultHandler(NotFound);
+router.addDefaultHandler(NotFoundPage);
 
 /**
  * Initializes the Web application.

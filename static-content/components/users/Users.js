@@ -1,19 +1,19 @@
 import {a, div, h1, h5} from "../../js/dom/domTags.js";
-import apiFetch from "../../js/apiFetch.js";
 
 /**
  * Users page.
  * @param state application state
+ * @param props component properties
  * @returns users page
  */
-async function Users(state) {
-    const users = await apiFetch(`users`)
-        .then(json => json.users);
+async function Users(state, props) {
+    if (props == null)
+        throw new Error("Users props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},
         h1({class: "app_icon"}, "Users"),
-        ...users.map(user =>
+        ...props.users.map(user =>
             div(
                 {class: "card user_card col-6"},
                 div(
