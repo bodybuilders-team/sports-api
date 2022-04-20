@@ -4,7 +4,7 @@ import kotlinx.datetime.toLocalDate
 import org.junit.Test
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Sport
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -54,7 +54,7 @@ class SportsServicesTests : AppServicesTests() {
     @Test
     fun `getSport throws SportsError (Not Found) if the sport with the sid doesn't exist`() {
 
-        assertFailsWith<AppError> {
+        assertFailsWith<AppException> {
             services.sports.getSport(1)
         }
     }

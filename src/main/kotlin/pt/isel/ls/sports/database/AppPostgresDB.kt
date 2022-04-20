@@ -10,7 +10,7 @@ import pt.isel.ls.sports.database.sections.tokens.TokensPostgresDB
 import pt.isel.ls.sports.database.sections.users.UsersPostgresDB
 import pt.isel.ls.sports.database.utils.rollbackTransaction
 import pt.isel.ls.sports.database.utils.runScript
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.utils.Logger
 import java.sql.SQLException
 
@@ -24,7 +24,7 @@ class AppPostgresDB(sourceURL: String) : AppDB {
         val conn = try {
             source.connection
         } catch (e: SQLException) {
-            throw AppError.DatabaseError("Could not access database")
+            throw AppException.DatabaseError("Could not access database")
         }
 
         conn.autoCommit = false

@@ -4,7 +4,7 @@ import kotlinx.datetime.toLocalDate
 import org.junit.Test
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.utils.toDuration
 import pt.isel.ls.tableAsserter
 import java.util.UUID
@@ -49,7 +49,7 @@ class UsersPostgresDBTests : AppPostgresDBTests() {
     @Test
     fun `getUser throws SportsError (Not found) if the user with the uid doesn't exist`(): Unit =
         db.execute { conn ->
-            assertFailsWith<AppError> {
+            assertFailsWith<AppException> {
                 db.users.getUser(conn, 0)
             }
         }
@@ -103,7 +103,7 @@ class UsersPostgresDBTests : AppPostgresDBTests() {
     @Test
     fun `getUID throws SportsError (Not Found) if the token isn't associated to any user`(): Unit =
         db.execute { conn ->
-            assertFailsWith<AppError> {
+            assertFailsWith<AppException> {
                 db.tokens.getUID(conn, "T-o-k-e-n")
             }
         }

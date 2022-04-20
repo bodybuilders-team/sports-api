@@ -3,7 +3,7 @@ package pt.isel.ls.unit.memory
 import org.junit.Test
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -48,7 +48,7 @@ class SportsMemoryDBTests : AppMemoryDBTests() {
     @Test
     fun `getSport throws SportsError (Not Found) if the sport with the sid doesn't exist`(): Unit =
         db.execute { conn ->
-            assertFailsWith<AppError> {
+            assertFailsWith<AppException> {
                 db.sports.getSport(conn, 1)
             }
         }

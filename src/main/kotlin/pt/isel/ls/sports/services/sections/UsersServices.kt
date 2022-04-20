@@ -1,10 +1,10 @@
 package pt.isel.ls.sports.services.sections
 
-import pt.isel.ls.sports.api.routers.users.CreateUserResponse
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponse
 import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.AbstractServices
 import java.util.UUID
 
@@ -19,14 +19,14 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      */
     fun createNewUser(name: String, email: String): CreateUserResponse {
         if (!User.isValidName(name))
-            throw AppError.InvalidArgument("Name must be between ${User.MIN_NAME_LENGTH} and ${User.MAX_NAME_LENGTH} characters")
+            throw AppException.InvalidArgument("Name must be between ${User.MIN_NAME_LENGTH} and ${User.MAX_NAME_LENGTH} characters")
 
         if (!User.isValidEmail(email))
-            throw AppError.InvalidArgument("Invalid email")
+            throw AppException.InvalidArgument("Invalid email")
 
         return db.execute { conn ->
             if (db.users.hasUserWithEmail(conn, email))
-                throw AppError.Conflict("Email already in use")
+                throw AppException.Conflict("Email already in use")
 
             val uid = db.users.createNewUser(conn, name, email)
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)

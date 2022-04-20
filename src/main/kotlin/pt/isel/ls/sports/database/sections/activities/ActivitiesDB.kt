@@ -49,7 +49,7 @@ interface ActivitiesDB {
     fun deleteActivity(conn: ConnectionDB, aid: Int)
 
     /**
-     * Get a list with the activities, given the parameters.
+     * Searches for all activities that satisfy the given parameters.
      *
      * @param conn database Connection
      * @param sid sport's identifier

@@ -5,7 +5,7 @@ import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.AbstractServices
 import kotlin.time.Duration
 
@@ -62,7 +62,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
             val activity = db.activities.getActivity(conn, aid)
 
             if (uid != activity.uid)
-                throw AppError.Forbidden("You are not allowed to delete this activity")
+                throw AppException.Forbidden("You are not allowed to delete this activity")
 
             db.activities.deleteActivity(conn, aid)
         }
@@ -75,7 +75,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      */
     fun deleteActivities(token: String, activityIds: Set<Int>) {
         if (activityIds.isEmpty())
-            throw AppError.InvalidArgument("No activity ids were specified")
+            throw AppException.InvalidArgument("No activity ids were specified")
 
         activityIds.forEach(::validateAid)
 
@@ -86,7 +86,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
                 val activity = db.activities.getActivity(conn, it)
 
                 if (uid != activity.uid)
-                    throw AppError.Forbidden("You are not allowed to delete activity with $it")
+                    throw AppException.Forbidden("You are not allowed to delete activity with $it")
 
                 db.activities.deleteActivity(conn, it)
             }
@@ -94,7 +94,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
-     * Get a list with the activities, given the parameters.
+     * Searches for all activities that satisfy the given parameters.
      *
      * @param sid sport's identifier
      * @param orderBy order by duration time, only has two possible values - "ascending" or "descending"
@@ -103,7 +103,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @param limit limits the number of results returned (optional)
      * @param skip skips the number of results provided (optional)
      *
-     * @return list of activities identifiers
+     * @return list of activities
      */
     fun searchActivities(
         sid: Int,
@@ -119,7 +119,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         validateLimit(limit, LIMIT_RANGE)
 
         val order = SortOrder.parse(orderBy)
-            ?: throw AppError.InvalidArgument("Order by must be either ascending or descending")
+            ?: throw AppException.InvalidArgument("Order by must be either ascending or descending")
 
         return db.execute { conn ->
             db.activities.searchActivities(conn, sid, order, date, rid, skip, limit)
@@ -127,7 +127,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
-     * Get a list with the activities, given the parameters.
+     * Searches for all users that have an activity that satisfies the given parameters.
      *
      * @param sid sport's identifier
      * @param rid route's unique identifier (optional)

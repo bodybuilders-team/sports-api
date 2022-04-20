@@ -1,7 +1,7 @@
 package pt.isel.ls.sports.api.utils
 
 import kotlinx.serialization.Serializable
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 
 /**
  * Represents an application error data transfer object.
@@ -13,10 +13,14 @@ import pt.isel.ls.sports.errors.AppError
 @Serializable
 class AppErrorDTO(val code: Int, val name: String, val description: String, val extraInfo: String? = null) {
     companion object {
-        operator fun invoke(error: AppError): AppErrorDTO =
+        operator fun invoke(error: AppException): AppErrorDTO =
             AppErrorDTO(error.code, error.name, error.description, error.extraInfo)
     }
 
-    fun toAppError() =
-        AppError(code, name, description, extraInfo)
+    /**
+     * Converts this DTO to an [AppException].
+     * @return [AppException]
+     */
+    fun toAppException() =
+        AppException(code, name, description, extraInfo)
 }

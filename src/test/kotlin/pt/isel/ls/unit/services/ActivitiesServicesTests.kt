@@ -4,7 +4,7 @@ import kotlinx.datetime.toLocalDate
 import org.junit.Test
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -42,7 +42,7 @@ class ActivitiesServicesTests : AppServicesTests() {
         val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
-        assertFailsWith<AppError.InvalidArgument> {
+        assertFailsWith<AppException.InvalidArgument> {
             services.activities.createNewActivity(
                 token,
                 "2022-11-05".toLocalDate(),
@@ -59,7 +59,7 @@ class ActivitiesServicesTests : AppServicesTests() {
         val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
-        assertFailsWith<AppError.InvalidArgument> {
+        assertFailsWith<AppException.InvalidArgument> {
             services.activities.createNewActivity(
                 token,
                 "2022-11-05".toLocalDate(),
@@ -88,7 +88,7 @@ class ActivitiesServicesTests : AppServicesTests() {
     @Test
     fun `getActivity throws SportsError (Not Found) if the activity with the sid doesn't exist`() {
 
-        assertFailsWith<AppError> {
+        assertFailsWith<AppException> {
             services.activities.getActivity(1)
         }
     }
@@ -103,7 +103,7 @@ class ActivitiesServicesTests : AppServicesTests() {
 
         services.activities.deleteActivity(token, 1)
 
-        assertFailsWith<AppError> {
+        assertFailsWith<AppException> {
             db.activities.getActivity(conn, 1)
         }
     }
@@ -124,13 +124,13 @@ class ActivitiesServicesTests : AppServicesTests() {
 
         services.activities.deleteActivities(token, setOf(aid1, aid2, aid3))
 
-        assertFailsWith<AppError> {
+        assertFailsWith<AppException> {
             db.activities.getActivity(conn, aid1)
         }
-        assertFailsWith<AppError> {
+        assertFailsWith<AppException> {
             db.activities.getActivity(conn, aid2)
         }
-        assertFailsWith<AppError> {
+        assertFailsWith<AppException> {
             db.activities.getActivity(conn, aid3)
         }
     }

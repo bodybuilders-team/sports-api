@@ -6,18 +6,18 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
 import org.junit.Test
-import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
-import pt.isel.ls.sports.api.routers.activities.ActivityDTO
-import pt.isel.ls.sports.api.routers.activities.CreateActivityRequest
-import pt.isel.ls.sports.api.routers.activities.CreateActivityResponse
-import pt.isel.ls.sports.api.routers.users.CreateUserRequest
-import pt.isel.ls.sports.api.routers.users.UsersResponse
+import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponse
+import pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO
+import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
+import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityResponse
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest
+import pt.isel.ls.sports.api.routers.users.dtos.UsersResponse
 import pt.isel.ls.sports.api.utils.AppErrorDTO
 import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.token
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
@@ -82,8 +82,8 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.BAD_REQUEST, status)
 
-            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-            assertEquals(AppError.NoCredentials(), error)
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+            assertEquals(AppException.NoCredentials(), error)
         }
     }
 
@@ -102,8 +102,8 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.UNAUTHORIZED, status)
 
-            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-            assertEquals(AppError.InvalidCredentials(), error)
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+            assertEquals(AppException.InvalidCredentials(), error)
         }
     }
 
@@ -128,8 +128,8 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.BAD_REQUEST, status)
 
-            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-            assertEquals(AppError.InvalidArgument(), error)
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+            assertEquals(AppException.InvalidArgument(), error)
         }
     }
 
@@ -183,8 +183,8 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.BAD_REQUEST, status)
 
-            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-            assertEquals(AppError.InvalidArgument(), error)
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+            assertEquals(AppException.InvalidArgument(), error)
         }
     }
 
@@ -196,9 +196,9 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.NOT_FOUND, status)
 
-            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
 
-            assertEquals(AppError.NotFound(), error)
+            assertEquals(AppException.NotFound(), error)
         }
     }
 
@@ -257,8 +257,8 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.NOT_FOUND, status)
 
-            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-            assertEquals(AppError.NotFound(), error)
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+            assertEquals(AppException.NotFound(), error)
         }
     }
 
@@ -293,8 +293,8 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.FORBIDDEN, status)
 
-            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-            assertEquals(AppError.Forbidden(), error)
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+            assertEquals(AppException.Forbidden(), error)
         }
     }
 

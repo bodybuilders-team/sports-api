@@ -2,7 +2,7 @@ package pt.isel.ls.sports.database.sections.tokens
 
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.connection.getPostgresConnection
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import java.sql.SQLException
 import java.util.UUID
 
@@ -44,6 +44,6 @@ class TokensPostgresDB : TokensDB {
         if (rs.next())
             return rs.getInt(1)
         else
-            throw AppError.NotFound("Token $token isn't associated to any user")
+            throw AppException.NotFound("Token $token isn't associated to any user")
     }
 }

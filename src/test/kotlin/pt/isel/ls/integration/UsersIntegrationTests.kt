@@ -4,16 +4,16 @@ import kotlinx.datetime.toLocalDate
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
-import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
-import pt.isel.ls.sports.api.routers.activities.CreateActivityRequest
-import pt.isel.ls.sports.api.routers.users.CreateUserRequest
-import pt.isel.ls.sports.api.routers.users.CreateUserResponse
-import pt.isel.ls.sports.api.routers.users.UserDTO
-import pt.isel.ls.sports.api.routers.users.UsersResponse
+import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponse
+import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponse
+import pt.isel.ls.sports.api.routers.users.dtos.UserDTO
+import pt.isel.ls.sports.api.routers.users.dtos.UsersResponse
 import pt.isel.ls.sports.api.utils.AppErrorDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.json
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.sports.utils.toDuration
 import kotlin.test.Test
@@ -70,8 +70,8 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.CONFLICT, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-                assertEquals(AppError.Conflict(), error)
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+                assertEquals(AppException.Conflict(), error)
             }
     }
 
@@ -91,8 +91,8 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-                assertEquals(AppError.InvalidArgument(), error)
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+                assertEquals(AppException.InvalidArgument(), error)
             }
     }
 
@@ -177,8 +177,8 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-                assertEquals(AppError.InvalidArgument(), error)
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+                assertEquals(AppException.InvalidArgument(), error)
             }
     }
 
@@ -191,8 +191,8 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.NOT_FOUND, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-                assertEquals(AppError.NotFound(), error)
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+                assertEquals(AppException.NotFound(), error)
             }
     }
 
@@ -246,8 +246,8 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
-                assertEquals(AppError.InvalidArgument(), error)
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
+                assertEquals(AppException.InvalidArgument(), error)
             }
     }
 }

@@ -3,7 +3,7 @@ package pt.isel.ls.sports.database.sections.routes
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.connection.getPostgresConnection
 import pt.isel.ls.sports.domain.Route
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.SQLException
@@ -51,7 +51,7 @@ class RoutesPostgresDB : RoutesDB {
         if (rs.next())
             return getRouteFromTable(rs)
         else
-            throw AppError.NotFound("Route with id $rid not found")
+            throw AppException.NotFound("Route with id $rid not found")
     }
 
     override fun getAllRoutes(

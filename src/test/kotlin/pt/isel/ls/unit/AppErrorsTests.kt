@@ -3,7 +3,7 @@ package pt.isel.ls.unit
 import org.http4k.core.Body
 import org.http4k.core.Status
 import pt.isel.ls.sports.api.utils.toResponse
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -13,8 +13,8 @@ class AppErrorsTests {
     @Test
     fun `throw SportsErrors badRequest works`() {
         val msg = "badRequest message"
-        val error = assertFailsWith<AppError> {
-            throw AppError.BadRequest(msg)
+        val error = assertFailsWith<AppException> {
+            throw AppException.BadRequest(msg)
         }
 
         assertEquals(1000, error.code)
@@ -26,8 +26,8 @@ class AppErrorsTests {
     @Test
     fun `throw SportsErrors notFound works`() {
         val msg = "notFound message"
-        val error = assertFailsWith<AppError> {
-            throw AppError.NotFound(msg)
+        val error = assertFailsWith<AppException> {
+            throw AppException.NotFound(msg)
         }
 
         assertEquals(1001, error.code)
@@ -39,8 +39,8 @@ class AppErrorsTests {
     @Test
     fun `throw SportsErrors internalError works`() {
         val msg = "internalError message"
-        val error = assertFailsWith<AppError> {
-            throw AppError.InternalError(msg)
+        val error = assertFailsWith<AppException> {
+            throw AppException.InternalError(msg)
         }
 
         assertEquals(1002, error.code)
@@ -52,8 +52,8 @@ class AppErrorsTests {
     @Test
     fun `throw SportsErrors invalidCredentials works`() {
         val msg = "invalidCredentials message"
-        val error = assertFailsWith<AppError> {
-            throw AppError.InvalidCredentials(msg)
+        val error = assertFailsWith<AppException> {
+            throw AppException.InvalidCredentials(msg)
         }
 
         assertEquals(1003, error.code)
@@ -65,8 +65,8 @@ class AppErrorsTests {
     @Test
     fun `throw SportsErrors noCredentials works`() {
         val msg = "noCredentials message"
-        val error = assertFailsWith<AppError> {
-            throw AppError.NoCredentials(msg)
+        val error = assertFailsWith<AppException> {
+            throw AppException.NoCredentials(msg)
         }
 
         assertEquals(1004, error.code)
@@ -79,7 +79,7 @@ class AppErrorsTests {
 
     @Test
     fun `badRequest toResponse`() {
-        val res = AppError.BadRequest().toResponse()
+        val res = AppException.BadRequest().toResponse()
         assertEquals(Status.BAD_REQUEST, res.status)
         assertEquals(
             Body("{\"code\":1000,\"name\":\"BAD_REQUEST\",\"description\":\"The request was malformed\"}"),
@@ -89,7 +89,7 @@ class AppErrorsTests {
 
     @Test
     fun `notFound toResponse`() {
-        val res = AppError.NotFound().toResponse()
+        val res = AppException.NotFound().toResponse()
         assertEquals(Status.NOT_FOUND, res.status)
         assertEquals(
             Body("{\"code\":1001,\"name\":\"NOT_FOUND\",\"description\":\"The requested resource was not found\"}"),
@@ -99,7 +99,7 @@ class AppErrorsTests {
 
     @Test
     fun `invalidCredentials toResponse`() {
-        val res = AppError.InvalidCredentials().toResponse()
+        val res = AppException.InvalidCredentials().toResponse()
         assertEquals(Status.UNAUTHORIZED, res.status)
         assertEquals(
             Body("{\"code\":1003,\"name\":\"INVALID_CREDENTIALS\",\"description\":\"The provided credentials are invalid\"}"),
@@ -109,7 +109,7 @@ class AppErrorsTests {
 
     @Test
     fun `conflict toResponse`() {
-        val res = AppError.Conflict().toResponse()
+        val res = AppException.Conflict().toResponse()
         assertEquals(Status.CONFLICT, res.status)
         assertEquals(
             Body("{\"code\":1007,\"name\":\"CONFLICT\",\"description\":\"There was a conflict\"}"),
@@ -119,6 +119,6 @@ class AppErrorsTests {
 
     @Test
     fun `Error comparison using hashCode`() {
-        assertEquals(AppError.BadRequest().hashCode(), AppError.BadRequest().hashCode())
+        assertEquals(AppException.BadRequest().hashCode(), AppException.BadRequest().hashCode())
     }
 }

@@ -1,4 +1,4 @@
-package pt.isel.ls.sports.api.routers.users
+package pt.isel.ls.sports.api.routers.users.dtos
 
 import kotlinx.serialization.Serializable
 import pt.isel.ls.sports.domain.User

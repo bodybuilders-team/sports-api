@@ -5,7 +5,7 @@ import org.junit.Test
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.utils.toDuration
 import pt.isel.ls.tableAsserter
 import kotlin.test.assertEquals
@@ -50,7 +50,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests() {
     @Test
     fun `getActivity throws SportsError (Not Found) if the activity with the sid doesn't exist`(): Unit =
         db.execute { conn ->
-            assertFailsWith<AppError> {
+            assertFailsWith<AppException> {
                 db.activities.getActivity(conn, 0)
             }
         }
@@ -61,7 +61,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests() {
     fun `deleteActivity deletes an activity successfully`(): Unit = db.execute { conn ->
         db.activities.deleteActivity(conn, 1)
 
-        assertFailsWith<AppError> {
+        assertFailsWith<AppException> {
             db.activities.getActivity(conn, 1)
         }
     }

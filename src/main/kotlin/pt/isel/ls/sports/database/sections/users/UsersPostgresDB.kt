@@ -3,7 +3,7 @@ package pt.isel.ls.sports.database.sections.users
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.connection.getPostgresConnection
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -40,7 +40,7 @@ class UsersPostgresDB : UsersDB {
         if (rs.next())
             return getUserFromTable(rs)
         else
-            throw AppError.NotFound("User with id $uid not found")
+            throw AppException.NotFound("User with id $uid not found")
     }
 
     override fun getAllUsers(conn: ConnectionDB): List<User> {

@@ -6,7 +6,7 @@ import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.utils.toDuration
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -49,7 +49,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests() {
     @Test
     fun `getActivity throws SportsError (Not Found) if the activity with the sid doesn't exist`(): Unit =
         db.execute { conn ->
-            assertFailsWith<AppError> {
+            assertFailsWith<AppException> {
                 db.activities.getActivity(conn, 1)
             }
         }

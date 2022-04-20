@@ -10,7 +10,7 @@ import pt.isel.ls.sports.database.utils.getSQLDate
 import pt.isel.ls.sports.database.utils.setIntOrNull
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppError
+import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.utils.toDTOString
 import pt.isel.ls.sports.utils.toDuration
 import java.sql.Connection
@@ -61,7 +61,7 @@ class ActivitiesPostgresDB : ActivitiesDB {
         if (rs.next())
             return getActivityFromTable(rs)
         else
-            throw AppError.NotFound("Activity with id $aid not found")
+            throw AppException.NotFound("Activity with id $aid not found")
     }
 
     override fun deleteActivity(
