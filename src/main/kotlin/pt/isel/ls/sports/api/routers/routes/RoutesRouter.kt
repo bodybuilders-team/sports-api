@@ -1,7 +1,5 @@
 package pt.isel.ls.sports.api.routers.routes
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
@@ -10,6 +8,7 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
+import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.getErrorResponse
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
@@ -49,7 +48,7 @@ class RoutesRouter(private val services: RoutesServices) {
     private fun createRoute(request: Request): Response = runCatching {
         val token = request.tokenOrThrow()
 
-        val routeRequest = Json.decodeFromString<CreateRouteRequest>(request.bodyString())
+        val routeRequest = request.decodeBodyAs<CreateRouteRequest>()
         val uid = services.createNewRoute(
             token,
             routeRequest.start_location,

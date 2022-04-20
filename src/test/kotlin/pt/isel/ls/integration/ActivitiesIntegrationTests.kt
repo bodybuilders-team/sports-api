@@ -2,13 +2,10 @@ package pt.isel.ls.integration
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toLocalDate
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
 import org.junit.Test
-import pt.isel.ls.json
 import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
 import pt.isel.ls.sports.api.routers.activities.ActivityDTO
 import pt.isel.ls.sports.api.routers.activities.CreateActivityRequest
@@ -17,10 +14,12 @@ import pt.isel.ls.sports.api.routers.users.CreateUserRequest
 import pt.isel.ls.sports.api.routers.users.UsersResponse
 import pt.isel.ls.sports.api.utils.AppErrorDTO
 import pt.isel.ls.sports.api.utils.MessageResponse
+import pt.isel.ls.sports.api.utils.decodeBodyAs
+import pt.isel.ls.sports.api.utils.json
+import pt.isel.ls.sports.api.utils.token
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.sports.utils.toDuration
-import pt.isel.ls.token
 import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -58,7 +57,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.CREATED, status)
 
-            val aid = Json.decodeFromString<CreateActivityResponse>(bodyString()).aid
+            val aid = this.decodeBodyAs<CreateActivityResponse>().aid
             assertTrue(isValidId(aid))
 
             db.execute { conn ->
@@ -83,7 +82,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.BAD_REQUEST, status)
 
-            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
             assertEquals(AppError.NoCredentials(), error)
         }
     }
@@ -103,7 +102,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.UNAUTHORIZED, status)
 
-            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
             assertEquals(AppError.InvalidCredentials(), error)
         }
     }
@@ -129,7 +128,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.BAD_REQUEST, status)
 
-            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
             assertEquals(AppError.InvalidArgument(), error)
         }
     }
@@ -166,7 +165,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.OK, status)
 
-            val activity = Json.decodeFromString<ActivityDTO>(bodyString())
+            val activity = this.decodeBodyAs<ActivityDTO>()
             assertEquals(mockData.mockId, activity.id)
             assertEquals(mockData.mockId, activity.uid)
 
@@ -184,7 +183,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.BAD_REQUEST, status)
 
-            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
             assertEquals(AppError.InvalidArgument(), error)
         }
     }
@@ -197,7 +196,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.NOT_FOUND, status)
 
-            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
 
             assertEquals(AppError.NotFound(), error)
         }
@@ -235,7 +234,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.OK, status)
 
-            Json.decodeFromString<MessageResponse>(bodyString())
+            this.decodeBodyAs<MessageResponse>()
         }
 
         db.execute { conn ->
@@ -258,7 +257,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.NOT_FOUND, status)
 
-            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
             assertEquals(AppError.NotFound(), error)
         }
     }
@@ -294,7 +293,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.FORBIDDEN, status)
 
-            val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+            val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
             assertEquals(AppError.Forbidden(), error)
         }
     }
@@ -354,7 +353,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.OK, status)
 
-            Json.decodeFromString<MessageResponse>(bodyString())
+            this.decodeBodyAs<MessageResponse>()
         }
 
         db.execute { conn ->
@@ -391,7 +390,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.OK, status)
 
-            val activities = Json.decodeFromString<ActivitiesResponse>(bodyString()).activities
+            val activities = this.decodeBodyAs<ActivitiesResponse>().activities
             assertEquals(mockData.activities.size, activities.size)
 
             activities.forEach { activity ->
@@ -445,7 +444,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.OK, status)
 
-            val users = Json.decodeFromString<UsersResponse>(bodyString()).users
+            val users = this.decodeBodyAs<UsersResponse>().users
 
             assertEquals(mockData.users.size, users.size)
 

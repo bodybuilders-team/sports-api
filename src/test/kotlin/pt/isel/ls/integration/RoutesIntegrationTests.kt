@@ -1,20 +1,19 @@
 package pt.isel.ls.integration
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
 import org.junit.Test
-import pt.isel.ls.json
 import pt.isel.ls.sports.api.routers.routes.CreateRouteRequest
 import pt.isel.ls.sports.api.routers.routes.CreateRouteResponse
 import pt.isel.ls.sports.api.routers.routes.RouteDTO
 import pt.isel.ls.sports.api.routers.routes.RoutesResponse
 import pt.isel.ls.sports.api.utils.AppErrorDTO
+import pt.isel.ls.sports.api.utils.decodeBodyAs
+import pt.isel.ls.sports.api.utils.json
+import pt.isel.ls.sports.api.utils.token
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
-import pt.isel.ls.token
 import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -51,7 +50,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.CREATED, status)
 
-                val rid = Json.decodeFromString<CreateRouteResponse>(bodyString()).rid
+                val rid = this.decodeBodyAs<CreateRouteResponse>().rid
                 assertTrue(isValidId(rid))
 
                 db.execute { conn ->
@@ -77,7 +76,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.NoCredentials(), error)
             }
     }
@@ -100,7 +99,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.UNAUTHORIZED, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.InvalidCredentials(), error)
             }
     }
@@ -127,7 +126,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.BadRequest(), error)
             }
     }
@@ -163,7 +162,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val routes = Json.decodeFromString<RoutesResponse>(bodyString()).routes
+                val routes = this.decodeBodyAs<RoutesResponse>().routes
                 assertEquals(mockRoutes.size, routes.size)
 
                 routes.forEach { route ->
@@ -185,7 +184,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val routes = Json.decodeFromString<RoutesResponse>(bodyString()).routes
+                val routes = this.decodeBodyAs<RoutesResponse>().routes
                 assertEquals(0, routes.size)
             }
     }
@@ -221,7 +220,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val route = Json.decodeFromString<RouteDTO>(bodyString())
+                val route = this.decodeBodyAs<RouteDTO>()
                 assertEquals(mockData.rid, route.id)
                 assertEquals(mockData.uid, route.uid)
 
@@ -240,7 +239,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.InvalidArgument(), error)
             }
     }
@@ -254,7 +253,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.NOT_FOUND, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.NotFound(), error)
             }
     }

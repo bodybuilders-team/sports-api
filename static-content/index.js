@@ -27,6 +27,7 @@ function render(component) {
  */
 function hashChangeHandler() {
     const path = window.location.hash.replace("#", "/");
+
     const state = createState()
     state.path = state.currentPath = path
 

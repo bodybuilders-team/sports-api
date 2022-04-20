@@ -86,7 +86,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
                 val activity = db.activities.getActivity(conn, it)
 
                 if (uid != activity.uid)
-                    throw AppError.Forbidden("You are not allowed to delete this activity")
+                    throw AppError.Forbidden("You are not allowed to delete activity with $it")
 
                 db.activities.deleteActivity(conn, it)
             }

@@ -62,3 +62,27 @@ fun Request.tokenOrThrow(): String =
 inline fun <reified T> Request.decodeBodyAs(): T {
     return Json.decodeFromString(this.bodyString())
 }
+
+/**
+ * Sets body of the request as JSON with given data and content type header
+ * @param requestBody JSON data
+ * @return Request with JSON body
+ */
+fun Request.json(requestBody: String) =
+    this.header("Content-Type", "application/json")
+        .body(requestBody)
+
+/**
+ * Decodes the response body as a [T] object.
+ * @return [T] object
+ */
+inline fun <reified T> Response.decodeBodyAs(): T =
+    Json.decodeFromString(this.bodyString())
+
+/**
+ * Set request bearer token in authorization header
+ * @param token bearer token
+ * @return Request with bearer token
+ */
+fun Request.token(token: String): Request =
+    this.header("Authorization", "Bearer $token")

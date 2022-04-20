@@ -1,13 +1,10 @@
 package pt.isel.ls.integration
 
 import kotlinx.datetime.toLocalDate
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
 import org.junit.Test
-import pt.isel.ls.json
 import pt.isel.ls.sports.api.routers.activities.ActivitiesResponse
 import pt.isel.ls.sports.api.routers.activities.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.sports.CreateSportRequest
@@ -15,10 +12,12 @@ import pt.isel.ls.sports.api.routers.sports.CreateSportResponse
 import pt.isel.ls.sports.api.routers.sports.SportDTO
 import pt.isel.ls.sports.api.routers.sports.SportsResponse
 import pt.isel.ls.sports.api.utils.AppErrorDTO
+import pt.isel.ls.sports.api.utils.decodeBodyAs
+import pt.isel.ls.sports.api.utils.json
+import pt.isel.ls.sports.api.utils.token
 import pt.isel.ls.sports.errors.AppError
 import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.sports.utils.toDuration
-import pt.isel.ls.token
 import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -51,7 +50,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.CREATED, status)
 
-                val sid = Json.decodeFromString<CreateSportResponse>(bodyString()).sid
+                val sid = this.decodeBodyAs<CreateSportResponse>().sid
                 assertTrue(isValidId(sid))
                 db.execute { conn ->
                     assertTrue(db.sports.hasSport(conn, sid))
@@ -82,7 +81,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.CREATED, status)
 
-                val sid = Json.decodeFromString<CreateSportResponse>(bodyString()).sid
+                val sid = this.decodeBodyAs<CreateSportResponse>().sid
                 assertTrue(isValidId(sid))
 
                 db.execute { conn ->
@@ -107,7 +106,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.NoCredentials(), error)
             }
     }
@@ -129,7 +128,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.UNAUTHORIZED, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.InvalidCredentials(), error)
             }
     }
@@ -155,7 +154,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.InvalidArgument(), error)
             }
     }
@@ -186,7 +185,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val sports = Json.decodeFromString<SportsResponse>(bodyString()).sports
+                val sports = this.decodeBodyAs<SportsResponse>().sports
                 assertEquals(mockData.sports.size, sports.size)
 
                 sports.forEach { sport ->
@@ -208,7 +207,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val sports = Json.decodeFromString<SportsResponse>(bodyString()).sports
+                val sports = this.decodeBodyAs<SportsResponse>().sports
                 assertEquals(0, sports.size)
             }
     }
@@ -235,7 +234,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val sport = Json.decodeFromString<SportDTO>(bodyString())
+                val sport = this.decodeBodyAs<SportDTO>()
                 assertEquals(mockData.uid, sport.uid)
                 assertEquals(mockData.sid, sport.id)
 
@@ -264,7 +263,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val sport = Json.decodeFromString<SportDTO>(bodyString())
+                val sport = this.decodeBodyAs<SportDTO>()
                 assertEquals(mockData.uid, sport.id)
                 assertEquals(mockData.sport.name, sport.name)
                 assertNull(sport.description)
@@ -280,7 +279,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.InvalidArgument(), error)
             }
     }
@@ -294,7 +293,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.NOT_FOUND, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.NotFound(), error)
             }
     }
@@ -325,7 +324,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val activities = Json.decodeFromString<ActivitiesResponse>(bodyString()).activities
+                val activities = this.decodeBodyAs<ActivitiesResponse>().activities
                 assertEquals(mockData.activities.size, activities.size)
 
                 activities.forEach { activity ->
@@ -349,7 +348,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = Json.decodeFromString<AppErrorDTO>(bodyString()).toAppError()
+                val error = this.decodeBodyAs<AppErrorDTO>().toAppError()
                 assertEquals(AppError.InvalidArgument(), error)
             }
     }

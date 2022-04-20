@@ -24,7 +24,7 @@ async function AppError(state, props) {
  */
 export function isAppError(error) {
     const errorLen = Object.keys(error).length;
-    if (errorLen !== 3 || errorLen !== 4)
+    if (errorLen !== 3 && errorLen !== 4)
         return false;
 
     return error.code !== undefined &&

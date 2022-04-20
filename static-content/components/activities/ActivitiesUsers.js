@@ -1,6 +1,4 @@
-import {a, div, h1} from "../../js/dom/domTags.js";
-import apiFetch from "../../js/apiFetch.js";
-import Sport from "../sports/Sport.js";
+import {div, h1} from "../../js/dom/domTags.js";
 
 /**
  * Activities users activities component.

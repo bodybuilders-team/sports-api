@@ -3,14 +3,14 @@
  * @returns created router
  */
 export function Router() {
-    function router(state) {
-        return router.handle(state)
+    function router(state, props) {
+        return router.handle(state, props)
     }
 
-    router.handle = function (state) {
+    router.handle = function (state, props) {
         const handlerData = this.getHandler(state.currentPath);
         if (handlerData === undefined) {
-            const handler = this.defaultHandler(state);
+            const handler = this.defaultHandler(state, props);
 
             if (handler === undefined)
                 throw new Error(`No handler for path ${state.currentPath}`);
@@ -24,7 +24,7 @@ export function Router() {
 
         state.currentPath = state.currentPath.substring(handlerPath.length)
 
-        return handlerData.handler(state);
+        return handlerData.handler(state, props);
     }
 
     /**
