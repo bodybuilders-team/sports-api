@@ -11,15 +11,12 @@ export function Router() {
 
     router.handle = function (state, props) {
         const handlerData = this.getHandler(state.currentPath);
-        if (handlerData === undefined) {
-            const handler = this.defaultHandler(state, props);
+        if (handlerData == null) {
+            if (this.defaultHandler != null)
+                return this.defaultHandler(state, props);
 
-            if (handler === undefined)
-                throw new LogError(`No handler for path ${state.currentPath}`);
-            return handler;
+            throw new LogError(`No handler for path ${state.currentPath}`);
         }
-
-        const handlerPath = handlerData.path;
 
         for (const param in handlerData.params)
             state.params[param] = handlerData.params[param];
@@ -27,7 +24,7 @@ export function Router() {
         for (const queryParam in handlerData.query)
             state.query[queryParam] = handlerData.query[queryParam];
 
-        state.currentPath = state.currentPath.substring(handlerPath.length)
+        state.currentPath = handlerData.newPath;
 
         return handlerData.handler(state, props);
     }
@@ -44,20 +41,55 @@ export function Router() {
         for (const handlerData of this.handlers) {
             const handlerPath = handlerData.path;
 
-            const {isMatch, params, query} = matchHandlerPath(handlerPath, path);
-            if (isMatch)
-                return {
-                    handler: handlerData.handler,
-                    path: handlerPath,
-                    params,
-                    query
-                };
+            const {isMatch, newPath, params} = matchHandlerPath(handlerPath, path);
+
+            if (!isMatch)
+                continue
+
+            return {
+                handler: handlerData.handler,
+                handlerPath,
+                newPath,
+                params,
+                query: parsePathQuery(path)
+            };
 
         }
 
         return undefined;
     }
 
+    /**
+     * Parses search query params from a path.
+     * @param path
+     */
+    function parsePathQuery(path) {
+        const query = {}
+
+        const pathQueryIdx = path.indexOf('?');
+        if (pathQueryIdx === -1)
+            return query;
+
+        const queryStr = path.substring(pathQueryIdx + 1)
+        const queryParams = new URLSearchParams(queryStr);
+
+        //Usually ocurrs when there are multiple ? in the path
+        if (queryParams === undefined)
+            throw new LogError(`Could not parse query params from path ${path}`);
+
+        queryParams.forEach((value, key) => {
+            query[key] = value;
+        })
+
+        return query
+    }
+
+    /**
+     * Matches a handler path with a given path and fills params if they exist.
+     * @param handlerPath handler path
+     * @param path path to match
+     * @returns {{newPath: string, params: {}, isMatch: boolean}|{isMatch: boolean}}
+     */
     function matchHandlerPath(handlerPath, path) {
         let lIdx = -1;
         let rIdx = path.indexOf('/');
@@ -65,29 +97,18 @@ export function Router() {
         let lHandlerIdx = -1;
         let rHandlerIdx = handlerPath.indexOf('/');
 
-        let params = {}
-        let query = {}
+        const params = {}
+        let newPath = path
 
         while (lHandlerIdx < rHandlerIdx) {
-            // /users/10/edit/20/dada
-            // /users/:id/edit/:groupId
-            // /
             const currPath = path.substring(lIdx + 1, rIdx);
             const currPathQueryIdx = currPath.indexOf('?');
 
             const currPathWithoutQuery = currPathQueryIdx === -1 ? currPath : currPath.substring(0, currPathQueryIdx);
-            if (currPathQueryIdx !== -1) {
-                const queryStr = currPath.substring(currPathQueryIdx + 1)
-                const queryParams = new URLSearchParams(queryStr);
-
-                queryParams.forEach((value, key) => {
-                    query[key] = value;
-                })
-            }
 
             const currHandlerPath = handlerPath.substring(lHandlerIdx + 1, rHandlerIdx);
 
-            if (currHandlerPath.startsWith(':')) {
+            if (currHandlerPath.startsWith(':') && currPathWithoutQuery !== "") {
                 const paramName = currHandlerPath.substring(1);
                 params[paramName] = currPathWithoutQuery;
             } else if (currHandlerPath !== currPathWithoutQuery)
@@ -107,10 +128,11 @@ export function Router() {
 
             if (currPathQueryIdx !== -1 && lHandlerIdx < rHandlerIdx)
                 return {isMatch: false};
-
         }
 
-        return {isMatch: true, params, query};
+        newPath = path.substring(lIdx);
+
+        return {isMatch: true, newPath, params};
     }
 
 

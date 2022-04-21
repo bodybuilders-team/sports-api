@@ -89,7 +89,7 @@ class UsersRouter(private val services: UsersServices) : IRouter {
      */
     private fun getUserActivities(request: Request): Response = runAndCatch {
         val uid = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }
-        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
+        val skip = request.query("skip")?.toIntOrThrow { "Invalid Skip" } ?: DEFAULT_SKIP
         val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
 
         val activitiesResponse = services.getUserActivities(uid, skip, limit)

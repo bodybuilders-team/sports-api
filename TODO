@@ -1,5 +1,4 @@
 //TODO 21/04/2022 - Add errorInfo to toIntOrThrows in all files
 //TODO 21/04/2022 - Verify every bit of documentation in all files (a lot of code has changed)
-//TODO 21/04/2022 - Add tests for Router.js
 //TODO 21/04/2022 - Catch serialization errors and throw them as a Bad request with appropriate error info.
 //TODO 21/04/2022 - Remove pagination options when there is only one page.
