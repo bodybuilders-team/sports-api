@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @property distance distance between [start_location] and [end_location] in meters
  */
 @Serializable
-data class CreateRouteRequest(
+data class CreateRouteRequestDTO(
     val start_location: String,
     val end_location: String,
     val distance: Double

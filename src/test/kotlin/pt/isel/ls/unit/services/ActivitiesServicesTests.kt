@@ -152,7 +152,7 @@ class ActivitiesServicesTests : AppServicesTests() {
                 rid = 1,
                 skip = 0,
                 limit = 10
-            )
+            ).activities
 
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
@@ -180,7 +180,7 @@ class ActivitiesServicesTests : AppServicesTests() {
                 rid = 1,
                 skip = 0,
                 limit = 10
-            )
+            ).users
 
         assertEquals(
             listOf(

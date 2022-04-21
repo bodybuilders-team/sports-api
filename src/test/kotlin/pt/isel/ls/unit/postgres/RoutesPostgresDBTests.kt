@@ -61,14 +61,14 @@ class RoutesPostgresDBTests : AppPostgresDBTests() {
             Route(3, "Lisboa", "Porto", 1.5, 3)
         )
 
-        assertEquals(routes, db.routes.getAllRoutes(conn))
+        assertEquals(routes, db.routes.getAllRoutes(conn, 0, 10).routes)
     }
 
     @Test
     fun `getAllRoutes with no created routes returns empty list`() {
         db.reset()
         db.execute { conn ->
-            assertEquals(emptyList(), db.routes.getAllRoutes(conn))
+            assertEquals(emptyList(), db.routes.getAllRoutes(conn, 0, 10).routes)
         }
     }
 }

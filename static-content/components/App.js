@@ -1,4 +1,4 @@
-import {Router} from "../Router.js";
+import {Router} from "../router.js";
 import usersRouter from "../routers/usersRouter.js";
 import sportsRouter from "../routers/sportsRouter.js";
 import routesRouter from "../routers/routesRouter.js";

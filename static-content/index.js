@@ -10,7 +10,7 @@ window.addEventListener("hashchange", hashChangeHandler);
  * @returns state object
  */
 function createState() {
-    return {path: "/", currentPath: "/", params: {}};
+    return {path: "/", currentPath: "/", params: {}, query: {}};
 }
 
 /**

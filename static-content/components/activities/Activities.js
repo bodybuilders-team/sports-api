@@ -1,4 +1,5 @@
 import {a, div, h5} from "../../js/dom/domTags.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * Activities component.
@@ -8,9 +9,10 @@ import {a, div, h5} from "../../js/dom/domTags.js";
  */
 async function Activities(state, props) {
     if (props == null)
-        throw new Error("Activities props must not be null");
+        throw new LogError("Activities props must not be null");
 
     return div(
+        {class: "row justify-content-evenly"},
         ...props.activities.map(activity =>
             div(
                 {class: "card user_card col-6"},

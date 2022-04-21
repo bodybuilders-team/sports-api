@@ -67,11 +67,11 @@ class SportsMemoryDBTests : AppMemoryDBTests() {
         source.sports[2] = sport2
         source.sports[3] = sport3
 
-        assertEquals(listOf(sport1, sport2, sport3), db.sports.getAllSports(conn))
+        assertEquals(listOf(sport1, sport2, sport3), db.sports.getAllSports(conn, 0, 10).sports)
     }
 
     @Test
     fun `getAllSports with no created sports returns empty list`(): Unit = db.execute { conn ->
-        assertEquals(emptyList(), db.sports.getAllSports(conn))
+        assertEquals(emptyList(), db.sports.getAllSports(conn, 0, 10).sports)
     }
 }

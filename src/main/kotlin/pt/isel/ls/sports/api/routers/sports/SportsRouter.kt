@@ -9,19 +9,17 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.IRouter
-import pt.isel.ls.sports.api.routers.IRouterCompanion
-import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponse
-import pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO
-import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportRequest
-import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportResponse
+import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
+import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportRequestDTO
+import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportResponseDTO
 import pt.isel.ls.sports.api.routers.sports.dtos.SportDTO
-import pt.isel.ls.sports.api.routers.sports.dtos.SportsResponse
+import pt.isel.ls.sports.api.routers.sports.dtos.SportsResponseDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.api.utils.runAndCatch
 import pt.isel.ls.sports.api.utils.tokenOrThrow
-import pt.isel.ls.sports.services.sections.SportsServices
+import pt.isel.ls.sports.services.sections.sports.SportsServices
 import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
@@ -32,8 +30,11 @@ import pt.isel.ls.sports.utils.toIntOrThrow
  */
 class SportsRouter(private val services: SportsServices) : IRouter {
 
-    companion object : IRouterCompanion<SportsServices> {
-        override fun routes(services: SportsServices) = SportsRouter(services).routes
+    companion object {
+        const val DEFAULT_SKIP = 0
+        const val DEFAULT_LIMIT = 10
+
+        fun routes(services: SportsServices) = SportsRouter(services).routes
     }
 
     override val routes = routes(
@@ -51,13 +52,13 @@ class SportsRouter(private val services: SportsServices) : IRouter {
     private fun createSport(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
 
-        val sportRequest = request.decodeBodyAs<CreateSportRequest>()
+        val sportRequest = request.decodeBodyAs<CreateSportRequestDTO>()
         val sid = services.createNewSport(
             token, sportRequest.name,
             sportRequest.description
         )
 
-        return Response(CREATED).json(CreateSportResponse(sid))
+        return Response(CREATED).json(CreateSportResponseDTO(sid))
     }
 
     /**
@@ -67,9 +68,12 @@ class SportsRouter(private val services: SportsServices) : IRouter {
      */
     @Suppress("UNUSED_PARAMETER")
     private fun getSports(request: Request): Response = runAndCatch {
-        val sports = services.getAllSports()
+        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
 
-        return Response(OK).json(SportsResponse(sports.map { SportDTO(it) }))
+        val sportsResponse = services.getAllSports(skip, limit)
+
+        return Response(OK).json(SportsResponseDTO(sportsResponse))
     }
 
     /**
@@ -87,9 +91,11 @@ class SportsRouter(private val services: SportsServices) : IRouter {
 
     private fun getSportActivities(request: Request): Response = runAndCatch {
         val sid = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
+        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
 
-        val activities = services.getSportActivities(sid)
+        val activitiesResponse = services.getSportActivities(sid, skip, limit)
 
-        return Response(OK).json(ActivitiesResponse(activities.map { ActivityDTO(it) }))
+        return Response(OK).json(ActivitiesResponseDTO(activitiesResponse))
     }
 }

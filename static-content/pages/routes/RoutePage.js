@@ -1,5 +1,6 @@
 import apiFetch from "../../js/apiFetch.js";
 import Route from "../../components/routes/Route.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * Route details page.
@@ -8,7 +9,7 @@ import Route from "../../components/routes/Route.js";
  */
 async function RoutePage(state) {
     if (state.params.id === undefined)
-        throw new Error("Route id must be defined")
+        throw new LogError("Route id must be defined")
 
     const id = state.params.id;
     const route = await apiFetch(`/routes/${id}`);

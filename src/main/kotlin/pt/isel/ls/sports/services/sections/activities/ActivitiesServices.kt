@@ -1,10 +1,11 @@
-package pt.isel.ls.sports.services.sections
+package pt.isel.ls.sports.services.sections.activities
 
 import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
+import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
-import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.AbstractServices
 import kotlin.time.Duration
@@ -112,7 +113,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         rid: Int?,
         skip: Int,
         limit: Int
-    ): List<Activity> {
+    ): ActivitiesResponse {
         validateSid(sid)
         if (rid != null) validateRid(rid)
         validateSkip(skip)
@@ -141,7 +142,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         rid: Int,
         skip: Int,
         limit: Int
-    ): List<User> {
+    ): UsersResponse {
         validateSid(sid)
         validateRid(rid)
         validateSkip(skip)

@@ -20,3 +20,7 @@ body {
 .center {
     margin: auto;
 }
+
+.page-item:not(.active) {
+    cursor: pointer;
+}

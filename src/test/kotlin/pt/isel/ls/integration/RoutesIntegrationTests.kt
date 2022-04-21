@@ -4,10 +4,10 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
 import org.junit.Test
-import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteRequest
-import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteResponse
+import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteRequestDTO
+import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteResponseDTO
 import pt.isel.ls.sports.api.routers.routes.dtos.RouteDTO
-import pt.isel.ls.sports.api.routers.routes.dtos.RoutesResponse
+import pt.isel.ls.sports.api.routers.routes.dtos.RoutesResponseDTO
 import pt.isel.ls.sports.api.utils.AppErrorDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.json
@@ -50,7 +50,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.CREATED, status)
 
-                val rid = this.decodeBodyAs<CreateRouteResponse>().rid
+                val rid = this.decodeBodyAs<CreateRouteResponseDTO>().rid
                 assertTrue(isValidId(rid))
 
                 db.execute { conn ->
@@ -139,12 +139,12 @@ class RoutesIntegrationTests : IntegrationTests() {
             val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
 
             val mockRoutes = listOf(
-                CreateRouteRequest(
+                CreateRouteRequestDTO(
                     "Russia",
                     "Lisbon",
                     10.0
                 ),
-                CreateRouteRequest(
+                CreateRouteRequestDTO(
                     "Dubai",
                     "Paris",
                     10.0
@@ -162,7 +162,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val routes = this.decodeBodyAs<RoutesResponse>().routes
+                val routes = this.decodeBodyAs<RoutesResponseDTO>().routes
                 assertEquals(mockRoutes.size, routes.size)
 
                 routes.forEach { route ->
@@ -184,7 +184,7 @@ class RoutesIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val routes = this.decodeBodyAs<RoutesResponse>().routes
+                val routes = this.decodeBodyAs<RoutesResponseDTO>().routes
                 assertEquals(0, routes.size)
             }
     }
@@ -194,7 +194,7 @@ class RoutesIntegrationTests : IntegrationTests() {
     @Test
     fun `Get route by id`() {
         val mockData = db.execute { conn ->
-            val route = CreateRouteRequest(
+            val route = CreateRouteRequestDTO(
                 "Russia",
                 "Lisbon",
                 10.0

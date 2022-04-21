@@ -1,8 +1,8 @@
-package pt.isel.ls.sports.services.sections
+package pt.isel.ls.sports.services.sections.users
 
-import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponse
 import pt.isel.ls.sports.database.AppDB
-import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
+import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.AbstractServices
@@ -55,8 +55,8 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      *
      * @return list of user objects
      */
-    fun getAllUsers(): List<User> = db.execute { conn ->
-        db.users.getAllUsers(conn)
+    fun getAllUsers(skip: Int, limit: Int): UsersResponse = db.execute { conn ->
+        db.users.getAllUsers(conn, skip, limit)
     }
 
     /**
@@ -66,11 +66,11 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      *
      * @return list of activities made from a user
      */
-    fun getUserActivities(uid: Int): List<Activity> {
+    fun getUserActivities(uid: Int, skip: Int, limit: Int): ActivitiesResponse {
         validateUid(uid)
 
         return db.execute { conn ->
-            db.activities.getUserActivities(conn, uid)
+            db.activities.getUserActivities(conn, uid, skip, limit)
         }
     }
 }

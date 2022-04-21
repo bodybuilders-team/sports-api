@@ -74,13 +74,13 @@ class SportsServicesTests : AppServicesTests() {
         val sport2 = Sport(2, "Powerlifting", 1, "Get big")
         val sport3 = Sport(3, "Basketball", 1, "Shoot a ball through a hoop")
 
-        assertEquals(listOf(sport1, sport2, sport3), services.sports.getAllSports())
+        assertEquals(listOf(sport1, sport2, sport3), services.sports.getAllSports(0, 10).sports)
     }
 
     @Test
     fun `getAllSports with no created sports returns empty list`() {
 
-        assertEquals(emptyList(), services.sports.getAllSports())
+        assertEquals(emptyList(), services.sports.getAllSports(0, 10).sports)
     }
 
 // getSportActivities
@@ -93,7 +93,7 @@ class SportsServicesTests : AppServicesTests() {
 
         db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
-        val activities = services.sports.getSportActivities(1)
+        val activities = services.sports.getSportActivities(1, 0, 10).activities
 
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),

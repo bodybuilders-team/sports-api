@@ -76,7 +76,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests() {
 
         source.activities[1] = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 
-        val activities = db.activities.getSportActivities(conn, 1)
+        val activities = db.activities.getSportActivities(conn, 1, 0, 10).activities
 
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
@@ -93,7 +93,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests() {
 
         source.activities[1] = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 
-        val activities = db.activities.getUserActivities(conn, 1)
+        val activities = db.activities.getUserActivities(conn, 1, 0, 10).activities
 
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
@@ -118,7 +118,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests() {
             rid = 1,
             0,
             10
-        )
+        ).activities
 
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
@@ -146,7 +146,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests() {
             rid = 1,
             skip = 0,
             limit = 10
-        )
+        ).users
 
         assertEquals(
             listOf(

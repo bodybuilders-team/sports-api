@@ -32,9 +32,11 @@ class RoutesMemoryDB(private val source: AppMemoryDBSource) : RoutesDB {
 
     override fun getAllRoutes(
         conn: ConnectionDB,
-    ): List<Route> {
-        return source.routes.values.toList()
-    }
+        skip: Int,
+        limit: Int
+    ): RoutesResponse = RoutesResponse(
+        source.routes.values.toList(), 0
+    )
 
     override fun hasRoute(
         conn: ConnectionDB,

@@ -41,7 +41,7 @@ inline fun runAndCatch(block: () -> Response): Response =
     } catch (error: SerializationException) {
 
         Logger.warn(error.toString())
-        AppException.BadRequest(error.message).toResponse()
+        AppException.BadRequest(error.localizedMessage).toResponse()
     } catch (error: AppException.DatabaseError) {
 
         Logger.error("${error.extraInfo}\n${error.stackTraceToString()}")

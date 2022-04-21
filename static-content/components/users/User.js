@@ -1,5 +1,6 @@
 import {div, h1, h3} from "../../js/dom/domTags.js";
 import Activities from "../activities/Activities.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * User details page.
@@ -9,7 +10,7 @@ import Activities from "../activities/Activities.js";
  */
 async function User(state, props) {
     if (props == null)
-        throw new Error("User props must not be null");
+        throw new LogError("User props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},
@@ -17,7 +18,7 @@ async function User(state, props) {
         div(
             {class: "card user_card col-6"},
             div(
-                {class: "card-body"},
+                {class: "card-body col justify-content-center"},
                 h3("Username: ", props.name),
                 h3("Email: ", props.email),
                 h3("Activities:"),

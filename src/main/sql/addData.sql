@@ -1,3 +1,4 @@
+BEGIN;
 INSERT INTO users(name, email)
 VALUES ('André Jesus', 'A48280@alunos.isel.pt'),
        ('André Páscoa', 'A48089@alunos.isel.pt'),
@@ -13,6 +14,7 @@ VALUES ('Soccer', 'Kick a ball to score a goal', 1),
        ('Powerlifting', 'Get big', 2),
        ('Basketball', 'Shoot a ball through a hoop', 3);
 
+
 INSERT INTO routes(start_location, end_location, distance, uid)
 VALUES ('Odivelas', 'Chelas', 150, 1),
        ('Chelas', 'Odivelas', 150, 2),
@@ -22,3 +24,4 @@ INSERT INTO activities(date, duration, uid, sid, rid)
 VALUES (date '2022-11-20', '23:44:59.903', 1, 1, NULL),
        (date '2022-11-21', '10:10:10.100', 2, 2, 1),
        (date '2022-11-21', '20:23:55.263', 3, 2, 1);
+COMMIT;

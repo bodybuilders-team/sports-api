@@ -1,5 +1,6 @@
 import apiFetch from "../../js/apiFetch.js";
 import Activity from "../../components/activities/Activity.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * Activity details page.
@@ -8,7 +9,7 @@ import Activity from "../../components/activities/Activity.js";
  */
 async function ActivityPage(state) {
     if (state.params.id === undefined)
-        throw new Error("User id must be defined")
+        throw new LogError("User id must be defined")
 
     const id = state.params.id;
     const activity = await apiFetch(`/activities/${id}`);

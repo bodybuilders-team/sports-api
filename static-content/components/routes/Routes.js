@@ -1,4 +1,5 @@
-import {a, div, h1, h5} from "../../js/dom/domTags.js";
+import {a, div, h5} from "../../js/dom/domTags.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * Routes component.
@@ -8,11 +9,10 @@ import {a, div, h1, h5} from "../../js/dom/domTags.js";
  */
 async function Routes(state, props) {
     if (props == null)
-        throw new Error("Routes props must not be null");
+        throw new LogError("Routes props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},
-        h1({class: "app_icon"}, "Routes"),
         ...props.routes.map(route =>
             div(
                 {class: "card user_card col-6"},

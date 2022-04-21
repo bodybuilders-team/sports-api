@@ -43,17 +43,26 @@ class UsersPostgresDB : UsersDB {
             throw AppException.NotFound("User with id $uid not found")
     }
 
-    override fun getAllUsers(conn: ConnectionDB): List<User> {
+    override fun getAllUsers(
+        conn: ConnectionDB,
+        skip: Int,
+        limit: Int
+    ): UsersResponse {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
                 """
-                SELECT *
+                SELECT *, count(*) OVER() AS totalCount
                 FROM users
+                OFFSET ?
+                LIMIT ?
                 """.trimIndent()
             )
 
-        return getUsers(stm)
+        stm.setInt(1, skip)
+        stm.setInt(2, limit)
+
+        return getUsersResponse(stm)
     }
 
     override fun hasUserWithEmail(conn: ConnectionDB, email: String): Boolean {
@@ -88,14 +97,16 @@ class UsersPostgresDB : UsersDB {
          *
          * @return list of users
          */
-        fun getUsers(stm: PreparedStatement): MutableList<User> {
+        fun getUsersResponse(stm: PreparedStatement): UsersResponse {
             val rs = stm.executeQuery()
             val users = mutableListOf<User>()
+            var total = 0
 
-            while (rs.next())
+            while (rs.next()) {
+                total = rs.getInt("totalCount")
                 users.add(getUserFromTable(rs))
-
-            return users
+            }
+            return UsersResponse(users, total)
         }
 
         /**

@@ -36,7 +36,11 @@ interface SportsDB {
      *
      * @return list of sport objects
      */
-    fun getAllSports(conn: ConnectionDB): List<Sport>
+    fun getAllSports(
+        conn: ConnectionDB,
+        skip: Int,
+        limit: Int
+    ): SportsResponse
 
     /**
      * Verifies if a sport exists with the given [sid]

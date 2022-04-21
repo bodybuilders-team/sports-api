@@ -4,12 +4,12 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.connection.getPostgresConnection
-import pt.isel.ls.sports.database.sections.users.UsersPostgresDB.Companion.getUsers
+import pt.isel.ls.sports.database.sections.users.UsersPostgresDB.Companion.getUsersResponse
+import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.database.utils.getSQLDate
 import pt.isel.ls.sports.database.utils.setIntOrNull
 import pt.isel.ls.sports.domain.Activity
-import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.utils.toDTOString
 import pt.isel.ls.sports.utils.toDuration
@@ -88,15 +88,15 @@ class ActivitiesPostgresDB : ActivitiesDB {
         rid: Int?,
         skip: Int,
         limit: Int
-    ): List<Activity> {
+    ): ActivitiesResponse {
         val queryDate = if (date != null) "AND date = ?" else ""
-        val queryRid = if (date != null) "AND rid = ?" else ""
+        val queryRid = if (rid != null) "AND rid = ?" else ""
 
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
                 """
-                SELECT *
+                SELECT *, count(*) OVER() AS totalCount
                 FROM activities
                 WHERE sid = ? $queryDate  $queryRid
                 ORDER BY duration ${orderBy.str}
@@ -117,7 +117,7 @@ class ActivitiesPostgresDB : ActivitiesDB {
         stm.setInt(++counter, skip)
         stm.setInt(++counter, limit)
 
-        return getActivities(stm)
+        return getActivitiesResponse(stm)
     }
 
     override fun searchUsersByActivity(
@@ -126,12 +126,12 @@ class ActivitiesPostgresDB : ActivitiesDB {
         rid: Int,
         skip: Int,
         limit: Int
-    ): List<User> {
+    ): UsersResponse {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
                 """
-                SELECT *
+                SELECT *, count(*) OVER() AS totalCount
                 FROM users
                 JOIN (
                 SELECT uid
@@ -148,43 +148,56 @@ class ActivitiesPostgresDB : ActivitiesDB {
         stm.setInt(3, skip)
         stm.setInt(4, limit)
 
-        return getUsers(stm)
+        return getUsersResponse(stm)
     }
 
     override fun getSportActivities(
         conn: ConnectionDB,
-        sid: Int
-    ): List<Activity> {
+        sid: Int,
+        skip: Int,
+        limit: Int
+    ): ActivitiesResponse {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
                 """
-                SELECT *
+                SELECT *, count(*) OVER() AS totalCount
                 FROM activities
                 WHERE sid = ?
+                OFFSET ?
+                LIMIT ?
                 """.trimIndent()
             )
-        stm.setInt(1, sid)
 
-        return getActivities(stm)
+        stm.setInt(1, sid)
+        stm.setInt(2, skip)
+        stm.setInt(3, limit)
+
+        return getActivitiesResponse(stm)
     }
 
     override fun getUserActivities(
         conn: ConnectionDB,
-        uid: Int
-    ): List<Activity> {
+        uid: Int,
+        skip: Int,
+        limit: Int
+    ): ActivitiesResponse {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
                 """
-                SELECT *
+                SELECT *, count(*) OVER() AS totalCount
                 FROM activities
                 WHERE uid = ?
+                OFFSET ?
+                LIMIT ?
                 """.trimIndent()
             )
         stm.setInt(1, uid)
+        stm.setInt(2, skip)
+        stm.setInt(3, limit)
 
-        return getActivities(stm)
+        return getActivitiesResponse(stm)
     }
 
     override fun hasActivity(
@@ -206,16 +219,18 @@ class ActivitiesPostgresDB : ActivitiesDB {
          *
          * @return list of activities
          */
-        private fun getActivities(stm: PreparedStatement): MutableList<Activity> {
+        private fun getActivitiesResponse(stm: PreparedStatement): ActivitiesResponse {
             val rs = stm.executeQuery()
             val activities = mutableListOf<Activity>()
 
+            var totalCount = 0
             while (rs.next()) {
+                totalCount = rs.getInt("totalCount")
                 activities.add(
                     getActivityFromTable(rs)
                 )
             }
-            return activities
+            return ActivitiesResponse(activities, totalCount)
         }
 
         /**

@@ -64,14 +64,14 @@ class UsersPostgresDBTests : AppPostgresDBTests() {
             User(3, "Nyckollas Brandão", "A48287@alunos.isel.pt")
         )
 
-        assertEquals(users, db.users.getAllUsers(conn))
+        assertEquals(users, db.users.getAllUsers(conn, 0, 10).users)
     }
 
     @Test
     fun `getAllUsers with no created users returns empty list`() {
         db.reset()
         db.execute { conn ->
-            assertEquals(emptyList(), db.users.getAllUsers(conn))
+            assertEquals(emptyList(), db.users.getAllUsers(conn, 0, 10).users)
         }
     }
 
@@ -111,7 +111,7 @@ class UsersPostgresDBTests : AppPostgresDBTests() {
 
     @Test
     fun `getUserActivities returns the activities list`(): Unit = db.execute { conn ->
-        val activities = db.activities.getUserActivities(conn, 1)
+        val activities = db.activities.getUserActivities(conn, 1, 0, 10).activities
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
             activities

@@ -3,9 +3,9 @@ package pt.isel.ls.sports.database.sections.activities
 import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.AppMemoryDBSource
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
-import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.errors.AppException
 import kotlin.time.Duration
 
@@ -42,20 +42,23 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         rid: Int?,
         skip: Int,
         limit: Int
-    ) =
-        source.activities
-            .filter {
-                it.value.sid == sid &&
-                    (date == null || it.value.date == date) &&
-                    (rid == null || it.value.rid == rid)
-            }
-            .values.toList()
-            .sortedWith(
-                if (orderBy == SortOrder.ASCENDING)
-                    compareBy { it.duration }
-                else
-                    compareByDescending { it.duration }
-            )
+    ): ActivitiesResponse =
+        ActivitiesResponse(
+            source.activities
+                .filter {
+                    it.value.sid == sid &&
+                        (date == null || it.value.date == date) &&
+                        (rid == null || it.value.rid == rid)
+                }
+                .values.toList()
+                .sortedWith(
+                    if (orderBy == SortOrder.ASCENDING)
+                        compareBy { it.duration }
+                    else
+                        compareByDescending { it.duration }
+                ),
+            0
+        )
 
     override fun searchUsersByActivity(
         conn: ConnectionDB,
@@ -63,28 +66,38 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         rid: Int,
         skip: Int,
         limit: Int
-    ): List<User> {
-        return source.activities
-            .filter {
-                it.value.sid == sid && it.value.rid == rid
-            }
-            .values.toList()
-            .sortedWith(
-                compareBy { it.duration }
-            )
-            .map {
-                source.users[it.uid] ?: throw AppException.NotFound("User with id ${it.uid} not found")
-            }
-            .distinct()
-    }
+    ): UsersResponse =
+        UsersResponse(
+            source.activities
+                .filter {
+                    it.value.sid == sid && it.value.rid == rid
+                }
+                .values.toList()
+                .sortedWith(
+                    compareBy { it.duration }
+                )
+                .map {
+                    source.users[it.uid] ?: throw AppException.NotFound("User with id ${it.uid} not found")
+                }
+                .distinct(),
+            0
+        )
 
-    override fun getSportActivities(conn: ConnectionDB, sid: Int): List<Activity> {
-        return source.activities.filter { it.value.sid == sid }.values.toList()
-    }
+    override fun getSportActivities(
+        conn: ConnectionDB,
+        sid: Int,
+        skip: Int,
+        limit: Int
+    ): ActivitiesResponse =
+        ActivitiesResponse(source.activities.filter { it.value.sid == sid }.values.toList(), 0)
 
-    override fun getUserActivities(conn: ConnectionDB, uid: Int): List<Activity> {
-        return source.activities.filter { it.value.uid == uid }.values.toList()
-    }
+    override fun getUserActivities(
+        conn: ConnectionDB,
+        uid: Int,
+        skip: Int,
+        limit: Int
+    ): ActivitiesResponse =
+        ActivitiesResponse(source.activities.filter { it.value.uid == uid }.values.toList(), 0)
 
     override fun hasActivity(conn: ConnectionDB, aid: Int): Boolean =
         source.activities.containsKey(aid)

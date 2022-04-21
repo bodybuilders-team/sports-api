@@ -1,5 +1,6 @@
 import {div, h1, h3} from "../../js/dom/domTags.js";
 import Activities from "../activities/Activities.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * Sport details page.
@@ -9,7 +10,7 @@ import Activities from "../activities/Activities.js";
  */
 async function Sport(state, props) {
     if (props == null)
-        throw new Error("Sport props must not be null");
+        throw new LogError("Sport props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},

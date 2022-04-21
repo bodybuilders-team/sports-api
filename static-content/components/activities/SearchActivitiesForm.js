@@ -1,5 +1,6 @@
-import {button, div, form, h1, hr, input, label, option, select} from "../../js/dom/domTags.js";
+import {br, button, div, form, h1, hr, input, label, option, select} from "../../js/dom/domTags.js";
 import Activities from "./Activities.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * SearchActivitiesForm component.
@@ -9,7 +10,7 @@ import Activities from "./Activities.js";
  */
 async function SearchActivitiesForm(state, props) {
     if (props == null)
-        throw new Error("SearchActivitiesForm props must not be null");
+        throw new LogError("SearchActivitiesForm props must not be null");
 
     return div(
         h1({class: "app_icon"}, "Activities"),
@@ -22,7 +23,7 @@ async function SearchActivitiesForm(state, props) {
                 div(
                     label({for: "sid", class: "col-form-label"}, "Sport Id"),
                     input({
-                        type: "number", min: "0", id: "sid",
+                        type: "number", min: "1", id: "sid",
                         class: "form-control",
                         value: (props.activitiesProps != null) ? props.activitiesProps.sid : "",
                         required: true
@@ -30,7 +31,7 @@ async function SearchActivitiesForm(state, props) {
 
                     label({for: "rid", class: "form-label"}, "Route Id"),
                     input({
-                        type: "number", min: "0", id: "rid",
+                        type: "number", min: "1", id: "rid",
                         value: (props.activitiesProps != null) ? props.activitiesProps.rid : "",
                         class: "form-control"
                     }),
@@ -40,16 +41,16 @@ async function SearchActivitiesForm(state, props) {
                         {id: "orderBy", class: "form-control", required: true},
                         option({
                             value: "",
-                            selected: (props.activitiesProps == null)
+                            selected: (props.activitiesProps == null) ? "" : undefined
                         }, "Select a order to display the results"),
                         option({
                                 value: "ascending",
-                                selected: (props.activitiesProps != null && props.activitiesProps.orderBy === "ascending")
+                                selected: (props.activitiesProps != null && props.activitiesProps.orderBy === "ascending") ? "" : undefined
                             },
                             "Ascending"),
                         option({
                             value: "descending",
-                            selected: (props.activitiesProps != null && props.activitiesProps.orderBy === "descending")
+                            selected: (props.activitiesProps != null && props.activitiesProps.orderBy === "descending") ? "" : undefined
                         }, "Descending")
                     ),
 
@@ -59,6 +60,7 @@ async function SearchActivitiesForm(state, props) {
                         value: (props.activitiesProps != null) ? props.activitiesProps.date : ""
                     })
                 ),
+                br(),
                 button({type: "submit", class: "btn btn-primary"}, "Search")
             )
         )

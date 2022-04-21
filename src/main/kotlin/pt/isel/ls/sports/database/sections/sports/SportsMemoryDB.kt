@@ -21,9 +21,12 @@ class SportsMemoryDB(private val source: AppMemoryDBSource) : SportsDB {
         return source.sports[sid] ?: throw AppException.NotFound("Sport with id $sid not found")
     }
 
-    override fun getAllSports(conn: ConnectionDB): List<Sport> {
-        return source.sports.values.toList()
-    }
+    override fun getAllSports(
+        conn: ConnectionDB,
+        skip: Int,
+        limit: Int
+    ): SportsResponse =
+        SportsResponse(source.sports.values.toList(), 0)
 
     override fun hasSport(conn: ConnectionDB, sid: Int): Boolean =
         source.sports.containsKey(sid)

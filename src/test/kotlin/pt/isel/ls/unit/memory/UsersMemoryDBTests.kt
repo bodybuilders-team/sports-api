@@ -57,12 +57,12 @@ class UsersMemoryDBTests : AppMemoryDBTests() {
         source.users[2] = user2
         source.users[3] = user3
 
-        assertEquals(listOf(user1, user2, user3), db.users.getAllUsers(conn))
+        assertEquals(listOf(user1, user2, user3), db.users.getAllUsers(conn, 0, 10).users)
     }
 
     @Test
     fun `getAllUsers with no created users returns empty list`(): Unit = db.execute { conn ->
-        assertEquals(emptyList(), db.users.getAllUsers(conn))
+        assertEquals(emptyList(), db.users.getAllUsers(conn, 0, 10).users)
     }
 
     // createUserToken

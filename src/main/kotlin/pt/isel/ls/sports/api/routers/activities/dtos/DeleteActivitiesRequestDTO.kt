@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
  * @property activityIds array of identifiers of the activities to be deleted.
  */
 @Serializable
-data class DeleteActivitiesRequest(
+data class DeleteActivitiesRequestDTO(
     val activityIds: Set<Int>
 )

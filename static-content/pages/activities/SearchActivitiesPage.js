@@ -1,7 +1,8 @@
 import SearchActivitiesForm from "../../components/activities/SearchActivitiesForm.js";
 import apiFetch from "../../js/apiFetch.js";
 import Activities from "../../components/activities/Activities.js";
-import {div} from "../../js/dom/domTags.js";
+import {br, div} from "../../js/dom/domTags.js";
+import SkipLimitPaginate from "../../components/pagination/SkipPagination.js";
 
 /**
  * Search activities page.
@@ -9,17 +10,18 @@ import {div} from "../../js/dom/domTags.js";
  * @returns search activities page
  */
 async function SearchActivitiesPage(state) {
+    const activitiesProps = getActivitiesProps()
 
-    const activitiesProps = getActivitiesProps();
-    const activities = await getActivities(activitiesProps);
+    let {skip, limit, sid, orderBy, rid, date} = activitiesProps || {};
+
+    const activitiesResponse = await getActivities(activitiesProps);
+
+    skip = parseInt(skip) || 0;
+    limit = parseInt(limit) || 10;
+
 
     function getActivitiesProps() {
-        const activitiesProps = {};
-        const searchParams = new URLSearchParams(window.location.search);
-        activitiesProps.sid = searchParams.get("sid");
-        activitiesProps.orderBy = searchParams.get("orderBy");
-        activitiesProps.rid = searchParams.get("rid");
-        activitiesProps.date = searchParams.get("date");
+        const activitiesProps = state.query || {}
 
         return (activitiesProps.sid != null && activitiesProps.orderBy != null)
             ? activitiesProps
@@ -28,16 +30,17 @@ async function SearchActivitiesPage(state) {
 
     function getActivities(activitiesProps) {
         if (activitiesProps == null)
-            return null;
+            return null
 
         const searchParams = new URLSearchParams();
         searchParams.set("sid", activitiesProps.sid);
         searchParams.set("orderBy", activitiesProps.orderBy);
         if (activitiesProps.rid != null) searchParams.set("rid", activitiesProps.rid);
         if (activitiesProps.date != null) searchParams.set("date", activitiesProps.date);
+        if (activitiesProps.skip != null) searchParams.set("skip", activitiesProps.skip);
+        if (activitiesProps.limit != null) searchParams.set("limit", activitiesProps.limit);
 
         return apiFetch("/activities?" + searchParams.toString())
-            .then(json => json.activities);
     }
 
     /**
@@ -59,15 +62,39 @@ async function SearchActivitiesPage(state) {
         if (rid !== "") searchParams.set("rid", rid);
         if (date !== "") searchParams.set("date", date);
 
-        window.location.search = searchParams.toString();
+        window.location.href = "#activities?" + searchParams.toString();
+    }
+
+    function onPageChange(page) {
+        const skip = (page - 1) * limit;
+
+        const searchParams = new URLSearchParams();
+        searchParams.set("sid", sid);
+        searchParams.set("orderBy", orderBy);
+        if (rid != null) searchParams.set("rid", rid);
+        if (date != null) searchParams.set("date", date);
+        searchParams.set("skip", skip);
+        searchParams.set("limit", limit);
+
+        window.location.href = "#activities?" + searchParams.toString();
     }
 
     return div(
         SearchActivitiesForm(state, {onSubmit: searchActivities, activitiesProps}),
-        (activities != null)
-            ? Activities(state, {activities})
-            : undefined,
+        br(),
+        (activitiesResponse != null && activitiesResponse.activities.length > 0)
+            ?
+            div(
+                Activities(state, {activities: activitiesResponse.activities}),
+                SkipLimitPaginate(state, {
+                    skip,
+                    limit,
+                    totalCount: activitiesResponse.totalCount,
+                    onPageChange
+                }),
+            ) : undefined,
     );
+
 }
 
 export default SearchActivitiesPage;

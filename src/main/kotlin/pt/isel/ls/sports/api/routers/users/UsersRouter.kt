@@ -9,17 +9,16 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.IRouter
-import pt.isel.ls.sports.api.routers.IRouterCompanion
-import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponse
-import pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO
-import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest
+import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequestDTO
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponseDTO
 import pt.isel.ls.sports.api.routers.users.dtos.UserDTO
-import pt.isel.ls.sports.api.routers.users.dtos.UsersResponse
+import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.api.utils.runAndCatch
-import pt.isel.ls.sports.services.sections.UsersServices
+import pt.isel.ls.sports.services.sections.users.UsersServices
 import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
@@ -30,8 +29,11 @@ import pt.isel.ls.sports.utils.toIntOrThrow
  */
 class UsersRouter(private val services: UsersServices) : IRouter {
 
-    companion object : IRouterCompanion<UsersServices> {
-        override fun routes(services: UsersServices) = UsersRouter(services).routes
+    companion object {
+        const val DEFAULT_SKIP = 0
+        const val DEFAULT_LIMIT = 10
+
+        fun routes(services: UsersServices) = UsersRouter(services).routes
     }
 
     override val routes = routes(
@@ -47,10 +49,10 @@ class UsersRouter(private val services: UsersServices) : IRouter {
      * @return user creation HTTP response
      */
     private fun createUser(request: Request): Response = runAndCatch {
-        val userRequest = request.decodeBodyAs<CreateUserRequest>()
+        val userRequest = request.decodeBodyAs<CreateUserRequestDTO>()
         val userResponse = services.createNewUser(userRequest.name, userRequest.email)
 
-        return Response(CREATED).json(userResponse)
+        return Response(CREATED).json(CreateUserResponseDTO(userResponse))
     }
 
     /**
@@ -60,9 +62,11 @@ class UsersRouter(private val services: UsersServices) : IRouter {
      */
     @Suppress("UNUSED_PARAMETER")
     private fun getUsers(request: Request): Response = runAndCatch {
-        val users = services.getAllUsers()
+        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
+        val usersResponse = services.getAllUsers(skip, limit)
 
-        return Response(OK).json(UsersResponse(users.map { UserDTO(it) }))
+        return Response(OK).json(UsersResponseDTO(usersResponse))
     }
 
     /**
@@ -85,9 +89,11 @@ class UsersRouter(private val services: UsersServices) : IRouter {
      */
     private fun getUserActivities(request: Request): Response = runAndCatch {
         val uid = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }
+        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
 
-        val activities = services.getUserActivities(uid)
+        val activitiesResponse = services.getUserActivities(uid, skip, limit)
 
-        return Response(OK).json(ActivitiesResponse(activities.map { ActivityDTO(it) }))
+        return Response(OK).json(ActivitiesResponseDTO(activitiesResponse))
     }
 }

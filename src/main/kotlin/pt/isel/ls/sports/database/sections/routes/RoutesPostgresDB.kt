@@ -56,25 +56,33 @@ class RoutesPostgresDB : RoutesDB {
 
     override fun getAllRoutes(
         conn: ConnectionDB,
-    ): List<Route> {
+        skip: Int,
+        limit: Int
+    ): RoutesResponse {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
                 """
-                SELECT *
+                SELECT *, count(*) OVER() AS totalCount
                 FROM routes
+                OFFSET ?
+                LIMIT ?
                 """.trimIndent()
             )
+
+        stm.setInt(1, skip)
+        stm.setInt(2, limit)
 
         val rs = stm.executeQuery()
         val routes = mutableListOf<Route>()
 
-        while (rs.next())
-            routes.add(
-                getRouteFromTable(rs)
-            )
+        var totalCount = 0
+        while (rs.next()) {
+            totalCount = rs.getInt("totalCount")
+            routes.add(getRouteFromTable(rs))
+        }
 
-        return routes
+        return RoutesResponse(routes, totalCount)
     }
 
     override fun hasRoute(

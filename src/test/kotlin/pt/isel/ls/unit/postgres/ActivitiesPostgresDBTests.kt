@@ -74,7 +74,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests() {
             db.activities.searchActivities(
                 conn, sid = 2, SortOrder.DESCENDING, "2022-11-21".toLocalDate(), rid = 1,
                 0, 10
-            )
+            ).activities
 
         val mockActivities = listOf(
             Activity(
@@ -103,7 +103,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests() {
             db.activities.searchActivities(
                 conn, sid = 2, SortOrder.ASCENDING, "2022-11-21".toLocalDate(), rid = 1,
                 0, 10
-            )
+            ).activities
 
         val mockActivities = listOf(
             Activity(
@@ -131,17 +131,17 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests() {
 
     @Test
     fun `searchUsersByActivity returns a list of users`(): Unit = db.execute { conn ->
-        val activities =
+        val users =
             db.activities.searchUsersByActivity(
                 conn, sid = 2, rid = 1,
                 skip = 0, limit = 10
-            )
+            ).users
 
-        val mockActivities = listOf(
+        val mockUsers = listOf(
             User(id = 2, name = "André Páscoa", email = "A48089@alunos.isel.pt"),
             User(id = 3, name = "Nyckollas Brandão", email = "A48287@alunos.isel.pt"),
         )
-        assertEquals(mockActivities, activities)
+        assertEquals(mockUsers, users)
     }
 
     // TODO: 16/04/2022 Skip and limit tests

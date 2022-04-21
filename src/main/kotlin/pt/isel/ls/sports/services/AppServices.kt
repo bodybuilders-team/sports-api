@@ -1,10 +1,10 @@
 package pt.isel.ls.sports.services
 
 import pt.isel.ls.sports.database.AppDB
-import pt.isel.ls.sports.services.sections.ActivitiesServices
-import pt.isel.ls.sports.services.sections.RoutesServices
-import pt.isel.ls.sports.services.sections.SportsServices
-import pt.isel.ls.sports.services.sections.UsersServices
+import pt.isel.ls.sports.services.sections.activities.ActivitiesServices
+import pt.isel.ls.sports.services.sections.routes.RoutesServices
+import pt.isel.ls.sports.services.sections.sports.SportsServices
+import pt.isel.ls.sports.services.sections.users.UsersServices
 
 /**
  * Services, an aggregate of all services sections.

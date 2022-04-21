@@ -67,11 +67,11 @@ class RoutesMemoryDBTests : AppMemoryDBTests() {
         source.routes[2] = route1
         source.routes[3] = route2
 
-        assertEquals(listOf(route0, route1, route2), db.routes.getAllRoutes(conn))
+        assertEquals(listOf(route0, route1, route2), db.routes.getAllRoutes(conn, 0, 10).routes)
     }
 
     @Test
     fun `getAllRoutes with no created routes returns empty list`(): Unit = db.execute { conn ->
-        assertEquals(emptyList(), db.routes.getAllRoutes(conn))
+        assertEquals(emptyList(), db.routes.getAllRoutes(conn, 0, 10).routes)
     }
 }

@@ -35,7 +35,11 @@ interface RoutesDB {
      *
      * @return list of route objects
      */
-    fun getAllRoutes(conn: ConnectionDB): List<Route>
+    fun getAllRoutes(
+        conn: ConnectionDB,
+        skip: Int,
+        limit: Int
+    ): RoutesResponse
 
     /**
      * Verifies if a route exists with the given [rid]

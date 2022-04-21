@@ -1,4 +1,5 @@
 import {a, div, h1, h3, h5} from "../../js/dom/domTags.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * Activity details component.
@@ -8,7 +9,7 @@ import {a, div, h1, h3, h5} from "../../js/dom/domTags.js";
  */
 async function Activity(state, props) {
     if (props == null)
-        throw new Error("Activity props must not be null");
+        throw new LogError("Activity props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},

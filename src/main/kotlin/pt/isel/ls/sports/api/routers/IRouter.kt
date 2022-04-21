@@ -10,12 +10,3 @@ import org.http4k.routing.RoutingHttpHandler
 interface IRouter {
     val routes: RoutingHttpHandler
 }
-
-interface IRouterCompanion<T> {
-    /**
-     * Returns the router routes.
-     * @param services router services
-     * @return router routes
-     */
-    fun routes(services: T): RoutingHttpHandler
-}

@@ -63,14 +63,14 @@ class SportsPostgresDBTests : AppPostgresDBTests() {
             Sport(3, "Basketball", 3, "Shoot a ball through a hoop")
         )
 
-        assertEquals(sports, db.sports.getAllSports(conn))
+        assertEquals(sports, db.sports.getAllSports(conn, 0, 10).sports)
     }
 
     @Test
     fun `getAllSports with no created sports returns empty list`() {
         db.reset()
         db.execute { conn ->
-            assertEquals(emptyList(), db.sports.getAllSports(conn))
+            assertEquals(emptyList(), db.sports.getAllSports(conn, 0, 10).sports)
         }
     }
 
@@ -78,7 +78,7 @@ class SportsPostgresDBTests : AppPostgresDBTests() {
 
     @Test
     fun `getSportActivities returns the activities list`(): Unit = db.execute { conn ->
-        val activities = db.activities.getSportActivities(conn, 1)
+        val activities = db.activities.getSportActivities(conn, 1, 0, 10).activities
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
             activities

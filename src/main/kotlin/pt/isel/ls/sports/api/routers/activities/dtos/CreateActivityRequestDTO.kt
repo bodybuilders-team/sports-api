@@ -12,7 +12,7 @@ import pt.isel.ls.sports.errors.AppException
  * @property rid unique identifier of the activity route (optional)
  */
 @Serializable
-data class CreateActivityRequest(
+data class CreateActivityRequestDTO(
     val date: String,
     val duration: String,
     val sid: Int,

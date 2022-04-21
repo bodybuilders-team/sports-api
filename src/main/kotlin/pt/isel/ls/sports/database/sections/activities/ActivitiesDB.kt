@@ -2,9 +2,9 @@ package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
-import pt.isel.ls.sports.domain.User
 import kotlin.time.Duration
 
 /**
@@ -69,7 +69,7 @@ interface ActivitiesDB {
         rid: Int? = null,
         skip: Int,
         limit: Int
-    ): List<Activity>
+    ): ActivitiesResponse
 
     /**
      * Get a list with the users that have an activity, given the parameters.
@@ -88,7 +88,7 @@ interface ActivitiesDB {
         rid: Int,
         skip: Int,
         limit: Int
-    ): List<User>
+    ): UsersResponse
 
     /**
      * Get all the activities of a sport.
@@ -98,7 +98,12 @@ interface ActivitiesDB {
      *
      * @return list of identifiers of activities of a sport
      */
-    fun getSportActivities(conn: ConnectionDB, sid: Int): List<Activity>
+    fun getSportActivities(
+        conn: ConnectionDB,
+        sid: Int,
+        skip: Int,
+        limit: Int
+    ): ActivitiesResponse
 
     /**
      * Get all the activities made from a user.
@@ -106,9 +111,14 @@ interface ActivitiesDB {
      * @param conn database Connection
      * @param uid user's unique identifier
      *
-     * @return list of identifiers of activities made from a user
+     * @return list of activities made from a user
      */
-    fun getUserActivities(conn: ConnectionDB, uid: Int): List<Activity>
+    fun getUserActivities(
+        conn: ConnectionDB,
+        uid: Int,
+        skip: Int,
+        limit: Int
+    ): ActivitiesResponse
 
     /**
      * Verifies if an activity exists with the given [aid]

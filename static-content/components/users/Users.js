@@ -1,4 +1,5 @@
-import {a, div, h1, h5} from "../../js/dom/domTags.js";
+import {a, div, h5} from "../../js/dom/domTags.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * Users page.
@@ -8,11 +9,10 @@ import {a, div, h1, h5} from "../../js/dom/domTags.js";
  */
 async function Users(state, props) {
     if (props == null)
-        throw new Error("Users props must not be null");
+        throw new LogError("Users props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},
-        h1({class: "app_icon"}, "Users"),
         ...props.users.map(user =>
             div(
                 {class: "card user_card col-6"},

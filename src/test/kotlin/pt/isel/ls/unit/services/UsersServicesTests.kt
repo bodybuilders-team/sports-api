@@ -66,13 +66,13 @@ class UsersServicesTests : AppServicesTests() {
         db.users.createNewUser(conn, "André Jesus", "andrejesus@mail.com")
         db.users.createNewUser(conn, "André Páscoa", "andrepascoa@mail.com")
 
-        assertEquals(listOf(user1, user2, user3), services.users.getAllUsers())
+        assertEquals(listOf(user1, user2, user3), services.users.getAllUsers(0, 10).users)
     }
 
     @Test
     fun `getAllUsers with no created users returns empty list`() {
 
-        assertEquals(emptyList(), services.users.getAllUsers())
+        assertEquals(emptyList(), services.users.getAllUsers(0, 10).users)
     }
 
     @Test
@@ -96,7 +96,7 @@ class UsersServicesTests : AppServicesTests() {
 
         db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
 
-        val activities = services.users.getUserActivities(1)
+        val activities = services.users.getUserActivities(1, 0, 10).activities
 
         assertEquals(
             listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),

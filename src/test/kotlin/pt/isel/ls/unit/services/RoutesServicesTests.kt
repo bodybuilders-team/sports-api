@@ -60,12 +60,12 @@ class RoutesServicesTests : AppServicesTests() {
         db.routes.createNewRoute(conn, "Chelas", "Odivelas", 150, 1)
         db.routes.createNewRoute(conn, "Lisboa", "Chelas", 150, 1)
 
-        assertEquals(listOf(route0, route1, route2), services.routes.getAllRoutes())
+        assertEquals(listOf(route0, route1, route2), services.routes.getAllRoutes(0, 10).routes)
     }
 
     @Test
     fun `getAllRoutes with no created routes returns empty list`() {
 
-        assertEquals(emptyList(), services.routes.getAllRoutes())
+        assertEquals(emptyList(), services.routes.getAllRoutes(0, 10).routes)
     }
 }

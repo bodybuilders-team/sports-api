@@ -1,4 +1,5 @@
 import {div, h1, h3} from "../../js/dom/domTags.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * Route details component.
@@ -8,7 +9,7 @@ import {div, h1, h3} from "../../js/dom/domTags.js";
  */
 async function Route(state, props) {
     if (props == null)
-        throw new Error("Route props must not be null");
+        throw new LogError("Route props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},

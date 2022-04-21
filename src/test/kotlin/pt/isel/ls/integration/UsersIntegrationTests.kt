@@ -4,12 +4,12 @@ import kotlinx.datetime.toLocalDate
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
-import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponse
-import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
-import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest
-import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponse
+import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
+import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequestDTO
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequestDTO
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponseDTO
 import pt.isel.ls.sports.api.routers.users.dtos.UserDTO
-import pt.isel.ls.sports.api.routers.users.dtos.UsersResponse
+import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.AppErrorDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.json
@@ -41,7 +41,7 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.CREATED, status)
 
-                val uid = this.decodeBodyAs<CreateUserResponse>().uid
+                val uid = this.decodeBodyAs<CreateUserResponseDTO>().uid
                 assertTrue(isValidId(uid))
 
                 db.execute { conn ->
@@ -102,8 +102,8 @@ class UsersIntegrationTests : IntegrationTests() {
     fun `Get all users`() {
         val mockUsers = db.execute { conn ->
             val users = listOf(
-                CreateUserRequest("Johnny", "JohnnyBoy@gmail.com"),
-                CreateUserRequest("Jesus", "JesusSenpai@gmail.com")
+                CreateUserRequestDTO("Johnny", "JohnnyBoy@gmail.com"),
+                CreateUserRequestDTO("Jesus", "JesusSenpai@gmail.com")
             ).associateBy {
                 db.users.createNewUser(conn, it.name, it.email)
             }
@@ -116,7 +116,7 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val users = this.decodeBodyAs<UsersResponse>().users
+                val users = this.decodeBodyAs<UsersResponseDTO>().users
                 assertEquals(users.size, users.size)
 
                 users.forEach { user ->
@@ -137,7 +137,7 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val users = this.decodeBodyAs<UsersResponse>().users
+                val users = this.decodeBodyAs<UsersResponseDTO>().users
                 assertEquals(0, users.size)
             }
     }
@@ -147,7 +147,7 @@ class UsersIntegrationTests : IntegrationTests() {
     @Test
     fun `Get user by id`() {
         val mockData = db.execute { conn ->
-            val user = CreateUserRequest("Johnny", "JohnnyBoy@gmail.com")
+            val user = CreateUserRequestDTO("Johnny", "JohnnyBoy@gmail.com")
             val uid = db.users.createNewUser(conn, user.name, user.email)
             object {
                 val uid = uid
@@ -205,8 +205,8 @@ class UsersIntegrationTests : IntegrationTests() {
             val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
 
             val activities = listOf(
-                CreateActivityRequest("2019-01-01", "23:59:59.555", sid),
-                CreateActivityRequest("2019-01-02", "20:59:59.555", sid)
+                CreateActivityRequestDTO("2019-01-01", "23:59:59.555", sid),
+                CreateActivityRequestDTO("2019-01-02", "20:59:59.555", sid)
             ).associateBy {
                 db.activities.createNewActivity(conn, uid, it.date.toLocalDate(), it.duration.toDuration(), it.sid)
             }
@@ -222,7 +222,7 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.OK, status)
 
-                val activities = this.decodeBodyAs<ActivitiesResponse>().activities
+                val activities = this.decodeBodyAs<ActivitiesResponseDTO>().activities
                 assertEquals(mockData.activities.size, activities.size)
 
                 activities.forEach { activity ->

@@ -11,14 +11,12 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.IRouter
-import pt.isel.ls.sports.api.routers.IRouterCompanion
-import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponse
+import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO
-import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
-import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityResponse
-import pt.isel.ls.sports.api.routers.activities.dtos.DeleteActivitiesRequest
-import pt.isel.ls.sports.api.routers.users.dtos.UserDTO
-import pt.isel.ls.sports.api.routers.users.dtos.UsersResponse
+import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequestDTO
+import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityResponseDTO
+import pt.isel.ls.sports.api.routers.activities.dtos.DeleteActivitiesRequestDTO
+import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.json
@@ -27,7 +25,7 @@ import pt.isel.ls.sports.api.utils.queryOrThrow
 import pt.isel.ls.sports.api.utils.runAndCatch
 import pt.isel.ls.sports.api.utils.tokenOrThrow
 import pt.isel.ls.sports.errors.AppException
-import pt.isel.ls.sports.services.sections.ActivitiesServices
+import pt.isel.ls.sports.services.sections.activities.ActivitiesServices
 import pt.isel.ls.sports.utils.toDuration
 import pt.isel.ls.sports.utils.toIntOrThrow
 
@@ -39,11 +37,11 @@ import pt.isel.ls.sports.utils.toIntOrThrow
  */
 class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
 
-    companion object : IRouterCompanion<ActivitiesServices> {
+    companion object {
         const val DEFAULT_SKIP = 0
         const val DEFAULT_LIMIT = 10
 
-        override fun routes(services: ActivitiesServices) = ActivitiesRouter(services).routes
+        fun routes(services: ActivitiesServices) = ActivitiesRouter(services).routes
     }
 
     override val routes = routes(
@@ -64,7 +62,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
     private fun createActivity(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
 
-        val activityReq = request.decodeBodyAs<CreateActivityRequest>()
+        val activityReq = request.decodeBodyAs<CreateActivityRequestDTO>()
 
         val aid = services.createNewActivity(
             token,
@@ -74,7 +72,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
             activityReq.rid
         )
 
-        return Response(CREATED).json(CreateActivityResponse(aid))
+        return Response(CREATED).json(CreateActivityResponseDTO(aid))
     }
 
     /**
@@ -115,7 +113,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
     private fun deleteActivities(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
 
-        val activityIds = request.decodeBodyAs<DeleteActivitiesRequest>().activityIds
+        val activityIds = request.decodeBodyAs<DeleteActivitiesRequestDTO>().activityIds
 
         services.deleteActivities(token, activityIds)
 
@@ -132,18 +130,19 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
         val sid = request.queryOrThrow("sid").toIntOrThrow { "Invalid Sport Id" }
         val orderBy = request.queryOrThrow("orderBy")
         val date = request.query("date")
-        val rid = request.query("rid")?.toInt()
-        val skip = request.query("skip")?.toInt() ?: DEFAULT_SKIP
-        val limit = request.query("limit")?.toInt() ?: DEFAULT_LIMIT
+
+        val rid = request.query("rid")?.toIntOrThrow()
+        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
 
         if (date != null && !ActivityDTO.isValidDate(date))
             throw AppException.InvalidArgument("Date must be in the format yyyy-mm-dd")
 
         val dateLDT = date?.toLocalDate()
 
-        val activities = services.searchActivities(sid, orderBy, dateLDT, rid, skip, limit)
+        val activitiesResponse = services.searchActivities(sid, orderBy, dateLDT, rid, skip, limit)
 
-        return Response(OK).json(ActivitiesResponse(activities.map { ActivityDTO(it) }))
+        return Response(OK).json(ActivitiesResponseDTO(activitiesResponse))
     }
 
     /**
@@ -155,11 +154,11 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
     private fun searchUsersByActivity(request: Request): Response = runAndCatch {
         val sid = request.queryOrThrow("sid").toIntOrThrow { "Invalid Sport Id" }
         val rid = request.queryOrThrow("rid").toIntOrThrow { "Invalid Route Id" }
-        val skip = request.query("skip")?.toInt() ?: DEFAULT_SKIP
-        val limit = request.query("limit")?.toInt() ?: DEFAULT_LIMIT
+        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
 
-        val users = services.searchUsersByActivity(sid, rid, skip, limit)
+        val usersResponse = services.searchUsersByActivity(sid, rid, skip, limit)
 
-        return Response(OK).json(UsersResponse(users.map { UserDTO(it) }))
+        return Response(OK).json(UsersResponseDTO(usersResponse))
     }
 }

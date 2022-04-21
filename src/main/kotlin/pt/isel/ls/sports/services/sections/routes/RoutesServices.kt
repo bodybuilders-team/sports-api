@@ -1,6 +1,7 @@
-package pt.isel.ls.sports.services.sections
+package pt.isel.ls.sports.services.sections.routes
 
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.sections.routes.RoutesResponse
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.AbstractServices
@@ -55,7 +56,7 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
      *
      * @return list of route objects
      */
-    fun getAllRoutes(): List<Route> = db.execute { conn ->
-        db.routes.getAllRoutes(conn)
+    fun getAllRoutes(skip: Int, limit: Int): RoutesResponse = db.execute { conn ->
+        db.routes.getAllRoutes(conn, skip, limit)
     }
 }

@@ -13,3 +13,7 @@ export function isAppError(error) {
         error.description !== undefined &&
         (errorLen === 4 ? error.extraInfo !== undefined : true);
 }
+
+export function LogError(...data) {
+    console.error(...data);
+}

@@ -1,5 +1,6 @@
 import apiFetch from "../../js/apiFetch.js";
 import User from "../../components/users/User.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * User details page.
@@ -8,7 +9,7 @@ import User from "../../components/users/User.js";
  */
 async function UserPage(state) {
     if (state.params.id === undefined)
-        throw new Error("User id must be defined")
+        throw new LogError("User id must be defined")
 
     const id = state.params.id;
     const user = await apiFetch(`/users/${id}`);

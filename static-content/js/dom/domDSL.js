@@ -6,6 +6,8 @@
  * @param children element children
  * @returns created element
  */
+import {LogError} from "../errorUtils.js";
+
 export async function createElement(tag, attributes, ...children) {
     const element = document.createElement(tag);
 
@@ -15,10 +17,15 @@ export async function createElement(tag, attributes, ...children) {
         appendChild(element, attributes);
     else if (attributes != null && typeof attributes === "object")
         setAttributes(element, attributes);
+    else if (attributes != null)
+        LogError("Invalid attributes for createElement");
 
     for (let child of children) {
-        if (child != null)
-            appendChild(element, await child);
+        child = await child;
+        if (child != null && (isElement(child) || typeof child === "string"))
+            appendChild(element, child);
+        else if (child != null)
+            throw new LogError("Invalid child:", child, "for element:", element);
     }
 
     return element;
@@ -34,15 +41,22 @@ function appendChild(element, child) {
 
 function setAttributes(element, attributes) {
     for (const attribute in attributes) {
+        if (attribute == null)
+            continue;
+
+        const value = attributes[attribute];
+        if (value == null)
+            continue
+
         switch (attribute) {
             case "onClick":
-                element.addEventListener("click", attributes[attribute]);
+                element.addEventListener("click", value);
                 break;
             case "onSubmit":
-                element.addEventListener("submit", attributes[attribute]);
+                element.addEventListener("submit", value);
                 break;
             default:
-                element.setAttribute(attribute, attributes[attribute]);
+                element.setAttribute(attribute, value);
         }
     }
 }

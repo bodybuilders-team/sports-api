@@ -24,9 +24,14 @@ class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
         source.users[uid]
             ?: throw AppException.NotFound("User with id $uid not found")
 
-    override fun getAllUsers(conn: ConnectionDB): List<User> {
-        return source.users.values.toList()
-    }
+    override fun getAllUsers(
+        conn: ConnectionDB,
+        skip: Int,
+        limit: Int
+    ): UsersResponse =
+        UsersResponse(
+            source.users.values.toList(), 0
+        )
 
     override fun hasUserWithEmail(conn: ConnectionDB, email: String): Boolean =
         source.users.values.any { it.email == email }

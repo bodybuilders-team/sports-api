@@ -72,25 +72,35 @@ class SportsPostgresDB : SportsDB {
      *
      * @return list of identifiers of all sports
      */
-    override fun getAllSports(conn: ConnectionDB): List<Sport> {
+    override fun getAllSports(
+        conn: ConnectionDB,
+        skip: Int,
+        limit: Int
+    ): SportsResponse {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
                 """
-                SELECT *
+                SELECT *, count(*) OVER() AS totalCount
                 FROM sports
+                OFFSET ?
+                LIMIT ?
                 """.trimIndent()
             )
+
+        stm.setInt(1, skip)
+        stm.setInt(2, limit)
 
         val rs = stm.executeQuery()
         val sports = mutableListOf<Sport>()
 
-        while (rs.next())
-            sports.add(
-                getSportFromTable(rs)
-            )
+        var totalCount = 0
+        while (rs.next()) {
+            totalCount = rs.getInt("totalCount")
+            sports.add(getSportFromTable(rs))
+        }
 
-        return sports
+        return SportsResponse(sports, totalCount)
     }
 
     override fun hasSport(conn: ConnectionDB, sid: Int): Boolean {

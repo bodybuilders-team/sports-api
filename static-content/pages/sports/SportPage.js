@@ -1,5 +1,6 @@
 import apiFetch from "../../js/apiFetch.js";
 import Sport from "../../components/sports/Sport.js";
+import {LogError} from "../../js/errorUtils.js";
 
 /**
  * Sport details page.
@@ -8,7 +9,7 @@ import Sport from "../../components/sports/Sport.js";
  */
 async function SportPage(state) {
     if (state.params.id === undefined)
-        throw new Error("Sport id must be defined")
+        throw new LogError("Sport id must be defined")
 
     const id = state.params.id;
     const sport = await apiFetch(`/sports/${id}`);

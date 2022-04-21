@@ -1,7 +1,8 @@
-package pt.isel.ls.sports.services.sections
+package pt.isel.ls.sports.services.sections.sports
 
 import pt.isel.ls.sports.database.AppDB
-import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
+import pt.isel.ls.sports.database.sections.sports.SportsResponse
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.AbstractServices
@@ -50,8 +51,8 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      *
      * @return list of identifiers of all sports
      */
-    fun getAllSports(): List<Sport> = db.execute { conn ->
-        db.sports.getAllSports(conn)
+    fun getAllSports(skip: Int, limit: Int): SportsResponse = db.execute { conn ->
+        db.sports.getAllSports(conn, skip, limit)
     }
 
     /**
@@ -61,11 +62,11 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      *
      * @return list of activities of a sport
      */
-    fun getSportActivities(sid: Int): List<Activity> {
+    fun getSportActivities(sid: Int, skip: Int, limit: Int): ActivitiesResponse {
         validateSid(sid)
 
         return db.execute { conn ->
-            db.activities.getSportActivities(conn, sid)
+            db.activities.getSportActivities(conn, sid, skip, limit)
         }
     }
 }

@@ -34,7 +34,11 @@ interface UsersDB {
      * @param conn database Connection
      * @return list of user objects
      */
-    fun getAllUsers(conn: ConnectionDB): List<User>
+    fun getAllUsers(
+        conn: ConnectionDB,
+        skip: Int,
+        limit: Int
+    ): UsersResponse
 
     /**
      * Verifies if a user exists with the given [email]
