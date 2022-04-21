@@ -34,6 +34,11 @@ class SportsRouter(private val services: SportsServices) : IRouter {
         const val DEFAULT_SKIP = 0
         const val DEFAULT_LIMIT = 10
 
+        /**
+         * Returns the sports router routes.
+         * @param services sports services
+         * @return sports router routes
+         */
         fun routes(services: SportsServices) = SportsRouter(services).routes
     }
 
@@ -68,8 +73,8 @@ class SportsRouter(private val services: SportsServices) : IRouter {
      */
     @Suppress("UNUSED_PARAMETER")
     private fun getSports(request: Request): Response = runAndCatch {
-        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
-        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
+        val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
         val sportsResponse = services.getAllSports(skip, limit)
 
@@ -91,8 +96,8 @@ class SportsRouter(private val services: SportsServices) : IRouter {
 
     private fun getSportActivities(request: Request): Response = runAndCatch {
         val sid = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
-        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
-        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
+        val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
         val activitiesResponse = services.getSportActivities(sid, skip, limit)
 

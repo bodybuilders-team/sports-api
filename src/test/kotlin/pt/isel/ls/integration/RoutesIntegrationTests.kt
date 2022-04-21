@@ -150,7 +150,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                     10.0
                 )
             ).associateBy {
-                db.routes.createNewRoute(conn, it.start_location, it.end_location, (it.distance * 1000).toInt(), uid)
+                db.routes.createNewRoute(conn, it.start_location, it.end_location, it.distance, uid)
             }
 
             mockRoutes
@@ -205,7 +205,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 conn,
                 route.start_location,
                 route.end_location,
-                (route.distance * 1000.0).toInt(),
+                route.distance,
                 uid
             )
             object {

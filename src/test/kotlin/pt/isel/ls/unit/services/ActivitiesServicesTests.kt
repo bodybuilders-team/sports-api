@@ -20,7 +20,7 @@ class ActivitiesServicesTests : AppServicesTests() {
         val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
         val sid = db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
-        val rid = db.routes.createNewRoute(conn, "Pontinha", "Chelas", 100, uid)
+        val rid = db.routes.createNewRoute(conn, "Pontinha", "Chelas", 0.1, uid)
 
         val aid = services.activities.createNewActivity(
             token,

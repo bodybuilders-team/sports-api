@@ -1,6 +1,7 @@
 import {div, h1, h3} from "../../js/dom/domTags.js";
 import Activities from "../activities/Activities.js";
 import {LogError} from "../../js/errorUtils.js";
+import PaginatedCollection from "../pagination/PaginatedCollection.js";
 
 /**
  * Sport details page.
@@ -21,8 +22,20 @@ async function Sport(state, props) {
                 {class: "card-body"},
                 h3("Name: ", props.name),
                 h3("Description: ", props.description),
-                h3("Activities:"),
-                Activities(state, {activities: props.activities})
+                (props.activitiesData.activities.length > 0) ?
+                    div(
+                        h3("Activities:"),
+                        PaginatedCollection(state,
+                            {
+                                skip: props.activitiesData.skip,
+                                limit: props.activitiesData.limit,
+                                collectionComponent: Activities,
+                                collectionName: "activities",
+                                collection: props.activitiesData.activities,
+                                totalCount: props.activitiesData.totalCount
+                            }
+                        )
+                    ) : undefined
             )
         )
     );

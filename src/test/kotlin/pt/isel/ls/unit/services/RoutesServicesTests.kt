@@ -56,9 +56,9 @@ class RoutesServicesTests : AppServicesTests() {
         val route1 = Route(2, "Chelas", "Odivelas", 0.15, 1)
         val route2 = Route(3, "Lisboa", "Chelas", 0.15, 1)
 
-        db.routes.createNewRoute(conn, "Odivelas", "Chelas", 150, 1)
-        db.routes.createNewRoute(conn, "Chelas", "Odivelas", 150, 1)
-        db.routes.createNewRoute(conn, "Lisboa", "Chelas", 150, 1)
+        db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 1)
+        db.routes.createNewRoute(conn, "Chelas", "Odivelas", 0.15, 1)
+        db.routes.createNewRoute(conn, "Lisboa", "Chelas", 0.15, 1)
 
         assertEquals(listOf(route0, route1, route2), services.routes.getAllRoutes(0, 10).routes)
     }

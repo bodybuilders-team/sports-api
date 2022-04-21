@@ -1,6 +1,7 @@
 import apiFetch from "../../js/apiFetch.js";
 import User from "../../components/users/User.js";
 import {LogError} from "../../js/errorUtils.js";
+import {getQuerySkipLimit} from "../../js/utils.js";
 
 /**
  * User details page.
@@ -11,15 +12,20 @@ async function UserPage(state) {
     if (state.params.id === undefined)
         throw new LogError("User id must be defined")
 
+
     const id = state.params.id;
     const user = await apiFetch(`/users/${id}`);
 
-    const activities = await apiFetch(`/users/${id}/activities`)
-        .then(json => json.activities);
+    let {skip, limit} = getQuerySkipLimit(state.query, 0, 10);
+
+    const activitiesData = await apiFetch(`/users/${id}/activities?skip=${skip}&limit=${limit}`);
+
+    activitiesData.skip = skip;
+    activitiesData.limit = limit;
 
     return User(
         state,
-        {id: user.id, name: user.name, email: user.email, activities}
+        {id: user.id, name: user.name, email: user.email, activitiesData}
     );
 }
 

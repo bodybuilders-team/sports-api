@@ -10,8 +10,8 @@ import pt.isel.ls.sports.api.routers.users.UsersRouter
 import pt.isel.ls.sports.services.AppServices
 
 /**
- * Represents the Sports API Web API.
- * @param services API services
+ * Represents the Sports Web API.
+ * @param services Sports App services
  * @property routes API routes
  */
 class AppWebApi(services: AppServices) {

@@ -11,14 +11,14 @@ class RoutesMemoryDB(private val source: AppMemoryDBSource) : RoutesDB {
         conn: ConnectionDB,
         startLocation: String,
         endLocation: String,
-        distance: Int,
+        distance: Double,
         uid: Int
     ): Int {
         val id = source.nextRouteId.getAndIncrement()
 
         if (source.users[uid] == null) throw AppException.NotFound("User with id $uid not found")
 
-        source.routes[id] = Route(id, startLocation, endLocation, distance / 1000.0, uid)
+        source.routes[id] = Route(id, startLocation, endLocation, distance, uid)
 
         return id
     }

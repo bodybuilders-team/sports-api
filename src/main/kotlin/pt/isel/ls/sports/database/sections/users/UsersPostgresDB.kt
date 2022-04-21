@@ -100,13 +100,17 @@ class UsersPostgresDB : UsersDB {
         fun getUsersResponse(stm: PreparedStatement): UsersResponse {
             val rs = stm.executeQuery()
             val users = mutableListOf<User>()
-            var total = 0
 
-            while (rs.next()) {
-                total = rs.getInt("totalCount")
+            if (!rs.next())
+                return UsersResponse(users, 0)
+
+            val totalCount = rs.getInt("totalCount")
+
+            do {
                 users.add(getUserFromTable(rs))
-            }
-            return UsersResponse(users, total)
+            } while (rs.next())
+
+            return UsersResponse(users, totalCount)
         }
 
         /**

@@ -18,7 +18,7 @@ interface RoutesDB {
      *
      * @return the route's unique identifier
      */
-    fun createNewRoute(conn: ConnectionDB, startLocation: String, endLocation: String, distance: Int, uid: Int): Int
+    fun createNewRoute(conn: ConnectionDB, startLocation: String, endLocation: String, distance: Double, uid: Int): Int
 
     /**
      * Get the details of a route.

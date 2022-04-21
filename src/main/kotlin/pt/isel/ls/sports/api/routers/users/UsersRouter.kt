@@ -33,6 +33,11 @@ class UsersRouter(private val services: UsersServices) : IRouter {
         const val DEFAULT_SKIP = 0
         const val DEFAULT_LIMIT = 10
 
+        /**
+         * Returns the users router routes.
+         * @param services users services
+         * @return users router routes
+         */
         fun routes(services: UsersServices) = UsersRouter(services).routes
     }
 
@@ -62,8 +67,8 @@ class UsersRouter(private val services: UsersServices) : IRouter {
      */
     @Suppress("UNUSED_PARAMETER")
     private fun getUsers(request: Request): Response = runAndCatch {
-        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
-        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
+        val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
         val usersResponse = services.getAllUsers(skip, limit)
 
         return Response(OK).json(UsersResponseDTO(usersResponse))
@@ -89,8 +94,8 @@ class UsersRouter(private val services: UsersServices) : IRouter {
      */
     private fun getUserActivities(request: Request): Response = runAndCatch {
         val uid = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }
-        val skip = request.query("skip")?.toIntOrThrow { "Invalid Skip" } ?: DEFAULT_SKIP
-        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
+        val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
         val activitiesResponse = services.getUserActivities(uid, skip, limit)
 

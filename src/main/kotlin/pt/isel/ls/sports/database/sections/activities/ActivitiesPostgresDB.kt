@@ -223,13 +223,15 @@ class ActivitiesPostgresDB : ActivitiesDB {
             val rs = stm.executeQuery()
             val activities = mutableListOf<Activity>()
 
-            var totalCount = 0
-            while (rs.next()) {
-                totalCount = rs.getInt("totalCount")
-                activities.add(
-                    getActivityFromTable(rs)
-                )
-            }
+            if (!rs.next())
+                return ActivitiesResponse(activities, 0)
+
+            val totalCount = rs.getInt("totalCount")
+
+            do {
+                activities.add(getActivityFromTable(rs))
+            } while (rs.next())
+
             return ActivitiesResponse(activities, totalCount)
         }
 

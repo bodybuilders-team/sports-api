@@ -94,11 +94,14 @@ class SportsPostgresDB : SportsDB {
         val rs = stm.executeQuery()
         val sports = mutableListOf<Sport>()
 
-        var totalCount = 0
-        while (rs.next()) {
-            totalCount = rs.getInt("totalCount")
+        if (!rs.next())
+            return SportsResponse(sports, 0)
+
+        val totalCount = rs.getInt("totalCount")
+
+        do {
             sports.add(getSportFromTable(rs))
-        }
+        } while (rs.next())
 
         return SportsResponse(sports, totalCount)
     }

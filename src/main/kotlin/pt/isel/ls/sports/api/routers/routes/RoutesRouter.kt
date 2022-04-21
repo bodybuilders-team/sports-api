@@ -33,6 +33,11 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
         const val DEFAULT_SKIP = 0
         const val DEFAULT_LIMIT = 10
 
+        /**
+         * Returns the routes router routes.
+         * @param services routes services
+         * @return routes router routes
+         */
         fun routes(services: RoutesServices) = RoutesRouter(services).routes
     }
 
@@ -67,8 +72,8 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
      * @return HTTP response
      */
     private fun getRoutes(request: Request): Response = runAndCatch {
-        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
-        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
+        val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
         val routesResponse = services.getAllRoutes(skip, limit)
 

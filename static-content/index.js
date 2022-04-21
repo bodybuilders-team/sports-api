@@ -1,7 +1,7 @@
 import App from "./components/App.js";
 import {isAppError} from "./js/errorUtils.js";
 import AppErrorPage from "./pages/AppErrorPage.js";
-import {changeStatePath, createState, render} from "./js/compLib.js";
+import {createState, render} from "./js/compLib.js";
 
 window.addEventListener("load", hashChangeHandler);
 window.addEventListener("hashchange", hashChangeHandler);
@@ -14,8 +14,7 @@ window.addEventListener("hashchange", hashChangeHandler);
 function hashChangeHandler() {
     const path = window.location.hash.replace("#", "/");
 
-    const state = createState();
-    changeStatePath(state, path);
+    const state = createState(path);
 
     App(state)
         .then(render)

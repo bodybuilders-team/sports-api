@@ -29,10 +29,10 @@ CREATE TABLE sports
 CREATE TABLE routes
 (
     id             SERIAL PRIMARY KEY,
-    start_location VARCHAR(250) NOT NULL,
-    end_location   VARCHAR(250) NOT NULL,
-    distance       INT          NOT NULL CHECK ( distance > 0 ),
-    uid            INT          NOT NULL REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
+    start_location VARCHAR(250)     NOT NULL,
+    end_location   VARCHAR(250)     NOT NULL,
+    distance       DOUBLE PRECISION NOT NULL CHECK ( distance > 0 ),
+    uid            INT              NOT NULL REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE activities

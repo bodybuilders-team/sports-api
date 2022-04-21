@@ -16,9 +16,9 @@ VALUES ('Soccer', 'Kick a ball to score a goal', 1),
 
 
 INSERT INTO routes(start_location, end_location, distance, uid)
-VALUES ('Odivelas', 'Chelas', 150, 1),
-       ('Chelas', 'Odivelas', 150, 2),
-       ('Lisboa', 'Porto', 1500, 3);
+VALUES ('Odivelas', 'Chelas', 0.15, 1),
+       ('Chelas', 'Odivelas', 0.15, 2),
+       ('Lisboa', 'Porto', 1.5, 3);
 
 INSERT INTO activities(date, duration, uid, sid, rid)
 VALUES (date '2022-11-20', '23:44:59.903', 1, 1, NULL),

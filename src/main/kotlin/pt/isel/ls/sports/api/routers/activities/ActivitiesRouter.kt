@@ -41,6 +41,11 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
         const val DEFAULT_SKIP = 0
         const val DEFAULT_LIMIT = 10
 
+        /**
+         * Returns the activities router routes.
+         * @param services activities services
+         * @return activities router routes
+         */
         fun routes(services: ActivitiesServices) = ActivitiesRouter(services).routes
     }
 
@@ -131,9 +136,9 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
         val orderBy = request.queryOrThrow("orderBy")
         val date = request.query("date")
 
-        val rid = request.query("rid")?.toIntOrThrow()
-        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
-        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
+        val rid = request.query("rid")?.toIntOrThrow { "Invalid Route Id" }
+        val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
         if (date != null && !ActivityDTO.isValidDate(date))
             throw AppException.InvalidArgument("Date must be in the format yyyy-mm-dd")
@@ -154,8 +159,8 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
     private fun searchUsersByActivity(request: Request): Response = runAndCatch {
         val sid = request.queryOrThrow("sid").toIntOrThrow { "Invalid Sport Id" }
         val rid = request.queryOrThrow("rid").toIntOrThrow { "Invalid Route Id" }
-        val skip = request.query("skip")?.toIntOrThrow() ?: DEFAULT_SKIP
-        val limit = request.query("limit")?.toIntOrThrow() ?: DEFAULT_LIMIT
+        val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
+        val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
         val usersResponse = services.searchUsersByActivity(sid, rid, skip, limit)
 

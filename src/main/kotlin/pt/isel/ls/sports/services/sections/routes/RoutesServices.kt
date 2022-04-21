@@ -30,7 +30,7 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
                 conn,
                 startLocation,
                 endLocation,
-                distance = (distance * 1000).toInt(),
+                distance,
                 uid
             )
         }

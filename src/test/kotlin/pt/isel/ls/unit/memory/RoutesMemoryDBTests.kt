@@ -14,7 +14,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests() {
     fun `createNewRoute creates route correctly in the database`(): Unit = db.execute { conn ->
         source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 150, 1)
+        val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 1)
 
         assertEquals(Route(rid, "Odivelas", "Chelas", 0.15, 1), source.routes[1])
     }
@@ -23,9 +23,9 @@ class RoutesMemoryDBTests : AppMemoryDBTests() {
     fun `createNewRoute returns correct identifier`(): Unit = db.execute { conn ->
         source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        val rid0 = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 150, 1)
-        val rid1 = db.routes.createNewRoute(conn, "Chelas", "Odivelas", 150, 1)
-        val rid2 = db.routes.createNewRoute(conn, "Lisboa", "Chelas", 150, 1)
+        val rid0 = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 1)
+        val rid1 = db.routes.createNewRoute(conn, "Chelas", "Odivelas", 0.15, 1)
+        val rid2 = db.routes.createNewRoute(conn, "Lisboa", "Chelas", 0.15, 1)
 
         assertEquals(1, rid0)
         assertEquals(2, rid1)
@@ -59,9 +59,9 @@ class RoutesMemoryDBTests : AppMemoryDBTests() {
     fun `getAllRoutes returns list of all route objects`(): Unit = db.execute { conn ->
         source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
 
-        val route0 = Route(1, "Odivelas", "Chelas", 150.0, 1)
-        val route1 = Route(2, "Chelas", "Odivelas", 150.0, 1)
-        val route2 = Route(3, "Lisboa", "Chelas", 150.0, 1)
+        val route0 = Route(1, "Odivelas", "Chelas", 0.15, 1)
+        val route1 = Route(2, "Chelas", "Odivelas", 0.15, 1)
+        val route2 = Route(3, "Lisboa", "Chelas", 0.15, 1)
 
         source.routes[1] = route0
         source.routes[2] = route1

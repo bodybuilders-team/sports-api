@@ -15,7 +15,7 @@ class RoutesPostgresDB : RoutesDB {
         conn: ConnectionDB,
         startLocation: String,
         endLocation: String,
-        distance: Int,
+        distance: Double,
         uid: Int
     ): Int {
         val stm = conn
@@ -30,7 +30,7 @@ class RoutesPostgresDB : RoutesDB {
         stm.setInt(1, uid)
         stm.setString(2, startLocation)
         stm.setString(3, endLocation)
-        stm.setInt(4, distance)
+        stm.setDouble(4, distance)
 
         if (stm.executeUpdate() == 0)
             throw SQLException("Creating route failed, no rows affected.")
@@ -76,11 +76,14 @@ class RoutesPostgresDB : RoutesDB {
         val rs = stm.executeQuery()
         val routes = mutableListOf<Route>()
 
-        var totalCount = 0
-        while (rs.next()) {
-            totalCount = rs.getInt("totalCount")
+        if (!rs.next())
+            return RoutesResponse(routes, 0)
+
+        val totalCount = rs.getInt("totalCount")
+
+        do {
             routes.add(getRouteFromTable(rs))
-        }
+        } while (rs.next())
 
         return RoutesResponse(routes, totalCount)
     }
@@ -107,7 +110,7 @@ class RoutesPostgresDB : RoutesDB {
             id = rs.getInt(1),
             startLocation = rs.getString(2),
             endLocation = rs.getString(3),
-            distance = rs.getInt(4) / 1000.0,
+            distance = rs.getDouble(4),
             uid = rs.getInt(5)
         )
 

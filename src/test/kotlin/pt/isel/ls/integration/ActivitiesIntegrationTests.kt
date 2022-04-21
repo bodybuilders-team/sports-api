@@ -418,7 +418,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             }
 
             val mockSid = db.sports.createNewSport(conn, 1, "Running")
-            val mockRid = db.routes.createNewRoute(conn, "Porto", "Evora", 201, 1)
+            val mockRid = db.routes.createNewRoute(conn, "Porto", "Evora", 201.0, 1)
 
             mockUsers.forEach {
                 db.activities.createNewActivity(

@@ -13,7 +13,7 @@ class RoutesPostgresDBTests : AppPostgresDBTests() {
     @Test
     fun `createNewRoute creates route correctly in the database`() {
         val rid = db.execute { conn ->
-            db.routes.createNewRoute(conn, "Odivelas", "Chelas", 150, 1)
+            db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 1)
         }
 
         dataSource.connection.use {
@@ -22,14 +22,14 @@ class RoutesPostgresDBTests : AppPostgresDBTests() {
             val rs = stm.executeQuery()
 
             val mockTable: Array<Array<Any>> = arrayOf(
-                arrayOf(4, "Odivelas", "Chelas", 150, 1)
+                arrayOf(4, "Odivelas", "Chelas", 0.15, 1)
             )
 
             tableAsserter(mockTable, rs) { mockRow, row ->
                 assertEquals(mockRow[0], row.getInt("id"))
                 assertEquals(mockRow[1], row.getString("start_location"))
                 assertEquals(mockRow[2], row.getString("end_location"))
-                assertEquals(mockRow[3], row.getInt("distance"))
+                assertEquals(mockRow[3], row.getDouble("distance"))
                 assertEquals(mockRow[4], row.getInt("uid"))
             }
         }
