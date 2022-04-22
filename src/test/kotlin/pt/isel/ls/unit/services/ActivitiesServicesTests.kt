@@ -2,9 +2,10 @@ package pt.isel.ls.unit.services
 
 import kotlinx.datetime.toLocalDate
 import org.junit.Test
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppException
+import pt.isel.ls.sports.services.InvalidArgumentException
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -42,7 +43,7 @@ class ActivitiesServicesTests : AppServicesTests() {
         val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
-        assertFailsWith<AppException.InvalidArgument> {
+        assertFailsWith<InvalidArgumentException> {
             services.activities.createNewActivity(
                 token,
                 "2022-11-05".toLocalDate(),
@@ -59,7 +60,7 @@ class ActivitiesServicesTests : AppServicesTests() {
         val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
-        assertFailsWith<AppException.InvalidArgument> {
+        assertFailsWith<InvalidArgumentException> {
             services.activities.createNewActivity(
                 token,
                 "2022-11-05".toLocalDate(),
@@ -88,7 +89,7 @@ class ActivitiesServicesTests : AppServicesTests() {
     @Test
     fun `getActivity throws SportsError (Not Found) if the activity with the sid doesn't exist`() {
 
-        assertFailsWith<AppException> {
+        assertFailsWith<NotFoundException> {
             services.activities.getActivity(1)
         }
     }
@@ -103,7 +104,7 @@ class ActivitiesServicesTests : AppServicesTests() {
 
         services.activities.deleteActivity(token, 1)
 
-        assertFailsWith<AppException> {
+        assertFailsWith<NotFoundException> {
             db.activities.getActivity(conn, 1)
         }
     }
@@ -124,13 +125,13 @@ class ActivitiesServicesTests : AppServicesTests() {
 
         services.activities.deleteActivities(token, setOf(aid1, aid2, aid3))
 
-        assertFailsWith<AppException> {
+        assertFailsWith<NotFoundException> {
             db.activities.getActivity(conn, aid1)
         }
-        assertFailsWith<AppException> {
+        assertFailsWith<NotFoundException> {
             db.activities.getActivity(conn, aid2)
         }
-        assertFailsWith<AppException> {
+        assertFailsWith<NotFoundException> {
             db.activities.getActivity(conn, aid3)
         }
     }

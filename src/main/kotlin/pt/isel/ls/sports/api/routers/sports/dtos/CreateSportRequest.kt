@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @property description description of the sport (optional)
  */
 @Serializable
-data class CreateSportRequestDTO(
+data class CreateSportRequest(
     val name: String,
     val description: String? = null
 )

@@ -6,8 +6,9 @@ import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
-import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.AbstractServices
+import pt.isel.ls.sports.services.InvalidArgumentException
+import pt.isel.ls.sports.services.UnauthorizedException
 import kotlin.time.Duration
 
 class ActivitiesServices(db: AppDB) : AbstractServices(db) {
@@ -63,7 +64,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
             val activity = db.activities.getActivity(conn, aid)
 
             if (uid != activity.uid)
-                throw AppException.Forbidden("You are not allowed to delete this activity")
+                throw UnauthorizedException("You are not allowed to delete this activity")
 
             db.activities.deleteActivity(conn, aid)
         }
@@ -76,7 +77,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      */
     fun deleteActivities(token: String, activityIds: Set<Int>) {
         if (activityIds.isEmpty())
-            throw AppException.InvalidArgument("No activity ids were specified")
+            throw InvalidArgumentException("No activity ids were specified")
 
         activityIds.forEach(::validateAid)
 
@@ -87,7 +88,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
                 val activity = db.activities.getActivity(conn, it)
 
                 if (uid != activity.uid)
-                    throw AppException.Forbidden("You are not allowed to delete activity with $it")
+                    throw UnauthorizedException("You are not allowed to delete activity $it")
 
                 db.activities.deleteActivity(conn, it)
             }
@@ -120,7 +121,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         validateLimit(limit, LIMIT_RANGE)
 
         val order = SortOrder.parse(orderBy)
-            ?: throw AppException.InvalidArgument("Order by must be either ascending or descending")
+            ?: throw InvalidArgumentException("Order by must be either ascending or descending")
 
         return db.execute { conn ->
             db.activities.searchActivities(conn, sid, order, date, rid, skip, limit)

@@ -10,16 +10,16 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.IRouter
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
-import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequestDTO
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest
 import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponseDTO
 import pt.isel.ls.sports.api.routers.users.dtos.UserDTO
 import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
+import pt.isel.ls.sports.api.utils.errors.runAndCatch
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
-import pt.isel.ls.sports.api.utils.runAndCatch
+import pt.isel.ls.sports.api.utils.toIntOrThrow
 import pt.isel.ls.sports.services.sections.users.UsersServices
-import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
  * Represents the users' router for the Web API.
@@ -54,7 +54,7 @@ class UsersRouter(private val services: UsersServices) : IRouter {
      * @return user creation HTTP response
      */
     private fun createUser(request: Request): Response = runAndCatch {
-        val userRequest = request.decodeBodyAs<CreateUserRequestDTO>()
+        val userRequest = request.decodeBodyAs<CreateUserRequest>()
         val userResponse = services.createNewUser(userRequest.name, userRequest.email)
 
         return Response(CREATED).json(CreateUserResponseDTO(userResponse))

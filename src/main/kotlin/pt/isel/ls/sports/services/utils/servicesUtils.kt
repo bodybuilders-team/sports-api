@@ -1,9 +1,9 @@
 package pt.isel.ls.sports.services.utils
 
 /**
- * Validates a serial ID.
- * @param id The serial ID to validate.
+ * Validates a ID.
+ * @param id The ID to validate.
  * @return true if the ID is valid, false otherwise.
  */
 fun isValidId(id: Int) =
-    id > 0
+    id >= 0

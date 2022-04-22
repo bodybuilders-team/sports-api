@@ -6,16 +6,15 @@ import org.http4k.core.Request
 import org.http4k.core.Status
 import org.junit.Test
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
-import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequestDTO
-import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportRequestDTO
-import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportResponseDTO
+import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
+import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportRequest
+import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportResponse
 import pt.isel.ls.sports.api.routers.sports.dtos.SportDTO
 import pt.isel.ls.sports.api.routers.sports.dtos.SportsResponseDTO
-import pt.isel.ls.sports.api.utils.AppErrorDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
+import pt.isel.ls.sports.api.utils.errors.AppError
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.token
-import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
@@ -50,7 +49,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.CREATED, status)
 
-                val sid = this.decodeBodyAs<CreateSportResponseDTO>().sid
+                val sid = this.decodeBodyAs<CreateSportResponse>().sid
                 assertTrue(isValidId(sid))
                 db.execute { conn ->
                     assertTrue(db.sports.hasSport(conn, sid))
@@ -81,7 +80,7 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.CREATED, status)
 
-                val sid = this.decodeBodyAs<CreateSportResponseDTO>().sid
+                val sid = this.decodeBodyAs<CreateSportResponse>().sid
                 assertTrue(isValidId(sid))
 
                 db.execute { conn ->
@@ -106,8 +105,8 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
-                assertEquals(AppException.NoCredentials(), error)
+                val error = this.decodeBodyAs<AppError>()
+                assertEquals("BAD_REQUEST", error.name)
             }
     }
 
@@ -128,8 +127,8 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.UNAUTHORIZED, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
-                assertEquals(AppException.InvalidCredentials(), error)
+                val error = this.decodeBodyAs<AppError>()
+                assertEquals("UNAUTHENTICATED", error.name)
             }
     }
 
@@ -154,8 +153,8 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
-                assertEquals(AppException.InvalidArgument(), error)
+                val error = this.decodeBodyAs<AppError>()
+                assertEquals("BAD_REQUEST", error.name)
             }
     }
 
@@ -167,8 +166,8 @@ class SportsIntegrationTests : IntegrationTests() {
             val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
 
             val sports = listOf(
-                CreateSportRequestDTO("Sprint", "100 Meters Sprint"),
-                CreateSportRequestDTO("PowerLifting", "LIGHT WEIGHT BABY!"),
+                CreateSportRequest("Sprint", "100 Meters Sprint"),
+                CreateSportRequest("PowerLifting", "LIGHT WEIGHT BABY!"),
             ).associateBy {
                 db.sports.createNewSport(conn, uid, it.name, it.description)
             }
@@ -217,7 +216,7 @@ class SportsIntegrationTests : IntegrationTests() {
     @Test
     fun `Get sport by id`() {
         val mockData = db.execute { conn ->
-            val sport = CreateSportRequestDTO("Sprint", "100 Meters Sprint")
+            val sport = CreateSportRequest("Sprint", "100 Meters Sprint")
 
             val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
             val sid = db.sports.createNewSport(conn, uid, sport.name, sport.description)
@@ -246,7 +245,7 @@ class SportsIntegrationTests : IntegrationTests() {
     @Test
     fun `Get sport with empty description by id`() {
         val mockData = db.execute { conn ->
-            val sport = CreateSportRequestDTO("Sprint")
+            val sport = CreateSportRequest("Sprint")
 
             val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
             val sid = db.sports.createNewSport(conn, uid, sport.name, sport.description)
@@ -279,8 +278,8 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
-                assertEquals(AppException.InvalidArgument(), error)
+                val error = this.decodeBodyAs<AppError>()
+                assertEquals("BAD_REQUEST", error.name)
             }
     }
 
@@ -293,8 +292,8 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.NOT_FOUND, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
-                assertEquals(AppException.NotFound(), error)
+                val error = this.decodeBodyAs<AppError>()
+                assertEquals("NOT_FOUND", error.name)
             }
     }
 
@@ -307,8 +306,8 @@ class SportsIntegrationTests : IntegrationTests() {
             val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
 
             val activities = listOf(
-                CreateActivityRequestDTO("2019-01-01", "23:59:59.555", sid),
-                CreateActivityRequestDTO("2019-01-02", "20:59:59.555", sid)
+                CreateActivityRequest("2019-01-01", "23:59:59.555", sid),
+                CreateActivityRequest("2019-01-02", "20:59:59.555", sid)
             ).associateBy {
                 db.activities.createNewActivity(conn, uid, it.date.toLocalDate(), it.duration.toDuration(), it.sid)
             }
@@ -348,8 +347,8 @@ class SportsIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.BAD_REQUEST, status)
 
-                val error = this.decodeBodyAs<AppErrorDTO>().toAppException()
-                assertEquals(AppException.InvalidArgument(), error)
+                val error = this.decodeBodyAs<AppError>()
+                assertEquals("BAD_REQUEST", error.name)
             }
     }
 }

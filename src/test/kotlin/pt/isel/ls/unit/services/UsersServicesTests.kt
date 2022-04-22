@@ -2,10 +2,10 @@ package pt.isel.ls.unit.services
 
 import kotlinx.datetime.toLocalDate
 import org.junit.Test
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -48,7 +48,7 @@ class UsersServicesTests : AppServicesTests() {
     @Test
     fun `getUser throws SportsError (Not Found) if the user with the uid doesn't exist`() {
 
-        assertFailsWith<AppException> {
+        assertFailsWith<NotFoundException> {
             services.users.getUser(1)
         }
     }

@@ -1,8 +1,8 @@
 package pt.isel.ls.sports.database.sections.tokens
 
 import pt.isel.ls.sports.database.AppMemoryDBSource
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
-import pt.isel.ls.sports.errors.AppException
 import java.util.UUID
 
 class TokensMemoryDB(private val source: AppMemoryDBSource) : TokensDB {
@@ -13,6 +13,6 @@ class TokensMemoryDB(private val source: AppMemoryDBSource) : TokensDB {
     }
 
     override fun getUID(conn: ConnectionDB, token: String): Int {
-        return source.tokens[token] ?: throw AppException.NotFound("Token $token isn't associated to any user")
+        return source.tokens[token] ?: throw NotFoundException("Token $token isn't associated to any user")
     }
 }

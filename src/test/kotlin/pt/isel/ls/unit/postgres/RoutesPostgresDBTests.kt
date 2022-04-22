@@ -1,8 +1,8 @@
 package pt.isel.ls.unit.postgres
 
 import org.junit.Test
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.domain.Route
-import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.tableAsserter
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -46,7 +46,7 @@ class RoutesPostgresDBTests : AppPostgresDBTests() {
     @Test
     fun `getRoute throws SportsError (Not Found) if the route with the rid doesn't exist`(): Unit =
         db.execute { conn ->
-            assertFailsWith<AppException> {
+            assertFailsWith<NotFoundException> {
                 db.routes.getRoute(conn, 0)
             }
         }

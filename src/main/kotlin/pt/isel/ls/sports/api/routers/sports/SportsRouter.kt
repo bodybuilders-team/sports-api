@@ -10,17 +10,17 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.IRouter
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
-import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportRequestDTO
-import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportResponseDTO
+import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportRequest
+import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportResponse
 import pt.isel.ls.sports.api.routers.sports.dtos.SportDTO
 import pt.isel.ls.sports.api.routers.sports.dtos.SportsResponseDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
+import pt.isel.ls.sports.api.utils.errors.runAndCatch
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
-import pt.isel.ls.sports.api.utils.runAndCatch
+import pt.isel.ls.sports.api.utils.toIntOrThrow
 import pt.isel.ls.sports.api.utils.tokenOrThrow
 import pt.isel.ls.sports.services.sections.sports.SportsServices
-import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
  * Represents the sports' router for the Web API.
@@ -57,13 +57,13 @@ class SportsRouter(private val services: SportsServices) : IRouter {
     private fun createSport(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
 
-        val sportRequest = request.decodeBodyAs<CreateSportRequestDTO>()
+        val sportRequest = request.decodeBodyAs<CreateSportRequest>()
         val sid = services.createNewSport(
             token, sportRequest.name,
             sportRequest.description
         )
 
-        return Response(CREATED).json(CreateSportResponseDTO(sid))
+        return Response(CREATED).json(CreateSportResponse(sid))
     }
 
     /**

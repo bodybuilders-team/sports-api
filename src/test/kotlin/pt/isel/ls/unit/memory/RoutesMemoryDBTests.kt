@@ -1,9 +1,9 @@
 package pt.isel.ls.unit.memory
 
 import org.junit.Test
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppException
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -48,7 +48,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests() {
     @Test
     fun `getRoute throws SportsError (Not Found) if the route with the rid doesn't exist`(): Unit =
         db.execute { conn ->
-            assertFailsWith<AppException> {
+            assertFailsWith<NotFoundException> {
                 db.routes.getRoute(conn, 1)
             }
         }

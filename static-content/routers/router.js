@@ -66,7 +66,7 @@ export function Router() {
      * Matches a handler path with a given path and fills params if they exist.
      * @param handlerPath handler path
      * @param path path to match
-     * 
+     *
      */
     function matchHandlerPath(handlerPath, path) {
         let lIdx = -1;

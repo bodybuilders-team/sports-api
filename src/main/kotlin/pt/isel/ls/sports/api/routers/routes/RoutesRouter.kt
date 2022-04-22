@@ -9,17 +9,17 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.IRouter
-import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteRequestDTO
-import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteResponseDTO
+import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteRequest
+import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteResponse
 import pt.isel.ls.sports.api.routers.routes.dtos.RouteDTO
 import pt.isel.ls.sports.api.routers.routes.dtos.RoutesResponseDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
+import pt.isel.ls.sports.api.utils.errors.runAndCatch
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
-import pt.isel.ls.sports.api.utils.runAndCatch
+import pt.isel.ls.sports.api.utils.toIntOrThrow
 import pt.isel.ls.sports.api.utils.tokenOrThrow
 import pt.isel.ls.sports.services.sections.routes.RoutesServices
-import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
  * Represents the routes' router for the Web API.
@@ -55,7 +55,7 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
     private fun createRoute(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
 
-        val routeRequest = request.decodeBodyAs<CreateRouteRequestDTO>()
+        val routeRequest = request.decodeBodyAs<CreateRouteRequest>()
         val uid = services.createNewRoute(
             token,
             routeRequest.start_location,
@@ -63,7 +63,7 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
             routeRequest.distance
         )
 
-        return Response(CREATED).json(CreateRouteResponseDTO(uid))
+        return Response(CREATED).json(CreateRouteResponse(uid))
     }
 
     /**

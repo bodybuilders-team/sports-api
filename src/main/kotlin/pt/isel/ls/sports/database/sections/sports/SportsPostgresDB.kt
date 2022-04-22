@@ -1,10 +1,10 @@
 package pt.isel.ls.sports.database.sections.sports
 
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.connection.getPostgresConnection
 import pt.isel.ls.sports.database.utils.setStringOrNull
 import pt.isel.ls.sports.domain.Sport
-import pt.isel.ls.sports.errors.AppException
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -64,7 +64,7 @@ class SportsPostgresDB : SportsDB {
         if (rs.next())
             return getSportFromTable(rs)
         else
-            throw AppException.NotFound("Sport with id $sid not found")
+            throw NotFoundException("Sport with id $sid not found")
     }
 
     /**

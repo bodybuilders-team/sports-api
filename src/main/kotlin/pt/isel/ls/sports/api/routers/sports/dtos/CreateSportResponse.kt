@@ -8,4 +8,4 @@ import kotlinx.serialization.Serializable
  * @property sid of the created sport
  */
 @Serializable
-data class CreateSportResponseDTO(val sid: Int)
+data class CreateSportResponse(val sid: Int)

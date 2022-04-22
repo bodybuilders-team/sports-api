@@ -1,2 +1,1 @@
 //TODO 21/04/2022 - Verify every bit of documentation in all files (a lot of code has changed)
-//TODO 21/04/2022 - Catch serialization errors and throw them as a Bad request with appropriate error info.

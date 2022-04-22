@@ -710,15 +710,9 @@ components:
       type: object
       description: Application error
       required:
-        - code
         - name
         - description
       properties:
-        code:
-          type: number
-          format: integer
-          description: Internal error code
-          example: 1000
         name:
           type: string
           description: Internal error name

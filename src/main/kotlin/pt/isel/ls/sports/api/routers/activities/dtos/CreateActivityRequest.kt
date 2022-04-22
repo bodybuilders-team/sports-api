@@ -1,7 +1,7 @@
 package pt.isel.ls.sports.api.routers.activities.dtos
 
 import kotlinx.serialization.Serializable
-import pt.isel.ls.sports.errors.AppException
+import pt.isel.ls.sports.services.InvalidArgumentException
 
 /**
  * Represents an activity creation request.
@@ -12,7 +12,7 @@ import pt.isel.ls.sports.errors.AppException
  * @property rid unique identifier of the activity route (optional)
  */
 @Serializable
-data class CreateActivityRequestDTO(
+data class CreateActivityRequest(
     val date: String,
     val duration: String,
     val sid: Int,
@@ -20,9 +20,9 @@ data class CreateActivityRequestDTO(
 ) {
     init {
         if (!ActivityDTO.isValidDate(date))
-            throw AppException.InvalidArgument("Date must be in the format yyyy-mm-dd")
+            throw InvalidArgumentException("Date must be in the format yyyy-mm-dd")
 
         if (!ActivityDTO.isValidDuration(duration))
-            throw AppException.InvalidArgument("Duration must be in the format hh:mm:ss.fff")
+            throw InvalidArgumentException("Duration must be in the format hh:mm:ss.fff")
     }
 }

@@ -8,4 +8,4 @@ import kotlinx.serialization.Serializable
  * @property rid of the created route
  */
 @Serializable
-data class CreateRouteResponseDTO(val rid: Int)
+data class CreateRouteResponse(val rid: Int)

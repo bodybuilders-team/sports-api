@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.routing.path
-import pt.isel.ls.sports.errors.AppException
+import pt.isel.ls.sports.services.InvalidArgumentException
 import pt.isel.ls.sports.utils.substringOrNull
 
 /**
@@ -27,10 +27,10 @@ inline fun <reified T> Response.json(data: T): Response =
  * @param param query param to search
  *
  * @return value of the [param]
- * @throws AppException.BadRequest if the param doesn't exist
+ * @throws InvalidArgumentException if the param doesn't exist
  */
 fun Request.queryOrThrow(param: String): String =
-    this.query(param) ?: throw AppException.BadRequest("Missing query parameter: $param")
+    this.query(param) ?: throw InvalidArgumentException("Missing query parameter: $param")
 
 /**
  * Returns the value of the [param] in the request path.
@@ -38,10 +38,10 @@ fun Request.queryOrThrow(param: String): String =
  * @param param path param to search
  *
  * @return value of the [param]
- * @throws AppException.BadRequest if the param doesn't exist
+ * @throws InvalidArgumentException if the param doesn't exist
  */
 fun Request.pathOrThrow(param: String): String =
-    this.path(param) ?: throw AppException.BadRequest("Missing path parameter: $param")
+    this.path(param) ?: throw InvalidArgumentException("Missing path parameter: $param")
 
 private const val TOKEN_START_INDEX = 7
 
@@ -49,19 +49,18 @@ private const val TOKEN_START_INDEX = 7
  * Returns the request token.
  *
  * @return token
- * @throws AppException.NoCredentials if the token doesn't exist
+ * @throws InvalidArgumentException if the token doesn't exist
  */
 fun Request.tokenOrThrow(): String =
     this.header("Authorization")?.substringOrNull(TOKEN_START_INDEX)
-        ?: throw AppException.NoCredentials()
+        ?: throw InvalidArgumentException("Missing token")
 
 /**
  * Decodes the request body as a [T] object.
  * @return [T] object
  */
-inline fun <reified T> Request.decodeBodyAs(): T {
-    return Json.decodeFromString(this.bodyString())
-}
+inline fun <reified T> Request.decodeBodyAs(): T =
+    Json.decodeFromString(this.bodyString())
 
 /**
  * Sets body of the request as JSON with given data and content type header
@@ -86,3 +85,12 @@ inline fun <reified T> Response.decodeBodyAs(): T =
  */
 fun Request.token(token: String): Request =
     this.header("Authorization", "Bearer $token")
+
+/**
+ * Parses the string as an Int number and returns the result.
+ *
+ * @throws InvalidArgumentException if the string is not a valid representation of a number.
+ */
+fun String.toIntOrThrow(errorInfo: (() -> String)? = null): Int =
+    this.toIntOrNull()
+        ?: throw InvalidArgumentException(errorInfo?.invoke())

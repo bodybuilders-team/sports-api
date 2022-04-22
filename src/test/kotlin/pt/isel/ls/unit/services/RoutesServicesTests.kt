@@ -1,8 +1,8 @@
 package pt.isel.ls.unit.services
 
 import org.junit.Test
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.domain.Route
-import pt.isel.ls.sports.errors.AppException
 import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -39,7 +39,7 @@ class RoutesServicesTests : AppServicesTests() {
     @Test
     fun `getRoute throws SportsError (Not Found) if the route with the rid doesn't exist`() {
 
-        assertFailsWith<AppException> {
+        assertFailsWith<NotFoundException> {
             services.routes.getRoute(1)
         }
     }

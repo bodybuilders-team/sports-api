@@ -2,11 +2,11 @@ package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.AppMemoryDBSource
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
-import pt.isel.ls.sports.errors.AppException
 import kotlin.time.Duration
 
 class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
@@ -27,11 +27,11 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
     }
 
     override fun getActivity(conn: ConnectionDB, aid: Int): Activity {
-        return source.activities[aid] ?: throw AppException.NotFound("Activity with id $aid not found")
+        return source.activities[aid] ?: throw NotFoundException("Activity with id $aid not found")
     }
 
     override fun deleteActivity(conn: ConnectionDB, aid: Int) {
-        source.activities.remove(aid) ?: throw AppException.NotFound("Activity with id $aid not found")
+        source.activities.remove(aid) ?: throw NotFoundException("Activity with id $aid not found")
     }
 
     override fun searchActivities(
@@ -77,7 +77,7 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
                     compareBy { it.duration }
                 )
                 .map {
-                    source.users[it.uid] ?: throw AppException.NotFound("User with id ${it.uid} not found")
+                    source.users[it.uid] ?: throw NotFoundException("User with id ${it.uid} not found")
                 }
                 .distinct(),
             0

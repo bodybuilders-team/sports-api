@@ -13,21 +13,21 @@ import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.IRouter
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO
-import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequestDTO
-import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityResponseDTO
-import pt.isel.ls.sports.api.routers.activities.dtos.DeleteActivitiesRequestDTO
+import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
+import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityResponse
+import pt.isel.ls.sports.api.routers.activities.dtos.DeleteActivitiesRequest
 import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.api.utils.decodeBodyAs
+import pt.isel.ls.sports.api.utils.errors.runAndCatch
 import pt.isel.ls.sports.api.utils.json
 import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.api.utils.queryOrThrow
-import pt.isel.ls.sports.api.utils.runAndCatch
+import pt.isel.ls.sports.api.utils.toIntOrThrow
 import pt.isel.ls.sports.api.utils.tokenOrThrow
-import pt.isel.ls.sports.errors.AppException
+import pt.isel.ls.sports.services.InvalidArgumentException
 import pt.isel.ls.sports.services.sections.activities.ActivitiesServices
 import pt.isel.ls.sports.utils.toDuration
-import pt.isel.ls.sports.utils.toIntOrThrow
 
 /**
  * Represents the activity's router for the Web API.
@@ -67,7 +67,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
     private fun createActivity(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
 
-        val activityReq = request.decodeBodyAs<CreateActivityRequestDTO>()
+        val activityReq = request.decodeBodyAs<CreateActivityRequest>()
 
         val aid = services.createNewActivity(
             token,
@@ -77,7 +77,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
             activityReq.rid
         )
 
-        return Response(CREATED).json(CreateActivityResponseDTO(aid))
+        return Response(CREATED).json(CreateActivityResponse(aid))
     }
 
     /**
@@ -118,7 +118,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
     private fun deleteActivities(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
 
-        val activityIds = request.decodeBodyAs<DeleteActivitiesRequestDTO>().activityIds
+        val activityIds = request.decodeBodyAs<DeleteActivitiesRequest>().activityIds
 
         services.deleteActivities(token, activityIds)
 
@@ -141,7 +141,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
         val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
         if (date != null && !ActivityDTO.isValidDate(date))
-            throw AppException.InvalidArgument("Date must be in the format yyyy-mm-dd")
+            throw InvalidArgumentException("Date must be in the format yyyy-mm-dd")
 
         val dateLDT = date?.toLocalDate()
 

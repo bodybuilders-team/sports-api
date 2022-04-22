@@ -23,7 +23,13 @@ data class RouteDTO(
 ) {
     companion object {
         operator fun invoke(route: Route): RouteDTO {
-            return RouteDTO(route.id, route.startLocation, route.endLocation, route.distance, route.uid)
+            return RouteDTO(
+                route.id,
+                route.startLocation,
+                route.endLocation,
+                route.distance,
+                route.uid
+            )
         }
     }
 

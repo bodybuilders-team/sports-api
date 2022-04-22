@@ -4,8 +4,8 @@ import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.sports.SportsResponse
 import pt.isel.ls.sports.domain.Sport
-import pt.isel.ls.sports.errors.AppException
 import pt.isel.ls.sports.services.AbstractServices
+import pt.isel.ls.sports.services.InvalidArgumentException
 
 class SportsServices(db: AppDB) : AbstractServices(db) {
     /**
@@ -19,10 +19,10 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      */
     fun createNewSport(token: String, name: String, description: String?): Int {
         if (!Sport.isValidName(name))
-            throw AppException.InvalidArgument("Name must be between ${Sport.MIN_NAME_LENGTH} and ${Sport.MAX_NAME_LENGTH} characters")
+            throw InvalidArgumentException("Name must be between ${Sport.MIN_NAME_LENGTH} and ${Sport.MAX_NAME_LENGTH} characters")
 
         if (description != null && !Sport.isValidDescription(description))
-            throw AppException.InvalidArgument("Description must be between ${Sport.MIN_DESCRIPTION_LENGTH} and ${Sport.MAX_DESCRIPTION_LENGTH} characters")
+            throw InvalidArgumentException("Description must be between ${Sport.MIN_DESCRIPTION_LENGTH} and ${Sport.MAX_DESCRIPTION_LENGTH} characters")
 
         return db.execute { conn ->
             val uid = authenticate(conn, token)

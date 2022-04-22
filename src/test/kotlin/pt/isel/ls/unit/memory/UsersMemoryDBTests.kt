@@ -1,8 +1,8 @@
 package pt.isel.ls.unit.memory
 
 import org.junit.Test
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppException
 import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -40,7 +40,7 @@ class UsersMemoryDBTests : AppMemoryDBTests() {
     @Test
     fun `getUser throws SportsError (Not Found) if the user with the uid doesn't exist`(): Unit =
         db.execute { conn ->
-            assertFailsWith<AppException> {
+            assertFailsWith<NotFoundException> {
                 db.users.getUser(conn, 1)
             }
         }
@@ -106,7 +106,7 @@ class UsersMemoryDBTests : AppMemoryDBTests() {
     @Test
     fun `getUID throws SportsError (Not Found) if the token isn't associated to any user`(): Unit =
         db.execute { conn ->
-            assertFailsWith<AppException> {
+            assertFailsWith<NotFoundException> {
                 db.tokens.getUID(conn, "T-o-k-e-n")
             }
         }

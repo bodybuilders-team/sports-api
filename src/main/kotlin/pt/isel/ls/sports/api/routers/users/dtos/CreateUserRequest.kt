@@ -9,4 +9,4 @@ import kotlinx.serialization.Serializable
  * @property email user email
  */
 @Serializable
-data class CreateUserRequestDTO(val name: String, val email: String)
+data class CreateUserRequest(val name: String, val email: String)

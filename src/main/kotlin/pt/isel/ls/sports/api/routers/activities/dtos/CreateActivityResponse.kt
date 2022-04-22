@@ -8,4 +8,4 @@ import kotlinx.serialization.Serializable
  * @property aid of the created activity
  */
 @Serializable
-data class CreateActivityResponseDTO(val aid: Int)
+data class CreateActivityResponse(val aid: Int)

@@ -1,9 +1,10 @@
 package pt.isel.ls.sports.database.sections.users
 
+import pt.isel.ls.sports.database.AlreadyExistsException
 import pt.isel.ls.sports.database.AppMemoryDBSource
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.errors.AppException
 
 class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
 
@@ -13,7 +14,7 @@ class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
         check(!source.users.containsKey(id)) { "Serial ID already exists" }
 
         if (source.users.values.any { it.email == email })
-            throw AppException.Conflict("Email already in use")
+            throw AlreadyExistsException("Email already in use")
 
         source.users[id] = User(id, name, email)
 
@@ -22,7 +23,7 @@ class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
 
     override fun getUser(conn: ConnectionDB, uid: Int): User =
         source.users[uid]
-            ?: throw AppException.NotFound("User with id $uid not found")
+            ?: throw NotFoundException("User with id $uid not found")
 
     override fun getAllUsers(
         conn: ConnectionDB,

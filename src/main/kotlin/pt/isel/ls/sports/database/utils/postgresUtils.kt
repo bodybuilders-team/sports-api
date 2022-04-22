@@ -2,7 +2,7 @@ package pt.isel.ls.sports.database.utils
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toJavaLocalDate
-import pt.isel.ls.sports.errors.AppException
+import pt.isel.ls.sports.database.DatabaseRollbackException
 import pt.isel.ls.sports.utils.Logger
 import java.io.File
 import java.sql.Connection
@@ -36,7 +36,7 @@ fun PreparedStatement.setIntOrNull(index: Int, value: Int?) =
 
 /**
  * Rollbacks a transaction and logs the error.
- * @throws AppException.InternalError if the rollback failed.
+ * @throws DatabaseRollbackException if the rollback fails
  */
 fun rollbackTransaction(conn: Connection) {
     runCatching {
@@ -44,7 +44,7 @@ fun rollbackTransaction(conn: Connection) {
         conn.rollback()
     }.getOrElse {
         Logger.error("Could not rollback transaction")
-        throw AppException.InternalError()
+        throw DatabaseRollbackException()
     }
 }
 
