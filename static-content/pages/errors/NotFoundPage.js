@@ -1,4 +1,4 @@
-import {h1} from "../js/dom/domTags.js";
+import {h1} from "../../js/dom/domTags.js";
 
 /**
  * Not Found page.

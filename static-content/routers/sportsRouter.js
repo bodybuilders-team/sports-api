@@ -1,7 +1,7 @@
-import {Router} from "../router.js";
+import {Router} from "./router.js";
 import SportsPage from "../pages/sports/SportsPage.js";
 import SportPage from "../pages/sports/SportPage.js";
-import NotFoundPage from "../pages/NotFoundPage.js";
+import NotFoundPage from "../pages/errors/NotFoundPage.js";
 
 const router = Router();
 

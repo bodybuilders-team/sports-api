@@ -3,8 +3,6 @@ import {range} from "../../js/utils.js";
 
 async function Paginate(state, props) {
     let {onPageChange, page, pagesToShow, pagesCount} = props;
-    onPageChange = onPageChange || (() => {
-    })
 
     const leftPage = Math.max(1, page - Math.floor(pagesToShow / 2));
     const rightPage = Math.min(pagesCount, leftPage + pagesToShow - 1);

@@ -2,6 +2,8 @@ import SearchActivitiesForm from "../../components/activities/SearchActivitiesFo
 import {br, div} from "../../js/dom/domTags.js";
 import FetchedPaginatedCollection from "../../components/pagination/FetchedPaginatedCollection.js";
 import Activities from "../../components/activities/Activities.js";
+import {InvSearchParamsError} from "../../js/errorUtils.js";
+import {validate} from "../../js/validationUtils.js";
 
 /**
  * Search activities page.
@@ -9,17 +11,27 @@ import Activities from "../../components/activities/Activities.js";
  * @returns search activities page
  */
 async function SearchActivitiesPage(state) {
-    const activitiesProps = getActivitiesProps()
-
-    let {sid, orderBy, rid, date} = activitiesProps || {};
 
     function getActivitiesProps() {
-        const activitiesProps = state.query || {}
+        if (Object.keys(state.query).length === 0)
+            return null
 
-        return (activitiesProps.sid != null && activitiesProps.orderBy != null)
-            ? activitiesProps
-            : null;
+        const result = validate(state.query, {
+            sid: {type: "string", required: true},
+            orderBy: {type: "string", required: true},
+            rid: {type: "string"},
+            date: {type: "string"},
+            skip: {type: "string"},
+            limit: {type: "string"},
+        })
+
+        if (!result.isValid)
+            throw new InvSearchParamsError(result);
+
+        return state.query
     }
+
+    const activitiesProps = getActivitiesProps()
 
     /**
      * Search for activities form function.
@@ -45,19 +57,14 @@ async function SearchActivitiesPage(state) {
 
 
     return div(
-        SearchActivitiesForm(state, {onSubmit: searchActivities, activitiesProps}),
+        SearchActivitiesForm(state, {onSubmit: searchActivities, activitiesProps: activitiesProps}),
         br(),
         (activitiesProps != null) ?
             FetchedPaginatedCollection(state,
                 {
                     initialSkip: 0,
                     initialLimit: 10,
-                    searchParams: {
-                        sid,
-                        orderBy,
-                        rid,
-                        date,
-                    },
+                    searchParams: activitiesProps,
                     collectionComponent: Activities,
                     collectionEndpoint: "/activities",
                     collectionName: "activities",

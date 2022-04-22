@@ -1,7 +1,7 @@
-import {Router} from "../router.js";
+import {Router} from "./router.js";
 import UserPage from "../pages/users/UserPage.js";
 import UsersPage from "../pages/users/UsersPage.js";
-import NotFoundPage from "../pages/NotFoundPage.js";
+import NotFoundPage from "../pages/errors/NotFoundPage.js";
 
 const router = Router();
 

@@ -1,10 +1,10 @@
-import {Router} from "../router.js";
+import {Router} from "../routers/router.js";
 import usersRouter from "../routers/usersRouter.js";
 import sportsRouter from "../routers/sportsRouter.js";
 import routesRouter from "../routers/routesRouter.js";
 import activitiesRouter from "../routers/activitiesRouter.js";
-import HomePage from "../pages/HomePage.js";
-import NotFoundPage from "../pages/NotFoundPage.js";
+import HomePage from "./HomePage.js";
+import NotFoundPage from "./errors/NotFoundPage.js";
 
 const router = Router();
 

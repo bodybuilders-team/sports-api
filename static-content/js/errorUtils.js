@@ -17,3 +17,10 @@ export function isAppError(error) {
 export function LogError(...data) {
     console.error(...data);
 }
+
+export function InvSearchParamsError(data) {
+    console.error("Invalid URL search parameters", data);
+
+    for (const prop in data)
+        this[prop] = data[prop];
+}

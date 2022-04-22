@@ -2,7 +2,7 @@
  * Creates a router.
  * @returns created router
  */
-import {LogError} from "./js/errorUtils.js";
+import {LogError} from "../js/errorUtils.js";
 
 export function Router() {
     function router(state, props) {

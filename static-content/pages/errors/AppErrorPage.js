@@ -1,4 +1,4 @@
-import {div, h1} from "../js/dom/domTags.js";
+import {div, h1} from "../../js/dom/domTags.js";
 
 /**
  * The app error component.

@@ -18,7 +18,7 @@ export async function createElement(tag, attributes, ...children) {
     else if (attributes != null && typeof attributes === "object")
         setAttributes(element, attributes);
     else if (attributes != null)
-        LogError("Invalid attributes for createElement");
+        throw new LogError("Invalid attributes for createElement");
 
     for (let child of children) {
         child = await child;

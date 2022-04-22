@@ -1,5 +1,5 @@
 import {div} from "../../js/dom/domTags.js";
-import SkipLimitPaginate from "./SkipPagination.js";
+import SkipLimitPaginate from "./SkipPaginate.js";
 
 async function PaginatedCollection(state, props) {
     const {skip, limit, collectionComponent, collectionName, collection, totalCount} = props;
