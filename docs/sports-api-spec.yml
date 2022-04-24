@@ -59,6 +59,22 @@ paths:
       tags:
         - Users
       summary: Gets all users
+      parameters:
+        - name: skip
+          in: query
+          description: Number of entities to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+
+        - name: limit
+          in: query
+          description: Number of entities that are returned
+          required: false
+          schema:
+            type: integer
+            default: 10
       responses:
         200:
           description: Users were found
@@ -81,6 +97,7 @@ paths:
           required: true
           schema:
             type: integer
+            default: 1
       responses:
         200:
           description: User was found
@@ -119,6 +136,22 @@ paths:
           required: true
           schema:
             type: integer
+            default: 1
+        - name: skip
+          in: query
+          description: Number of entities to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+
+        - name: limit
+          in: query
+          description: Number of entities that are returned
+          required: false
+          schema:
+            type: integer
+            default: 10
 
       responses:
         200:
@@ -168,6 +201,22 @@ paths:
     get:
       tags:
         - Routes
+      parameters:
+        - name: skip
+          in: query
+          description: Number of entities to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+
+        - name: limit
+          in: query
+          description: Number of entities that are returned
+          required: false
+          schema:
+            type: integer
+            default: 10
       summary: Gets all routes
       responses:
         200:
@@ -192,6 +241,7 @@ paths:
           required: true
           schema:
             type: integer
+            default: 1
       responses:
 
         200:
@@ -225,6 +275,7 @@ paths:
       security:
         - token: [ ]
       requestBody:
+
         description: Sport object
         required: true
         content:
@@ -249,6 +300,22 @@ paths:
       tags:
         - Sports
       summary: Gets all sports
+      parameters:
+        - name: skip
+          in: query
+          description: Number of entities to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+
+        - name: limit
+          in: query
+          description: Number of entities that are returned
+          required: false
+          schema:
+            type: integer
+            default: 10
       responses:
         200:
           description: Sports were found
@@ -271,6 +338,7 @@ paths:
           required: true
           schema:
             type: integer
+            default: 1
       responses:
         200:
           description: Sport was found
@@ -305,6 +373,22 @@ paths:
           required: true
           schema:
             type: integer
+            default: 1
+        - name: skip
+          in: query
+          description: Number of entities to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+
+        - name: limit
+          in: query
+          description: Number of entities that are returned
+          required: false
+          schema:
+            type: integer
+            default: 10
       responses:
         200:
           description: Activity was found
@@ -396,6 +480,7 @@ paths:
           required: true
           schema:
             type: integer
+            default: 1
 
         - name: orderBy
           in: query
@@ -417,23 +502,23 @@ paths:
           required: false
           schema:
             type: integer
-
-        - name: limit
-          in: query
-          description: Activities limit
-          required: false
-          schema:
-            type: integer
-            default: 10
+            default: 1
 
         - name: skip
           in: query
-          description: Activities skip
+          description: Number of entities to skip
           required: false
           schema:
             type: integer
             default: 0
 
+        - name: limit
+          in: query
+          description: Number of entities that are returned
+          required: false
+          schema:
+            type: integer
+            default: 10
 
       responses:
         200:
@@ -469,6 +554,7 @@ paths:
           required: true
           schema:
             type: integer
+            default: 1
 
         - name: rid
           in: query
@@ -476,22 +562,23 @@ paths:
           required: true
           schema:
             type: integer
-
-        - name: limit
-          in: query
-          description: Activities limit
-          required: false
-          schema:
-            type: integer
-            default: 10
+            default: 1
 
         - name: skip
           in: query
-          description: Activities skip
+          description: Number of entities to skip
           required: false
           schema:
             type: integer
             default: 0
+
+        - name: limit
+          in: query
+          description: Number of entities that are returned
+          required: false
+          schema:
+            type: integer
+            default: 10
 
       responses:
         200:
@@ -521,6 +608,7 @@ paths:
           required: true
           schema:
             type: integer
+            default: 1
       responses:
         200:
           description: Activity was found
@@ -644,6 +732,7 @@ components:
       properties:
         uid:
           type: integer
+          default: 1
           description: User Id
         token:
           type: string
@@ -677,6 +766,7 @@ components:
       properties:
         rid:
           type: integer
+          default: 1
           description: Route Id
 
     CreateSportResponse:
@@ -686,6 +776,7 @@ components:
       properties:
         sid:
           type: integer
+          default: 1
           description: Sport Id
 
     CreateActivityResponse:
@@ -695,6 +786,7 @@ components:
       properties:
         aid:
           type: integer
+          default: 1
           description: Activity Id
 
     MessageResponse:
@@ -760,10 +852,12 @@ components:
 
         sid:
           type: integer
+          default: 1
           description: Sport id
 
         rid:
           type: integer
+          default: 1
           description: Route id
 
     CreateUserRequest:
@@ -785,7 +879,6 @@ components:
       type: object
       required:
         - name
-        - uid
       properties:
         name:
           type: string
@@ -796,10 +889,6 @@ components:
           type: string
           description: Sport Description
           example: andre@pascoa.org
-
-        uid:
-          type: integer
-          description: User id
 
     ActivityUser:
       type: object
@@ -855,6 +944,7 @@ components:
       properties:
         id:
           type: integer
+          default: 1
           description: Sport id
         name:
           type: string
@@ -868,6 +958,7 @@ components:
 
         uid:
           type: integer
+          default: 1
           description: User id
 
     Route:
@@ -901,6 +992,7 @@ components:
 
         uid:
           type: integer
+          default: 1
           description: User id
 
     Activity:
@@ -925,14 +1017,17 @@ components:
 
         uid:
           type: integer
+          default: 1
           description: User id
 
         sid:
           type: integer
+          default: 1
           description: Sport id
 
         rid:
           type: integer
+          default: 1
           description: Route id
 
     Duration:

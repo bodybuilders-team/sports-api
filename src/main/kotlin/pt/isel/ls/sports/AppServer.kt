@@ -1,7 +1,10 @@
 package pt.isel.ls.sports
 
 import org.http4k.core.Filter
+import org.http4k.core.Method
+import org.http4k.filter.AllowAll
 import org.http4k.filter.CorsPolicy
+import org.http4k.filter.OriginPolicy
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.ResourceLoader
 import org.http4k.routing.bind
@@ -31,7 +34,9 @@ class AppServer(private val port: Int, private val database: AppDB) {
 
         // Need Cross origin filter to allow requests from other domains (in this case the
         // openApi documentation in the intellij plugin)
-        val corsFilter = ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive)
+        val corsFilter = ServerFilters.Cors(
+            CorsPolicy(OriginPolicy.AllowAll(), listOf("*"), Method.values().toList(), true)
+        )
 
         // Logs all requests
         val logRequestFilter = Filter { next ->
