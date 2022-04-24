@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>C:/ISEL/Cadeiras/4ºSemestre/LS/2122-2-leic41d-g03/src/main</OriginalElement>
+  <nodes>
+    <node x="920.0" y="2173.0">pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponseDTO.Companion</node>
+    <node x="1997.5" y="2023.0">pt.isel.ls.sports.api.routers.sports.dtos.SportsResponseDTO</node>
+    <node x="2138.0" y="2521.0">pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityResponse</node>
+    <node x="1656.0" y="2173.0">pt.isel.ls.sports.api.routers.routes.dtos.RoutesResponseDTO.Companion</node>
+    <node x="1980.0" y="1852.0">pt.isel.ls.sports.database.connection.MemoryConnectionDB</node>
+    <node x="1527.0" y="540.0">pt.isel.ls.sports.database.sections.activities.ActivitiesPostgresDB.Companion</node>
+    <node x="10.0" y="876.0">pt.isel.ls.sports.database.sections.users.UsersPostgresDB</node>
+    <node x="942.0" y="922.0">pt.isel.ls.sports.database.AppMemoryDB</node>
+    <node x="681.0" y="2023.0">pt.isel.ls.sports.api.routers.users.dtos.UserDTO</node>
+    <node x="1716.0" y="1828.0">pt.isel.ls.sports.database.connection.PostgresConnectionDB</node>
+    <node x="641.0" y="1700.0">pt.isel.ls.sports.domain.Route</node>
+    <node x="1576.0" y="1405.0">pt.isel.ls.sports.database.sections.sports.SportsMemoryDB</node>
+    <node x="0.0" y="2422.0">pt.isel.ls.sports.database.utils.SortOrder.Companion</node>
+    <node x="1270.5" y="1599.0">pt.isel.ls.sports.database.sections.sports.SportsPostgresDB.Companion</node>
+    <node x="827.0" y="2789.0">pt.isel.ls.sports.utils.DomTagsGeneratorKt</node>
+    <node x="1995.0" y="258.0">pt.isel.ls.sports.database.sections.activities.ActivitiesMemoryDB</node>
+    <node x="746.0" y="2294.0">pt.isel.ls.sports.api.utils.errors.AppError</node>
+    <node x="307.99999999999994" y="1339.0">pt.isel.ls.sports.api.routers.activities.ActivitiesRouter</node>
+    <node x="0.0" y="1601.0">pt.isel.ls.sports.api.routers.sports.SportsRouter.Companion</node>
+    <node x="497.49999999999994" y="1235.0">pt.isel.ls.sports.api.routers.IRouter</node>
+    <node x="1370.0" y="2521.0">pt.isel.ls.sports.database.sections.users.UsersResponse</node>
+    <node x="15.5" y="1361.0">pt.isel.ls.sports.api.routers.sports.SportsRouter</node>
+    <node x="277.0" y="2666.0">pt.isel.ls.sports.api.utils.MessageResponse</node>
+    <node x="438.99999999999994" y="405.0">pt.isel.ls.sports.services.sections.routes.RoutesServices</node>
+    <node x="1955.0" y="1235.0">pt.isel.ls.sports.domain.Activity</node>
+    <node x="906.0" y="1601.0">pt.isel.ls.sports.api.routers.users.UsersRouter.Companion</node>
+    <node x="1991.0" y="2173.0">pt.isel.ls.sports.api.routers.sports.dtos.SportsResponseDTO.Companion</node>
+    <node x="832.75" y="684.0">pt.isel.ls.sports.database.AppDB</node>
+    <node x="929.0" y="1894.0">pt.isel.ls.sports.domain.Sport.Companion</node>
+    <node x="1630.0" y="2521.0">pt.isel.ls.sports.AppServer</node>
+    <node x="1008.0" y="2294.0">pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest</node>
+    <node x="16.5" y="2294.0">pt.isel.ls.sports.database.utils.SortOrder</node>
+    <node x="282.0" y="2789.0">pt.isel.ls.sports.utils.UtilsKt</node>
+    <node x="1453.0" y="258.0">pt.isel.ls.sports.database.sections.activities.ActivitiesPostgresDB</node>
+    <node x="639.0" y="1372.0">pt.isel.ls.sports.api.routers.routes.RoutesRouter</node>
+    <node x="177.00000000000003" y="684.0">pt.isel.ls.sports.database.sections.users.UsersDB</node>
+    <node x="921.5" y="1361.0">pt.isel.ls.sports.api.routers.users.UsersRouter</node>
+    <node x="0.0" y="372.0">pt.isel.ls.sports.services.sections.activities.ActivitiesServices</node>
+    <node x="373.0" y="1916.0">pt.isel.ls.sports.api.routers.routes.dtos.RouteDTO.Companion</node>
+    <node x="1301.5" y="1048.0">pt.isel.ls.sports.database.sections.routes.RoutesPostgresDB.Companion</node>
+    <node x="1399.0" y="1235.0">pt.isel.ls.sports.database.sections.sports.SportsDB</node>
+    <node x="2428.0" y="2521.0">pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteResponse</node>
+    <node x="1274.0" y="2789.0">pt.isel.ls.sports.AppLaunchKt</node>
+    <node x="2270.0" y="2294.0">pt.isel.ls.sports.database.sections.activities.ActivitiesResponse</node>
+    <node x="1946.0" y="2294.0">pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteRequest</node>
+    <node x="1846.0" y="2521.0">pt.isel.ls.sports.api.routers.activities.dtos.DeleteActivitiesRequest</node>
+    <node x="769.0" y="394.0">pt.isel.ls.sports.services.sections.sports.SportsServices</node>
+    <node x="652.5" y="1916.0">pt.isel.ls.sports.domain.Route.Companion</node>
+    <node x="0.0" y="1700.0">pt.isel.ls.sports.database.AppMemoryDBSource</node>
+    <node x="295.99999999999994" y="1601.0">pt.isel.ls.sports.api.routers.activities.ActivitiesRouter.Companion</node>
+    <node x="1222.0" y="1405.0">pt.isel.ls.sports.database.sections.sports.SportsPostgresDB</node>
+    <node x="2320.0" y="2173.0">pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO.Companion</node>
+    <node x="1227.0" y="1894.0">pt.isel.ls.sports.api.routers.sports.dtos.SportDTO.Companion</node>
+    <node x="0.0" y="2521.0">pt.isel.ls.sports.api.routers.sports.dtos.CreateSportRequest</node>
+    <node x="0.0" y="2789.0">pt.isel.ls.sports.database.DatabaseRollbackException</node>
+    <node x="164.0" y="2023.0">pt.isel.ls.sports.database.sections.tokens.TokensDB</node>
+    <node x="1305.0" y="2023.0">pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO</node>
+    <node x="1332.0" y="2666.0">pt.isel.ls.sports.services.UnauthorizedException</node>
+    <node x="1662.5" y="2023.0">pt.isel.ls.sports.api.routers.routes.dtos.RoutesResponseDTO</node>
+    <node x="1202.0" y="1700.0">pt.isel.ls.sports.api.routers.sports.dtos.SportDTO</node>
+    <node x="2326.5" y="2023.0">pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO</node>
+    <node x="1247.0" y="854.0">pt.isel.ls.sports.database.sections.routes.RoutesPostgresDB</node>
+    <node x="2105.0" y="2666.0">pt.isel.ls.sports.utils.TimeUtilsKt</node>
+    <node x="558.0" y="2521.0">pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest</node>
+    <node x="1060.0" y="2666.0">pt.isel.ls.sports.services.AuthenticationException</node>
+    <node x="1836.5" y="1700.0">pt.isel.ls.sports.database.connection.ConnectionDB</node>
+    <node x="145.99999999999994" y="610.0">pt.isel.ls.sports.services.sections.activities.ActivitiesServices.Companion</node>
+    <node x="778.0" y="2666.0">pt.isel.ls.sports.services.InvalidArgumentException</node>
+    <node x="328.0" y="2149.0">pt.isel.ls.sports.database.sections.tokens.TokensPostgresDB</node>
+    <node x="0.0" y="1092.0">pt.isel.ls.sports.database.sections.users.UsersPostgresDB.Companion</node>
+    <node x="0.0" y="2666.0">pt.isel.ls.sports.api.routers.sports.dtos.CreateSportResponse</node>
+    <node x="1094.0" y="394.0">pt.isel.ls.sports.services.sections.users.UsersServices</node>
+    <node x="2344.0" y="1235.0">pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO</node>
+    <node x="958.5" y="2023.0">pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponseDTO</node>
+    <node x="330.0" y="1700.0">pt.isel.ls.sports.api.routers.routes.dtos.RouteDTO</node>
+    <node x="282.0" y="2521.0">pt.isel.ls.sports.database.sections.routes.RoutesResponse</node>
+    <node x="344.0" y="876.0">pt.isel.ls.sports.database.sections.users.UsersMemoryDB</node>
+    <node x="1342.0" y="2294.0">pt.isel.ls.sports.services.AppServices</node>
+    <node x="1724.0" y="0.0">pt.isel.ls.sports.database.sections.activities.ActivitiesDB</node>
+    <node x="220.0" y="2294.0">pt.isel.ls.sports.api.utils.UtilsKt</node>
+    <node x="703.0" y="922.0">pt.isel.ls.sports.database.AppPostgresDB</node>
+    <node x="942.5" y="1700.0">pt.isel.ls.sports.domain.Sport</node>
+    <node x="1643.0" y="854.0">pt.isel.ls.sports.database.sections.routes.RoutesMemoryDB</node>
+    <node x="696.0" y="2195.0">pt.isel.ls.sports.api.routers.users.dtos.UserDTO.Companion</node>
+    <node x="2333.0" y="2666.0">pt.isel.ls.sports.api.utils.errors.ErrorsUtilsKt</node>
+    <node x="1297.0" y="2173.0">pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO.Companion</node>
+    <node x="1596.0" y="2666.0">pt.isel.ls.sports.database.AlreadyExistsException</node>
+    <node x="533.0" y="2666.0">pt.isel.ls.sports.api.AppWebApi</node>
+    <node x="1858.0" y="2666.0">pt.isel.ls.sports.database.NotFoundException</node>
+    <node x="1068.0" y="2789.0">pt.isel.ls.sports.services.utils.ServicesUtilsKt</node>
+    <node x="1575.0" y="2294.0">pt.isel.ls.sports.database.utils.PostgresUtilsKt</node>
+    <node x="830.0" y="2521.0">pt.isel.ls.sports.database.sections.sports.SportsResponse</node>
+    <node x="1471.0" y="1872.0">pt.isel.ls.sports.domain.User.Companion</node>
+    <node x="2375.0" y="1473.0">pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO.Companion</node>
+    <node x="518.0" y="2294.0">pt.isel.ls.sports.utils.Logger</node>
+    <node x="1100.0" y="2521.0">pt.isel.ls.sports.services.sections.users.CreateUserResponse</node>
+    <node x="1485.5" y="1700.0">pt.isel.ls.sports.domain.User</node>
+    <node x="558.0" y="2789.0">pt.isel.ls.sports.database.DatabaseAccessException</node>
+    <node x="1445.0" y="684.0">pt.isel.ls.sports.database.sections.routes.RoutesDB</node>
+    <node x="613.25" y="0.0">pt.isel.ls.sports.services.AbstractServices</node>
+    <node x="0.0" y="2149.0">pt.isel.ls.sports.database.sections.tokens.TokensMemoryDB</node>
+    <node x="607.0" y="1601.0">pt.isel.ls.sports.api.routers.routes.RoutesRouter.Companion</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="pt.isel.ls.sports.services.sections.users.UsersServices" target="pt.isel.ls.sports.services.AbstractServices" relationship="GENERALIZATION">
+      <point x="0.0" y="-72.0" />
+      <point x="1251.0" y="347.0" />
+      <point x="757.75" y="347.0" />
+      <point x="0.0" y="161.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.domain.User.Companion" target="pt.isel.ls.sports.domain.User" relationship="INNER_CLASS">
+      <point x="0.0" y="-38.0" />
+      <point x="0.0" y="61.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.AppMemoryDB" target="pt.isel.ls.sports.database.AppDB" relationship="REALIZATION">
+      <point x="0.0" y="-106.0" />
+      <point x="1072.0" y="897.0" />
+      <point x="942.25" y="897.0" />
+      <point x="0.0" y="94.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.services.sections.activities.ActivitiesServices" target="pt.isel.ls.sports.services.AbstractServices" relationship="GENERALIZATION">
+      <point x="0.0" y="-94.0" />
+      <point x="209.5" y="347.0" />
+      <point x="757.75" y="347.0" />
+      <point x="0.0" y="161.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO.Companion" target="pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO" relationship="INNER_CLASS">
+      <point x="0.0" y="-49.0" />
+      <point x="0.0" y="94.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.sports.dtos.SportDTO.Companion" target="pt.isel.ls.sports.api.routers.sports.dtos.SportDTO" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="72.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.sports.dtos.SportsResponseDTO.Companion" target="pt.isel.ls.sports.api.routers.sports.dtos.SportsResponseDTO" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.users.UsersRouter" target="pt.isel.ls.sports.api.routers.IRouter" relationship="REALIZATION">
+      <point x="-2.2737367544323206E-13" y="-84.0" />
+      <point x="1041.4999999999998" y="1314.0" />
+      <point x="594.0" y="1314.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.routes.dtos.RouteDTO.Companion" target="pt.isel.ls.sports.api.routers.routes.dtos.RouteDTO" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="83.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.connection.MemoryConnectionDB" target="pt.isel.ls.sports.database.connection.ConnectionDB" relationship="REALIZATION">
+      <point x="0.0" y="-27.0" />
+      <point x="2081.0" y="1803.0" />
+      <point x="1959.5" y="1803.0" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.sports.SportsRouter.Companion" target="pt.isel.ls.sports.api.routers.sports.SportsRouter" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="84.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.utils.SortOrder.Companion" target="pt.isel.ls.sports.database.utils.SortOrder" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.users.UsersPostgresDB" target="pt.isel.ls.sports.database.sections.users.UsersDB" relationship="REALIZATION">
+      <point x="0.0" y="-83.0" />
+      <point x="167.0" y="851.0" />
+      <point x="334.0" y="851.0" />
+      <point x="0.0" y="71.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO.Companion" target="pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.tokens.TokensMemoryDB" target="pt.isel.ls.sports.database.sections.tokens.TokensDB" relationship="REALIZATION">
+      <point x="0.0" y="-50.0" />
+      <point x="154.0" y="2124.0" />
+      <point x="318.0" y="2124.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.activities.ActivitiesRouter.Companion" target="pt.isel.ls.sports.api.routers.activities.ActivitiesRouter" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="106.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.sports.SportsRouter" target="pt.isel.ls.sports.api.routers.IRouter" relationship="REALIZATION">
+      <point x="0.0" y="-84.0" />
+      <point x="138.0" y="1314.0" />
+      <point x="594.0" y="1314.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.sports.SportsPostgresDB" target="pt.isel.ls.sports.database.sections.sports.SportsDB" relationship="REALIZATION">
+      <point x="0.0" y="-72.0" />
+      <point x="1389.0" y="1380.0" />
+      <point x="1566.0" y="1380.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.routes.RoutesPostgresDB.Companion" target="pt.isel.ls.sports.database.sections.routes.RoutesPostgresDB" relationship="INNER_CLASS">
+      <point x="0.0" y="-38.0" />
+      <point x="0.0" y="72.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.tokens.TokensPostgresDB" target="pt.isel.ls.sports.database.sections.tokens.TokensDB" relationship="REALIZATION">
+      <point x="0.0" y="-50.0" />
+      <point x="482.0" y="2124.0" />
+      <point x="318.0" y="2124.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.users.dtos.UserDTO.Companion" target="pt.isel.ls.sports.api.routers.users.dtos.UserDTO" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="61.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponseDTO.Companion" target="pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponseDTO" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.activities.ActivitiesMemoryDB" target="pt.isel.ls.sports.database.sections.activities.ActivitiesDB" relationship="REALIZATION">
+      <point x="0.0" y="-116.0" />
+      <point x="2256.0" y="233.0" />
+      <point x="1985.0" y="233.0" />
+      <point x="0.0" y="104.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.activities.ActivitiesRouter" target="pt.isel.ls.sports.api.routers.IRouter" relationship="REALIZATION">
+      <point x="0.0" y="-106.0" />
+      <point x="441.49999999999994" y="1314.0" />
+      <point x="594.0" y="1314.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.routes.RoutesMemoryDB" target="pt.isel.ls.sports.database.sections.routes.RoutesDB" relationship="REALIZATION">
+      <point x="0.0" y="-72.0" />
+      <point x="1831.0" y="829.0" />
+      <point x="1633.0" y="829.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.users.UsersPostgresDB.Companion" target="pt.isel.ls.sports.database.sections.users.UsersPostgresDB" relationship="INNER_CLASS">
+      <point x="0.0" y="-49.0" />
+      <point x="0.0" y="83.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.connection.PostgresConnectionDB" target="pt.isel.ls.sports.database.connection.ConnectionDB" relationship="REALIZATION">
+      <point x="0.0" y="-51.0" />
+      <point x="1838.0" y="1803.0" />
+      <point x="1959.5" y="1803.0" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.sports.SportsPostgresDB.Companion" target="pt.isel.ls.sports.database.sections.sports.SportsPostgresDB" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="72.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.routes.RoutesRouter.Companion" target="pt.isel.ls.sports.api.routers.routes.RoutesRouter" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="73.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO.Companion" target="pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.activities.ActivitiesPostgresDB.Companion" target="pt.isel.ls.sports.database.sections.activities.ActivitiesPostgresDB" relationship="INNER_CLASS">
+      <point x="0.0" y="-49.0" />
+      <point x="0.0" y="116.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.services.sections.routes.RoutesServices" target="pt.isel.ls.sports.services.AbstractServices" relationship="GENERALIZATION">
+      <point x="0.0" y="-61.0" />
+      <point x="594.0" y="347.0" />
+      <point x="757.75" y="347.0" />
+      <point x="0.0" y="161.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.users.UsersRouter.Companion" target="pt.isel.ls.sports.api.routers.users.UsersRouter" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="84.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.services.sections.activities.ActivitiesServices.Companion" target="pt.isel.ls.sports.services.sections.activities.ActivitiesServices" relationship="INNER_CLASS">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="94.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.users.UsersMemoryDB" target="pt.isel.ls.sports.database.sections.users.UsersDB" relationship="REALIZATION">
+      <point x="0.0" y="-83.0" />
+      <point x="501.0" y="851.0" />
+      <point x="334.0" y="851.0" />
+      <point x="0.0" y="71.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.AppPostgresDB" target="pt.isel.ls.sports.database.AppDB" relationship="REALIZATION">
+      <point x="0.0" y="-106.0" />
+      <point x="812.5" y="897.0" />
+      <point x="942.25" y="897.0" />
+      <point x="0.0" y="94.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.services.sections.sports.SportsServices" target="pt.isel.ls.sports.services.AbstractServices" relationship="GENERALIZATION">
+      <point x="0.0" y="-72.0" />
+      <point x="921.5" y="347.0" />
+      <point x="757.75" y="347.0" />
+      <point x="0.0" y="161.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.domain.Route.Companion" target="pt.isel.ls.sports.domain.Route" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="83.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.routes.RoutesRouter" target="pt.isel.ls.sports.api.routers.IRouter" relationship="REALIZATION">
+      <point x="0.0" y="-73.0" />
+      <point x="746.5" y="1314.0" />
+      <point x="594.0" y="1314.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.sports.SportsMemoryDB" target="pt.isel.ls.sports.database.sections.sports.SportsDB" relationship="REALIZATION">
+      <point x="0.0" y="-72.0" />
+      <point x="1743.0" y="1380.0" />
+      <point x="1566.0" y="1380.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.domain.Sport.Companion" target="pt.isel.ls.sports.domain.Sport" relationship="INNER_CLASS">
+      <point x="0.0" y="-38.0" />
+      <point x="0.0" y="72.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.activities.ActivitiesPostgresDB" target="pt.isel.ls.sports.database.sections.activities.ActivitiesDB" relationship="REALIZATION">
+      <point x="0.0" y="-116.0" />
+      <point x="1714.0" y="233.0" />
+      <point x="1985.0" y="233.0" />
+      <point x="0.0" y="104.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.database.sections.routes.RoutesPostgresDB" target="pt.isel.ls.sports.database.sections.routes.RoutesDB" relationship="REALIZATION">
+      <point x="0.0" y="-72.0" />
+      <point x="1435.0" y="829.0" />
+      <point x="1633.0" y="829.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="pt.isel.ls.sports.api.routers.routes.dtos.RoutesResponseDTO.Companion" target="pt.isel.ls.sports.api.routers.routes.dtos.RoutesResponseDTO" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="50.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.30632203981837236" showDependencies="false" x="1331.5" y="1421.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

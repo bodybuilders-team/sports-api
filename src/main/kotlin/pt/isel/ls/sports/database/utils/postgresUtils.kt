@@ -67,4 +67,4 @@ fun Connection.runScript(filepath: String) {
  * @param date the date to convert
  * @return the converted date
  */
-fun getSQLDate(date: LocalDate) = Date.valueOf(date.toJavaLocalDate())
+fun getSQLDate(date: LocalDate): Date = Date.valueOf(date.toJavaLocalDate())

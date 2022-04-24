@@ -4,7 +4,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
-import pt.isel.ls.sports.database.connection.getPostgresConnection
 import pt.isel.ls.sports.database.sections.users.UsersPostgresDB.Companion.getUsersResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder

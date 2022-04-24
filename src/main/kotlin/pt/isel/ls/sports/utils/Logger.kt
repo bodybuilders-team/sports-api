@@ -11,7 +11,7 @@ import java.sql.Timestamp
  */
 object Logger {
     private const val LOGGER_NAME = "pt.isel.ls.sports.Logger"
-    val logger: Logger = LoggerFactory.getLogger(LOGGER_NAME)
+    private val logger: Logger = LoggerFactory.getLogger(LOGGER_NAME)
 
     fun error(message: String) =
         logger.error("{} : {}", Timestamp(System.currentTimeMillis()), message)

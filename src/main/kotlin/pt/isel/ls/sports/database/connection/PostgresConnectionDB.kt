@@ -12,9 +12,3 @@ class PostgresConnectionDB(val connection: Connection) : ConnectionDB, Closeable
         connection.close()
     }
 }
-
-/**
- * Converts a [ConnectionDB] instance to a [Connection] instance
- */
-fun ConnectionDB.getPostgresConnection(): Connection =
-    (this as PostgresConnectionDB).connection

@@ -2,7 +2,6 @@ package pt.isel.ls.sports.database.sections.sports
 
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
-import pt.isel.ls.sports.database.connection.getPostgresConnection
 import pt.isel.ls.sports.database.utils.setStringOrNull
 import pt.isel.ls.sports.domain.Sport
 import java.sql.ResultSet

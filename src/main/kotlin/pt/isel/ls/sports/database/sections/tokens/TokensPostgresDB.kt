@@ -2,7 +2,6 @@ package pt.isel.ls.sports.database.sections.tokens
 
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
-import pt.isel.ls.sports.database.connection.getPostgresConnection
 import java.sql.SQLException
 import java.util.UUID
 

@@ -2,7 +2,6 @@ package pt.isel.ls.sports.database.sections.routes
 
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
-import pt.isel.ls.sports.database.connection.getPostgresConnection
 import pt.isel.ls.sports.domain.Route
 import java.sql.Connection
 import java.sql.ResultSet
