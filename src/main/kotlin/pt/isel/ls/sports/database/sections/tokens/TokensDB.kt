@@ -1,8 +1,12 @@
 package pt.isel.ls.sports.database.sections.tokens
 
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import java.util.UUID
 
+/**
+ * Tokens database representation.
+ */
 interface TokensDB {
     /**
      * Associates a user [token] with the [uid].
@@ -21,7 +25,8 @@ interface TokensDB {
      * @param conn database Connection
      * @param token user's token
      *
-     * @return uid
+     * @return user's unique identifier
+     * @throws NotFoundException if the token isn't associated with any user
      */
     fun getUID(conn: ConnectionDB, token: String): Int
 }

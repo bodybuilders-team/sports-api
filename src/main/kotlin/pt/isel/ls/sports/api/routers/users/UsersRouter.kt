@@ -34,9 +34,10 @@ class UsersRouter(private val services: UsersServices) : IRouter {
         const val DEFAULT_LIMIT = 10
 
         /**
-         * Returns the users router routes.
+         * Returns the users' router's routes.
+         *
          * @param services users services
-         * @return users router routes
+         * @return users router's routes
          */
         fun routes(services: UsersServices) = UsersRouter(services).routes
     }
@@ -50,8 +51,9 @@ class UsersRouter(private val services: UsersServices) : IRouter {
 
     /**
      * Creates a user.
-     * @param request user creation HTTP request
-     * @return user creation HTTP response
+     *
+     * @param request HTTP request containing a body that follows the [CreateUserRequest] format
+     * @return HTTP response containing a body that follows the [CreateUserResponseDTO] format
      */
     private fun createUser(request: Request): Response = runAndCatch {
         val userRequest = request.decodeBodyAs<CreateUserRequest>()
@@ -62,10 +64,10 @@ class UsersRouter(private val services: UsersServices) : IRouter {
 
     /**
      * Gets all users.
+     *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [UsersResponseDTO] format
      */
-    @Suppress("UNUSED_PARAMETER")
     private fun getUsers(request: Request): Response = runAndCatch {
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
         val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
@@ -76,8 +78,9 @@ class UsersRouter(private val services: UsersServices) : IRouter {
 
     /**
      * Gets a specific user.
+     *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [UserDTO] format
      */
     private fun getUser(request: Request): Response = runAndCatch {
         val uid = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }
@@ -88,9 +91,10 @@ class UsersRouter(private val services: UsersServices) : IRouter {
     }
 
     /**
-     * Gets all activities made by user.
+     * Gets all the activities made by a specific user.
+     *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [ActivitiesResponseDTO] format
      */
     private fun getUserActivities(request: Request): Response = runAndCatch {
         val uid = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }

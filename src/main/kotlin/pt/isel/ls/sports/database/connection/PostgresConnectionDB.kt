@@ -5,6 +5,8 @@ import java.sql.Connection
 
 /**
  * Postgres database connection implementation.
+ *
+ * @property connection the connection to the database
  */
 class PostgresConnectionDB(val connection: Connection) : ConnectionDB, Closeable {
 

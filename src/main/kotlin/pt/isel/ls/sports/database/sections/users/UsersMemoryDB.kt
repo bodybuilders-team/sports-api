@@ -11,9 +11,7 @@ class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
     override fun createNewUser(conn: ConnectionDB, name: String, email: String): Int {
         val id = source.nextUserId.getAndIncrement()
 
-        check(!source.users.containsKey(id)) { "Serial ID already exists" }
-
-        if (source.users.values.any { it.email == email })
+        if (hasUserWithEmail(conn, email))
             throw AlreadyExistsException("Email already in use")
 
         source.users[id] = User(id, name, email)

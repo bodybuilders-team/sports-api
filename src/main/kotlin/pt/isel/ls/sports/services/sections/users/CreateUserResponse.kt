@@ -1,7 +1,7 @@
 package pt.isel.ls.sports.services.sections.users
 
 /**
- * Response for the createUser method of services.
+ * Represents a user creation response.
  *
  * @property token user's token
  * @property uid user's unique identifier

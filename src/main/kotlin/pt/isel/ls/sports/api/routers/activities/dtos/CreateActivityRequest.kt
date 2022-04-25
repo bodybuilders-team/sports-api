@@ -6,8 +6,8 @@ import pt.isel.ls.sports.services.InvalidArgumentException
 /**
  * Represents an activity creation request.
  *
- * @property date activity date
- * @property duration duration of the activity
+ * @property date date of the activity in string representation
+ * @property duration duration of the activity in string representation
  * @property sid unique identifier of the activity sport
  * @property rid unique identifier of the activity route (optional)
  */

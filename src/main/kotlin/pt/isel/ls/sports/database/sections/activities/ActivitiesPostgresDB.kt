@@ -67,6 +67,9 @@ class ActivitiesPostgresDB : ActivitiesDB {
         conn: ConnectionDB,
         aid: Int
     ) {
+        if (!hasActivity(conn, aid))
+            throw NotFoundException("Activity with id $aid not found")
+
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
@@ -212,11 +215,10 @@ class ActivitiesPostgresDB : ActivitiesDB {
 
     companion object {
         /**
-         * Gets a list of activities returned from the execution of the statement [stm]
+         * Gets a list of activities returned from the execution of the statement [stm].
          *
          * @param stm statement
-         *
-         * @return list of activities
+         * @return [ActivitiesResponse] with the list of activities
          */
         private fun getActivitiesResponse(stm: PreparedStatement): ActivitiesResponse {
             val rs = stm.executeQuery()
@@ -235,9 +237,10 @@ class ActivitiesPostgresDB : ActivitiesDB {
         }
 
         /**
-         * Gets an Activity object from a ResultSet.
+         * Gets an [Activity] from a ResultSet.
+         *
          * @param rs table
-         * @return activity
+         * @return activity object
          */
         private fun getActivityFromTable(rs: ResultSet) = Activity(
             id = rs.getInt(1),
@@ -249,10 +252,10 @@ class ActivitiesPostgresDB : ActivitiesDB {
         )
 
         /**
-         * Executes a query on the activities table given the [aid].
+         * Executes a query on the "activities" table given the [aid].
          *
          * @param conn connection
-         * @param aid activity id
+         * @param aid activity's unique identifier
          * @return result set
          */
         private fun doActivityQuery(conn: Connection, aid: Int): ResultSet {

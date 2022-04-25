@@ -12,17 +12,15 @@ import pt.isel.ls.sports.database.sections.users.UsersDB
  */
 interface AppDB {
     /**
-     * Encapsulates a function that interacts with the database
-     * so an implementation can do an operation before,
-     * after or if an exception is thrown during the function call.
+     * Encapsulates a function that interacts with the database in order to allow for atomic sets of operations.
      *
-     * @param func, function that interacts with the database
-     * @return [func] result
+     * @param func function that interacts with the database
+     * @return result of [func]
      */
     fun <R> execute(func: (ConnectionDB) -> R): R
 
     /**
-     * Reset database.
+     * Resets database.
      */
     fun reset()
 

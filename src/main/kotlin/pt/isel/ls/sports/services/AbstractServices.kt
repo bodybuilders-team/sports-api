@@ -5,13 +5,15 @@ import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.services.utils.isValidId
 
+/**
+ * Abstract Services class that implements the common methods of all services.
+ */
 abstract class AbstractServices(protected val db: AppDB) {
-
     /**
-     * Gets the user's unique identifier associate with the [token]
+     * Gets the user's unique identifier associated with the [token].
      *
      * @param conn database Connection
-     * @param token user token
+     * @param token user's token
      *
      * @return user's unique identifier associated with the [token]
      *
@@ -19,7 +21,7 @@ abstract class AbstractServices(protected val db: AppDB) {
      */
     protected fun authenticate(conn: ConnectionDB, token: String) = try {
         db.tokens.getUID(conn, token)
-    } catch (e: NotFoundException) {
+    } catch (error: NotFoundException) {
         throw AuthenticationException("Invalid token")
     }
 
@@ -69,6 +71,7 @@ abstract class AbstractServices(protected val db: AppDB) {
 
     /**
      * Validates the existence of a user with the [uid].
+     *
      * @param conn database Connection
      * @param uid user's unique identifier
      *
@@ -81,6 +84,7 @@ abstract class AbstractServices(protected val db: AppDB) {
 
     /**
      * Validates the existence of a sport with the [sid].
+     *
      * @param conn database Connection
      * @param sid sport's unique identifier
      *
@@ -93,6 +97,7 @@ abstract class AbstractServices(protected val db: AppDB) {
 
     /**
      * Validates the existence of a route with the [rid].
+     *
      * @param conn database Connection
      * @param rid route's unique identifier
      *
@@ -105,6 +110,7 @@ abstract class AbstractServices(protected val db: AppDB) {
 
     /**
      * Validates the existence of an activity with the [aid].
+     *
      * @param conn database Connection
      * @param aid activity's unique identifier
      *
@@ -117,6 +123,11 @@ abstract class AbstractServices(protected val db: AppDB) {
 
     /**
      * Validates if a limit is between the given [range].
+     *
+     * @param limit limit to be validated
+     * @param range range of valid values
+     *
+     * @throws InvalidArgumentException if [limit] is not between [range]
      */
     protected fun validateLimit(limit: Int, range: IntRange) {
         if (limit !in range)
@@ -125,6 +136,10 @@ abstract class AbstractServices(protected val db: AppDB) {
 
     /**
      * Validates skip.
+     *
+     * @param skip skip to be validated
+     *
+     * @throws InvalidArgumentException if [skip] is invalid
      */
     protected fun validateSkip(skip: Int) {
         if (skip < 0)

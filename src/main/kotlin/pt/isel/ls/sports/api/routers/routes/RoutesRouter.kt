@@ -34,9 +34,10 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
         const val DEFAULT_LIMIT = 10
 
         /**
-         * Returns the routes router routes.
+         * Returns the routes' router's routes.
+         *
          * @param services routes services
-         * @return routes router routes
+         * @return routes router's routes
          */
         fun routes(services: RoutesServices) = RoutesRouter(services).routes
     }
@@ -49,8 +50,9 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
 
     /**
      * Creates a route.
-     * @param request route creation HTTP request
-     * @return route creation HTTP response
+     *
+     * @param request HTTP request containing a body that follows the [CreateRouteRequest] format
+     * @return HTTP response containing a body that follows the [CreateRouteResponse] format
      */
     private fun createRoute(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
@@ -58,8 +60,8 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
         val routeRequest = request.decodeBodyAs<CreateRouteRequest>()
         val uid = services.createNewRoute(
             token,
-            routeRequest.start_location,
-            routeRequest.end_location,
+            routeRequest.startLocation,
+            routeRequest.endLocation,
             routeRequest.distance
         )
 
@@ -68,8 +70,9 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
 
     /**
      * Gets all routes.
+     *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [RoutesResponseDTO] format
      */
     private fun getRoutes(request: Request): Response = runAndCatch {
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
@@ -82,8 +85,9 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
 
     /**
      * Gets a specific route.
+     *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [RouteDTO] format
      */
     private fun getRoute(request: Request): Response = runAndCatch {
         val rid = request.pathOrThrow("id").toIntOrThrow { "Invalid Route Id" }

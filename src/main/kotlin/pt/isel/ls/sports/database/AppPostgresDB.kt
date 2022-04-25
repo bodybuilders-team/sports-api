@@ -14,7 +14,10 @@ import pt.isel.ls.sports.utils.Logger
 import java.sql.SQLException
 
 /**
- * Implementation of a Postgres database representation, an aggregate of all Postgres database sections.
+ * App database representation using Postgres, an aggregate of all Postgres database sections.
+ *
+ * @param sourceURL the Postgres database URL
+ * @property source the Postgres database source obtained from the URL
  */
 class AppPostgresDB(sourceURL: String) : AppDB {
     private val source = PGSimpleDataSource().apply { setURL(sourceURL) }

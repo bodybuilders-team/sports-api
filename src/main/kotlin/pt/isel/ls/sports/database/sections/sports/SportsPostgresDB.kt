@@ -9,15 +9,7 @@ import java.sql.SQLException
 import java.sql.Statement
 
 class SportsPostgresDB : SportsDB {
-    /**
-     * Create a new sport.
-     *
-     * @param name the sport's name
-     * @param description the sport's description
-     * @param uid user's unique identifier
-     *
-     * @return the sport's unique identifier
-     */
+
     override fun createNewSport(conn: ConnectionDB, uid: Int, name: String, description: String?): Int {
         val stm = conn
             .getPostgresConnection()
@@ -39,13 +31,6 @@ class SportsPostgresDB : SportsDB {
         return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
     }
 
-    /**
-     * Get a sport.
-     *
-     * @param sid sport's unique identifier
-     *
-     * @return the sport object
-     */
     override fun getSport(conn: ConnectionDB, sid: Int): Sport {
         val stm = conn
             .getPostgresConnection()
@@ -66,11 +51,6 @@ class SportsPostgresDB : SportsDB {
             throw NotFoundException("Sport with id $sid not found")
     }
 
-    /**
-     * Get the list of all sports.
-     *
-     * @return list of identifiers of all sports
-     */
     override fun getAllSports(
         conn: ConnectionDB,
         skip: Int,
@@ -124,9 +104,10 @@ class SportsPostgresDB : SportsDB {
 
     companion object {
         /**
-         * Gets a Sport object from a ResultSet.
+         * Gets a [Sport] from a ResultSet.
+         *
          * @param rs table
-         * @return sport
+         * @return sport object
          */
         private fun getSportFromTable(rs: ResultSet) = Sport(
             id = rs.getInt(1),

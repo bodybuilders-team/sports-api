@@ -9,14 +9,20 @@ import pt.isel.ls.sports.services.AbstractServices
 import pt.isel.ls.sports.services.InvalidArgumentException
 import java.util.UUID
 
+/**
+ * Users services. Implements methods regarding users.
+ */
 class UsersServices(db: AppDB) : AbstractServices(db) {
     /**
-     * Creates a new user in the database.
+     * Creates a new user.
      *
-     * @param name user's name
-     * @param email user's email
+     * @param name name of the user
+     * @param email email of the user
      *
-     * @return a createUser response (user's token and the user's unique identifier)
+     * @return [CreateUserResponse] with the user's token and the user's unique identifier
+     * @throws InvalidArgumentException if the name is invalid
+     * @throws InvalidArgumentException if the email is invalid
+     * @throws AlreadyExistsException if a user with that email already exists
      */
     fun createNewUser(name: String, email: String): CreateUserResponse {
         if (!User.isValidName(name))
@@ -37,11 +43,12 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
-     * Gets the user identified by [uid].
+     * Gets a specific user.
      *
-     * @param uid user's identifier
+     * @param uid user's unique identifier
      *
-     * @return user object
+     * @return the user object
+     * @throws InvalidArgumentException if [uid] is negative
      */
     fun getUser(uid: Int): User {
         validateUid(uid)
@@ -52,20 +59,26 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
-     * Get the list of users.
+     * Gets all users.
      *
-     * @return list of user objects
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
+     *
+     * @return [UsersResponse] with the list of users
      */
     fun getAllUsers(skip: Int, limit: Int): UsersResponse = db.execute { conn ->
         db.users.getAllUsers(conn, skip, limit)
     }
 
     /**
-     * Get all the activities made from a user.
+     * Gets all the activities made by a specific user.
      *
      * @param uid user's unique identifier
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
      *
-     * @return list of activities made from a user
+     * @return [ActivitiesResponse] with the list of activities
+     * @throws InvalidArgumentException if [uid] is negative
      */
     fun getUserActivities(uid: Int, skip: Int, limit: Int): ActivitiesResponse {
         validateUid(uid)

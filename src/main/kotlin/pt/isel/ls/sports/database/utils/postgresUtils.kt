@@ -8,6 +8,7 @@ import java.io.File
 import java.sql.Connection
 import java.sql.Date
 import java.sql.PreparedStatement
+import java.sql.SQLException
 import java.sql.Types
 
 /**
@@ -35,21 +36,23 @@ fun PreparedStatement.setIntOrNull(index: Int, value: Int?) =
     }
 
 /**
- * Rollbacks a transaction and logs the error.
+ * Rolls back a transaction and logs the error.
+ *
  * @throws DatabaseRollbackException if the rollback fails
  */
 fun rollbackTransaction(conn: Connection) {
-    runCatching {
+    try {
         Logger.warn("Transaction is being rolled back")
         conn.rollback()
-    }.getOrElse {
+    } catch (error: SQLException) {
         Logger.error("Could not rollback transaction")
         throw DatabaseRollbackException()
     }
 }
 
 /**
- * Runs SQL script
+ * Runs an SQL script.
+ *
  * @param filepath path of the script to run
  */
 fun Connection.runScript(filepath: String) {

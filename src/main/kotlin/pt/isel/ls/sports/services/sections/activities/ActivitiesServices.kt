@@ -2,26 +2,36 @@ package pt.isel.ls.sports.services.sections.activities
 
 import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.services.AbstractServices
+import pt.isel.ls.sports.services.AuthenticationException
 import pt.isel.ls.sports.services.InvalidArgumentException
 import pt.isel.ls.sports.services.UnauthorizedException
 import kotlin.time.Duration
 
+/**
+ * Activities services. Implements methods regarding activities.
+ */
 class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     /**
-     * Create a new activity.
+     * Creates a new activity.
      *
      * @param token user's token
-     * @param date
-     * @param duration
+     * @param date date of the activity
+     * @param duration duration of the activity
      * @param sid sport's unique identifier
      * @param rid route's unique identifier
      *
      * @return activity's unique identifier
+     * @throws InvalidArgumentException if [sid] is negative
+     * @throws InvalidArgumentException if [rid] is negative
+     * @throws AuthenticationException if a user with the [token] was not found
+     * @throws NotFoundException if there's no sport with the [sid]
+     * @throws NotFoundException if there's no route with the [rid]
      */
     fun createNewActivity(token: String, date: LocalDate, duration: Duration, sid: Int, rid: Int?): Int {
         validateSid(sid)
@@ -37,11 +47,13 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
-     * Get an activity.
+     * Gets a specific activity.
      *
      * @param aid activity's unique identifier
      *
      * @return the activity object
+     * @throws InvalidArgumentException if [aid] is negative
+     * @throws NotFoundException if there's no activity with the [aid]
      */
     fun getActivity(aid: Int): Activity {
         validateAid(aid)
@@ -52,14 +64,20 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
-     * Delete an activity.
+     * Deletes an activity.
      *
+     * @param token user's token
      * @param aid activity's unique identifier
+     *
+     * @throws InvalidArgumentException if [aid] is negative
+     * @throws AuthenticationException if a user with the [token] was not found
+     * @throws NotFoundException if there's no activity with the [aid]
+     * @throws UnauthorizedException if the user with the [token] is not the owner of the activity
      */
     fun deleteActivity(token: String, aid: Int) {
         validateAid(aid)
 
-        return db.execute { conn ->
+        db.execute { conn ->
             val uid = authenticate(conn, token)
             val activity = db.activities.getActivity(conn, aid)
 
@@ -73,7 +91,14 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     /**
      * Deletes a set of activities.
      *
-     * @param activityIds activity's unique identifiers
+     * @param token user's token
+     * @param activityIds set of activities' unique identifiers
+     *
+     * @throws InvalidArgumentException if [activityIds] is empty
+     * @throws InvalidArgumentException if [activityIds] contains negative values
+     * @throws AuthenticationException if a user with the [token] was not found
+     * @throws NotFoundException if some activity identifier doesn't match any activity
+     * @throws UnauthorizedException if the user with the [token] is not the owner of some activity
      */
     fun deleteActivities(token: String, activityIds: Set<Int>) {
         if (activityIds.isEmpty())
@@ -81,7 +106,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
 
         activityIds.forEach(::validateAid)
 
-        return db.execute { conn ->
+        db.execute { conn ->
             val uid = authenticate(conn, token)
 
             activityIds.forEach {
@@ -100,12 +125,17 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      *
      * @param sid sport's identifier
      * @param orderBy order by duration time, only has two possible values - "ascending" or "descending"
-     * @param date activity date (optional)
+     * @param date date of the activity (optional)
      * @param rid route's unique identifier (optional)
-     * @param limit limits the number of results returned (optional)
-     * @param skip skips the number of results provided (optional)
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
      *
-     * @return list of activities
+     * @return [ActivitiesResponse] with the list of activities
+     * @throws InvalidArgumentException if [sid] is negative
+     * @throws InvalidArgumentException if [rid] is negative
+     * @throws InvalidArgumentException if [skip] is invalid
+     * @throws InvalidArgumentException if [limit] is invalid
+     * @throws InvalidArgumentException if [orderBy] is not "ascending" or "descending"
      */
     fun searchActivities(
         sid: Int,
@@ -121,7 +151,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         validateLimit(limit, LIMIT_RANGE)
 
         val order = SortOrder.parse(orderBy)
-            ?: throw InvalidArgumentException("Order by must be either ascending or descending")
+            ?: throw InvalidArgumentException("Order by must be either \"ascending\" or \"descending\"")
 
         return db.execute { conn ->
             db.activities.searchActivities(conn, sid, order, date, rid, skip, limit)
@@ -133,10 +163,15 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      *
      * @param sid sport's identifier
      * @param rid route's unique identifier (optional)
-     * @param skip skips the number of results provided (optional)
-     * @param limit limits the number of results returned (optional)
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
      *
-     * @return list of activities identifiers
+     * @return [UsersResponse] with the list of users
+     * @throws InvalidArgumentException if [sid] is negative
+     * @throws InvalidArgumentException if [rid] is negative
+     * @throws InvalidArgumentException if [skip] is invalid
+     * @throws InvalidArgumentException if [limit] is invalid
+     * @throws NotFoundException if there's an activity whose user identifier doesn't match any user TODO CHECK THIS
      */
     fun searchUsersByActivity(
         sid: Int,

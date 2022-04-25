@@ -18,9 +18,14 @@ data class UserDTO(
     val email: String
 ) {
     companion object {
-        operator fun invoke(user: User): UserDTO {
-            return UserDTO(user.id, user.name, user.email)
-        }
+        /**
+         * Converts a [User] to a [UserDTO].
+         *
+         * @param user user to be converted
+         * @return [UserDTO] representation of the user
+         */
+        operator fun invoke(user: User): UserDTO =
+            UserDTO(user.id, user.name, user.email)
     }
 
     init {

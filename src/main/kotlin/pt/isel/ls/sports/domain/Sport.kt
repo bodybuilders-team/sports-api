@@ -7,8 +7,8 @@ import pt.isel.ls.sports.services.utils.isValidId
  *
  * @property id sport's unique identifier
  * @property name name of the sport
- * @property description description of the sport (optional)
  * @property uid unique identifier of the user who created the sport
+ * @property description description of the sport (optional)
  */
 data class Sport(
     val id: Int,
@@ -24,17 +24,19 @@ data class Sport(
         const val MAX_DESCRIPTION_LENGTH = 1000
 
         /**
-         * Checks if a name e valid.
+         * Checks if a name is valid.
+         *
          * @param name name to check
-         * @return true if its valid
+         * @return true if it's valid
          */
         fun isValidName(name: String) =
             name.length in MIN_NAME_LENGTH..MAX_NAME_LENGTH
 
         /**
-         * Checks if a description e valid.
+         * Checks if a description is valid.
+         *
          * @param description description to check
-         * @return true if its valid
+         * @return true if it's valid
          */
         fun isValidDescription(description: String) =
             description.length in MIN_DESCRIPTION_LENGTH..MAX_DESCRIPTION_LENGTH
@@ -43,7 +45,7 @@ data class Sport(
     init {
         require(isValidId(id)) { "Invalid sport id: $id" }
         require(isValidName(name)) { "Invalid name: $name" }
-        if (description != null) require(isValidDescription(description)) { "Invalid description: $description" }
         require(isValidId(uid)) { "Invalid user id: $uid" }
+        if (description != null) require(isValidDescription(description)) { "Invalid description: $description" }
     }
 }

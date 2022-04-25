@@ -9,16 +9,15 @@ import pt.isel.ls.sports.database.sections.tokens.TokensMemoryDB
 import pt.isel.ls.sports.database.sections.users.UsersMemoryDB
 
 /**
- * Implementation of a memory database representation, an aggregate of all memory database sections.
+ * App database representation using memory, an aggregate of all memory database sections.
+ *
+ * @property source the memory source of the database
  */
 class AppMemoryDB(private val source: AppMemoryDBSource) : AppDB {
-    override fun <R> execute(func: (ConnectionDB) -> R): R {
-        return func(MemoryConnectionDB())
-    }
+    override fun <R> execute(func: (ConnectionDB) -> R): R =
+        func(MemoryConnectionDB())
 
-    override fun reset() {
-        source.reset()
-    }
+    override fun reset() = source.reset()
 
     override val users = UsersMemoryDB(source)
     override val sports = SportsMemoryDB(source)

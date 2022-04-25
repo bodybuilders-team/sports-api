@@ -36,8 +36,8 @@ class RoutesIntegrationTests : IntegrationTests() {
 
         val requestBody = """
             {
-                "start_location": "Porto",
-                "end_location": "Lisbon",
+                "startLocation": "Porto",
+                "endLocation": "Lisbon",
                 "distance": 10
             }
         """.trimIndent()
@@ -63,8 +63,8 @@ class RoutesIntegrationTests : IntegrationTests() {
     fun `Create new route with no token`() {
         val requestBody = """
             {
-                "start_location": "Porto",
-                "end_location": "Lisbon",
+                "startLocation": "Porto",
+                "endLocation": "Lisbon",
                 "distance": 10
             }
         """.trimIndent()
@@ -74,10 +74,10 @@ class RoutesIntegrationTests : IntegrationTests() {
 
         send(request)
             .apply {
-                assertEquals(Status.BAD_REQUEST, status)
+                assertEquals(Status.UNAUTHORIZED, status)
 
                 val error = this.decodeBodyAs<AppError>()
-                assertEquals("BAD_REQUEST", error.name)
+                assertEquals("UNAUTHENTICATED", error.name)
             }
     }
 
@@ -85,8 +85,8 @@ class RoutesIntegrationTests : IntegrationTests() {
     fun `Create new route with invalid token`() {
         val requestBody = """
             {
-                "start_location": "Porto",
-                "end_location": "Lisbon",
+                "startLocation": "Porto",
+                "endLocation": "Lisbon",
                 "distance": 10
             }
         """.trimIndent()
@@ -150,7 +150,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                     10.0
                 )
             ).associateBy {
-                db.routes.createNewRoute(conn, it.start_location, it.end_location, it.distance, uid)
+                db.routes.createNewRoute(conn, it.startLocation, it.endLocation, it.distance, uid)
             }
 
             mockRoutes
@@ -169,8 +169,8 @@ class RoutesIntegrationTests : IntegrationTests() {
                     val mockRoute = mockRoutes[route.id]
                     assertNotNull(mockRoute)
 
-                    assertEquals(mockRoute.start_location, route.startLocation)
-                    assertEquals(mockRoute.end_location, route.endLocation)
+                    assertEquals(mockRoute.startLocation, route.startLocation)
+                    assertEquals(mockRoute.endLocation, route.endLocation)
                     assertEquals(mockRoute.distance, route.distance)
                 }
             }
@@ -203,8 +203,8 @@ class RoutesIntegrationTests : IntegrationTests() {
             val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
             val rid = db.routes.createNewRoute(
                 conn,
-                route.start_location,
-                route.end_location,
+                route.startLocation,
+                route.endLocation,
                 route.distance,
                 uid
             )
@@ -224,8 +224,8 @@ class RoutesIntegrationTests : IntegrationTests() {
                 assertEquals(mockData.rid, route.id)
                 assertEquals(mockData.uid, route.uid)
 
-                assertEquals(mockData.route.start_location, route.startLocation)
-                assertEquals(mockData.route.end_location, route.endLocation)
+                assertEquals(mockData.route.startLocation, route.startLocation)
+                assertEquals(mockData.route.endLocation, route.endLocation)
                 assertEquals(mockData.route.distance, route.distance)
             }
     }

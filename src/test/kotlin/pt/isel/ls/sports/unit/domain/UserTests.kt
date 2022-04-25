@@ -44,7 +44,17 @@ class UserTests {
 
     @Test
     fun `isValidName returns true with a string with a valid length`() {
+        assertTrue { User.isValidName("a".repeat((User.MIN_NAME_LENGTH..User.MAX_NAME_LENGTH).random())) }
+    }
+
+    @Test
+    fun `isValidName returns true with a string at min length`() {
         assertTrue { User.isValidName("a".repeat(User.MIN_NAME_LENGTH)) }
+    }
+
+    @Test
+    fun `isValidName returns true with a string at max length`() {
+        assertTrue { User.isValidName("a".repeat(User.MAX_NAME_LENGTH)) }
     }
 
     @Test

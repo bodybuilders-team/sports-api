@@ -42,9 +42,10 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
         const val DEFAULT_LIMIT = 10
 
         /**
-         * Returns the activities router routes.
+         * Returns the activities' router's routes.
+         *
          * @param services activities services
-         * @return activities router routes
+         * @return activities router's routes
          */
         fun routes(services: ActivitiesServices) = ActivitiesRouter(services).routes
     }
@@ -61,8 +62,8 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
     /**
      * Creates an activity.
      *
-     * @param request activity creation HTTP request
-     * @return HTTP response
+     * @param request HTTP request containing a body that follows the [CreateActivityRequest] format
+     * @return HTTP response containing a body that follows the [CreateActivityResponse] format
      */
     private fun createActivity(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
@@ -84,7 +85,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
      * Gets a specific activity.
      *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [ActivityDTO] format
      */
     private fun getActivity(request: Request): Response = runAndCatch {
         val aid = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
@@ -98,7 +99,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
      * Deletes an activity.
      *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [MessageResponse] format
      */
     private fun deleteActivity(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
@@ -112,8 +113,8 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
     /**
      * Deletes a set of activities.
      *
-     * @param request HTTP request
-     * @return HTTP response
+     * @param request HTTP request containing a body that follows the [DeleteActivitiesRequest] format
+     * @return HTTP response containing a body that follows the [MessageResponse] format
      */
     private fun deleteActivities(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
@@ -129,7 +130,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
      * Searches for all activities that satisfy the given query parameters of the request.
      *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [ActivitiesResponseDTO] format
      */
     private fun searchActivities(request: Request): Response = runAndCatch {
         val sid = request.queryOrThrow("sid").toIntOrThrow { "Invalid Sport Id" }
@@ -154,7 +155,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
      * Searches for all users that have an activity that satisfies the given query parameters of the request.
      *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [UsersResponseDTO] format
      */
     private fun searchUsersByActivity(request: Request): Response = runAndCatch {
         val sid = request.queryOrThrow("sid").toIntOrThrow { "Invalid Sport Id" }

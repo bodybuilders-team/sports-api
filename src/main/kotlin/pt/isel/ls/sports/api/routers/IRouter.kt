@@ -5,7 +5,7 @@ import org.http4k.routing.RoutingHttpHandler
 /**
  * Represents a router for the Web API.
  *
- * @property routes router routes
+ * @property routes router's routes
  */
 interface IRouter {
     val routes: RoutingHttpHandler

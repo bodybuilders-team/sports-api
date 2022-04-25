@@ -21,17 +21,19 @@ data class User(
         private const val EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$"
 
         /**
-         * Checks if a email e valid.
+         * Checks if an email is valid.
+         *
          * @param email email to check
-         * @return true if its valid
+         * @return true if it's valid
          */
         fun isValidEmail(email: String) =
             email.matches(Regex(EMAIL_REGEX))
 
         /**
-         * Checks if a name e valid.
+         * Checks if a name is valid.
+         *
          * @param name name to check
-         * @return true if its valid
+         * @return true if it's valid
          */
         fun isValidName(name: String) =
             name.length in MIN_NAME_LENGTH..MAX_NAME_LENGTH

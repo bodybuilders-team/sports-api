@@ -3,7 +3,7 @@ package pt.isel.ls.sports.api.routers.sports.dtos
 import kotlinx.serialization.Serializable
 
 /**
- * Represents a Sport creation request.
+ * Represents a sport creation request.
  *
  * @property name name of the sport
  * @property description description of the sport (optional)

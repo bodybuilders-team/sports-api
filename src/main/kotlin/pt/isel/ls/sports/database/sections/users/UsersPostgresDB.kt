@@ -90,11 +90,10 @@ class UsersPostgresDB : UsersDB {
 
     companion object {
         /**
-         * Gets a list of users returned from the execution of the statement [stm]
+         * Gets a [UsersResponse] returned from the execution of the statement [stm].
          *
          * @param stm statement
-         *
-         * @return list of users
+         * @return [UsersResponse] with the list of users
          */
         fun getUsersResponse(stm: PreparedStatement): UsersResponse {
             val rs = stm.executeQuery()
@@ -113,9 +112,10 @@ class UsersPostgresDB : UsersDB {
         }
 
         /**
-         * Gets a User object from a ResultSet.
+         * Gets a [User] from a ResultSet.
+         *
          * @param rs table
-         * @return user
+         * @return user object
          */
         fun getUserFromTable(rs: ResultSet) = User(
             id = rs.getInt(1),
@@ -124,10 +124,10 @@ class UsersPostgresDB : UsersDB {
         )
 
         /**
-         * Executes a query on the users table given the [uid].
+         * Executes a query on the "users" table given the [uid].
          *
          * @param conn connection
-         * @param uid user id
+         * @param uid user's unique identifier
          * @return result set
          */
         private fun doUserQuery(conn: Connection, uid: Int): ResultSet {

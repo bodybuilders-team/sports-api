@@ -20,6 +20,7 @@ import pt.isel.ls.sports.utils.Logger
 
 /**
  * Represents a Sports API application server.
+ *
  * @property port port where the server is running
  * @property database application database
  * @property server HTTP4K server

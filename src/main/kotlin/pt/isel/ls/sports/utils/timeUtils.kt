@@ -7,8 +7,9 @@ const val MINUTES_INDEX = 1
 const val SECONDS_INDEX = 2
 
 /**
- * Converts a string in the format "hh:mm:ss.fff" to a Duration.
- * @return duration
+ * Converts a string in the format "hh:mm:ss.fff" to a [Duration].
+ *
+ * @return converted duration
  */
 fun String.toDuration(): Duration {
     val dateParts = split(":")
@@ -16,8 +17,8 @@ fun String.toDuration(): Duration {
 }
 
 /**
- * Converts a duration to a String in the format "hh:mm:ss.fff".
- * @return string
+ * Converts a duration to a [String] in the format "hh:mm:ss.fff".
+ * @return converted string
  */
 fun Duration.toDTOString(): String =
     toComponents { hours, minutes, seconds, nanoseconds ->

@@ -8,17 +8,17 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Source (memory) shared by all DataMem modules.
+ * Memory source shared by all memory database modules.
  *
  * @property tokens memory for tokens
  * @property users memory for users
- * @property nextUserId stores the next uid (user id)
+ * @property nextUserId stores the next uid (user's unique identifier)
  * @property routes memory for routes
- * @property nextRouteId stores the next rid (route id)
+ * @property nextRouteId stores the next rid (route's unique identifier)
  * @property sports memory for sports
- * @property nextSportId stores the next sid (sport id)
+ * @property nextSportId stores the next sid (sport's unique identifier)
  * @property activities memory for activities
- * @property nextActivityId stores the next aid (activity id)
+ * @property nextActivityId stores the next aid (activity's unique identifier)
  */
 class AppMemoryDBSource {
     val tokens = ConcurrentHashMap<String, Int>()

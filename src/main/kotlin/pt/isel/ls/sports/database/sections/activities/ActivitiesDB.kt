@@ -1,6 +1,7 @@
 package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
@@ -12,13 +13,13 @@ import kotlin.time.Duration
  */
 interface ActivitiesDB {
     /**
-     * Create a new activity.
+     * Creates a new activity.
      *
      * @param conn database Connection
      * @param uid user's unique identifier
+     * @param date date of the activity
+     * @param duration duration of the activity
      * @param sid sport's unique identifier
-     * @param duration
-     * @param date
      * @param rid route's unique identifier
      *
      * @return activity's unique identifier
@@ -33,18 +34,23 @@ interface ActivitiesDB {
     ): Int
 
     /**
-     * Get the detailed information of an activity.
+     * Gets the detailed information of an activity.
      *
      * @param conn database Connection
      * @param aid activity's unique identifier
+     *
+     * @return the activity object
+     * @throws NotFoundException if there's no activity with the [aid]
      */
     fun getActivity(conn: ConnectionDB, aid: Int): Activity
 
     /**
-     * Delete an activity.
+     * Deletes an activity.
      *
      * @param conn database Connection
      * @param aid activity's unique identifier
+     *
+     * @throws NotFoundException if there's no activity with the [aid]
      */
     fun deleteActivity(conn: ConnectionDB, aid: Int)
 
@@ -54,25 +60,25 @@ interface ActivitiesDB {
      * @param conn database Connection
      * @param sid sport's identifier
      * @param orderBy order by duration time, only has two possible values - "ascending" or "descending"
-     * @param date activity date (optional)
+     * @param date date of the activity (optional)
      * @param rid route's unique identifier (optional)
      * @param skip number of elements to skip
      * @param limit number of elements to return
      *
-     * @return list of activities
+     * @return [ActivitiesResponse] with the list of activities
      */
     fun searchActivities(
         conn: ConnectionDB,
         sid: Int,
         orderBy: SortOrder,
-        date: LocalDate? = null,
-        rid: Int? = null,
+        date: LocalDate?,
+        rid: Int?,
         skip: Int,
         limit: Int
     ): ActivitiesResponse
 
     /**
-     * Get a list with the users that have an activity, given the parameters.
+     * Searches for all users that have an activity that satisfies the given parameters.
      *
      * @param conn database Connection
      * @param sid sport's identifier
@@ -81,6 +87,7 @@ interface ActivitiesDB {
      * @param limit number of elements to return
      *
      * @return list of users
+     * @throws NotFoundException if there's an activity whose user identifier doesn't match any user TODO CHECK THIS
      */
     fun searchUsersByActivity(
         conn: ConnectionDB,
@@ -91,12 +98,14 @@ interface ActivitiesDB {
     ): UsersResponse
 
     /**
-     * Get all the activities of a sport.
+     * Gets all activities of a specific sport.
      *
      * @param conn database Connection
      * @param sid sport's unique identifier
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
      *
-     * @return list of identifiers of activities of a sport
+     * @return [ActivitiesResponse] with the list of activities
      */
     fun getSportActivities(
         conn: ConnectionDB,
@@ -106,12 +115,14 @@ interface ActivitiesDB {
     ): ActivitiesResponse
 
     /**
-     * Get all the activities made from a user.
+     * Gets all the activities made by a specific user.
      *
      * @param conn database Connection
      * @param uid user's unique identifier
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
      *
-     * @return list of activities made from a user
+     * @return [ActivitiesResponse] with the list of activities
      */
     fun getUserActivities(
         conn: ConnectionDB,
@@ -121,7 +132,7 @@ interface ActivitiesDB {
     ): ActivitiesResponse
 
     /**
-     * Verifies if an activity exists with the given [aid]
+     * Verifies if an activity with the given [aid] exists.
      *
      * @param conn database Connection
      * @param aid activity's unique identifier

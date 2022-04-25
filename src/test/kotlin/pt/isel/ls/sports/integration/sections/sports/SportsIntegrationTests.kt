@@ -105,10 +105,10 @@ class SportsIntegrationTests : IntegrationTests() {
 
         send(request)
             .apply {
-                assertEquals(Status.BAD_REQUEST, status)
+                assertEquals(Status.UNAUTHORIZED, status)
 
                 val error = this.decodeBodyAs<AppError>()
-                assertEquals("BAD_REQUEST", error.name)
+                assertEquals("UNAUTHENTICATED", error.name)
             }
     }
 

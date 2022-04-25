@@ -4,6 +4,7 @@ import java.io.File
 
 /**
  * Generates a file named domTags.js which exports a function for each HTML tag.
+ * These functions are used in the static-content part of the project.
  */
 fun main() {
     val htmlTags = listOf(

@@ -5,10 +5,10 @@ import pt.isel.ls.sports.services.utils.isValidId
 /**
  * Route representation.
  *
- * @property id route unique identifier
+ * @property id route's unique identifier
  * @property startLocation start location of the route
  * @property endLocation end location of the route
- * @property distance distance between [startLocation] and [endLocation] in meters
+ * @property distance distance to travel between [startLocation] and [endLocation] in kilometers
  * @property uid unique identifier of the user who created the route
  */
 data class Route(
@@ -21,9 +21,10 @@ data class Route(
     companion object {
 
         /**
-         * Checks if a distance e valid.
+         * Checks if a distance is valid.
+         *
          * @param distance distance to check
-         * @return true if its valid
+         * @return true if it's valid
          */
         fun isValidDistance(distance: Double) =
             distance >= 0

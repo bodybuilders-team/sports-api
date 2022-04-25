@@ -35,9 +35,10 @@ class SportsRouter(private val services: SportsServices) : IRouter {
         const val DEFAULT_LIMIT = 10
 
         /**
-         * Returns the sports router routes.
+         * Returns the sports' router's routes.
+         *
          * @param services sports services
-         * @return sports router routes
+         * @return sports router's routes
          */
         fun routes(services: SportsServices) = SportsRouter(services).routes
     }
@@ -51,8 +52,9 @@ class SportsRouter(private val services: SportsServices) : IRouter {
 
     /**
      * Creates a sport.
-     * @param request sport creation HTTP request
-     * @return sport creation HTTP response
+     *
+     * @param request HTTP request containing a body that follows the [CreateSportRequest] format
+     * @return HTTP response containing a body that follows the [CreateSportResponse] format
      */
     private fun createSport(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
@@ -68,10 +70,10 @@ class SportsRouter(private val services: SportsServices) : IRouter {
 
     /**
      * Gets all sports.
+     *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [SportsResponseDTO] format
      */
-    @Suppress("UNUSED_PARAMETER")
     private fun getSports(request: Request): Response = runAndCatch {
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
         val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
@@ -83,8 +85,9 @@ class SportsRouter(private val services: SportsServices) : IRouter {
 
     /**
      * Gets a specific sport.
+     *
      * @param request HTTP request
-     * @return HTTP response
+     * @return HTTP response containing a body that follows the [SportDTO] format
      */
     private fun getSport(request: Request): Response = runAndCatch {
         val sid = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
@@ -94,6 +97,12 @@ class SportsRouter(private val services: SportsServices) : IRouter {
         return Response(OK).json(SportDTO(sport))
     }
 
+    /**
+     * Gets all activities of a specific sport.
+     *
+     * @param request HTTP request
+     * @return HTTP response containing a body that follows the [ActivitiesResponseDTO] format
+     */
     private fun getSportActivities(request: Request): Response = runAndCatch {
         val sid = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP

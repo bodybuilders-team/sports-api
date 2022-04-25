@@ -7,10 +7,10 @@ import pt.isel.ls.sports.services.utils.isValidId
 /**
  * Route data transfer object representation.
  *
- * @property id route unique identifier
+ * @property id route's unique identifier
  * @property startLocation start location of the route
  * @property endLocation end location of the route
- * @property distance distance between [startLocation] and [endLocation] in meters
+ * @property distance distance to travel between [startLocation] and [endLocation] in kilometers
  * @property uid unique identifier of the user who created the route
  */
 @Serializable
@@ -22,15 +22,20 @@ data class RouteDTO(
     val uid: Int
 ) {
     companion object {
-        operator fun invoke(route: Route): RouteDTO {
-            return RouteDTO(
+        /**
+         * Converts a [Route] to a [RouteDTO].
+         *
+         * @param route route to be converted
+         * @return [RouteDTO] representation of the route
+         */
+        operator fun invoke(route: Route): RouteDTO =
+            RouteDTO(
                 route.id,
                 route.startLocation,
                 route.endLocation,
                 route.distance,
                 route.uid
             )
-        }
     }
 
     init {

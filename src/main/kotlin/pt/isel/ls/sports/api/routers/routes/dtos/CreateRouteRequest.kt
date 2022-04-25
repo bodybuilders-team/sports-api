@@ -3,15 +3,15 @@ package pt.isel.ls.sports.api.routers.routes.dtos
 import kotlinx.serialization.Serializable
 
 /**
- * Represents a Route creation request.
+ * Represents a route creation request.
  *
- * @property start_location start location of the route
- * @property end_location end location of the route
- * @property distance distance between [start_location] and [end_location] in meters
+ * @property startLocation start location of the route
+ * @property endLocation end location of the route
+ * @property distance distance to travel between [startLocation] and [endLocation] in kilometers
  */
 @Serializable
 data class CreateRouteRequest(
-    val start_location: String,
-    val end_location: String,
+    val startLocation: String,
+    val endLocation: String,
     val distance: Double
 )

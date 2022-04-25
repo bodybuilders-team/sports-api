@@ -5,17 +5,24 @@ import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.sports.SportsResponse
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.services.AbstractServices
+import pt.isel.ls.sports.services.AuthenticationException
 import pt.isel.ls.sports.services.InvalidArgumentException
 
+/**
+ * Sports services. Implements methods regarding sports.
+ */
 class SportsServices(db: AppDB) : AbstractServices(db) {
     /**
-     * Create a new sport.
+     * Creates a new sport.
      *
      * @param token user's token
-     * @param name the sport's name
-     * @param description the sport's description
+     * @param name name of the sport
+     * @param description description of the sport
      *
-     * @return the sport's unique identifier
+     * @return sport's unique identifier
+     * @throws InvalidArgumentException if the name is invalid
+     * @throws InvalidArgumentException if the description is invalid
+     * @throws AuthenticationException if a user with the [token] was not found
      */
     fun createNewSport(token: String, name: String, description: String?): Int {
         if (!Sport.isValidName(name))
@@ -32,11 +39,12 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
-     * Get a sport.
+     * Gets a specific sport.
      *
      * @param sid sport's unique identifier
      *
      * @return the sport object
+     * @throws InvalidArgumentException if [sid] is negative
      */
     fun getSport(sid: Int): Sport {
         validateSid(sid)
@@ -47,20 +55,26 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
-     * Get the list of all sports.
+     * Gets all sports.
      *
-     * @return list of identifiers of all sports
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
+     *
+     * @return [SportsResponse] with the list of sports
      */
     fun getAllSports(skip: Int, limit: Int): SportsResponse = db.execute { conn ->
         db.sports.getAllSports(conn, skip, limit)
     }
 
     /**
-     * Get all the activities of a sport.
+     * Gets all activities of a specific sport.
      *
      * @param sid sport's unique identifier
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
      *
-     * @return list of activities of a sport
+     * @return [ActivitiesResponse] with the list of activities
+     * @throws InvalidArgumentException if [sid] is negative
      */
     fun getSportActivities(sid: Int, skip: Int, limit: Int): ActivitiesResponse {
         validateSid(sid)

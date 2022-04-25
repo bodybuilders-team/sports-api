@@ -11,7 +11,8 @@ import pt.isel.ls.sports.services.AppServices
 
 /**
  * Represents the Sports Web API.
- * @param services Sports App services
+ *
+ * @param services App services
  * @property routes API routes
  */
 class AppWebApi(services: AppServices) {

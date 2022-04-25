@@ -7,8 +7,8 @@ import kotlin.time.Duration
 /**
  * Activity representation.
  *
- * @property id activity unique identifier
- * @property date activity date
+ * @property id activity's unique identifier
+ * @property date date of the activity
  * @property duration duration of the activity
  * @property uid unique identifier of the user who created the activity
  * @property sid unique identifier of the activity sport

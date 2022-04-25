@@ -13,7 +13,7 @@ import pt.isel.ls.sports.services.UnauthorizedException
 import pt.isel.ls.sports.utils.Logger
 
 /**
- * Runs the given function and returns the result as a Response.
+ * Runs the given function [block] and returns the result as a Response.
  * Catches any exceptions and returns an error response accordingly.
  */
 // TODO: 22/04/2022 - Place App errors in a separate file

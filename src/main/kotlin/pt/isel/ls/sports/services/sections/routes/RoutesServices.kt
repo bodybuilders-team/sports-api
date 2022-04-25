@@ -4,20 +4,24 @@ import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.database.sections.routes.RoutesResponse
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.services.AbstractServices
+import pt.isel.ls.sports.services.AuthenticationException
 import pt.isel.ls.sports.services.InvalidArgumentException
 
+/**
+ * Routes services. Implements methods regarding routes.
+ */
 class RoutesServices(db: AppDB) : AbstractServices(db) {
     /**
      * Creates a new route.
      *
-     * The [distance] is converted from km to m (meters).
-     *
      * @param token user's token
-     * @param startLocation
-     * @param endLocation
-     * @param distance distance of the route in km
+     * @param startLocation start location of the route
+     * @param endLocation end location of the route
+     * @param distance distance to travel between [startLocation] and [endLocation] in kilometers
      *
-     * @return the route's unique identifier
+     * @return route's unique identifier
+     * @throws InvalidArgumentException if the [distance] is negative
+     * @throws AuthenticationException if a user with the [token] was not found
      */
     fun createNewRoute(token: String, startLocation: String, endLocation: String, distance: Double): Int {
         if (!Route.isValidDistance(distance))
@@ -37,11 +41,12 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
-     * Get the details of a route.
+     * Gets a specific route.
      *
      * @param rid route's unique identifier
      *
      * @return the route object
+     * @throws InvalidArgumentException if the [rid] is negative
      */
     fun getRoute(rid: Int): Route {
         validateRid(rid)
@@ -52,9 +57,12 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
-     * Get the list of routes.
+     * Gets all routes.
      *
-     * @return list of route objects
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
+     *
+     * @return [RoutesResponse] with the list of routes
      */
     fun getAllRoutes(skip: Int, limit: Int): RoutesResponse = db.execute { conn ->
         db.routes.getAllRoutes(conn, skip, limit)

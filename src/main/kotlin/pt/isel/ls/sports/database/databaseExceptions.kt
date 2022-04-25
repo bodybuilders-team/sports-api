@@ -12,12 +12,14 @@ class DatabaseRollbackException : Exception()
 
 /**
  * Thrown when a resource was not found.
+ *
  * @param message exception message
  */
 class NotFoundException(message: String? = null) : Exception(message)
 
 /**
  * Thrown when a resource already exists.
+ *
  * @param message exception message
  */
 class AlreadyExistsException(message: String? = null) : Exception(message)

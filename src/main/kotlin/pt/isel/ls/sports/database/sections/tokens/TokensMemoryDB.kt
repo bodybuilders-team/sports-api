@@ -6,6 +6,7 @@ import pt.isel.ls.sports.database.connection.ConnectionDB
 import java.util.UUID
 
 class TokensMemoryDB(private val source: AppMemoryDBSource) : TokensDB {
+
     override fun createUserToken(conn: ConnectionDB, token: UUID, uid: Int): String {
         val stringToken = token.toString()
         source.tokens[stringToken] = uid

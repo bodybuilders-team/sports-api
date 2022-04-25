@@ -99,11 +99,11 @@ class RoutesPostgresDB : RoutesDB {
     }
 
     companion object {
-
         /**
-         * Gets a Route object from a ResultSet.
+         * Gets a [Route] from a ResultSet.
+         *
          * @param rs table
-         * @return route
+         * @return route object
          */
         private fun getRouteFromTable(rs: ResultSet) = Route(
             id = rs.getInt(1),
@@ -114,10 +114,10 @@ class RoutesPostgresDB : RoutesDB {
         )
 
         /**
-         * Executes a query on the routes table given the [rid].
+         * Executes a query on the "routes" table given the [rid].
          *
          * @param conn connection
-         * @param rid route id
+         * @param rid route's unique identifier
          * @return result set
          */
         private fun doRouteQuery(conn: Connection, rid: Int): ResultSet {
