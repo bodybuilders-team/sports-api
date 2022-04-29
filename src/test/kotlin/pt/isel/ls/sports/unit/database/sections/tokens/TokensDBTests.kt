@@ -12,5 +12,5 @@ interface TokensDBTests {
 
     fun `getUID returns the uid correctly`()
 
-    fun `getUID throws SportsError (Not Found) if the token isn't associated to any user`()
+    fun `getUID throws NotFoundException if the token isn't associated to any user`()
 }

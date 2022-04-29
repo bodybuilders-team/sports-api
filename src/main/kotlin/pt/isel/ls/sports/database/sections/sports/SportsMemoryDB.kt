@@ -10,23 +10,27 @@ class SportsMemoryDB(private val source: AppMemoryDBSource) : SportsDB {
     override fun createNewSport(conn: ConnectionDB, uid: Int, name: String, description: String?): Int {
         val id = source.nextSportId.getAndIncrement()
 
-        if (source.users[uid] == null) throw NotFoundException("User with id $uid not found")
+        source.users[uid] ?: throw NotFoundException("User with id $uid not found")
 
         source.sports[id] = Sport(id, name, uid, description)
 
         return id
     }
 
-    override fun getSport(conn: ConnectionDB, sid: Int): Sport {
-        return source.sports[sid] ?: throw NotFoundException("Sport with id $sid not found")
-    }
+    override fun getSport(conn: ConnectionDB, sid: Int): Sport =
+        source.sports[sid] ?: throw NotFoundException("Sport with id $sid not found")
 
     override fun getAllSports(
         conn: ConnectionDB,
         skip: Int,
         limit: Int
     ): SportsResponse =
-        SportsResponse(source.sports.values.toList(), 0)
+        SportsResponse(
+            sports = source.sports
+                .values.toList()
+                .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
+            totalCount = 0
+        )
 
     override fun hasSport(conn: ConnectionDB, sid: Int): Boolean =
         source.sports.containsKey(sid)

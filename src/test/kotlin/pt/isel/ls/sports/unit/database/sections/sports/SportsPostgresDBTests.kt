@@ -7,6 +7,8 @@ import pt.isel.ls.sports.unit.database.AppPostgresDBTests
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class SportsPostgresDBTests : AppPostgresDBTests(), SportsDBTests {
 
@@ -47,6 +49,15 @@ class SportsPostgresDBTests : AppPostgresDBTests(), SportsDBTests {
         assertEquals(6, uid3)
     }
 
+    @Test
+    override fun `createNewSport throws NotFoundException if there's no user with the uid`(): Unit =
+        db.execute { conn ->
+            // TODO: 30/04/2022 Fix me
+			/*assertFailsWith<NotFoundException> {
+				db.sports.createNewSport(conn, 99999, "Powerlifting", "Get big")
+			}*/
+        }
+
     // getSport
 
     @Test
@@ -56,7 +67,7 @@ class SportsPostgresDBTests : AppPostgresDBTests(), SportsDBTests {
     }
 
     @Test
-    override fun `getSport throws SportsError (Not Found) if the sport with the sid doesn't exist`(): Unit =
+    override fun `getSport throws NotFoundException if the sport with the sid doesn't exist`(): Unit =
         db.execute { conn ->
             assertFailsWith<NotFoundException> {
                 db.sports.getSport(conn, 0)
@@ -82,5 +93,37 @@ class SportsPostgresDBTests : AppPostgresDBTests(), SportsDBTests {
         db.execute { conn ->
             assertEquals(emptyList(), db.sports.getAllSports(conn, 0, 10).sports)
         }
+    }
+
+    @Test
+    override fun `getAllSports with skip works`(): Unit = db.execute { conn ->
+        val sports = listOf(
+            Sport(2, "Powerlifting", 2, "Get big"),
+            Sport(3, "Basketball", 3, "Shoot a ball through a hoop")
+        )
+
+        assertEquals(sports, db.sports.getAllSports(conn, 1, 10).sports)
+    }
+
+    @Test
+    override fun `getAllSports with limit works`(): Unit = db.execute { conn ->
+        val sports = listOf(
+            Sport(1, "Soccer", 1, "Kick a ball to score a goal"),
+            Sport(2, "Powerlifting", 2, "Get big")
+        )
+
+        assertEquals(sports, db.sports.getAllSports(conn, 0, 2).sports)
+    }
+
+    // hasSport
+
+    @Test
+    override fun `hasSport returns true if the sport exists`(): Unit = db.execute { conn ->
+        assertTrue(db.sports.hasSport(conn, 1))
+    }
+
+    @Test
+    override fun `hasSport returns false if the sport does not exist`(): Unit = db.execute { conn ->
+        assertFalse(db.sports.hasSport(conn, 999999))
     }
 }

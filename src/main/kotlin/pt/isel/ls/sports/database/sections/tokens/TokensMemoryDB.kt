@@ -13,7 +13,6 @@ class TokensMemoryDB(private val source: AppMemoryDBSource) : TokensDB {
         return stringToken
     }
 
-    override fun getUID(conn: ConnectionDB, token: String): Int {
-        return source.tokens[token] ?: throw NotFoundException("Token $token isn't associated to any user")
-    }
+    override fun getUID(conn: ConnectionDB, token: String): Int =
+        source.tokens[token] ?: throw NotFoundException("Token $token isn't associated to any user")
 }

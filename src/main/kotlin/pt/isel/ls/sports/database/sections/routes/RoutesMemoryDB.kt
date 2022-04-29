@@ -16,7 +16,7 @@ class RoutesMemoryDB(private val source: AppMemoryDBSource) : RoutesDB {
     ): Int {
         val id = source.nextRouteId.getAndIncrement()
 
-        if (source.users[uid] == null) throw NotFoundException("User with id $uid not found")
+        source.users[uid] ?: throw NotFoundException("User with id $uid not found")
 
         source.routes[id] = Route(id, startLocation, endLocation, distance, uid)
 
@@ -26,16 +26,18 @@ class RoutesMemoryDB(private val source: AppMemoryDBSource) : RoutesDB {
     override fun getRoute(
         conn: ConnectionDB,
         rid: Int
-    ): Route {
-        return source.routes[rid] ?: throw NotFoundException("Route with id $rid not found")
-    }
+    ): Route =
+        source.routes[rid] ?: throw NotFoundException("Route with id $rid not found")
 
     override fun getAllRoutes(
         conn: ConnectionDB,
         skip: Int,
         limit: Int
     ): RoutesResponse = RoutesResponse(
-        source.routes.values.toList(), 0
+        routes = source.routes
+            .values.toList()
+            .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
+        totalCount = 0
     )
 
     override fun hasRoute(

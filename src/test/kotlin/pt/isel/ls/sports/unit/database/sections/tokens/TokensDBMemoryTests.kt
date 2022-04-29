@@ -49,7 +49,7 @@ class TokensDBMemoryTests : AppMemoryDBTests(), TokensDBTests {
     }
 
     @Test
-    override fun `getUID throws SportsError (Not Found) if the token isn't associated to any user`(): Unit =
+    override fun `getUID throws NotFoundException if the token isn't associated to any user`(): Unit =
         db.execute { conn ->
             assertFailsWith<NotFoundException> {
                 db.tokens.getUID(conn, "T-o-k-e-n")

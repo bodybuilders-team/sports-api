@@ -7,6 +7,8 @@ import pt.isel.ls.sports.unit.database.AppMemoryDBTests
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
     // createNewRoute
@@ -33,6 +35,14 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
         assertEquals(3, rid2)
     }
 
+    @Test
+    override fun `createNewRoute throws NotFoundException if there's no user with the uid`(): Unit =
+        db.execute { conn ->
+            assertFailsWith<NotFoundException> {
+                db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 1)
+            }
+        }
+
     // getRoute
 
     @Test
@@ -47,7 +57,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
     }
 
     @Test
-    override fun `getRoute throws SportsError (Not Found) if the route with the rid doesn't exist`(): Unit =
+    override fun `getRoute throws NotFoundException if the route with the rid doesn't exist`(): Unit =
         db.execute { conn ->
             assertFailsWith<NotFoundException> {
                 db.routes.getRoute(conn, 1)
@@ -74,5 +84,50 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
     @Test
     override fun `getAllRoutes with no created routes returns empty list`(): Unit = db.execute { conn ->
         assertEquals(emptyList(), db.routes.getAllRoutes(conn, 0, 10).routes)
+    }
+
+    @Test
+    override fun `getAllRoutes with skip works`(): Unit = db.execute { conn ->
+        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
+
+        val route0 = Route(1, "Odivelas", "Chelas", 0.15, 1)
+        val route1 = Route(2, "Chelas", "Odivelas", 0.15, 1)
+        val route2 = Route(3, "Lisboa", "Chelas", 0.15, 1)
+
+        source.routes[1] = route0
+        source.routes[2] = route1
+        source.routes[3] = route2
+
+        assertEquals(listOf(route1, route2), db.routes.getAllRoutes(conn, 1, 10).routes)
+    }
+
+    @Test
+    override fun `getAllRoutes with limit works`(): Unit = db.execute { conn ->
+        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
+
+        val route0 = Route(1, "Odivelas", "Chelas", 0.15, 1)
+        val route1 = Route(2, "Chelas", "Odivelas", 0.15, 1)
+        val route2 = Route(3, "Lisboa", "Chelas", 0.15, 1)
+
+        source.routes[1] = route0
+        source.routes[2] = route1
+        source.routes[3] = route2
+
+        assertEquals(listOf(route0, route1), db.routes.getAllRoutes(conn, 0, 2).routes)
+    }
+
+    // hasRoute
+
+    @Test
+    override fun `hasRoute returns true if the route exists`(): Unit = db.execute { conn ->
+        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
+        source.routes[1] = Route(1, "Odivelas", "Chelas", 0.15, 1)
+
+        assertTrue(db.routes.hasRoute(conn, 1))
+    }
+
+    @Test
+    override fun `hasRoute returns false if the route does not exist`(): Unit = db.execute { conn ->
+        assertFalse(db.routes.hasRoute(conn, 1))
     }
 }

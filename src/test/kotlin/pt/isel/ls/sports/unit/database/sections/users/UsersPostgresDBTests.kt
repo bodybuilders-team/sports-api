@@ -1,5 +1,6 @@
 package pt.isel.ls.sports.unit.database.sections.users
 
+import pt.isel.ls.sports.database.AlreadyExistsException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.tableAsserter
@@ -7,6 +8,8 @@ import pt.isel.ls.sports.unit.database.AppPostgresDBTests
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
 
@@ -46,6 +49,16 @@ class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
         assertEquals(6, uid3)
     }
 
+    @Test
+    override fun `createNewUser throws AlreadyExistsException if a user with the email already exists`(): Unit =
+        db.execute { conn ->
+            db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+
+            assertFailsWith<AlreadyExistsException> {
+                db.users.createNewUser(conn, "André Jesus", "nyckollasbrandao@mail.com")
+            }
+        }
+
     // getUser
 
     @Test
@@ -56,7 +69,7 @@ class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
     }
 
     @Test
-    override fun `getUser throws SportsError (Not Found) if the user with the uid doesn't exist`(): Unit =
+    override fun `getUser throws NotFoundException if the user with the uid doesn't exist`(): Unit =
         db.execute { conn ->
             assertFailsWith<NotFoundException> {
                 db.users.getUser(conn, 0)
@@ -82,5 +95,50 @@ class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
         db.execute { conn ->
             assertEquals(emptyList(), db.users.getAllUsers(conn, 0, 10).users)
         }
+    }
+
+    @Test
+    override fun `getAllUsers with skip works`(): Unit = db.execute { conn ->
+        val users = listOf(
+            User(2, "André Páscoa", "A48089@alunos.isel.pt"),
+            User(3, "Nyckollas Brandão", "A48287@alunos.isel.pt")
+        )
+
+        assertEquals(users, db.users.getAllUsers(conn, 1, 10).users)
+    }
+
+    @Test
+    override fun `getAllUsers with limit works`(): Unit = db.execute { conn ->
+        val users = listOf(
+            User(1, "André Jesus", "A48280@alunos.isel.pt"),
+            User(2, "André Páscoa", "A48089@alunos.isel.pt")
+        )
+
+        assertEquals(users, db.users.getAllUsers(conn, 0, 2).users)
+    }
+
+    // hasUserWithEmail
+
+    @Test
+    override fun `hasUserWithEmail returns true if a user with the given email exists`(): Unit = db.execute { conn ->
+        assertTrue(db.users.hasUserWithEmail(conn, "A48280@alunos.isel.pt"))
+    }
+
+    @Test
+    override fun `hasUserWithEmail returns false if a user with the given email does not exist`(): Unit =
+        db.execute { conn ->
+            assertFalse(db.users.hasUserWithEmail(conn, "dada@alunos.isel.pt"))
+        }
+
+    // hasUser
+
+    @Test
+    override fun `hasUser returns true if a user with the given uid exists`(): Unit = db.execute { conn ->
+        assertTrue(db.users.hasUser(conn, 1))
+    }
+
+    @Test
+    override fun `hasUser returns false if a user with the given uid does not exist`(): Unit = db.execute { conn ->
+        assertFalse(db.users.hasUser(conn, 9999999))
     }
 }

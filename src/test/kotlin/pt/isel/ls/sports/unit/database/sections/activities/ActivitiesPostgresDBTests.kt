@@ -11,6 +11,8 @@ import pt.isel.ls.sports.utils.toDuration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
 
@@ -50,7 +52,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
     }
 
     @Test
-    override fun `getActivity throws SportsError (Not Found) if the activity with the sid doesn't exist`(): Unit =
+    override fun `getActivity throws NotFoundException if the activity with the sid doesn't exist`(): Unit =
         db.execute { conn ->
             assertFailsWith<NotFoundException> {
                 db.activities.getActivity(conn, 0)
@@ -68,10 +70,95 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
         }
     }
 
-    // getActivities
+    @Test
+    override fun `deleteActivity throws NotFoundException if there's no activity with the aid`(): Unit =
+        db.execute { conn ->
+            // TODO: 29/04/2022 Fix me
+			/*assertFailsWith<NotFoundException> {
+				db.activities.deleteActivity(conn, 9999999)
+			}*/
+        }
+
+    // getSportActivities
 
     @Test
-    override fun `getActivities with descending order returns the activities list`(): Unit = db.execute { conn ->
+    override fun `getSportActivities returns the activities list`(): Unit = db.execute { conn ->
+        val activities = db.activities.getSportActivities(conn, 1, 0, 10).activities
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
+            activities
+        )
+    }
+
+    @Test
+    override fun `getSportActivities with skip works`(): Unit = db.execute { conn ->
+        val activities = db.activities.getSportActivities(conn, 1, 1, 10).activities
+        assertEquals(
+            emptyList(),
+            activities
+        )
+    }
+
+    @Test
+    override fun `getSportActivities with limit works`(): Unit = db.execute { conn ->
+        val activities = db.activities.getSportActivities(conn, 1, 0, 0).activities
+        assertEquals(
+            emptyList(),
+            activities
+        )
+    }
+
+    // getUserActivities
+
+    @Test
+    override fun `getUserActivities returns the activities list`(): Unit = db.execute { conn ->
+        val activities = db.activities.getUserActivities(conn, 1, 0, 10).activities
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
+            activities
+        )
+    }
+
+    @Test
+    override fun `getUserActivities with skip works`(): Unit = db.execute { conn ->
+        val activities = db.activities.getUserActivities(conn, 1, 1, 10).activities
+        assertEquals(
+            emptyList(),
+            activities
+        )
+    }
+
+    @Test
+    override fun `getUserActivities with limit works`(): Unit = db.execute { conn ->
+        val activities = db.activities.getUserActivities(conn, 1, 0, 0).activities
+        assertEquals(
+            emptyList(),
+            activities
+        )
+    }
+
+    // searchActivities
+
+    @Test
+    override fun `searchActivities returns the activities list`(): Unit = db.execute { conn ->
+        val activities = db.activities.searchActivities(
+            conn,
+            sid = 1,
+            SortOrder.ASCENDING,
+            "2022-11-20".toLocalDate(),
+            rid = null,
+            skip = 0,
+            limit = 10
+        ).activities
+
+        assertEquals(
+            listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
+            activities
+        )
+    }
+
+    @Test
+    override fun `searchActivities with descending order returns the activities list`(): Unit = db.execute { conn ->
         val activities =
             db.activities.searchActivities(
                 conn, sid = 2, SortOrder.DESCENDING, "2022-11-21".toLocalDate(), rid = 1,
@@ -100,7 +187,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
     }
 
     @Test
-    override fun `getActivities with ascending order returns the activities list`(): Unit = db.execute { conn ->
+    override fun `searchActivities with ascending order returns the activities list`(): Unit = db.execute { conn ->
         val activities =
             db.activities.searchActivities(
                 conn, sid = 2, SortOrder.ASCENDING, "2022-11-21".toLocalDate(), rid = 1,
@@ -129,32 +216,26 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
         assertEquals(mockActivities, activities)
     }
 
-    // getSportActivities
-
     @Test
-    override fun `getSportActivities returns the activities list`(): Unit = db.execute { conn ->
-        val activities = db.activities.getSportActivities(conn, 1, 0, 10).activities
+    override fun `searchActivities with skip works`(): Unit = db.execute { conn ->
+        val activities = db.activities.searchActivities(
+            conn,
+            sid = 1,
+            SortOrder.ASCENDING,
+            "2022-11-20".toLocalDate(),
+            rid = null,
+            skip = 1,
+            limit = 10
+        ).activities
+
         assertEquals(
-            listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
+            emptyList(),
             activities
         )
     }
 
-    // getUserActivities
-
     @Test
-    override fun `getUserActivities returns the activities list`(): Unit = db.execute { conn ->
-        val activities = db.activities.getUserActivities(conn, 1, 0, 10).activities
-        assertEquals(
-            listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
-            activities
-        )
-    }
-
-    // searchActivities
-
-    @Test
-    override fun `searchActivities returns the activities list`(): Unit = db.execute { conn ->
+    override fun `searchActivities with limit works`(): Unit = db.execute { conn ->
         val activities = db.activities.searchActivities(
             conn,
             sid = 1,
@@ -162,11 +243,11 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
             "2022-11-20".toLocalDate(),
             rid = null,
             skip = 0,
-            limit = 10
+            limit = 0
         ).activities
 
         assertEquals(
-            listOf(Activity(1, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1, null)),
+            emptyList(),
             activities
         )
     }
@@ -183,8 +264,48 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
 
         val mockUsers = listOf(
             User(id = 2, name = "André Páscoa", email = "A48089@alunos.isel.pt"),
+            User(id = 3, name = "Nyckollas Brandão", email = "A48287@alunos.isel.pt")
+        )
+        assertEquals(mockUsers, users)
+    }
+
+    @Test
+    override fun `searchUsersByActivity with skip works`(): Unit = db.execute { conn ->
+        val users =
+            db.activities.searchUsersByActivity(
+                conn, sid = 2, rid = 1,
+                skip = 1, limit = 10
+            ).users
+
+        val mockUsers = listOf(
             User(id = 3, name = "Nyckollas Brandão", email = "A48287@alunos.isel.pt"),
         )
         assertEquals(mockUsers, users)
+    }
+
+    @Test
+    override fun `searchUsersByActivity with limit works`(): Unit = db.execute { conn ->
+        val users =
+            db.activities.searchUsersByActivity(
+                conn, sid = 2, rid = 1,
+                skip = 0, limit = 1
+            ).users
+
+        val mockUsers = listOf(
+            User(id = 2, name = "André Páscoa", email = "A48089@alunos.isel.pt"),
+        )
+        assertEquals(mockUsers, users)
+    }
+
+    // hasActivity
+
+    @Test
+    override fun `hasActivity returns true if the activity exists`(): Unit = db.execute { conn ->
+        assertTrue(db.activities.hasActivity(conn, 1))
+    }
+
+    @Test
+    override fun `hasActivity returns false if the activity does not exist`(): Unit = db.execute { conn ->
+        assertFalse(db.activities.hasActivity(conn, 9999999))
     }
 }

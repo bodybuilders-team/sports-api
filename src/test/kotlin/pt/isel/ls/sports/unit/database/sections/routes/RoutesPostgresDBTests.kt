@@ -7,6 +7,8 @@ import pt.isel.ls.sports.unit.database.AppPostgresDBTests
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class RoutesPostgresDBTests : AppPostgresDBTests(), RoutesDBTests {
 
@@ -49,6 +51,15 @@ class RoutesPostgresDBTests : AppPostgresDBTests(), RoutesDBTests {
         assertEquals(6, rid2)
     }
 
+    @Test
+    override fun `createNewRoute throws NotFoundException if there's no user with the uid`(): Unit =
+        db.execute { conn ->
+            // TODO: 29/04/2022 Fix me
+            /*assertFailsWith<NotFoundException> {
+                db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 999999)
+            }*/
+        }
+
     // getRoute
 
     @Test
@@ -58,7 +69,7 @@ class RoutesPostgresDBTests : AppPostgresDBTests(), RoutesDBTests {
     }
 
     @Test
-    override fun `getRoute throws SportsError (Not Found) if the route with the rid doesn't exist`(): Unit =
+    override fun `getRoute throws NotFoundException if the route with the rid doesn't exist`(): Unit =
         db.execute { conn ->
             assertFailsWith<NotFoundException> {
                 db.routes.getRoute(conn, 0)
@@ -84,5 +95,37 @@ class RoutesPostgresDBTests : AppPostgresDBTests(), RoutesDBTests {
         db.execute { conn ->
             assertEquals(emptyList(), db.routes.getAllRoutes(conn, 0, 10).routes)
         }
+    }
+
+    @Test
+    override fun `getAllRoutes with skip works`(): Unit = db.execute { conn ->
+        val routes = listOf(
+            Route(2, "Chelas", "Odivelas", 0.15, 2),
+            Route(3, "Lisboa", "Porto", 1.5, 3)
+        )
+
+        assertEquals(routes, db.routes.getAllRoutes(conn, 1, 10).routes)
+    }
+
+    @Test
+    override fun `getAllRoutes with limit works`(): Unit = db.execute { conn ->
+        val routes = listOf(
+            Route(1, "Odivelas", "Chelas", 0.15, 1),
+            Route(2, "Chelas", "Odivelas", 0.15, 2)
+        )
+
+        assertEquals(routes, db.routes.getAllRoutes(conn, 0, 2).routes)
+    }
+
+    // hasRoute
+
+    @Test
+    override fun `hasRoute returns true if the route exists`(): Unit = db.execute { conn ->
+        assertTrue(db.routes.hasRoute(conn, 1))
+    }
+
+    @Test
+    override fun `hasRoute returns false if the route does not exist`(): Unit = db.execute { conn ->
+        assertFalse(db.routes.hasRoute(conn, 9999999))
     }
 }

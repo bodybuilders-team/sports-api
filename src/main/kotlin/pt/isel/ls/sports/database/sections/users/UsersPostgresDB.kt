@@ -1,5 +1,6 @@
 package pt.isel.ls.sports.database.sections.users
 
+import pt.isel.ls.sports.database.AlreadyExistsException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.utils.getPaginatedQuery
@@ -13,6 +14,9 @@ import java.sql.Statement
 class UsersPostgresDB : UsersDB {
 
     override fun createNewUser(conn: ConnectionDB, name: String, email: String): Int {
+        if (hasUserWithEmail(conn, email))
+            throw AlreadyExistsException("Email already in use")
+
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(

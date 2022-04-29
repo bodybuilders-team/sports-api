@@ -26,9 +26,8 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         return id
     }
 
-    override fun getActivity(conn: ConnectionDB, aid: Int): Activity {
-        return source.activities[aid] ?: throw NotFoundException("Activity with id $aid not found")
-    }
+    override fun getActivity(conn: ConnectionDB, aid: Int): Activity =
+        source.activities[aid] ?: throw NotFoundException("Activity with id $aid not found")
 
     override fun deleteActivity(conn: ConnectionDB, aid: Int) {
         source.activities.remove(aid) ?: throw NotFoundException("Activity with id $aid not found")
@@ -44,7 +43,7 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         limit: Int
     ): ActivitiesResponse =
         ActivitiesResponse(
-            source.activities
+            activities = source.activities
                 .filter {
                     it.value.sid == sid &&
                         (date == null || it.value.date == date) &&
@@ -56,8 +55,9 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
                         compareBy { it.duration }
                     else
                         compareByDescending { it.duration }
-                ),
-            0
+                )
+                .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
+            totalCount = 0
         )
 
     override fun searchUsersByActivity(
@@ -68,13 +68,14 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         limit: Int
     ): UsersResponse =
         UsersResponse(
-            source.activities
+            users = source.activities
                 .filter { it.value.sid == sid && it.value.rid == rid }
                 .values.toList()
                 .sortedWith(compareBy { it.duration })
                 .map { source.users[it.uid] ?: throw NotFoundException("User with id ${it.uid} not found") }
-                .distinct(),
-            0
+                .distinct()
+                .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
+            totalCount = 0
         )
 
     override fun getSportActivities(
@@ -83,7 +84,13 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         skip: Int,
         limit: Int
     ): ActivitiesResponse =
-        ActivitiesResponse(source.activities.filter { it.value.sid == sid }.values.toList(), 0)
+        ActivitiesResponse(
+            activities = source.activities
+                .filter { it.value.sid == sid }
+                .values.toList()
+                .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
+            totalCount = 0
+        )
 
     override fun getUserActivities(
         conn: ConnectionDB,
@@ -91,7 +98,13 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         skip: Int,
         limit: Int
     ): ActivitiesResponse =
-        ActivitiesResponse(source.activities.filter { it.value.uid == uid }.values.toList(), 0)
+        ActivitiesResponse(
+            activities = source.activities
+                .filter { it.value.uid == uid }
+                .values.toList()
+                .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
+            totalCount = 0
+        )
 
     override fun hasActivity(conn: ConnectionDB, aid: Int): Boolean =
         source.activities.containsKey(aid)
