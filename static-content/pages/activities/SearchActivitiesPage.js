@@ -19,22 +19,22 @@ async function SearchActivitiesPage(state) {
      * @returns {?PropActivitiesProps}
      */
     function getActivitiesProps() {
-        const activitiesProps = {}
+        const activitiesProps = {};
 
         for (const key in state.query)
-            activitiesProps[key] = state.query[key]
+            activitiesProps[key] = state.query[key];
 
         if (state.query.sid != null)
-            activitiesProps.sid = parseInt(state.query.sid)
+            activitiesProps.sid = parseInt(state.query.sid);
         if (state.query.rid != null)
-            activitiesProps.rid = parseInt(state.query.rid)
+            activitiesProps.rid = parseInt(state.query.rid);
         if (state.query.skip != null)
-            activitiesProps.skip = parseInt(state.query.skip)
+            activitiesProps.skip = parseInt(state.query.skip);
         if (state.query.limit != null)
-            activitiesProps.limit = parseInt(state.query.limit)
+            activitiesProps.limit = parseInt(state.query.limit);
 
         if (Object.keys(activitiesProps).length === 0)
-            return null
+            return null;
 
         const result = validate(activitiesProps, {
             sid: {type: "number", required: true},
@@ -43,15 +43,15 @@ async function SearchActivitiesPage(state) {
             date: {type: "string"},
             skip: {type: "number"},
             limit: {type: "number"},
-        })
+        });
 
         if (!result.isValid)
             throw new InvalidSearchParamsError(result);
 
-        return activitiesProps
+        return activitiesProps;
     }
 
-    const activitiesProps = getActivitiesProps()
+    const activitiesProps = getActivitiesProps();
 
     /**
      * Search for activities form function.
@@ -79,8 +79,9 @@ async function SearchActivitiesPage(state) {
     return div(
         SearchActivitiesForm(state, {onSubmit: searchActivities, activitiesProps: activitiesProps}),
         br(),
-        (activitiesProps != null) ?
-            FetchedPaginatedCollection(state,
+        (activitiesProps != null)
+            ? FetchedPaginatedCollection(
+                state,
                 {
                     defaultSkip: 0,
                     defaultLimit: 10,
@@ -91,9 +92,7 @@ async function SearchActivitiesPage(state) {
                 }
             )
             : undefined
-    )
-
-
+    );
 }
 
 export default SearchActivitiesPage;

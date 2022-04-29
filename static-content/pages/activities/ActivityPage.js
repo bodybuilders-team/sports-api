@@ -10,11 +10,12 @@ import {LogError} from "../../js/errorUtils.js";
  */
 async function ActivityPage(state) {
     if (state.params.id === undefined)
-        throw new LogError("User id must be defined")
+        throw new LogError("User id must be defined");
 
     const id = parseInt(state.params.id);
     if (id == null)
-        throw new LogError("User id")
+        throw new LogError("User id");
+
     const activity = await apiFetch(`/activities/${id}`);
 
     const sport = await apiFetch(`/sports/${activity.sid}`);

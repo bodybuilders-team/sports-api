@@ -69,16 +69,10 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
     ): UsersResponse =
         UsersResponse(
             source.activities
-                .filter {
-                    it.value.sid == sid && it.value.rid == rid
-                }
+                .filter { it.value.sid == sid && it.value.rid == rid }
                 .values.toList()
-                .sortedWith(
-                    compareBy { it.duration }
-                )
-                .map {
-                    source.users[it.uid] ?: throw NotFoundException("User with id ${it.uid} not found")
-                }
+                .sortedWith(compareBy { it.duration })
+                .map { source.users[it.uid] ?: throw NotFoundException("User with id ${it.uid} not found") }
                 .distinct(),
             0
         )

@@ -84,7 +84,7 @@ async function Paginate(state, props) {
                 }, span({["aria-hidden"]: "true"}, "»"))
             )
         )
-    )
+    );
 }
 
 export default Paginate;

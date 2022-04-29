@@ -14,7 +14,7 @@ export function Router() {
      * @returns Promise<HTMLElement>
      */
     function router(state, props) {
-        return router.handle(state, props)
+        return router.handle(state, props);
     }
 
     /**
@@ -63,7 +63,7 @@ export function Router() {
             const {isMatch, newPath, params} = matchHandlerPath(handlerPath, path);
 
             if (!isMatch)
-                continue
+                continue;
 
             return {
                 handler: handlerData.handler,
@@ -71,7 +71,6 @@ export function Router() {
                 newPath,
                 params
             };
-
         }
 
         return undefined;
@@ -123,8 +122,8 @@ function matchHandlerPath(handlerPath, path) {
     let lHandlerIdx = -1;
     let rHandlerIdx = handlerPath.indexOf('/');
 
-    const params = {}
-    let newPath = path
+    const params = {};
+    let newPath = path;
 
     while (lHandlerIdx < rHandlerIdx) {
         const currPath = path.substring(lIdx + 1, rIdx);

@@ -11,7 +11,7 @@ import {getQuerySkipLimit} from "../../js/utils.js";
  */
 async function UserPage(state) {
     if (state.params.id === undefined)
-        throw new LogError("User id must be defined")
+        throw new LogError("User id must be defined");
 
 
     const id = state.params.id;

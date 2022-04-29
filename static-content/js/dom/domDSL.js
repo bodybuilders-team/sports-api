@@ -17,15 +17,19 @@ export async function createElement(tag, attributes, ...children) {
 
     if (isElement(attributes) || typeof attributes === "string")
         appendChild(element, attributes);
+
     else if (attributes != null && typeof attributes === "object")
         setAttributes(element, attributes);
+
     else if (attributes != null)
         throw new LogError("Invalid attributes for createElement");
 
     for (let child of children) {
         child = await child;
+
         if (child != null && (isElement(child) || typeof child === "string"))
             appendChild(element, child);
+
         else if (child != null)
             throw new LogError("Invalid child:", child, "for element:", element);
     }
@@ -55,7 +59,7 @@ function setAttributes(element, attributes) {
 
         const value = attributes[attribute];
         if (value == null)
-            continue
+            continue;
 
         switch (attribute) {
             case "onClick":

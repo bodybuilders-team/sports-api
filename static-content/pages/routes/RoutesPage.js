@@ -21,7 +21,7 @@ async function RoutesPage(state) {
                 collectionName: "routes",
             }
         )
-    )
+    );
 }
 
 

@@ -23,7 +23,7 @@ async function apiFetch(endpoint) {
         throw new LogError(err);
     }
 
-    throw new LogError(json)
+    throw new LogError(json);
 }
 
 export default apiFetch;

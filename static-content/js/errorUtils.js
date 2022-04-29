@@ -35,6 +35,6 @@ export function LogError(...data) {
 export function InvalidSearchParamsError(data) {
     console.error("Invalid URL search parameters", data);
 
-    this.error = data.error
-    this.details = data.details
+    this.error = data.error;
+    this.details = data.details;
 }

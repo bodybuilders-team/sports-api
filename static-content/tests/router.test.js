@@ -5,7 +5,7 @@ import {a, p} from "../js/dom/domTags.js";
 import {LogError} from "../js/errorUtils.js";
 import {createState} from "../js/compLib.js";
 
-const assert = chai.assert
+const assert = chai.assert;
 
 describe('Router', () => {
     it('Should be a function', () => {
@@ -27,7 +27,7 @@ describe('Router', () => {
         describe('Simple handler path', () => {
 
             it('with valid path is routed properly', async () => {
-                const state = createState("/")
+                const state = createState("/");
 
                 const router = Router();
 
@@ -43,7 +43,7 @@ describe('Router', () => {
             });
 
             it('with invalid path throws LogError without default handler', async () => {
-                const state = createState('dada/')
+                const state = createState('dada/');
 
                 const router = Router();
 
@@ -53,7 +53,7 @@ describe('Router', () => {
 
                 try {
                     await router(state);
-                    assert.fail("router doesn't throw Log Error")
+                    assert.fail("router doesn't throw Log Error");
                 } catch (e) {
                     assert.isDefined(e);
                     assert.instanceOf(e, LogError);
@@ -61,7 +61,7 @@ describe('Router', () => {
             });
 
             it('with invalid path returns default handler', async () => {
-                const state = createState('dada/')
+                const state = createState('dada/');
 
                 const router = Router();
 
@@ -84,7 +84,7 @@ describe('Router', () => {
 
         describe('Handler path', () => {
             it('with valid path is routed properly', async () => {
-                const state = createState('/Hello/World/dada')
+                const state = createState('/Hello/World/dada');
 
                 const router = Router();
 
@@ -100,7 +100,7 @@ describe('Router', () => {
             });
 
             it('with invalid path throws LogError without default handler', async () => {
-                const state = createState('/Hello/Word')
+                const state = createState('/Hello/Word');
 
                 const router = Router();
 
@@ -110,7 +110,7 @@ describe('Router', () => {
 
                 try {
                     await router(state);
-                    assert.fail("router doesn't throw Log Error")
+                    assert.fail("router doesn't throw Log Error");
                 } catch (e) {
                     assert.isDefined(e);
                     assert.instanceOf(e, LogError);
@@ -120,7 +120,7 @@ describe('Router', () => {
 
         describe('Handler path with params', () => {
             it('and with valid path is routed properly', async () => {
-                const state = createState('/Hello/World/dada')
+                const state = createState('/Hello/World/dada');
 
                 const router = Router();
 
@@ -138,7 +138,7 @@ describe('Router', () => {
             });
 
             it('and with invalid path throws LogError without default handler', async () => {
-                const state = createState('/Hello/')
+                const state = createState('/Hello/');
 
                 const router = Router();
 

@@ -30,8 +30,8 @@ async function Sport(state, props) {
                 {class: "card-body"},
                 h3("Name: ", props.name),
                 h3("Description: ", props.description),
-                (props.activitiesData.activities.length > 0) ?
-                    div(
+                (props.activitiesData.activities.length > 0)
+                    ? div(
                         h3("Activities:"),
                         PaginatedCollection(state,
                             {
@@ -43,7 +43,8 @@ async function Sport(state, props) {
                                 totalCount: props.activitiesData.totalCount
                             }
                         )
-                    ) : undefined
+                    )
+                    : undefined
             )
         )
     );

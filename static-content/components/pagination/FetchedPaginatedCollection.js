@@ -27,7 +27,7 @@ async function FetchedPaginatedCollection(state, props) {
     searchParams.skip = skip;
     searchParams.limit = limit;
 
-    //Removes undefined and null values from the searchParams object (for the apiFetch call)
+    // Removes undefined and null values from the searchParams object (for the apiFetch call)
     for (const key in searchParams) {
         if (searchParams[key] == null)
             delete searchParams[key];

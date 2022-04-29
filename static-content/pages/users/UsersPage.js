@@ -20,7 +20,7 @@ async function UsersPage(state) {
                 collectionName: "users",
             }
         )
-    )
+    );
 }
 
 export default UsersPage;

@@ -30,8 +30,8 @@ async function User(state, props) {
                 {class: "card-body col justify-content-center"},
                 h3("Username: ", props.name),
                 h3("Email: ", props.email),
-                (props.activitiesData.activities.length > 0) ?
-                    div(
+                (props.activitiesData.activities.length > 0)
+                    ? div(
                         h3("Activities:"),
                         PaginatedCollection(state,
                             {
@@ -43,7 +43,8 @@ async function User(state, props) {
                                 totalCount: props.activitiesData.totalCount
                             }
                         )
-                    ) : undefined
+                    )
+                    : undefined
             )
         )
     );

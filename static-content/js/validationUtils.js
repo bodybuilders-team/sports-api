@@ -19,7 +19,7 @@ export function validate(object, schema) {
         return {isValid: true};
     }
 
-    //Verifies if all object properties exist in schema
+    // Verifies if all object properties exist in schema
     for (const prop in object) {
         if (schema[prop] == null)
             return {isValid: false, error: "Object property " + prop + " does not exist in schema"};

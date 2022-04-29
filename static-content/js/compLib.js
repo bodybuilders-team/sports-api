@@ -13,17 +13,17 @@
  * @param rawPath
  */
 function parsePath(rawPath) {
-    const query = {}
+    const query = {};
 
-    const url = new URL(rawPath, window.location.origin)
+    const url = new URL(rawPath, window.location.origin);
 
-    const path = url.pathname
+    const path = url.pathname;
 
     url.searchParams.forEach((value, key) => {
         query[key] = value;
-    })
+    });
 
-    return {path, query}
+    return {path, query};
 }
 
 /**
@@ -31,7 +31,7 @@ function parsePath(rawPath) {
  * @returns state object
  */
 export function createState(rawPath) {
-    //Right now the state is just the path and query,
+    // Right now the state is just the path and query,
     // but in the future it could be more complex
     return parsePath(rawPath);
 }

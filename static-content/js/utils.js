@@ -28,11 +28,10 @@ export function getQuerySkipLimit(query, defaultSkip, defaultLimit) {
     limit = (limit != null) ? parseInt(limit) : defaultLimit;
 
     if (skip == null || Number.isNaN(skip) || skip < 0)
-        throw new InvalidSearchParamsError({error:`Skip must be a valid positive number, not ${query.skip}`})
+        throw new InvalidSearchParamsError({error: `Skip must be a valid positive number, not ${query.skip}`})
+
     if (limit == null || Number.isNaN(limit) || limit < 0)
-        throw new InvalidSearchParamsError({error:`Limit must be a valid positive number, not ${query.limit}`})
-
-
+        throw new InvalidSearchParamsError({error: `Limit must be a valid positive number, not ${query.limit}`})
 
     return {skip, limit}
 }

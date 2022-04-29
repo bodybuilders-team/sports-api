@@ -32,16 +32,18 @@ async function PaginatedCollection(state, props) {
 
     return div(
         {class: "row justify-content-center"},
-        (totalCount <= 0) ?
-            div({class: "alert alert-info ", role: "alert"}, `No ${collectionName} found.`,)
+        (totalCount <= 0)
+            ? div({class: "alert alert-info ", role: "alert"}, `No ${collectionName} found.`,)
             : collectionComponent(state, {[collectionName]: collection}),
 
-        (totalCount > limit) ? SkipLimitPaginate(state, {
-            skip,
-            limit,
-            totalCount,
-            onPageChange
-        }) : undefined
+        (totalCount > limit)
+            ? SkipLimitPaginate(state, {
+                skip,
+                limit,
+                totalCount,
+                onPageChange
+            })
+            : undefined
     );
 }
 

@@ -21,7 +21,7 @@ async function SportsPage(state) {
                 collectionName: "sports",
             }
         )
-    )
+    );
 }
 
 
