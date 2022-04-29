@@ -1,15 +1,26 @@
 import {a, div, h1, h3, h5} from "../../js/dom/domTags.js";
-import {LogError} from "../../js/errorUtils.js";
+
+/**
+ * @typedef PropRoute
+ * @property {string} id activity route id
+ */
 
 /**
  * Activity details component.
- * @param state application state
- * @param props component properties
- * @returns activity component
+ *
+ * @param state - application state
+ * @param {Object} props - component properties
+ * @param {number} props.id - activity id
+ * @param {string} props.date - activity date
+ * @param {string} props.duration - activity duration
+ * @param {Object} props.sport - activity sport
+ * @param {number} props.sport.id - activity sport id
+ * @param {string} props.sport.name - activity sport name
+ * @param {?PropRoute=} props.route - activity route
+ *
+ * @return Promise<HTMLElement>
  */
 async function Activity(state, props) {
-    if (props == null)
-        throw new LogError("Activity props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},

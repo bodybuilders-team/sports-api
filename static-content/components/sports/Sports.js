@@ -1,15 +1,22 @@
 import {a, div, h5} from "../../js/dom/domTags.js";
-import {LogError} from "../../js/errorUtils.js";
 
 /**
- * Sports page.
- * @param state application state
- * @param props component properties
- * @returns sports page
+ * @typedef PropSport
+ * @property {number} id sport id
+ * @property {string} name sport name
+ */
+
+/**
+ * Sports component.
+ *
+ * @param state - application state
+ *
+ * @param {Object} props - component properties
+ * @param {PropSport[]} props.sports - sports Ids
+ *
+ * @return Promise<HTMLElement>
  */
 async function Sports(state, props) {
-    if (props == null)
-        throw new LogError("Sports props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},

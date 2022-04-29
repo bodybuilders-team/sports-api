@@ -67,6 +67,9 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      * @return [UsersResponse] with the list of users
      */
     fun getAllUsers(skip: Int, limit: Int): UsersResponse = db.execute { conn ->
+        validateSkip(skip)
+        validateLimit(limit, LIMIT_RANGE)
+
         db.users.getAllUsers(conn, skip, limit)
     }
 
@@ -82,9 +85,15 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      */
     fun getUserActivities(uid: Int, skip: Int, limit: Int): ActivitiesResponse {
         validateUid(uid)
+        validateSkip(skip)
+        validateLimit(limit, LIMIT_RANGE)
 
         return db.execute { conn ->
             db.activities.getUserActivities(conn, uid, skip, limit)
         }
+    }
+
+    companion object {
+        private val LIMIT_RANGE = 0..100
     }
 }

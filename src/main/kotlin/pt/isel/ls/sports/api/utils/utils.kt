@@ -6,9 +6,14 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.routing.path
-import pt.isel.ls.sports.services.AuthenticationException
+import pt.isel.ls.sports.api.MissingTokenException
 import pt.isel.ls.sports.services.InvalidArgumentException
 import pt.isel.ls.sports.utils.substringOrNull
+
+/**
+ * All default values are not serialized (used for nullable fields)
+ */
+val json = Json { encodeDefaults = false }
 
 /**
  * Changes the 'Content-Type' header to 'application/json' and adds [data] to the response body.
@@ -19,7 +24,7 @@ import pt.isel.ls.sports.utils.substringOrNull
 inline fun <reified T> Response.json(data: T): Response =
     this
         .header("Content-Type", "application/json")
-        .body(Json.encodeToString(data))
+        .body(json.encodeToString(data))
 
 /**
  * Returns the value of the [param] in the request query.
@@ -47,14 +52,14 @@ private const val TOKEN_START_INDEX = 7
 
 /**
  * Returns the request token.
- * If the token is not present in the request, an [InvalidArgumentException] is thrown.
+ * If the token is not present in the request, an [MissingTokenException] is thrown.
  *
  * @return token
- * @throws InvalidArgumentException if the token is not present in the request
+ * @throws MissingTokenException if the token is not present in the request
  */
 fun Request.tokenOrThrow(): String =
     this.header("Authorization")?.substringOrNull(TOKEN_START_INDEX)
-        ?: throw AuthenticationException("Missing token in request")
+        ?: throw MissingTokenException("Missing token in request")
 
 /**
  * Decodes the request body as a [T] object.

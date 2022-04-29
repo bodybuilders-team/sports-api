@@ -36,7 +36,6 @@ import pt.isel.ls.sports.utils.toDuration
  * @property routes router routes
  */
 class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
-
     companion object {
         const val DEFAULT_SKIP = 0
         const val DEFAULT_LIMIT = 10

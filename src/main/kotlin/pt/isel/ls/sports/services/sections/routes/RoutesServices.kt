@@ -65,6 +65,13 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
      * @return [RoutesResponse] with the list of routes
      */
     fun getAllRoutes(skip: Int, limit: Int): RoutesResponse = db.execute { conn ->
+        validateSkip(skip)
+        validateLimit(limit, LIMIT_RANGE)
+
         db.routes.getAllRoutes(conn, skip, limit)
+    }
+
+    companion object {
+        private val LIMIT_RANGE = 0..100
     }
 }

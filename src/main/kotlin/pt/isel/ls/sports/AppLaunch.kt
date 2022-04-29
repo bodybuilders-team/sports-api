@@ -3,7 +3,6 @@ package pt.isel.ls.sports
 import pt.isel.ls.sports.database.AppMemoryDB
 import pt.isel.ls.sports.database.AppMemoryDBSource
 import pt.isel.ls.sports.database.AppPostgresDB
-import pt.isel.ls.sports.utils.Logger
 
 const val PORT_ENV = "PORT"
 const val DEFAULT_PORT = 8888
@@ -21,10 +20,5 @@ fun main() {
     else
         AppMemoryDB(AppMemoryDBSource())
 
-    val server = AppServer(port, database).also { it.start() }
-
-    readln()
-    server.stop()
-
-    Logger.info("Leaving main")
+    AppServer(port, database).also { it.start() }
 }

@@ -1,16 +1,31 @@
 import {br, button, div, form, h1, hr, input, label, option, select} from "../../js/dom/domTags.js";
-import Activities from "./Activities.js";
-import {LogError} from "../../js/errorUtils.js";
+
+/**
+ * @typedef PropActivitiesProps
+ * @property {?number} sid - Search sport id
+ * @property {?number} rid - Search route id
+ * @property {?string} orderBy - Search orderBy {"ascending" || "descending"}
+ * @property {?string} date - Search date
+ */
+
+/**
+ * @callback OnSubmitCallback
+ * @param {Event} event - event
+ */
 
 /**
  * SearchActivitiesForm component.
- * @param state application state
- * @param props component properties
- * @returns activities component
+ *
+ * @param state - application state
+ *
+ * @param {Object} props - component properties
+ * @param {OnSubmitCallback} props.onSubmit - on Submit event callback
+ * @param {?PropActivitiesProps=} props.activitiesProps - form activities props
+ *
+ * @return Promise<HTMLElement>
  */
 async function SearchActivitiesForm(state, props) {
-    if (props == null)
-        throw new LogError("SearchActivitiesForm props must not be null");
+    const actProps = props.activitiesProps;
 
     return div(
         h1({class: "app_icon"}, "Activities"),
@@ -25,14 +40,14 @@ async function SearchActivitiesForm(state, props) {
                     input({
                         type: "number", min: "1", id: "sid",
                         class: "form-control",
-                        value: (props.activitiesProps != null) ? props.activitiesProps.sid : "",
+                        value: (actProps != null && actProps.sid != null) ? actProps.sid.toString() : "",
                         required: true
                     }),
 
                     label({for: "rid", class: "form-label"}, "Route Id"),
                     input({
                         type: "number", min: "1", id: "rid",
-                        value: (props.activitiesProps != null) ? props.activitiesProps.rid : "",
+                        value: (actProps != null && actProps.rid != null) ? actProps.rid.toString() : "",
                         class: "form-control"
                     }),
 
@@ -41,23 +56,23 @@ async function SearchActivitiesForm(state, props) {
                         {id: "orderBy", class: "form-control", required: true},
                         option({
                             value: "",
-                            selected: (props.activitiesProps == null) ? "" : undefined
+                            selected: (actProps == null) ? "" : undefined
                         }, "Select a order to display the results"),
                         option({
                                 value: "ascending",
-                                selected: (props.activitiesProps != null && props.activitiesProps.orderBy === "ascending") ? "" : undefined
+                                selected: (actProps != null && actProps.orderBy === "ascending") ? "" : undefined
                             },
                             "Ascending"),
                         option({
                             value: "descending",
-                            selected: (props.activitiesProps != null && props.activitiesProps.orderBy === "descending") ? "" : undefined
+                            selected: (actProps != null && actProps.orderBy === "descending") ? "" : undefined
                         }, "Descending")
                     ),
 
                     label({for: "date", class: "form-label"}, "Date"),
                     input({
                         type: "date", id: "date", class: "form-control",
-                        value: (props.activitiesProps != null) ? props.activitiesProps.date : ""
+                        value: (actProps != null && actProps.date != null) ? actProps.date : ""
                     })
                 ),
                 br(),

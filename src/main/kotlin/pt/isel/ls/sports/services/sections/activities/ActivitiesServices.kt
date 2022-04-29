@@ -9,8 +9,8 @@ import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.services.AbstractServices
 import pt.isel.ls.sports.services.AuthenticationException
+import pt.isel.ls.sports.services.AuthorizationException
 import pt.isel.ls.sports.services.InvalidArgumentException
-import pt.isel.ls.sports.services.UnauthorizedException
 import kotlin.time.Duration
 
 /**
@@ -72,7 +72,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @throws InvalidArgumentException if [aid] is negative
      * @throws AuthenticationException if a user with the [token] was not found
      * @throws NotFoundException if there's no activity with the [aid]
-     * @throws UnauthorizedException if the user with the [token] is not the owner of the activity
+     * @throws AuthorizationException if the user with the [token] is not the owner of the activity
      */
     fun deleteActivity(token: String, aid: Int) {
         validateAid(aid)
@@ -82,7 +82,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
             val activity = db.activities.getActivity(conn, aid)
 
             if (uid != activity.uid)
-                throw UnauthorizedException("You are not allowed to delete this activity")
+                throw AuthorizationException("You are not allowed to delete this activity")
 
             db.activities.deleteActivity(conn, aid)
         }
@@ -98,7 +98,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @throws InvalidArgumentException if [activityIds] contains negative values
      * @throws AuthenticationException if a user with the [token] was not found
      * @throws NotFoundException if some activity identifier doesn't match any activity
-     * @throws UnauthorizedException if the user with the [token] is not the owner of some activity
+     * @throws AuthorizationException if the user with the [token] is not the owner of some activity
      */
     fun deleteActivities(token: String, activityIds: Set<Int>) {
         if (activityIds.isEmpty())
@@ -113,7 +113,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
                 val activity = db.activities.getActivity(conn, it)
 
                 if (uid != activity.uid)
-                    throw UnauthorizedException("You are not allowed to delete activity $it")
+                    throw AuthorizationException("You are not allowed to delete activity $it")
 
                 db.activities.deleteActivity(conn, it)
             }

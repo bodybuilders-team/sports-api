@@ -2,13 +2,13 @@ import {a, br, div, h1, img, p, strong} from "../js/dom/domTags.js";
 
 /**
  * HomePage page.
- * @param state application state
- * @returns home page
+ * @param {Object} state - application state
+ *
+ * @returns Promise<HTMLElement>
  */
 async function HomePage(state) {
     return div(
         h1({class: "app_icon"}, "Home"),
-        p("Add description..."),
         strong(
             "Authors: ",
             a({href: "https://github.com/Andre-J3sus"}, "André Jesus"), ", ",

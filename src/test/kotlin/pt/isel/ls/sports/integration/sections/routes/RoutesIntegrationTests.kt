@@ -74,10 +74,10 @@ class RoutesIntegrationTests : IntegrationTests() {
 
         send(request)
             .apply {
-                assertEquals(Status.UNAUTHORIZED, status)
+                assertEquals(Status.BAD_REQUEST, status)
 
                 val error = this.decodeBodyAs<AppError>()
-                assertEquals("UNAUTHENTICATED", error.name)
+                assertEquals("MISSING_TOKEN", error.name)
             }
     }
 

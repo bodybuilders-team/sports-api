@@ -71,3 +71,19 @@ fun Connection.runScript(filepath: String) {
  * @return the converted date
  */
 fun getSQLDate(date: LocalDate): Date = Date.valueOf(date.toJavaLocalDate())
+
+/**
+ * Generates a paginated query from a normal query.
+ */
+fun getPaginatedQuery(query: String) = """
+   WITH cnttable AS (
+   $query
+   )
+    SELECT *
+    FROM  (
+        TABLE  cnttable
+        OFFSET ?
+        LIMIT  ?
+   ) sub
+   RIGHT  JOIN (SELECT count(*) FROM cnttable) c(totalCount) ON true; 
+""".trimIndent()

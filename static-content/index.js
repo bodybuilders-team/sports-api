@@ -1,20 +1,23 @@
 import App from "./pages/App.js";
-import {InvSearchParamsError, isAppError} from "./js/errorUtils.js";
+import {InvalidSearchParamsError, isAppError} from "./js/errorUtils.js";
 import AppErrorPage from "./pages/errors/AppErrorPage.js";
 import {createState, render} from "./js/compLib.js";
-import InvSearchParamsErrorPage from "./pages/errors/InvSearchParamsErrorPage.js";
+import InvalidSearchParamsErrorPage from "./pages/errors/InvalidSearchParamsErrorPage.js";
 
 window.addEventListener("load", hashChangeHandler);
 window.addEventListener("hashchange", hashChangeHandler);
 
-
+/**
+ * Handles a component error
+ *
+ * @param {Object} state - applicationState
+ * @param {Object} error - error object
+ */
 function handleComponentError(state, error) {
-    if (error instanceof InvSearchParamsError)
-        InvSearchParamsErrorPage(state, error).then(render);
-
+    if (error instanceof InvalidSearchParamsError)
+        InvalidSearchParamsErrorPage(state, error).then(render);
     else if (isAppError(error))
         AppErrorPage(state, error).then(render);
-
     else
         throw error;
 }

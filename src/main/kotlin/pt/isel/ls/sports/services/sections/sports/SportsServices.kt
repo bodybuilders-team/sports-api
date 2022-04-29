@@ -63,6 +63,9 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      * @return [SportsResponse] with the list of sports
      */
     fun getAllSports(skip: Int, limit: Int): SportsResponse = db.execute { conn ->
+        validateSkip(skip)
+        validateLimit(limit, LIMIT_RANGE)
+
         db.sports.getAllSports(conn, skip, limit)
     }
 
@@ -78,9 +81,15 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      */
     fun getSportActivities(sid: Int, skip: Int, limit: Int): ActivitiesResponse {
         validateSid(sid)
+        validateSkip(skip)
+        validateLimit(limit, LIMIT_RANGE)
 
         return db.execute { conn ->
             db.activities.getSportActivities(conn, sid, skip, limit)
         }
+    }
+
+    companion object {
+        private val LIMIT_RANGE = 0..100
     }
 }

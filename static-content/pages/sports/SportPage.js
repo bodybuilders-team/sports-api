@@ -5,8 +5,9 @@ import {getQuerySkipLimit} from "../../js/utils.js";
 
 /**
  * Sport details page.
- * @param state application state
- * @returns sport page
+ * @param {Object} state - application state
+ *
+ * @returns Promise<HTMLElement>
  */
 async function SportPage(state) {
     if (state.params.id === undefined)

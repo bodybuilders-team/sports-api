@@ -1,17 +1,25 @@
 import {div, h1, h3} from "../../js/dom/domTags.js";
 import Activities from "../activities/Activities.js";
-import {LogError} from "../../js/errorUtils.js";
 import PaginatedCollection from "../pagination/PaginatedCollection.js";
 
 /**
  * User details page.
- * @param state application state
- * @param props component properties
- * @returns user page
+
+ * @param {Object} state - global state
+ *
+ * @param {Object} props - component properties
+ * @param {number} props.id - user id
+ * @param {string} props.name - user name
+ * @param {string} props.email - user email
+ * @param {Object} props.activitiesData
+ * @param {number} props.activitiesData.skip - activities skip
+ * @param {number} props.activitiesData.limit - activities limit
+ * @param {PropActivity[]} props.activitiesData.activities - activities
+ * @param {number} props.activitiesData.totalCount - total number of activities
+ *
+ * @return Promise<HTMLElement>
  */
 async function User(state, props) {
-    if (props == null)
-        throw new LogError("User props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},

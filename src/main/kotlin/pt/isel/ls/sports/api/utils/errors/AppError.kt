@@ -1,10 +1,9 @@
 package pt.isel.ls.sports.api.utils.errors
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.http4k.core.Response
 import org.http4k.core.Status
+import pt.isel.ls.sports.api.utils.json
 
 /**
  * Represents an error response of the api.
@@ -23,6 +22,5 @@ class AppError(val name: String, val description: String, val extraInfo: String?
      * @return a [Response] which the body is the serialized [AppError]
      */
     fun toResponse(status: Status): Response =
-        Response(status)
-            .body(Json.encodeToString(this))
+        Response(status).json(this)
 }

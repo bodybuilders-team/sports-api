@@ -2,6 +2,7 @@ package pt.isel.ls.sports.database.sections.users
 
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.utils.getPaginatedQuery
 import pt.isel.ls.sports.domain.User
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -50,12 +51,12 @@ class UsersPostgresDB : UsersDB {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
-                """
-                SELECT *, count(*) OVER() AS totalCount
+                getPaginatedQuery(
+                    """
+                SELECT *
                 FROM users
-                OFFSET ?
-                LIMIT ?
-                """.trimIndent()
+                    """.trimIndent()
+                )
             )
 
         stm.setInt(1, skip)
@@ -99,14 +100,13 @@ class UsersPostgresDB : UsersDB {
             val rs = stm.executeQuery()
             val users = mutableListOf<User>()
 
-            if (!rs.next())
-                return UsersResponse(users, 0)
-
+            rs.next()
             val totalCount = rs.getInt("totalCount")
 
-            do {
-                users.add(getUserFromTable(rs))
-            } while (rs.next())
+            if (rs.getObject("id") != null)
+                do {
+                    users.add(getUserFromTable(rs))
+                } while (rs.next())
 
             return UsersResponse(users, totalCount)
         }

@@ -8,7 +8,6 @@ info:
 servers:
   - url: http://localhost:8888/api
 
-
 tags:
   - name: Users
 
@@ -821,15 +820,15 @@ components:
     CreateRouteRequest:
       type: object
       required:
-        - start_location
-        - end_location
+        - startLocation
+        - endLocation
         - distance
       properties:
-        start_location:
+        startLocation:
           type: string
           description: Route start location
 
-        end_location:
+        endLocation:
           type: string
           description: Route end location
 
@@ -954,7 +953,6 @@ components:
         description:
           type: string
           description: Sport Description
-          example: andre@pascoa.org
 
         uid:
           type: integer
@@ -966,8 +964,8 @@ components:
       description: Route object
       required:
         - id
-        - start_location
-        - end_location
+        - startLocation
+        - endLocation
         - distance
         - uid
       properties:
@@ -975,12 +973,12 @@ components:
           type: integer
           description: Route id
 
-        start_location:
+        startLocation:
           type: string
           description: Route start location
           example: "Porto, Portugal"
 
-        end_location:
+        endLocation:
           type: string
           description: Route end location
           example: "Lisbon, Portugal"

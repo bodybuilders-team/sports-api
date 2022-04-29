@@ -19,4 +19,4 @@ class InvalidArgumentException(message: String? = null) : Exception(message)
  *
  * @param message exception message
  */
-class UnauthorizedException(message: String? = null) : Exception(message)
+class AuthorizationException(message: String? = null) : Exception(message)

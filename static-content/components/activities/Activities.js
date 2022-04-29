@@ -1,15 +1,21 @@
 import {a, div, h5} from "../../js/dom/domTags.js";
-import {LogError} from "../../js/errorUtils.js";
+
+/**
+ * @typedef PropActivity
+ * @property {number} id activity id
+ */
 
 /**
  * Activities component.
- * @param state application state
- * @param props component properties
- * @returns activities component
+ *
+ * @param state - application state
+ *
+ * @param {Object} props - component properties
+ * @param {PropActivity[]} props.activities - activities Ids
+ *
+ * @return Promise<HTMLElement>
  */
 async function Activities(state, props) {
-    if (props == null)
-        throw new LogError("Activities props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},

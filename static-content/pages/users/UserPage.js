@@ -5,8 +5,9 @@ import {getQuerySkipLimit} from "../../js/utils.js";
 
 /**
  * User details page.
- * @param state application state
- * @returns user page
+ * @param {Object} state - application state
+ *
+ * @returns Promise<HTMLElement>
  */
 async function UserPage(state) {
     if (state.params.id === undefined)

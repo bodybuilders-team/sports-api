@@ -4,14 +4,17 @@ import {LogError} from "../../js/errorUtils.js";
 
 /**
  * Activity details page.
- * @param state application state
- * @returns Activity page
+ * @param {Object} state - application state
+ *
+ * @returns Promise<HTMLElement>
  */
 async function ActivityPage(state) {
     if (state.params.id === undefined)
         throw new LogError("User id must be defined")
 
-    const id = state.params.id;
+    const id = parseInt(state.params.id);
+    if (id == null)
+        throw new LogError("User id")
     const activity = await apiFetch(`/activities/${id}`);
 
     const sport = await apiFetch(`/sports/${activity.sid}`);

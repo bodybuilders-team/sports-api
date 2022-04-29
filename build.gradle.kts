@@ -23,3 +23,10 @@ tasks.register<Copy>("copyRuntimeDependencies") {
     into("build/libs")
     from(configurations.runtimeClasspath)
 }
+
+// gradlew.bat launch
+tasks.register<JavaExec>("launch") {
+    group = "launch"
+    this.mainClass.set("pt.isel.ls.sports.AppLaunchKt")
+    classpath = sourceSets["main"].runtimeClasspath
+}

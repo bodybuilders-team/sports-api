@@ -1,4 +1,14 @@
 /**
+ * @name Component
+ * @typedef {Function}
+ *
+ * @param {Object} state - application state
+ * @param {?Object=} props - component properties
+ *
+ * @returns Promise<HTMLElement>
+ */
+
+/**
  * Parses search query params from a path.
  * @param rawPath
  */
@@ -28,9 +38,9 @@ export function createState(rawPath) {
 
 /**
  * Renders a component.
- * @param component component to render
+ * @param {HTMLElement} element - component to render
  */
-export function render(component) {
+export function render(element) {
     const mainContent = document.getElementById("mainContent");
-    mainContent.replaceChildren(component);
+    mainContent.replaceChildren(element);
 }

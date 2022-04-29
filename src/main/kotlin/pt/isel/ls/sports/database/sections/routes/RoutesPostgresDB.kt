@@ -2,6 +2,7 @@ package pt.isel.ls.sports.database.sections.routes
 
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.utils.getPaginatedQuery
 import pt.isel.ls.sports.domain.Route
 import java.sql.Connection
 import java.sql.ResultSet
@@ -61,12 +62,12 @@ class RoutesPostgresDB : RoutesDB {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
-                """
-                SELECT *, count(*) OVER() AS totalCount
+                getPaginatedQuery(
+                    """
+                SELECT *
                 FROM routes
-                OFFSET ?
-                LIMIT ?
-                """.trimIndent()
+                    """.trimIndent()
+                )
             )
 
         stm.setInt(1, skip)
@@ -75,14 +76,13 @@ class RoutesPostgresDB : RoutesDB {
         val rs = stm.executeQuery()
         val routes = mutableListOf<Route>()
 
-        if (!rs.next())
-            return RoutesResponse(routes, 0)
-
+        rs.next()
         val totalCount = rs.getInt("totalCount")
 
-        do {
-            routes.add(getRouteFromTable(rs))
-        } while (rs.next())
+        if (rs.getObject("id") != null)
+            do {
+                routes.add(getRouteFromTable(rs))
+            } while (rs.next())
 
         return RoutesResponse(routes, totalCount)
     }

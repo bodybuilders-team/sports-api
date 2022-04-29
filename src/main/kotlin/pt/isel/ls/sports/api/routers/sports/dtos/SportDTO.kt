@@ -17,7 +17,7 @@ data class SportDTO(
     val id: Int,
     val name: String,
     val uid: Int,
-    val description: String?
+    val description: String? = null
 ) {
     companion object {
         /**

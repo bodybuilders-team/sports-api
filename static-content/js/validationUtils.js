@@ -1,8 +1,9 @@
 /**
+ * Validates an object based on a shema.
  *
- * @param object
- * @param schema
- * @returns {any}
+ * @param {Object} object
+ * @param {Object} schema
+ * @returns {{isValid:boolean, error:string=, details:any=}}
  */
 export function validate(object, schema) {
     if (object == null)

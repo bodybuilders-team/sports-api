@@ -17,8 +17,9 @@ router.addDefaultHandler(NotFoundPage);
 
 /**
  * Initializes the Web application.
- * @param state application state
- * @returns application
+ * @param {Object} state - application state
+ *
+ * @returns Promise<HTMLElement>
  */
 async function App(state) {
     return router(state);

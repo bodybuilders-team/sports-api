@@ -1,15 +1,21 @@
 import {a, div, h5} from "../../js/dom/domTags.js";
-import {LogError} from "../../js/errorUtils.js";
+
+/**
+ * @typedef PropRoute
+ * @property {number} id route id
+ */
 
 /**
  * Routes component.
- * @param state application state
- * @param props component properties
- * @returns routes component
+ *
+ * @param state - application state
+ *
+ * @param {Object} props - component properties
+ * @param {PropRoute[]} props.routes - routes Ids
+ *
+ * @return Promise<HTMLElement>
  */
 async function Routes(state, props) {
-    if (props == null)
-        throw new LogError("Routes props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},

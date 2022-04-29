@@ -7,6 +7,7 @@ import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.sections.users.UsersPostgresDB.Companion.getUsersResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
+import pt.isel.ls.sports.database.utils.getPaginatedQuery
 import pt.isel.ls.sports.database.utils.getSQLDate
 import pt.isel.ls.sports.database.utils.setIntOrNull
 import pt.isel.ls.sports.domain.Activity
@@ -97,14 +98,14 @@ class ActivitiesPostgresDB : ActivitiesDB {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
-                """
-                SELECT *, count(*) OVER() AS totalCount
+                getPaginatedQuery(
+                    """
+                SELECT *
                 FROM activities
                 WHERE sid = ? $queryDate  $queryRid
                 ORDER BY duration ${orderBy.str}
-                OFFSET ?
-                LIMIT ?
-                """.trimIndent()
+                    """.trimIndent()
+                )
             )
         stm.setInt(1, sid)
 
@@ -132,18 +133,18 @@ class ActivitiesPostgresDB : ActivitiesDB {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
-                """
-                SELECT *, count(*) OVER() AS totalCount
+                getPaginatedQuery(
+                    """
+                SELECT *
                 FROM users
                 JOIN (
                 SELECT uid
                 FROM activities
                 WHERE sid = ? AND rid = ?
                 ORDER BY duration
-                OFFSET ?
-                LIMIT ?
                 ) AS activityUids ON users.id = activityUids.uid
-                """.trimIndent()
+                    """.trimIndent()
+                )
             )
         stm.setInt(1, sid)
         stm.setInt(2, rid)
@@ -162,13 +163,13 @@ class ActivitiesPostgresDB : ActivitiesDB {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
-                """
-                SELECT *, count(*) OVER() AS totalCount
+                getPaginatedQuery(
+                    """
+                SELECT *
                 FROM activities
                 WHERE sid = ?
-                OFFSET ?
-                LIMIT ?
-                """.trimIndent()
+                    """.trimIndent()
+                )
             )
 
         stm.setInt(1, sid)
@@ -187,13 +188,13 @@ class ActivitiesPostgresDB : ActivitiesDB {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
-                """
-                SELECT *, count(*) OVER() AS totalCount
+                getPaginatedQuery(
+                    """
+                SELECT *
                 FROM activities
                 WHERE uid = ?
-                OFFSET ?
-                LIMIT ?
-                """.trimIndent()
+                    """.trimIndent()
+                )
             )
         stm.setInt(1, uid)
         stm.setInt(2, skip)
@@ -224,14 +225,13 @@ class ActivitiesPostgresDB : ActivitiesDB {
             val rs = stm.executeQuery()
             val activities = mutableListOf<Activity>()
 
-            if (!rs.next())
-                return ActivitiesResponse(activities, 0)
-
+            rs.next()
             val totalCount = rs.getInt("totalCount")
 
-            do {
-                activities.add(getActivityFromTable(rs))
-            } while (rs.next())
+            if (rs.getObject("id") != null)
+                do {
+                    activities.add(getActivityFromTable(rs))
+                } while (rs.next())
 
             return ActivitiesResponse(activities, totalCount)
         }

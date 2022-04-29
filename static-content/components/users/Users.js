@@ -1,15 +1,22 @@
 import {a, div, h5} from "../../js/dom/domTags.js";
-import {LogError} from "../../js/errorUtils.js";
 
 /**
- * Users page.
- * @param state application state
- * @param props component properties
- * @returns users page
+ * @typedef PropUser
+ * @property {number} id user id
+ * @property {string} name user name
+ */
+
+/**
+ * Users component.
+ *
+ * @param state - application state
+ *
+ * @param {Object} props - component properties
+ * @param {PropUser[]} props.users - users Ids
+ *
+ * @return Promise<HTMLElement>
  */
 async function Users(state, props) {
-    if (props == null)
-        throw new LogError("Users props must not be null");
 
     return div(
         {class: "row justify-content-evenly"},

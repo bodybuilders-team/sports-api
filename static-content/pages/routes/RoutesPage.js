@@ -4,8 +4,9 @@ import {div, h1} from "../../js/dom/domTags.js";
 
 /**
  * Routes page.
- * @param state application state
- * @returns routes page
+ * @param {Object} state - application state
+ *
+ * @returns Promise<HTMLElement>
  */
 async function RoutesPage(state) {
 
@@ -13,8 +14,8 @@ async function RoutesPage(state) {
         h1({class: "app_icon"}, "Routes"),
         FetchedPaginatedCollection(state,
             {
-                initialSkip: 0,
-                initialLimit: 10,
+                defaultSkip: 0,
+                defaultLimit: 10,
                 collectionComponent: Routes,
                 collectionEndpoint: "/routes",
                 collectionName: "routes",

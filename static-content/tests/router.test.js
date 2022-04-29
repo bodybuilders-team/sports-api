@@ -1,3 +1,5 @@
+// noinspection ALL
+
 import {Router} from "../routers/router.js";
 import {a, p} from "../js/dom/domTags.js";
 import {LogError} from "../js/errorUtils.js";

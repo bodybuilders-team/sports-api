@@ -1,14 +1,16 @@
+import {LogError} from "../errorUtils.js";
+
 /**
  * Creates an HTML element.
  *
- * @param tag element tag
- * @param attributes element attributes
- * @param children element children
- * @returns created element
+ * @param {string} tag element tag
+ * @param {Object | Promise<HTMLElement> | HTMLElement | string} [attributes] element attributes or an element child
+ * @param {Promise<HTMLElement> | HTMLElement | string} [children] element children
+ *
+ * @returns Promise<HTMLElement>
  */
-import {LogError} from "../errorUtils.js";
-
 export async function createElement(tag, attributes, ...children) {
+    /** @type {HTMLElement} */
     const element = document.createElement(tag);
 
     attributes = await attributes;
@@ -31,14 +33,21 @@ export async function createElement(tag, attributes, ...children) {
     return element;
 }
 
-
+/**
+ * @param {HTMLElement} element
+ * @param {string | HTMLElement} child
+ */
 function appendChild(element, child) {
     if (typeof child === "string")
-        child = document.createTextNode(child);
-
-    element.appendChild(child);
+        element.appendChild(document.createTextNode(child));
+    else
+        element.appendChild(child);
 }
 
+/**
+ * @param {HTMLElement} element
+ * @param {Object} attributes
+ */
 function setAttributes(element, attributes) {
     for (const attribute in attributes) {
         if (attribute == null)
@@ -63,12 +72,12 @@ function setAttributes(element, attributes) {
 
 /**
  * Checks if an object is a DOM element.
- * @param obj object to check
+ * @param {any} obj object to check
  * @returns true if it is a DOM element; false otherwise
  */
 function isElement(obj) {
     return (
         typeof HTMLElement === "object" ? obj instanceof HTMLElement :
-            obj && typeof obj === "object" && obj !== null && obj.nodeType === 1 && typeof obj.nodeName === "string"
+            obj && typeof obj === "object" && obj.nodeType === 1 && typeof obj.nodeName === "string"
     );
 }

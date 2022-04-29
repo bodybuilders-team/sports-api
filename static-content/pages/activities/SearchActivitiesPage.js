@@ -2,33 +2,53 @@ import SearchActivitiesForm from "../../components/activities/SearchActivitiesFo
 import {br, div} from "../../js/dom/domTags.js";
 import FetchedPaginatedCollection from "../../components/pagination/FetchedPaginatedCollection.js";
 import Activities from "../../components/activities/Activities.js";
-import {InvSearchParamsError} from "../../js/errorUtils.js";
+import {InvalidSearchParamsError} from "../../js/errorUtils.js";
 import {validate} from "../../js/validationUtils.js";
 
 /**
  * Search activities page.
- * @param state application state
- * @returns search activities page
+ * @param {Object} state - application state
+ *
+ * @returns Promise<HTMLElement>
  */
 async function SearchActivitiesPage(state) {
 
+    /**
+     * Parses activities props from state query params.
+     *
+     * @returns {?PropActivitiesProps}
+     */
     function getActivitiesProps() {
-        if (Object.keys(state.query).length === 0)
+        const activitiesProps = {}
+
+        for (const key in state.query)
+            activitiesProps[key] = state.query[key]
+
+        if (state.query.sid != null)
+            activitiesProps.sid = parseInt(state.query.sid)
+        if (state.query.rid != null)
+            activitiesProps.rid = parseInt(state.query.rid)
+        if (state.query.skip != null)
+            activitiesProps.skip = parseInt(state.query.skip)
+        if (state.query.limit != null)
+            activitiesProps.limit = parseInt(state.query.limit)
+
+        if (Object.keys(activitiesProps).length === 0)
             return null
 
-        const result = validate(state.query, {
-            sid: {type: "string", required: true},
+        const result = validate(activitiesProps, {
+            sid: {type: "number", required: true},
             orderBy: {type: "string", required: true},
-            rid: {type: "string"},
+            rid: {type: "number"},
             date: {type: "string"},
-            skip: {type: "string"},
-            limit: {type: "string"},
+            skip: {type: "number"},
+            limit: {type: "number"},
         })
 
         if (!result.isValid)
-            throw new InvSearchParamsError(result);
+            throw new InvalidSearchParamsError(result);
 
-        return state.query
+        return activitiesProps
     }
 
     const activitiesProps = getActivitiesProps()
@@ -62,8 +82,8 @@ async function SearchActivitiesPage(state) {
         (activitiesProps != null) ?
             FetchedPaginatedCollection(state,
                 {
-                    initialSkip: 0,
-                    initialLimit: 10,
+                    defaultSkip: 0,
+                    defaultLimit: 10,
                     searchParams: activitiesProps,
                     collectionComponent: Activities,
                     collectionEndpoint: "/activities",

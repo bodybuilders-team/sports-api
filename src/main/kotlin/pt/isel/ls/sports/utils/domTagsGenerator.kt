@@ -152,11 +152,12 @@ fun main() {
             printer.print(
                 """
                 /**
-                 * Creates an '$tag' HTML element.
+                 * Creates a '$tag' HTML element.
                  *
-                 * @param attributes element attributes
-                 * @param children element children
-                 * @returns created element
+                 * @param {Object | Promise<HTMLElement> | HTMLElement | string} [attributes] element attributes or an element child
+                 * @param {Promise<HTMLElement> | HTMLElement | string} [children] element children
+                 * 
+                 * @returns Promise<HTMLElement>
                  */
                 export function $tag(attributes, ...children) {
                     return createElement("$tag", attributes, ...children);

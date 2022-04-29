@@ -2,6 +2,7 @@ package pt.isel.ls.sports.database.sections.sports
 
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.utils.getPaginatedQuery
 import pt.isel.ls.sports.database.utils.setStringOrNull
 import pt.isel.ls.sports.domain.Sport
 import java.sql.ResultSet
@@ -59,12 +60,12 @@ class SportsPostgresDB : SportsDB {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
-                """
-                SELECT *, count(*) OVER() AS totalCount
+                getPaginatedQuery(
+                    """
+                SELECT *
                 FROM sports
-                OFFSET ?
-                LIMIT ?
-                """.trimIndent()
+                    """.trimIndent()
+                )
             )
 
         stm.setInt(1, skip)
@@ -73,14 +74,13 @@ class SportsPostgresDB : SportsDB {
         val rs = stm.executeQuery()
         val sports = mutableListOf<Sport>()
 
-        if (!rs.next())
-            return SportsResponse(sports, 0)
-
+        rs.next()
         val totalCount = rs.getInt("totalCount")
 
-        do {
-            sports.add(getSportFromTable(rs))
-        } while (rs.next())
+        if (rs.getObject("id") != null)
+            do {
+                sports.add(getSportFromTable(rs))
+            } while (rs.next())
 
         return SportsResponse(sports, totalCount)
     }

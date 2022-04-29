@@ -3,13 +3,14 @@ package pt.isel.ls.sports.api.utils.errors
 import kotlinx.serialization.SerializationException
 import org.http4k.core.Response
 import org.http4k.core.Status
+import pt.isel.ls.sports.api.MissingTokenException
 import pt.isel.ls.sports.database.AlreadyExistsException
 import pt.isel.ls.sports.database.DatabaseAccessException
 import pt.isel.ls.sports.database.DatabaseRollbackException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.services.AuthenticationException
+import pt.isel.ls.sports.services.AuthorizationException
 import pt.isel.ls.sports.services.InvalidArgumentException
-import pt.isel.ls.sports.services.UnauthorizedException
 import pt.isel.ls.sports.utils.Logger
 
 /**
@@ -21,7 +22,6 @@ inline fun runAndCatch(block: () -> Response): Response =
     try {
         block()
     } catch (error: SerializationException) {
-
         Logger.warn(error.toString())
         AppError(
             "BAD_REQUEST",
@@ -33,7 +33,6 @@ inline fun runAndCatch(block: () -> Response): Response =
         AppError(
             "INTERNAL_ERROR",
             "An internal error occurred",
-            error.message
         ).toResponse(Status.INTERNAL_SERVER_ERROR)
     } catch (error: DatabaseRollbackException) {
 
@@ -41,7 +40,6 @@ inline fun runAndCatch(block: () -> Response): Response =
         AppError(
             "INTERNAL_ERROR",
             "An internal error occurred",
-            error.message
         ).toResponse(Status.INTERNAL_SERVER_ERROR)
     } catch (error: NotFoundException) {
 
@@ -67,7 +65,7 @@ inline fun runAndCatch(block: () -> Response): Response =
             "The request argument is not valid",
             error.message
         ).toResponse(Status.BAD_REQUEST)
-    } catch (error: UnauthorizedException) {
+    } catch (error: AuthorizationException) {
 
         Logger.warn(error.toString())
         AppError(
@@ -83,12 +81,20 @@ inline fun runAndCatch(block: () -> Response): Response =
             "You are not authenticated",
             error.message
         ).toResponse(Status.UNAUTHORIZED)
+    } catch (error: MissingTokenException) {
+
+        Logger.warn(error.toString())
+
+        AppError(
+            "MISSING_TOKEN",
+            "Missing Authorization header token",
+            error.message
+        ).toResponse(Status.BAD_REQUEST)
     } catch (error: Exception) {
         Logger.error(error.stackTraceToString())
 
         AppError(
             "INTERNAL_ERROR",
-            "An internal error occurred",
-            error.message
+            "An internal error occurred"
         ).toResponse(Status.INTERNAL_SERVER_ERROR)
     }
