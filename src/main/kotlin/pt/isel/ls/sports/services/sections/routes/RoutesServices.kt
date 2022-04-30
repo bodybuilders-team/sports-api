@@ -1,6 +1,7 @@
 package pt.isel.ls.sports.services.sections.routes
 
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.sections.routes.RoutesResponse
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.services.AbstractServices
@@ -47,6 +48,7 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
      *
      * @return the route object
      * @throws InvalidArgumentException if the [rid] is negative
+     * @throws NotFoundException if there's no route with the [rid]
      */
     fun getRoute(rid: Int): Route {
         validateRid(rid)
@@ -63,6 +65,8 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
      * @param limit number of elements to return
      *
      * @return [RoutesResponse] with the list of routes
+     * @throws InvalidArgumentException if [skip] is invalid
+     * @throws InvalidArgumentException if [limit] is invalid
      */
     fun getAllRoutes(skip: Int, limit: Int): RoutesResponse = db.execute { conn ->
         validateSkip(skip)

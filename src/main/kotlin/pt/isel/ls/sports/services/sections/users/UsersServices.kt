@@ -2,6 +2,7 @@ package pt.isel.ls.sports.services.sections.users
 
 import pt.isel.ls.sports.database.AlreadyExistsException
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.domain.User
@@ -49,6 +50,7 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      *
      * @return the user object
      * @throws InvalidArgumentException if [uid] is negative
+     * @throws NotFoundException if there's no user with the [uid]
      */
     fun getUser(uid: Int): User {
         validateUid(uid)
@@ -65,6 +67,8 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      * @param limit number of elements to return
      *
      * @return [UsersResponse] with the list of users
+     * @throws InvalidArgumentException if [skip] is invalid
+     * @throws InvalidArgumentException if [limit] is invalid
      */
     fun getAllUsers(skip: Int, limit: Int): UsersResponse = db.execute { conn ->
         validateSkip(skip)
@@ -82,6 +86,8 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      *
      * @return [ActivitiesResponse] with the list of activities
      * @throws InvalidArgumentException if [uid] is negative
+     * @throws InvalidArgumentException if [skip] is invalid
+     * @throws InvalidArgumentException if [limit] is invalid
      */
     fun getUserActivities(uid: Int, skip: Int, limit: Int): ActivitiesResponse {
         validateUid(uid)

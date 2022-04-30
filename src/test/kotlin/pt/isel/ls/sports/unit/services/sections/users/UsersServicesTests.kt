@@ -1,21 +1,23 @@
 package pt.isel.ls.sports.unit.services.sections.users
 
 import kotlinx.datetime.toLocalDate
+import pt.isel.ls.sports.database.AlreadyExistsException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.domain.Activity
-import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.unit.services.AppServicesTests
+import pt.isel.ls.sports.services.InvalidArgumentException
+import pt.isel.ls.sports.unit.services.AbstractServicesTests
 import pt.isel.ls.sports.utils.toDuration
-import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UsersServicesTests : AppServicesTests() {
+class UsersServicesTests : AbstractServicesTests() {
+
     // createNewUser
+
     @Test
-    fun `createNewUser creates user correctly in the database`(): Unit = db.execute { conn ->
+    fun `createNewUser creates user correctly`(): Unit = db.execute { conn ->
         val createUserResponse = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
         assertEquals(
@@ -35,20 +37,48 @@ class UsersServicesTests : AppServicesTests() {
         assertEquals(3, createUserResponse3.uid)
     }
 
+    @Test
+    fun `createNewUser throws InvalidArgumentException if the name is invalid`() {
+        assertFailsWith<InvalidArgumentException> {
+            services.users.createNewUser("Ny", "nyckollasbrandao@mail.com")
+        }
+    }
+
+    @Test
+    fun `createNewUser throws InvalidArgumentException if the email is invalid`() {
+        assertFailsWith<InvalidArgumentException> {
+            services.users.createNewUser("Nyckollas Brandão", "@@@@mail.com")
+        }
+    }
+
+    @Test
+    fun `createNewUser throws AlreadyExistsException if a user with that email already exists`(): Unit =
+        db.execute { conn ->
+            db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+
+            assertFailsWith<AlreadyExistsException> {
+                services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            }
+        }
+
     // getUser
 
     @Test
     fun `getUser returns the user object`(): Unit = db.execute { conn ->
-        val user = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-
-        assertEquals(user, services.users.getUser(1))
+        assertEquals(User(uid, "Nyckollas Brandão", "nyckollasbrandao@mail.com"), services.users.getUser(uid))
     }
 
     @Test
-    fun `getUser throws SportsError (Not Found) if the user with the uid doesn't exist`() {
+    fun `getUser throws InvalidArgumentException if the uid is not positive`() {
+        assertFailsWith<InvalidArgumentException> {
+            services.users.getUser(-5)
+        }
+    }
 
+    @Test
+    fun `getUser throws NotFoundException if the user with the uid doesn't exist`() {
         assertFailsWith<NotFoundException> {
             services.users.getUser(1)
         }
@@ -77,31 +107,66 @@ class UsersServicesTests : AppServicesTests() {
     }
 
     @Test
-    fun `createNewRoute creates route correctly in the database`(): Unit = db.execute { conn ->
-
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
-
-        val rid = services.routes.createNewRoute(token, "Odivelas", "Chelas", 0.150)
-
-        assertEquals(Route(rid, "Odivelas", "Chelas", 0.15, 1), db.routes.getRoute(conn, rid))
+    fun `getAllUsers throws InvalidArgumentException if the skip is invalid`() {
+        assertFailsWith<InvalidArgumentException> {
+            services.users.getAllUsers(-5, 10)
+        }
     }
 
-// getUserActivities
+    @Test
+    fun `getAllUsers throws InvalidArgumentException if the limit is invalid`() {
+        assertFailsWith<InvalidArgumentException> {
+            services.users.getAllUsers(0, -5)
+        }
+    }
+
+    // getUserActivities
 
     @Test
     fun `getUserActivities returns the activities list`(): Unit = db.execute { conn ->
 
-        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val sid = db.sports.createNewSport(conn, uid, "Soccer", "Kick a ball to score a goal")
 
-        db.activities.createNewActivity(conn, 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
+        val aid =
+            db.activities.createNewActivity(conn, uid, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), sid, 1)
 
-        val activities = services.users.getUserActivities(1, 0, 10).activities
+        val activities = services.users.getUserActivities(uid, 0, 10).activities
 
         assertEquals(
-            listOf(Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)),
+            listOf(Activity(aid, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), uid, sid, 1)),
             activities
         )
+    }
+
+    @Test
+    fun `getUserActivities throws InvalidArgumentException if the uid is not positive`() {
+        assertFailsWith<InvalidArgumentException> {
+            services.users.getUserActivities(-5, 0, 10).activities
+        }
+    }
+
+    @Test
+    fun `getUserActivities throws InvalidArgumentException if the skip is invalid`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val sid = db.sports.createNewSport(conn, uid, "Soccer", "Kick a ball to score a goal")
+
+        db.activities.createNewActivity(conn, uid, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), sid, 1)
+
+        assertFailsWith<InvalidArgumentException> {
+            services.users.getUserActivities(uid, -4, 10).activities
+        }
+    }
+
+    @Test
+    fun `getUserActivities throws InvalidArgumentException if the limit is invalid`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val sid = db.sports.createNewSport(conn, uid, "Soccer", "Kick a ball to score a goal")
+
+        db.activities.createNewActivity(conn, uid, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), sid, 1)
+
+        assertFailsWith<InvalidArgumentException> {
+            services.users.getUserActivities(uid, 0, -4).activities
+        }
     }
 }

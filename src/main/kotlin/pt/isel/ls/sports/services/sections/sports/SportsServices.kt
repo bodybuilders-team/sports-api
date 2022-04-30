@@ -1,6 +1,7 @@
 package pt.isel.ls.sports.services.sections.sports
 
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.sports.SportsResponse
 import pt.isel.ls.sports.domain.Sport
@@ -45,6 +46,7 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      *
      * @return the sport object
      * @throws InvalidArgumentException if [sid] is negative
+     * @throws NotFoundException if there's no sport with the [sid]
      */
     fun getSport(sid: Int): Sport {
         validateSid(sid)
@@ -61,6 +63,8 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      * @param limit number of elements to return
      *
      * @return [SportsResponse] with the list of sports
+     * @throws InvalidArgumentException if [skip] is invalid
+     * @throws InvalidArgumentException if [limit] is invalid
      */
     fun getAllSports(skip: Int, limit: Int): SportsResponse = db.execute { conn ->
         validateSkip(skip)
@@ -78,6 +82,8 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      *
      * @return [ActivitiesResponse] with the list of activities
      * @throws InvalidArgumentException if [sid] is negative
+     * @throws InvalidArgumentException if [skip] is invalid
+     * @throws InvalidArgumentException if [limit] is invalid
      */
     fun getSportActivities(sid: Int, skip: Int, limit: Int): ActivitiesResponse {
         validateSid(sid)

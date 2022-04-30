@@ -24,7 +24,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @param date date of the activity
      * @param duration duration of the activity
      * @param sid sport's unique identifier
-     * @param rid route's unique identifier
+     * @param rid route's unique identifier (optional)
      *
      * @return activity's unique identifier
      * @throws InvalidArgumentException if [sid] is negative
