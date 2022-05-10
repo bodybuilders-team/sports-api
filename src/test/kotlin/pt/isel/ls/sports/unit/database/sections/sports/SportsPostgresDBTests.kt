@@ -49,15 +49,6 @@ class SportsPostgresDBTests : AppPostgresDBTests(), SportsDBTests {
         assertEquals(6, uid3)
     }
 
-    @Test
-    override fun `createNewSport throws NotFoundException if there's no user with the uid`(): Unit =
-        db.execute { conn ->
-            // TODO: 30/04/2022 Fix me
-			/*assertFailsWith<NotFoundException> {
-				db.sports.createNewSport(conn, 99999, "Powerlifting", "Get big")
-			}*/
-        }
-
     // getSport
 
     @Test

@@ -8,8 +8,6 @@ interface SportsDBTests {
 
     fun `createNewSport returns correct identifier`()
 
-    fun `createNewSport throws NotFoundException if there's no user with the uid`()
-
     // getSport
 
     fun `getSport returns the sport object`()

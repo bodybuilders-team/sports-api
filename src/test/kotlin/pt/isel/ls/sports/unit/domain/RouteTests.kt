@@ -9,10 +9,10 @@ import kotlin.test.assertTrue
 
 class RouteTests {
 
-    // Route creation
+    // Route object instantiation
 
     @Test
-    fun `create a Route with valid information`() {
+    fun `Instantiate a Route object with valid information`() {
         val route = Route(id = 1, startLocation = "Odivelas", endLocation = "Chelas", distance = 10.0, uid = 1)
         assertEquals(1, route.id)
         assertEquals("Odivelas", route.startLocation)
@@ -22,21 +22,21 @@ class RouteTests {
     }
 
     @Test
-    fun `create a Route with invalid ID throws IllegalArgumentException`() {
+    fun `Instantiate a Route object with invalid ID throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
             Route(id = -1, startLocation = "Odivelas", endLocation = "Chelas", distance = 10.0, uid = 1)
         }
     }
 
     @Test
-    fun `create a Route with invalid distance throws IllegalArgumentException`() {
+    fun `Instantiate a Route object with invalid distance throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
             Route(id = 1, startLocation = "Odivelas", endLocation = "Chelas", distance = -10.0, uid = 1)
         }
     }
 
     @Test
-    fun `create a Route with invalid uid throws IllegalArgumentException`() {
+    fun `Instantiate a Route object with invalid uid throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
             Route(id = 1, startLocation = "Odivelas", endLocation = "Chelas", distance = 10.0, uid = -1)
         }

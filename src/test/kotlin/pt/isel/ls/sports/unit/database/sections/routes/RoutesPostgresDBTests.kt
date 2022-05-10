@@ -51,15 +51,6 @@ class RoutesPostgresDBTests : AppPostgresDBTests(), RoutesDBTests {
         assertEquals(6, rid2)
     }
 
-    @Test
-    override fun `createNewRoute throws NotFoundException if there's no user with the uid`(): Unit =
-        db.execute { conn ->
-            // TODO: 29/04/2022 Fix me
-            /*assertFailsWith<NotFoundException> {
-                db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 999999)
-            }*/
-        }
-
     // getRoute
 
     @Test
@@ -69,7 +60,7 @@ class RoutesPostgresDBTests : AppPostgresDBTests(), RoutesDBTests {
     }
 
     @Test
-    override fun `getRoute throws NotFoundException if the route with the rid doesn't exist`(): Unit =
+    override fun `getRoute throws NotFoundException if there's no route with the rid`(): Unit =
         db.execute { conn ->
             assertFailsWith<NotFoundException> {
                 db.routes.getRoute(conn, 0)

@@ -18,7 +18,6 @@ interface RoutesDB {
      * @param uid user's unique identifier
      *
      * @return route's unique identifier
-     * @throws NotFoundException if there's no user with the [uid]
      */
     fun createNewRoute(conn: ConnectionDB, startLocation: String, endLocation: String, distance: Double, uid: Int): Int
 

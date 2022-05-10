@@ -43,6 +43,23 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
         }
     }
 
+    @Test
+    override fun `createNewActivity returns correct identifier`(): Unit = db.execute { conn ->
+
+        val aid4 =
+            db.activities.createNewActivity(conn, 1, "2022-12-05".toLocalDate(), "14:16:27.903".toDuration(), 1, 1)
+
+        val aid5 =
+            db.activities.createNewActivity(conn, 1, "2022-01-05".toLocalDate(), "14:51:27.903".toDuration(), 1, 1)
+
+        val aid6 =
+            db.activities.createNewActivity(conn, 1, "2022-07-05".toLocalDate(), "14:30:27.903".toDuration(), 1, 1)
+
+        assertEquals(4, aid4)
+        assertEquals(5, aid5)
+        assertEquals(6, aid6)
+    }
+
     // getActivity
 
     @Test
@@ -52,7 +69,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
     }
 
     @Test
-    override fun `getActivity throws NotFoundException if the activity with the sid doesn't exist`(): Unit =
+    override fun `getActivity throws NotFoundException if there's no activity with the sid`(): Unit =
         db.execute { conn ->
             assertFailsWith<NotFoundException> {
                 db.activities.getActivity(conn, 0)

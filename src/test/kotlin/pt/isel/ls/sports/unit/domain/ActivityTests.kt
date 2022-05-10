@@ -9,11 +9,12 @@ import kotlin.test.assertFailsWith
 
 class ActivityTests {
 
-    // Activity creation
+    // Activity object instantiation
 
     @Test
-    fun `create a Activity with valid information`() {
-        val activity = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
+    fun `Instantiate an Activity object with valid information`() {
+        val activity =
+            Activity(id = 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), uid = 1, sid = 1, rid = 1)
         assertEquals(1, activity.id)
         assertEquals("2022-11-20".toLocalDate(), activity.date)
         assertEquals("20:23:55.263".toDuration(), activity.duration)
@@ -23,30 +24,40 @@ class ActivityTests {
     }
 
     @Test
-    fun `create a Activity with invalid ID throws IllegalArgumentException`() {
+    fun `Instantiate an Activity object without route`() {
+        val activity = Activity(id = 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), uid = 1, sid = 1)
+        assertEquals(1, activity.id)
+        assertEquals("2022-11-20".toLocalDate(), activity.date)
+        assertEquals("20:23:55.263".toDuration(), activity.duration)
+        assertEquals(1, activity.uid)
+        assertEquals(1, activity.sid)
+    }
+
+    @Test
+    fun `Instantiate an Activity object with invalid ID throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
-            Activity(-1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
+            Activity(id = -1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), uid = 1, sid = 1, rid = 1)
         }
     }
 
     @Test
-    fun `create a Activity with invalid uid throws IllegalArgumentException`() {
+    fun `Instantiate an Activity object with invalid uid throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
-            Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), -1, 1, 1)
+            Activity(id = 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), uid = -1, sid = 1, rid = 1)
         }
     }
 
     @Test
-    fun `create a Activity with invalid sid throws IllegalArgumentException`() {
+    fun `Instantiate an Activity object with invalid sid throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
-            Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, -1, 1)
+            Activity(id = 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), uid = 1, sid = -1, rid = 1)
         }
     }
 
     @Test
-    fun `create a Activity with invalid rid throws IllegalArgumentException`() {
+    fun `Instantiate an Activity object with invalid rid throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
-            Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, -1)
+            Activity(id = 1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), uid = 1, sid = 1, rid = -1)
         }
     }
 }

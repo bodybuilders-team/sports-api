@@ -37,6 +37,24 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
         )
     }
 
+    @Test
+    override fun `createNewActivity returns correct identifier`(): Unit = db.execute { conn ->
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+
+        val aid1 =
+            db.activities.createNewActivity(conn, 1, "2022-12-05".toLocalDate(), "14:16:27.903".toDuration(), 1, 1)
+
+        val aid2 =
+            db.activities.createNewActivity(conn, 1, "2022-01-05".toLocalDate(), "14:51:27.903".toDuration(), 1, 1)
+
+        val aid3 =
+            db.activities.createNewActivity(conn, 1, "2022-07-05".toLocalDate(), "14:30:27.903".toDuration(), 1, 1)
+
+        assertEquals(1, aid1)
+        assertEquals(2, aid2)
+        assertEquals(3, aid3)
+    }
+
     // getActivity
 
     @Test
@@ -51,7 +69,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
     }
 
     @Test
-    override fun `getActivity throws NotFoundException if the activity with the sid doesn't exist`(): Unit =
+    override fun `getActivity throws NotFoundException if there's no activity with the sid`(): Unit =
         db.execute { conn ->
             assertFailsWith<NotFoundException> {
                 db.activities.getActivity(conn, 1)

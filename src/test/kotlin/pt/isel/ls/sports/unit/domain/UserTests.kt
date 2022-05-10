@@ -9,10 +9,10 @@ import kotlin.test.assertTrue
 
 class UserTests {
 
-    // User creation
+    // User object instantiation
 
     @Test
-    fun `create a User with valid information`() {
+    fun `Instantiate a User object with valid information`() {
         val user = User(id = 1, name = "Paulão", email = "paulao@isel.com")
         assertEquals(1, user.id)
         assertEquals("Paulão", user.name)
@@ -20,21 +20,21 @@ class UserTests {
     }
 
     @Test
-    fun `create a User with invalid ID throws IllegalArgumentException`() {
+    fun `Instantiate a User object with invalid ID throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
             User(id = -1, name = "Paulão", email = "paulao@isel.com")
         }
     }
 
     @Test
-    fun `create a User with invalid name throws IllegalArgumentException`() {
+    fun `Instantiate a User object with invalid name throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
             User(id = 1, name = "", email = "paulao@isel.com")
         }
     }
 
     @Test
-    fun `create a User with invalid email throws IllegalArgumentException`() {
+    fun `Instantiate a User object with invalid email throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
             User(id = 1, name = "Paulão", email = "")
         }

@@ -6,11 +6,13 @@ interface ActivitiesDBTests {
 
     fun `createNewActivity creates activity correctly in the database`()
 
+    fun `createNewActivity returns correct identifier`()
+
     // getActivity
 
     fun `getActivity returns the activity object`()
 
-    fun `getActivity throws NotFoundException if the activity with the sid doesn't exist`()
+    fun `getActivity throws NotFoundException if there's no activity with the sid`()
 
     // deleteActivity
 

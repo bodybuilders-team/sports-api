@@ -8,13 +8,11 @@ interface RoutesDBTests {
 
     fun `createNewRoute returns correct identifier`()
 
-    fun `createNewRoute throws NotFoundException if there's no user with the uid`()
-
     // getRoute
 
     fun `getRoute returns the route object`()
 
-    fun `getRoute throws NotFoundException if the route with the rid doesn't exist`()
+    fun `getRoute throws NotFoundException if there's no route with the rid`()
 
     // getAllRoutes
 

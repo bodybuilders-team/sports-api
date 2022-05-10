@@ -36,14 +36,6 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
         assertEquals(3, uid3)
     }
 
-    @Test
-    override fun `createNewSport throws NotFoundException if there's no user with the uid`(): Unit =
-        db.execute { conn ->
-            assertFailsWith<NotFoundException> {
-                db.sports.createNewSport(conn, 99999, "Powerlifting", "Get big")
-            }
-        }
-
     // getSport
 
     @Test

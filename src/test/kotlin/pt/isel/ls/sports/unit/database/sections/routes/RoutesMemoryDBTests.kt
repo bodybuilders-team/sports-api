@@ -26,22 +26,14 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
     override fun `createNewRoute returns correct identifier`(): Unit = db.execute { conn ->
         source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
-        val rid0 = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 1)
-        val rid1 = db.routes.createNewRoute(conn, "Chelas", "Odivelas", 0.15, 1)
-        val rid2 = db.routes.createNewRoute(conn, "Lisboa", "Chelas", 0.15, 1)
+        val rid1 = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 1)
+        val rid2 = db.routes.createNewRoute(conn, "Chelas", "Odivelas", 0.15, 1)
+        val rid3 = db.routes.createNewRoute(conn, "Lisboa", "Chelas", 0.15, 1)
 
-        assertEquals(1, rid0)
-        assertEquals(2, rid1)
-        assertEquals(3, rid2)
+        assertEquals(1, rid1)
+        assertEquals(2, rid2)
+        assertEquals(3, rid3)
     }
-
-    @Test
-    override fun `createNewRoute throws NotFoundException if there's no user with the uid`(): Unit =
-        db.execute { conn ->
-            assertFailsWith<NotFoundException> {
-                db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 1)
-            }
-        }
 
     // getRoute
 
@@ -57,7 +49,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
     }
 
     @Test
-    override fun `getRoute throws NotFoundException if the route with the rid doesn't exist`(): Unit =
+    override fun `getRoute throws NotFoundException if there's no route with the rid`(): Unit =
         db.execute { conn ->
             assertFailsWith<NotFoundException> {
                 db.routes.getRoute(conn, 1)
