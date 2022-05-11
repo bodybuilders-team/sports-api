@@ -5,10 +5,14 @@ import routesRouter from "../routers/routesRouter.js";
 import activitiesRouter from "../routers/activitiesRouter.js";
 import HomePage from "./HomePage.js";
 import NotFoundPage from "./errors/NotFoundPage.js";
+import RegisterPage from "./RegisterPage.js";
+import LoginPage from "./LoginPage.js";
 
 const router = Router();
 
 router.addHandler("/", HomePage);
+router.addHandler("/register", RegisterPage);
+router.addHandler("/login", LoginPage);
 router.addHandler("/users", usersRouter);
 router.addHandler("/sports", sportsRouter);
 router.addHandler("/routes", routesRouter);
