@@ -65,45 +65,45 @@ class SportsPostgresDBTests : AppPostgresDBTests(), SportsDBTests {
             }
         }
 
-    // getAllSports
+    // searchSports
 
     @Test
-    override fun `getAllSports returns list of all sport objects`(): Unit = db.execute { conn ->
+    override fun `searchSports returns list of all sport objects`(): Unit = db.execute { conn ->
         val sports = listOf(
             Sport(1, "Soccer", 1, "Kick a ball to score a goal"),
             Sport(2, "Powerlifting", 2, "Get big"),
             Sport(3, "Basketball", 3, "Shoot a ball through a hoop")
         )
 
-        assertEquals(sports, db.sports.getAllSports(conn, 0, 10).sports)
+        assertEquals(sports, db.sports.searchSports(conn, 0, 10).sports)
     }
 
     @Test
-    override fun `getAllSports with no created sports returns empty list`() {
+    override fun `searchSports with no created sports returns empty list`() {
         db.reset()
         db.execute { conn ->
-            assertEquals(emptyList(), db.sports.getAllSports(conn, 0, 10).sports)
+            assertEquals(emptyList(), db.sports.searchSports(conn, 0, 10).sports)
         }
     }
 
     @Test
-    override fun `getAllSports with skip works`(): Unit = db.execute { conn ->
+    override fun `searchSports with skip works`(): Unit = db.execute { conn ->
         val sports = listOf(
             Sport(2, "Powerlifting", 2, "Get big"),
             Sport(3, "Basketball", 3, "Shoot a ball through a hoop")
         )
 
-        assertEquals(sports, db.sports.getAllSports(conn, 1, 10).sports)
+        assertEquals(sports, db.sports.searchSports(conn, 1, 10).sports)
     }
 
     @Test
-    override fun `getAllSports with limit works`(): Unit = db.execute { conn ->
+    override fun `searchSports with limit works`(): Unit = db.execute { conn ->
         val sports = listOf(
             Sport(1, "Soccer", 1, "Kick a ball to score a goal"),
             Sport(2, "Powerlifting", 2, "Get big")
         )
 
-        assertEquals(sports, db.sports.getAllSports(conn, 0, 2).sports)
+        assertEquals(sports, db.sports.searchSports(conn, 0, 2).sports)
     }
 
     // hasSport

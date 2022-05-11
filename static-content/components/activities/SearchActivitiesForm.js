@@ -1,4 +1,4 @@
-import {br, button, div, form, h1, hr, input, label, option, select} from "../../js/dom/domTags.js";
+import {a, br, button, div, form, h1, hr, input, label, option, select} from "../../js/dom/domTags.js";
 
 /**
  * @typedef PropActivitiesProps
@@ -27,6 +27,13 @@ import {br, button, div, form, h1, hr, input, label, option, select} from "../..
 async function SearchActivitiesForm(state, props) {
     const actProps = props.activitiesProps;
 
+    function onSportInputChange(event) {
+        event.preventDefault();
+        const sportId = event.target.value;
+        console.log("sportId", sportId);
+
+    }
+
     return div(
         h1({class: "app_icon"}, "Activities"),
         div(
@@ -37,13 +44,27 @@ async function SearchActivitiesForm(state, props) {
                 {onSubmit: props.onSubmit},
                 div(
                     label({for: "sid", class: "col-form-label"}, "Sport Id"),
-                    input({
-                        type: "number", min: "1", id: "sid",
-                        class: "form-control",
-                        value: (actProps != null && actProps.sid != null) ? actProps.sid.toString() : "",
-                        required: true
-                    }),
+                    // input({
+                    //     type: "number", min: "1", id: "sid",
+                    //     class: "form-control",
+                    //     value: (actProps != null && actProps.sid != null) ? actProps.sid.toString() : "",
+                    //     required: true
+                    // }),
+                    div({class: "dropdown"},
+                        button({
+                            class: "btn btn-secondary dropdown-toggle", type: "button", id: "dropdownMenuButton",
+                            "data-bs-toggle": "dropdown", "aria-expanded": "false",
+                        }, "Select a sport..."),
 
+                        div({class: "dropdown-menu", "aria-labelledby": "dropdownMenuButton"},
+                            input({
+                                type: "text", id: "sport", class: "form-control",
+                                onInput: onSportInputChange
+                            }),
+                            a({class: "dropdown-item", "data-id": "5"}, "Lisboa-Porto"),
+                            a({class: "dropdown-item", "data-id": "6"}, "Lisboa-Lisbon"),
+                        )
+                    ),
                     label({for: "rid", class: "form-label"}, "Route Id"),
                     input({
                         type: "number", min: "1", id: "rid",
@@ -79,7 +100,8 @@ async function SearchActivitiesForm(state, props) {
                 button({type: "submit", class: "btn btn-primary"}, "Search")
             )
         )
-    );
+    )
+        ;
 }
 
 export default SearchActivitiesForm;

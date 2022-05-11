@@ -87,13 +87,13 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
         }
     }
 
+    // TODO: 29/04/2022 Fix me
     @Test
     override fun `deleteActivity throws NotFoundException if there's no activity with the aid`(): Unit =
         db.execute { conn ->
-            // TODO: 29/04/2022 Fix me
-			/*assertFailsWith<NotFoundException> {
-				db.activities.deleteActivity(conn, 9999999)
-			}*/
+            /*assertFailsWith<NotFoundException> {
+                db.activities.deleteActivity(conn, 9999999)
+            }*/
         }
 
     // getSportActivities

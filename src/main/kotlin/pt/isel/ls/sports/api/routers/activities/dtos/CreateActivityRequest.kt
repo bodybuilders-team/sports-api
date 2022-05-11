@@ -1,7 +1,7 @@
 package pt.isel.ls.sports.api.routers.activities.dtos
 
 import kotlinx.serialization.Serializable
-import pt.isel.ls.sports.services.InvalidArgumentException
+import pt.isel.ls.sports.database.InvalidArgumentException
 
 /**
  * Represents an activity creation request.

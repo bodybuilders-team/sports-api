@@ -41,24 +41,28 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         rid: Int?,
         skip: Int,
         limit: Int
-    ): ActivitiesResponse =
-        ActivitiesResponse(
-            activities = source.activities
-                .filter {
-                    it.value.sid == sid &&
+    ): ActivitiesResponse {
+        val activities = source.activities
+            .filter {
+                it.value.sid == sid &&
                         (date == null || it.value.date == date) &&
                         (rid == null || it.value.rid == rid)
-                }
-                .values.toList()
-                .sortedWith(
-                    if (orderBy == SortOrder.ASCENDING)
-                        compareBy { it.duration }
-                    else
-                        compareByDescending { it.duration }
-                )
-                .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
-            totalCount = 0
-        )
+            }
+            .values.toList()
+            .sortedWith(
+                if (orderBy == SortOrder.ASCENDING)
+                    compareBy { it.duration }
+                else
+                    compareByDescending { it.duration }
+            )
+
+        return activities.run {
+            ActivitiesResponse(
+                subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit),
+                size
+            )
+        }
+    }
 
     override fun searchUsersByActivity(
         conn: ConnectionDB,
@@ -66,45 +70,55 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         rid: Int,
         skip: Int,
         limit: Int
-    ): UsersResponse =
-        UsersResponse(
-            users = source.activities
-                .filter { it.value.sid == sid && it.value.rid == rid }
-                .values.toList()
-                .sortedWith(compareBy { it.duration })
-                .map { source.users[it.uid] ?: throw NotFoundException("User with id ${it.uid} not found") }
-                .distinct()
-                .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
-            totalCount = 0
-        )
+    ): UsersResponse {
+
+        val users = source.activities
+            .filter { it.value.sid == sid && it.value.rid == rid }
+            .values.toList()
+            .sortedWith(compareBy { it.duration })
+            .map { source.users[it.uid] ?: throw NotFoundException("User with id ${it.uid} not found") }
+            .distinct()
+
+        return users.run {
+            UsersResponse(subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit), size)
+        }
+    }
 
     override fun getSportActivities(
         conn: ConnectionDB,
         sid: Int,
         skip: Int,
         limit: Int
-    ): ActivitiesResponse =
-        ActivitiesResponse(
-            activities = source.activities
-                .filter { it.value.sid == sid }
-                .values.toList()
-                .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
-            totalCount = 0
-        )
+    ): ActivitiesResponse {
+        val activities = source.activities
+            .filter { it.value.sid == sid }
+            .values.toList()
+
+        return activities.run {
+            ActivitiesResponse(
+                subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit),
+                size
+            )
+        }
+    }
 
     override fun getUserActivities(
         conn: ConnectionDB,
         uid: Int,
         skip: Int,
         limit: Int
-    ): ActivitiesResponse =
-        ActivitiesResponse(
-            activities = source.activities
-                .filter { it.value.uid == uid }
-                .values.toList()
-                .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
-            totalCount = 0
-        )
+    ): ActivitiesResponse {
+        val activities = source.activities
+            .filter { it.value.uid == uid }
+            .values.toList()
+
+        return activities.run {
+            ActivitiesResponse(
+                subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit),
+                size
+            )
+        }
+    }
 
     override fun hasActivity(conn: ConnectionDB, aid: Int): Boolean =
         source.activities.containsKey(aid)

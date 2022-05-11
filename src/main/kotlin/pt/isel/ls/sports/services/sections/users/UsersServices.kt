@@ -2,12 +2,12 @@ package pt.isel.ls.sports.services.sections.users
 
 import pt.isel.ls.sports.database.AlreadyExistsException
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.services.AbstractServices
-import pt.isel.ls.sports.services.InvalidArgumentException
 import java.util.UUID
 
 /**

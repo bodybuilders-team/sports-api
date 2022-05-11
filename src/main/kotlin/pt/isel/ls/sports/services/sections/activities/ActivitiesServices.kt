@@ -2,6 +2,7 @@ package pt.isel.ls.sports.services.sections.activities
 
 import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
@@ -10,7 +11,6 @@ import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.services.AbstractServices
 import pt.isel.ls.sports.services.AuthenticationException
 import pt.isel.ls.sports.services.AuthorizationException
-import pt.isel.ls.sports.services.InvalidArgumentException
 import kotlin.time.Duration
 
 /**

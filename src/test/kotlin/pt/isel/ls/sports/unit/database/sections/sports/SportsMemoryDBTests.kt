@@ -57,10 +57,10 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
             }
         }
 
-    // getAllSports
+    // searchSports
 
     @Test
-    override fun `getAllSports returns list of all sport objects`(): Unit = db.execute { conn ->
+    override fun `searchSports returns list of all sport objects`(): Unit = db.execute { conn ->
         source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
 
         val sport1 = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
@@ -71,16 +71,16 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
         source.sports[2] = sport2
         source.sports[3] = sport3
 
-        assertEquals(listOf(sport1, sport2, sport3), db.sports.getAllSports(conn, 0, 10).sports)
+        assertEquals(listOf(sport1, sport2, sport3), db.sports.searchSports(conn, 0, 10).sports)
     }
 
     @Test
-    override fun `getAllSports with no created sports returns empty list`(): Unit = db.execute { conn ->
-        assertEquals(emptyList(), db.sports.getAllSports(conn, 0, 10).sports)
+    override fun `searchSports with no created sports returns empty list`(): Unit = db.execute { conn ->
+        assertEquals(emptyList(), db.sports.searchSports(conn, 0, 10).sports)
     }
 
     @Test
-    override fun `getAllSports with skip works`(): Unit = db.execute { conn ->
+    override fun `searchSports with skip works`(): Unit = db.execute { conn ->
         source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
 
         val sport1 = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
@@ -91,11 +91,11 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
         source.sports[2] = sport2
         source.sports[3] = sport3
 
-        assertEquals(listOf(sport2, sport3), db.sports.getAllSports(conn, 1, 10).sports)
+        assertEquals(listOf(sport2, sport3), db.sports.searchSports(conn, 1, 10).sports)
     }
 
     @Test
-    override fun `getAllSports with limit works`(): Unit = db.execute { conn ->
+    override fun `searchSports with limit works`(): Unit = db.execute { conn ->
         source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
 
         val sport1 = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
@@ -106,7 +106,7 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
         source.sports[2] = sport2
         source.sports[3] = sport3
 
-        assertEquals(listOf(sport1, sport2), db.sports.getAllSports(conn, 0, 2).sports)
+        assertEquals(listOf(sport1, sport2), db.sports.searchSports(conn, 0, 2).sports)
     }
 
     // hasSport

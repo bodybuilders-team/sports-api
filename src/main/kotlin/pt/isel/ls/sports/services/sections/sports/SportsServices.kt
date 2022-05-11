@@ -1,13 +1,14 @@
 package pt.isel.ls.sports.services.sections.sports
 
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.sports.SportsResponse
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.services.AbstractServices
 import pt.isel.ls.sports.services.AuthenticationException
-import pt.isel.ls.sports.services.InvalidArgumentException
+import pt.isel.ls.sports.services.AuthorizationException
 
 /**
  * Sports services. Implements methods regarding sports.
@@ -26,11 +27,9 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      * @throws AuthenticationException if a user with the [token] was not found
      */
     fun createNewSport(token: String, name: String, description: String?): Int {
-        if (!Sport.isValidName(name))
-            throw InvalidArgumentException("Name must be between ${Sport.MIN_NAME_LENGTH} and ${Sport.MAX_NAME_LENGTH} characters")
-
-        if (description != null && !Sport.isValidDescription(description))
-            throw InvalidArgumentException("Description must be between ${Sport.MIN_DESCRIPTION_LENGTH} and ${Sport.MAX_DESCRIPTION_LENGTH} characters")
+        validateName(name)
+        if (description != null)
+            validateDescription(description)
 
         return db.execute { conn ->
             val uid = authenticate(conn, token)
@@ -56,21 +55,13 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
         }
     }
 
-    /**
-     * Gets all sports.
-     *
-     * @param skip number of elements to skip
-     * @param limit number of elements to return
-     *
-     * @return [SportsResponse] with the list of sports
-     * @throws InvalidArgumentException if [skip] is invalid
-     * @throws InvalidArgumentException if [limit] is invalid
-     */
-    fun getAllSports(skip: Int, limit: Int): SportsResponse = db.execute { conn ->
+    fun searchSports(skip: Int, limit: Int, name: String? = null): SportsResponse {
         validateSkip(skip)
         validateLimit(limit, LIMIT_RANGE)
 
-        db.sports.getAllSports(conn, skip, limit)
+        return db.execute { conn ->
+            db.sports.searchSports(conn, skip, limit, name)
+        }
     }
 
     /**
@@ -95,7 +86,35 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
         }
     }
 
+    fun updateSport(sid: Int, token: String, name: String?, description: String?): Boolean {
+        validateSid(sid)
+        if (name != null)
+            validateName(name)
+        if (description != null)
+            validateDescription(description)
+
+        return db.execute { conn ->
+            val uid = authenticate(conn, token)
+
+            val sport = db.sports.getSport(conn, sid)
+            if (sport.uid != uid)
+                throw AuthorizationException("You are not allowed to update this sport.")
+
+            db.sports.updateSport(conn, sid, name, description)
+        }
+    }
+
     companion object {
         private val LIMIT_RANGE = 0..100
+
+        fun validateName(name: String) {
+            if (!Sport.isValidName(name))
+                throw InvalidArgumentException("Name must be between ${Sport.MIN_NAME_LENGTH} and ${Sport.MAX_NAME_LENGTH} characters")
+        }
+
+        fun validateDescription(description: String) {
+            if (!Sport.isValidDescription(description))
+                throw InvalidArgumentException("Description must be between ${Sport.MIN_DESCRIPTION_LENGTH} and ${Sport.MAX_DESCRIPTION_LENGTH} characters")
+        }
     }
 }

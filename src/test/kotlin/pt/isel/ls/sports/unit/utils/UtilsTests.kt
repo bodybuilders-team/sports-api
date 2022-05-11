@@ -1,7 +1,7 @@
 package pt.isel.ls.sports.unit.utils
 
 import pt.isel.ls.sports.api.utils.toIntOrThrow
-import pt.isel.ls.sports.services.InvalidArgumentException
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.utils.substringOrNull
 import kotlin.test.Test
 import kotlin.test.assertEquals

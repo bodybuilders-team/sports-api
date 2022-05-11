@@ -1,5 +1,6 @@
 package pt.isel.ls.sports.database.sections.sports
 
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.domain.Sport
@@ -14,7 +15,7 @@ interface SportsDB {
      * @param conn database Connection
      * @param uid user's unique identifier
      * @param name name of the sport
-     * @param description description of the sport
+     * @param description description of the sport (optional)
      *
      * @return sport's unique identifier
      * @throws NotFoundException if there's no user with the [uid]
@@ -33,19 +34,16 @@ interface SportsDB {
     fun getSport(conn: ConnectionDB, sid: Int): Sport
 
     /**
-     * Gets all sports.
+     * Searches for sports.
      *
      * @param conn database Connection
      * @param skip number of elements to skip
      * @param limit number of elements to return
+     * @param name search query (optional)
      *
      * @return [SportsResponse] with a list of sports
      */
-    fun getAllSports(
-        conn: ConnectionDB,
-        skip: Int,
-        limit: Int
-    ): SportsResponse
+    fun searchSports(conn: ConnectionDB, skip: Int, limit: Int, name: String? = null): SportsResponse
 
     /**
      * Verifies if a sport with the given [sid] exists.
@@ -56,4 +54,18 @@ interface SportsDB {
      * @return true if the sport exists, false otherwise
      */
     fun hasSport(conn: ConnectionDB, sid: Int): Boolean
+
+    /**
+     * Updates a sport.
+     *
+     * @param conn database Connection
+     * @param sid sports unique identifier
+     * @param name name of the sport
+     * @param description description of the sport (optional)
+     *
+     * @return true if the sport was modified, false otherwise
+     * @throws NotFoundException if there's no sport with the [sid]
+     * @throws InvalidArgumentException if name and description are both null
+     */
+    fun updateSport(conn: ConnectionDB, sid: Int, name: String? = null, description: String? = null): Boolean
 }

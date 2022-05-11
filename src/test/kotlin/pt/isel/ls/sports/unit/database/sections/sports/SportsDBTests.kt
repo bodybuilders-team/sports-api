@@ -14,15 +14,15 @@ interface SportsDBTests {
 
     fun `getSport throws NotFoundException if the sport with the sid doesn't exist`()
 
-    // getAllSports
+    // searchSports
 
-    fun `getAllSports returns list of all sport objects`()
+    fun `searchSports returns list of all sport objects`()
 
-    fun `getAllSports with no created sports returns empty list`()
+    fun `searchSports with no created sports returns empty list`()
 
-    fun `getAllSports with skip works`()
+    fun `searchSports with skip works`()
 
-    fun `getAllSports with limit works`()
+    fun `searchSports with limit works`()
 
     // hasSport
 

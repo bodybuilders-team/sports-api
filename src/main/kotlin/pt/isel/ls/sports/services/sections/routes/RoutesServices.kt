@@ -1,12 +1,12 @@
 package pt.isel.ls.sports.services.sections.routes
 
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.sections.routes.RoutesResponse
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.services.AbstractServices
 import pt.isel.ls.sports.services.AuthenticationException
-import pt.isel.ls.sports.services.InvalidArgumentException
 
 /**
  * Routes services. Implements methods regarding routes.
@@ -68,11 +68,13 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
      * @throws InvalidArgumentException if [skip] is invalid
      * @throws InvalidArgumentException if [limit] is invalid
      */
-    fun getAllRoutes(skip: Int, limit: Int): RoutesResponse = db.execute { conn ->
+    fun getAllRoutes(skip: Int, limit: Int): RoutesResponse {
         validateSkip(skip)
         validateLimit(limit, LIMIT_RANGE)
 
-        db.routes.getAllRoutes(conn, skip, limit)
+        return db.execute { conn ->
+            db.routes.getAllRoutes(conn, skip, limit)
+        }
     }
 
     companion object {

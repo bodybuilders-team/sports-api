@@ -31,7 +31,7 @@ class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
             users = source.users
                 .values.toList()
                 .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
-            totalCount = 0
+            totalCount = source.users.size
         )
 
     override fun hasUserWithEmail(conn: ConnectionDB, email: String): Boolean =

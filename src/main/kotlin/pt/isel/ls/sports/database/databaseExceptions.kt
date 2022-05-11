@@ -23,3 +23,10 @@ class NotFoundException(message: String? = null) : Exception(message)
  * @param message exception message
  */
 class AlreadyExistsException(message: String? = null) : Exception(message)
+
+/**
+ * Thrown if an argument is invalid.
+ *
+ * @param message exception message
+ */
+class InvalidArgumentException(message: String? = null) : Exception(message)

@@ -68,6 +68,12 @@ function setAttributes(element, attributes) {
             case "onSubmit":
                 element.addEventListener("submit", value);
                 break;
+            case "onChange":
+                element.addEventListener("change", value);
+                break;
+            case "onInput":
+                element.addEventListener("input", value);
+                break;
             default:
                 element.setAttribute(attribute, value);
         }

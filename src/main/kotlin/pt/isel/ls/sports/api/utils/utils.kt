@@ -7,7 +7,7 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.routing.path
 import pt.isel.ls.sports.api.MissingTokenException
-import pt.isel.ls.sports.services.InvalidArgumentException
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.utils.substringOrNull
 
 /**

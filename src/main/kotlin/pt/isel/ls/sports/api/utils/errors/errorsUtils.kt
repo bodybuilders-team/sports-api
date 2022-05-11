@@ -7,10 +7,10 @@ import pt.isel.ls.sports.api.MissingTokenException
 import pt.isel.ls.sports.database.AlreadyExistsException
 import pt.isel.ls.sports.database.DatabaseAccessException
 import pt.isel.ls.sports.database.DatabaseRollbackException
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.services.AuthenticationException
 import pt.isel.ls.sports.services.AuthorizationException
-import pt.isel.ls.sports.services.InvalidArgumentException
 import pt.isel.ls.sports.utils.Logger
 
 /**

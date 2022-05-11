@@ -1,10 +1,12 @@
 package pt.isel.ls.sports.database.sections.sports
 
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.utils.getPaginatedQuery
 import pt.isel.ls.sports.database.utils.setStringOrNull
 import pt.isel.ls.sports.domain.Sport
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -32,6 +34,31 @@ class SportsPostgresDB : SportsDB {
         return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
     }
 
+    override fun updateSport(conn: ConnectionDB, sid: Int, name: String?, description: String?): Boolean {
+        if (!hasSport(conn, sid))
+            throw NotFoundException("Sport not found.")
+
+        if (name == null && description == null)
+            throw InvalidArgumentException("Name or description must be specified.")
+
+        val stm = conn
+            .getPostgresConnection()
+            .prepareStatement(
+                """
+                    UPDATE sports
+                    SET name = COALESCE($1, name),
+                    description= COALESCE($2, description)
+                    where id = ?
+                """.trimIndent()
+            )
+
+        stm.setString(1, name)
+        stm.setStringOrNull(2, description)
+        stm.setInt(3, sid)
+
+        return stm.executeUpdate() == 1
+    }
+
     override fun getSport(conn: ConnectionDB, sid: Int): Sport {
         val stm = conn
             .getPostgresConnection()
@@ -52,11 +79,8 @@ class SportsPostgresDB : SportsDB {
             throw NotFoundException("Sport with id $sid not found")
     }
 
-    override fun getAllSports(
-        conn: ConnectionDB,
-        skip: Int,
-        limit: Int
-    ): SportsResponse {
+    override fun searchSports(conn: ConnectionDB, skip: Int, limit: Int, name: String?): SportsResponse {
+        val nameQuery = if (name != null) "WHERE name ILIKE ?" else ""
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
@@ -64,25 +88,18 @@ class SportsPostgresDB : SportsDB {
                     """
                 SELECT *
                 FROM sports
+				$nameQuery
                     """.trimIndent()
                 )
             )
+        var counter = 1
+        if (name != null)
+            stm.setString(counter++, "%$name%")
 
-        stm.setInt(1, skip)
-        stm.setInt(2, limit)
+        stm.setInt(counter++, skip)
+        stm.setInt(counter, limit)
 
-        val rs = stm.executeQuery()
-        val sports = mutableListOf<Sport>()
-
-        rs.next()
-        val totalCount = rs.getInt("totalCount")
-
-        if (rs.getObject("id") != null)
-            do {
-                sports.add(getSportFromTable(rs))
-            } while (rs.next())
-
-        return SportsResponse(sports, totalCount)
+        return getSportsResponse(stm)
     }
 
     override fun hasSport(conn: ConnectionDB, sid: Int): Boolean {
@@ -103,6 +120,27 @@ class SportsPostgresDB : SportsDB {
     }
 
     companion object {
+        /**
+         * Gets a list of Sports returned from the execution of the statement [stm].
+         *
+         * @param stm statement
+         * @return [SportsResponse] with the list of Sports
+         */
+        private fun getSportsResponse(stm: PreparedStatement): SportsResponse {
+            val rs = stm.executeQuery()
+            val sports = mutableListOf<Sport>()
+
+            rs.next()
+            val totalCount = rs.getInt("totalCount")
+
+            if (rs.getObject("id") != null)
+                do {
+                    sports.add(getSportFromTable(rs))
+                } while (rs.next())
+
+            return SportsResponse(sports, totalCount)
+        }
+
         /**
          * Gets a [Sport] from a ResultSet.
          *

@@ -37,7 +37,7 @@ class RoutesMemoryDB(private val source: AppMemoryDBSource) : RoutesDB {
         routes = source.routes
             .values.toList()
             .run { subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit) },
-        totalCount = 0
+        totalCount = source.routes.size
     )
 
     override fun hasRoute(

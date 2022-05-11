@@ -1,6 +1,7 @@
 package pt.isel.ls.sports.api.routers.sports
 
 import org.http4k.core.Method.GET
+import org.http4k.core.Method.PATCH
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
@@ -14,6 +15,9 @@ import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportRequest
 import pt.isel.ls.sports.api.routers.sports.dtos.CreateSportResponse
 import pt.isel.ls.sports.api.routers.sports.dtos.SportDTO
 import pt.isel.ls.sports.api.routers.sports.dtos.SportsResponseDTO
+import pt.isel.ls.sports.api.routers.sports.dtos.UpdateSportRequest
+import pt.isel.ls.sports.api.routers.sports.dtos.UpdateSportResponse
+import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.errors.runAndCatch
 import pt.isel.ls.sports.api.utils.json
@@ -45,7 +49,8 @@ class SportsRouter(private val services: SportsServices) : IRouter {
 
     override val routes = routes(
         "/" bind POST to ::createSport,
-        "/" bind GET to ::getSports,
+        "/" bind GET to ::searchSports,
+        "/{id}" bind PATCH to ::updateSport,
         "/{id}" bind GET to ::getSport,
         "/{id}/activities" bind GET to ::getSportActivities,
     )
@@ -69,16 +74,36 @@ class SportsRouter(private val services: SportsServices) : IRouter {
     }
 
     /**
-     * Gets all sports.
+     * Updates a sport.
+     *
+     * @param request HTTP request containing a body that follows the [UpdateSportRequest] format
+     * @return HTTP response containing a body that follows the [MessageResponse] format
+     */
+    private fun updateSport(request: Request): Response = runAndCatch {
+        val token = request.tokenOrThrow()
+        val sid = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
+
+        val sportRequest = request.decodeBodyAs<UpdateSportRequest>()
+        val modified = services.updateSport(
+            sid, token, sportRequest.name,
+            sportRequest.description
+        )
+
+        return Response(CREATED).json(UpdateSportResponse(modified))
+    }
+
+    /**
+     * Search for sports.
      *
      * @param request HTTP request
      * @return HTTP response containing a body that follows the [SportsResponseDTO] format
      */
-    private fun getSports(request: Request): Response = runAndCatch {
+    private fun searchSports(request: Request): Response = runAndCatch {
+        val name = request.query("name")
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
         val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
-        val sportsResponse = services.getAllSports(skip, limit)
+        val sportsResponse = services.searchSports(skip, limit, name)
 
         return Response(OK).json(SportsResponseDTO(sportsResponse))
     }

@@ -1,6 +1,7 @@
 package pt.isel.ls.sports.services
 
 import pt.isel.ls.sports.database.AppDB
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.services.utils.isValidId

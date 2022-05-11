@@ -1,11 +1,11 @@
 package pt.isel.ls.sports.unit.services.sections.sports
 
 import kotlinx.datetime.toLocalDate
+import pt.isel.ls.sports.database.InvalidArgumentException
 import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.services.AuthenticationException
-import pt.isel.ls.sports.services.InvalidArgumentException
 import pt.isel.ls.sports.unit.services.AbstractServicesTests
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
@@ -100,10 +100,10 @@ class SportsServicesTests : AbstractServicesTests() {
         }
     }
 
-    // getAllSports
+    // searchSports
 
     @Test
-    fun `getAllSports returns list of all sport objects`(): Unit = db.execute { conn ->
+    fun `searchSports returns list of all sport objects`(): Unit = db.execute { conn ->
 
         db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
 
@@ -115,25 +115,25 @@ class SportsServicesTests : AbstractServicesTests() {
         val sport2 = Sport(2, "Powerlifting", 1, "Get big")
         val sport3 = Sport(3, "Basketball", 1, "Shoot a ball through a hoop")
 
-        assertEquals(listOf(sport1, sport2, sport3), services.sports.getAllSports(0, 10).sports)
+        assertEquals(listOf(sport1, sport2, sport3), services.sports.searchSports(0, 10).sports)
     }
 
     @Test
-    fun `getAllSports with no created sports returns empty list`() {
-        assertEquals(emptyList(), services.sports.getAllSports(0, 10).sports)
+    fun `searchSports with no created sports returns empty list`() {
+        assertEquals(emptyList(), services.sports.searchSports(0, 10).sports)
     }
 
     @Test
-    fun `getAllSports throws InvalidArgumentException if the skip is invalid`() {
+    fun `searchSports throws InvalidArgumentException if the skip is invalid`() {
         assertFailsWith<InvalidArgumentException> {
-            services.sports.getAllSports(-5, 10)
+            services.sports.searchSports(-5, 10)
         }
     }
 
     @Test
-    fun `getAllSports throws InvalidArgumentException if the limit is invalid`() {
+    fun `searchSports throws InvalidArgumentException if the limit is invalid`() {
         assertFailsWith<InvalidArgumentException> {
-            services.sports.getAllSports(0, -5)
+            services.sports.searchSports(0, -5)
         }
     }
 
