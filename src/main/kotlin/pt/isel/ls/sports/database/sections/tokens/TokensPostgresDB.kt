@@ -1,11 +1,15 @@
 package pt.isel.ls.sports.database.sections.tokens
 
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import java.sql.SQLException
 import java.util.UUID
 
+/**
+ * Tokens database representation using Postgres.
+ */
 class TokensPostgresDB : TokensDB {
+
     override fun createUserToken(conn: ConnectionDB, token: UUID, uid: Int): String {
         val stm = conn
             .getPostgresConnection()

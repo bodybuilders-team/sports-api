@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package pt.isel.ls.sports.api.utils.errors
 
 import kotlinx.serialization.Serializable

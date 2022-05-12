@@ -1,7 +1,7 @@
 package pt.isel.ls.sports.database.sections.routes
 
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.utils.getPaginatedQuery
 import pt.isel.ls.sports.domain.Route
 import java.sql.Connection
@@ -9,6 +9,9 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
+/**
+ * Routes database representation using Postgres.
+ */
 class RoutesPostgresDB : RoutesDB {
 
     override fun createNewRoute(
@@ -27,6 +30,7 @@ class RoutesPostgresDB : RoutesDB {
                 """.trimIndent(),
                 Statement.RETURN_GENERATED_KEYS
             )
+
         stm.setInt(1, uid)
         stm.setString(2, startLocation)
         stm.setString(3, endLocation)
@@ -99,6 +103,7 @@ class RoutesPostgresDB : RoutesDB {
     }
 
     companion object {
+
         /**
          * Gets a [Route] from a ResultSet.
          *

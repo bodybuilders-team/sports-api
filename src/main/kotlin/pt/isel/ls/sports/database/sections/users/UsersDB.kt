@@ -1,14 +1,15 @@
 package pt.isel.ls.sports.database.sections.users
 
-import pt.isel.ls.sports.database.AlreadyExistsException
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.AlreadyExistsException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.User
 
 /**
  * Users database representation.
  */
 interface UsersDB {
+
     /**
      * Creates a new user.
      *
@@ -41,11 +42,7 @@ interface UsersDB {
      *
      * @return [UsersResponse] with a list of users
      */
-    fun getAllUsers(
-        conn: ConnectionDB,
-        skip: Int,
-        limit: Int
-    ): UsersResponse
+    fun getAllUsers(conn: ConnectionDB, skip: Int, limit: Int): UsersResponse
 
     /**
      * Verifies if a user with the given [email] exists.

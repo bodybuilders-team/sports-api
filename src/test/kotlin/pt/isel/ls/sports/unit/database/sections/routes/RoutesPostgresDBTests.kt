@@ -1,6 +1,6 @@
 package pt.isel.ls.sports.unit.database.sections.routes
 
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.tableAsserter
 import pt.isel.ls.sports.unit.database.AppPostgresDBTests

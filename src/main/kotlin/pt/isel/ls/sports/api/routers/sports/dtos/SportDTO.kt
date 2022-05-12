@@ -20,6 +20,7 @@ data class SportDTO(
     val description: String? = null
 ) {
     companion object {
+
         /**
          * Converts a [Sport] to a [SportDTO].
          *

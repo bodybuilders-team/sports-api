@@ -1,17 +1,18 @@
 package pt.isel.ls.sports.services.sections.routes
 
 import pt.isel.ls.sports.database.AppDB
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.routes.RoutesResponse
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.services.AbstractServices
-import pt.isel.ls.sports.services.AuthenticationException
+import pt.isel.ls.sports.services.exceptions.AuthenticationException
 
 /**
  * Routes services. Implements methods regarding routes.
  */
 class RoutesServices(db: AppDB) : AbstractServices(db) {
+
     /**
      * Creates a new route.
      *

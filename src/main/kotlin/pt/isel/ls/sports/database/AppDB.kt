@@ -11,6 +11,7 @@ import pt.isel.ls.sports.database.sections.users.UsersDB
  * App database representation, an aggregate of all database sections.
  */
 interface AppDB {
+
     /**
      * Encapsulates a function that interacts with the database in order to allow for atomic sets of operations.
      *

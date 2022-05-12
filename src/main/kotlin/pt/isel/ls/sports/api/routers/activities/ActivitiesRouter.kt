@@ -25,7 +25,7 @@ import pt.isel.ls.sports.api.utils.pathOrThrow
 import pt.isel.ls.sports.api.utils.queryOrThrow
 import pt.isel.ls.sports.api.utils.toIntOrThrow
 import pt.isel.ls.sports.api.utils.tokenOrThrow
-import pt.isel.ls.sports.database.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.services.sections.activities.ActivitiesServices
 import pt.isel.ls.sports.utils.toDuration
 

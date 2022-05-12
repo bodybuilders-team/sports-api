@@ -1,6 +1,6 @@
 package pt.isel.ls.sports.unit.database.sections.tokens
 
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.unit.database.AppMemoryDBTests
 import java.util.UUID

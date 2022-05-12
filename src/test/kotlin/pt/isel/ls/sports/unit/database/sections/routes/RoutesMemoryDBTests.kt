@@ -1,6 +1,6 @@
 package pt.isel.ls.sports.unit.database.sections.routes
 
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.unit.database.AppMemoryDBTests
@@ -11,6 +11,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
+
     // createNewRoute
 
     @Test

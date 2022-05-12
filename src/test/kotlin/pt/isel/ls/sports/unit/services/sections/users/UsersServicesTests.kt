@@ -1,9 +1,9 @@
 package pt.isel.ls.sports.unit.services.sections.users
 
 import kotlinx.datetime.toLocalDate
-import pt.isel.ls.sports.database.AlreadyExistsException
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.AlreadyExistsException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.unit.services.AbstractServicesTests

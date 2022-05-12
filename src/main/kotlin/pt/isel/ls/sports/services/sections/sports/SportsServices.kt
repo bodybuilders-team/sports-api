@@ -1,19 +1,20 @@
 package pt.isel.ls.sports.services.sections.sports
 
 import pt.isel.ls.sports.database.AppDB
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.sports.SportsResponse
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.services.AbstractServices
-import pt.isel.ls.sports.services.AuthenticationException
-import pt.isel.ls.sports.services.AuthorizationException
+import pt.isel.ls.sports.services.exceptions.AuthenticationException
+import pt.isel.ls.sports.services.exceptions.AuthorizationException
 
 /**
  * Sports services. Implements methods regarding sports.
  */
 class SportsServices(db: AppDB) : AbstractServices(db) {
+
     /**
      * Creates a new sport.
      *
@@ -55,6 +56,15 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
         }
     }
 
+    /**
+     * Searches for sports.
+     *
+     * @param skip number of elements to skip
+     * @param limit number of elements to return
+     * @param name search query (optional)
+     *
+     * @return [SportsResponse] with a list of sports
+     */
     fun searchSports(skip: Int, limit: Int, name: String? = null): SportsResponse {
         validateSkip(skip)
         validateLimit(limit, LIMIT_RANGE)
@@ -86,10 +96,24 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
         }
     }
 
+    /**
+     * Updates a sport.
+     *
+     * @param sid sports unique identifier
+     * @param name name of the sport
+     * @param description description of the sport (optional)
+     *
+     * @return true if the sport was modified, false otherwise
+     * @throws NotFoundException if there's no sport with the [sid]
+     * @throws InvalidArgumentException if name or description are invalid
+     * @throws AuthorizationException if the user is not the sport creater
+     */
     fun updateSport(sid: Int, token: String, name: String?, description: String?): Boolean {
         validateSid(sid)
+
         if (name != null)
             validateName(name)
+
         if (description != null)
             validateDescription(description)
 
@@ -107,14 +131,32 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
     companion object {
         private val LIMIT_RANGE = 0..100
 
+        // TODO: 12/05/2022 Test
+        /**
+         * Validates a sport name.
+         *
+         * @param name name of the sport
+         * @throws InvalidArgumentException if the sport name is invalid
+         */
         fun validateName(name: String) {
             if (!Sport.isValidName(name))
-                throw InvalidArgumentException("Name must be between ${Sport.MIN_NAME_LENGTH} and ${Sport.MAX_NAME_LENGTH} characters")
+                throw InvalidArgumentException(
+                    "Name must be between ${Sport.MIN_NAME_LENGTH} and ${Sport.MAX_NAME_LENGTH} characters"
+                )
         }
 
+        // TODO: 12/05/2022 Test
+        /**
+         * Validates a sport description.
+         *
+         * @param description description of the sport
+         * @throws InvalidArgumentException if the sport description is invalid
+         */
         fun validateDescription(description: String) {
             if (!Sport.isValidDescription(description))
-                throw InvalidArgumentException("Description must be between ${Sport.MIN_DESCRIPTION_LENGTH} and ${Sport.MAX_DESCRIPTION_LENGTH} characters")
+                throw InvalidArgumentException(
+                    "Description must be between ${Sport.MIN_DESCRIPTION_LENGTH} and ${Sport.MAX_DESCRIPTION_LENGTH} characters"
+                )
         }
     }
 }

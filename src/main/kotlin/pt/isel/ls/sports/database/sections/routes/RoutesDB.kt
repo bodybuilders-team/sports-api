@@ -1,13 +1,14 @@
 package pt.isel.ls.sports.database.sections.routes
 
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Route
 
 /**
  * Routes database representation.
  */
 interface RoutesDB {
+
     /**
      * Creates a new route.
      *
@@ -39,11 +40,7 @@ interface RoutesDB {
      *
      * @return [RoutesResponse] with the list of routes
      */
-    fun getAllRoutes(
-        conn: ConnectionDB,
-        skip: Int,
-        limit: Int
-    ): RoutesResponse
+    fun getAllRoutes(conn: ConnectionDB, skip: Int, limit: Int): RoutesResponse
 
     /**
      * Verifies if a route with the given [rid] exists.

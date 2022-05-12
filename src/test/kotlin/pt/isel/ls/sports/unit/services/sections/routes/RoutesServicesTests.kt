@@ -1,9 +1,9 @@
 package pt.isel.ls.sports.unit.services.sections.routes
 
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Route
-import pt.isel.ls.sports.services.AuthenticationException
+import pt.isel.ls.sports.services.exceptions.AuthenticationException
 import pt.isel.ls.sports.unit.services.AbstractServicesTests
 import java.util.UUID
 import kotlin.test.Test

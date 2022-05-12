@@ -3,21 +3,23 @@ package pt.isel.ls.sports.api.utils.errors
 import kotlinx.serialization.SerializationException
 import org.http4k.core.Response
 import org.http4k.core.Status
-import pt.isel.ls.sports.api.MissingTokenException
-import pt.isel.ls.sports.database.AlreadyExistsException
-import pt.isel.ls.sports.database.DatabaseAccessException
-import pt.isel.ls.sports.database.DatabaseRollbackException
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
-import pt.isel.ls.sports.services.AuthenticationException
-import pt.isel.ls.sports.services.AuthorizationException
+import pt.isel.ls.sports.api.exceptions.MissingTokenException
+import pt.isel.ls.sports.database.exceptions.AlreadyExistsException
+import pt.isel.ls.sports.database.exceptions.DatabaseAccessException
+import pt.isel.ls.sports.database.exceptions.DatabaseRollbackException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
+import pt.isel.ls.sports.services.exceptions.AuthenticationException
+import pt.isel.ls.sports.services.exceptions.AuthorizationException
 import pt.isel.ls.sports.utils.Logger
 
 /**
  * Runs the given function [block] and returns the result as a Response.
  * Catches any exceptions and returns an error response accordingly.
+ *
+ * @param block function to execute
+ * @return error response, if any error occurs
  */
-// TODO: 22/04/2022 - Place App errors in a separate file
 inline fun runAndCatch(block: () -> Response): Response =
     try {
         block()

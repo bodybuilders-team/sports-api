@@ -1,8 +1,8 @@
 package pt.isel.ls.sports.database.sections.sports
 
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.utils.getPaginatedQuery
 import pt.isel.ls.sports.database.utils.setStringOrNull
 import pt.isel.ls.sports.domain.Sport
@@ -11,6 +11,9 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
+/**
+ * Sports database representation using Postgres.
+ */
 class SportsPostgresDB : SportsDB {
 
     override fun createNewSport(conn: ConnectionDB, uid: Int, name: String, description: String?): Int {
@@ -23,6 +26,7 @@ class SportsPostgresDB : SportsDB {
                 """.trimIndent(),
                 Statement.RETURN_GENERATED_KEYS
             )
+
         stm.setString(1, name)
         stm.setStringOrNull(2, description)
         stm.setInt(3, uid)
@@ -46,9 +50,9 @@ class SportsPostgresDB : SportsDB {
             .prepareStatement(
                 """
                     UPDATE sports
-                    SET name = COALESCE($1, name),
-                    description= COALESCE($2, description)
-                    where id = ?
+                    SET name = COALESCE(?, name),
+                        description= COALESCE(?, description)
+                    WHERE id = ?
                 """.trimIndent()
             )
 
@@ -86,9 +90,9 @@ class SportsPostgresDB : SportsDB {
             .prepareStatement(
                 getPaginatedQuery(
                     """
-                SELECT *
-                FROM sports
-				$nameQuery
+                    SELECT *
+                    FROM sports
+                    $nameQuery
                     """.trimIndent()
                 )
             )

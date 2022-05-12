@@ -6,8 +6,8 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.routing.path
-import pt.isel.ls.sports.api.MissingTokenException
-import pt.isel.ls.sports.database.InvalidArgumentException
+import pt.isel.ls.sports.api.exceptions.MissingTokenException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.utils.substringOrNull
 
 /**

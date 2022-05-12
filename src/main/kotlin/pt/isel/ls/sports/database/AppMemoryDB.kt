@@ -14,8 +14,7 @@ import pt.isel.ls.sports.database.sections.users.UsersMemoryDB
  * @property source the memory source of the database
  */
 class AppMemoryDB(private val source: AppMemoryDBSource) : AppDB {
-    override fun <R> execute(func: (ConnectionDB) -> R): R =
-        func(MemoryConnectionDB())
+    override fun <R> execute(func: (ConnectionDB) -> R): R = func(MemoryConnectionDB())
 
     override fun reset() = source.reset()
 

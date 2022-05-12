@@ -1,14 +1,15 @@
 package pt.isel.ls.sports.database.sections.sports
 
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Sport
 
 /**
  * Sports database representation.
  */
 interface SportsDB {
+
     /**
      * Creates a new sport.
      *

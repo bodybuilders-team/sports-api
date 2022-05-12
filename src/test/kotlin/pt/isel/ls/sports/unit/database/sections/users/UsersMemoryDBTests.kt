@@ -1,7 +1,7 @@
 package pt.isel.ls.sports.unit.database.sections.users
 
-import pt.isel.ls.sports.database.AlreadyExistsException
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.AlreadyExistsException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.unit.database.AppMemoryDBTests
 import kotlin.test.Test

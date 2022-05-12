@@ -2,21 +2,22 @@ package pt.isel.ls.sports.services.sections.activities
 
 import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.AppDB
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.services.AbstractServices
-import pt.isel.ls.sports.services.AuthenticationException
-import pt.isel.ls.sports.services.AuthorizationException
+import pt.isel.ls.sports.services.exceptions.AuthenticationException
+import pt.isel.ls.sports.services.exceptions.AuthorizationException
 import kotlin.time.Duration
 
 /**
  * Activities services. Implements methods regarding activities.
  */
 class ActivitiesServices(db: AppDB) : AbstractServices(db) {
+
     /**
      * Creates a new activity.
      *
@@ -171,7 +172,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @throws InvalidArgumentException if [rid] is negative
      * @throws InvalidArgumentException if [skip] is invalid
      * @throws InvalidArgumentException if [limit] is invalid
-     * @throws NotFoundException if there's an activity whose user identifier doesn't match any user TODO CHECK THIS
+     * @throws NotFoundException if there's an activity whose user identifier doesn't match any user
      */
     fun searchUsersByActivity(
         sid: Int,

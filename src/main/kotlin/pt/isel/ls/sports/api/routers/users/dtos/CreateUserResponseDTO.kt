@@ -12,6 +12,7 @@ import pt.isel.ls.sports.services.sections.users.CreateUserResponse
 @Serializable
 data class CreateUserResponseDTO(val token: String, val uid: Int) {
     companion object {
+
         /**
          * Converts a [CreateUserResponse] to a [CreateUserResponseDTO].
          *

@@ -1,7 +1,7 @@
 package pt.isel.ls.sports.unit.database.sections.activities
 
 import kotlinx.datetime.toLocalDate
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
@@ -87,13 +87,12 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
         }
     }
 
-    // TODO: 29/04/2022 Fix me
     @Test
     override fun `deleteActivity throws NotFoundException if there's no activity with the aid`(): Unit =
         db.execute { conn ->
-            /*assertFailsWith<NotFoundException> {
+            assertFailsWith<NotFoundException> {
                 db.activities.deleteActivity(conn, 9999999)
-            }*/
+            }
         }
 
     // getSportActivities

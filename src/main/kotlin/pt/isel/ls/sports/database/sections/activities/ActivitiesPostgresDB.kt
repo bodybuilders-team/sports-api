@@ -2,8 +2,8 @@ package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.users.UsersPostgresDB.Companion.getUsersResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
@@ -20,6 +20,9 @@ import java.sql.SQLException
 import java.sql.Statement
 import kotlin.time.Duration
 
+/**
+ * Activities database representation using Postgres.
+ */
 class ActivitiesPostgresDB : ActivitiesDB {
 
     override fun createNewActivity(
@@ -215,6 +218,7 @@ class ActivitiesPostgresDB : ActivitiesDB {
     }
 
     companion object {
+
         /**
          * Gets a list of activities returned from the execution of the statement [stm].
          *

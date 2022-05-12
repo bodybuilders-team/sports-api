@@ -1,10 +1,13 @@
 package pt.isel.ls.sports.database.sections.tokens
 
 import pt.isel.ls.sports.database.AppMemoryDBSource
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import java.util.UUID
 
+/**
+ * Tokens database representation using memory.
+ */
 class TokensMemoryDB(private val source: AppMemoryDBSource) : TokensDB {
 
     override fun createUserToken(conn: ConnectionDB, token: UUID, uid: Int): String {

@@ -2,13 +2,16 @@ package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.AppMemoryDBSource
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import kotlin.time.Duration
 
+/**
+ * Activities database representation using memory.
+ */
 class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
 
     override fun createNewActivity(
@@ -45,8 +48,8 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         val activities = source.activities
             .filter {
                 it.value.sid == sid &&
-                        (date == null || it.value.date == date) &&
-                        (rid == null || it.value.rid == rid)
+                    (date == null || it.value.date == date) &&
+                    (rid == null || it.value.rid == rid)
             }
             .values.toList()
             .sortedWith(
@@ -57,10 +60,7 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
             )
 
         return activities.run {
-            ActivitiesResponse(
-                subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit),
-                size
-            )
+            ActivitiesResponse(subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit), size)
         }
     }
 
@@ -95,10 +95,7 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
             .values.toList()
 
         return activities.run {
-            ActivitiesResponse(
-                subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit),
-                size
-            )
+            ActivitiesResponse(subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit), size)
         }
     }
 
@@ -113,10 +110,7 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
             .values.toList()
 
         return activities.run {
-            ActivitiesResponse(
-                subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit),
-                size
-            )
+            ActivitiesResponse(subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit), size)
         }
     }
 

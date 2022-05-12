@@ -1,9 +1,9 @@
 package pt.isel.ls.sports.services.sections.users
 
-import pt.isel.ls.sports.database.AlreadyExistsException
 import pt.isel.ls.sports.database.AppDB
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.AlreadyExistsException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.domain.User
@@ -14,6 +14,7 @@ import java.util.UUID
  * Users services. Implements methods regarding users.
  */
 class UsersServices(db: AppDB) : AbstractServices(db) {
+
     /**
      * Creates a new user.
      *
@@ -27,7 +28,9 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      */
     fun createNewUser(name: String, email: String): CreateUserResponse {
         if (!User.isValidName(name))
-            throw InvalidArgumentException("Name must be between ${User.MIN_NAME_LENGTH} and ${User.MAX_NAME_LENGTH} characters")
+            throw InvalidArgumentException(
+                "Name must be between ${User.MIN_NAME_LENGTH} and ${User.MAX_NAME_LENGTH} characters"
+            )
 
         if (!User.isValidEmail(email))
             throw InvalidArgumentException("Invalid email")

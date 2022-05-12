@@ -1,12 +1,12 @@
 package pt.isel.ls.sports.unit.services.sections.activities
 
 import kotlinx.datetime.toLocalDate
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.User
-import pt.isel.ls.sports.services.AuthenticationException
-import pt.isel.ls.sports.services.AuthorizationException
+import pt.isel.ls.sports.services.exceptions.AuthenticationException
+import pt.isel.ls.sports.services.exceptions.AuthorizationException
 import pt.isel.ls.sports.unit.services.AbstractServicesTests
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID

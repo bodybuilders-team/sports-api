@@ -1,8 +1,8 @@
 package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
@@ -12,6 +12,7 @@ import kotlin.time.Duration
  * Activities database representation.
  */
 interface ActivitiesDB {
+
     /**
      * Creates a new activity.
      *
@@ -87,7 +88,7 @@ interface ActivitiesDB {
      * @param limit number of elements to return
      *
      * @return list of users
-     * @throws NotFoundException if there's an activity whose user identifier doesn't match any user TODO CHECK THIS
+     * @throws NotFoundException if there's an activity whose user identifier doesn't match any user
      */
     fun searchUsersByActivity(
         conn: ConnectionDB,

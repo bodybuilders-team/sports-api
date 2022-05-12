@@ -2,7 +2,7 @@ package pt.isel.ls.sports.database.utils
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toJavaLocalDate
-import pt.isel.ls.sports.database.DatabaseRollbackException
+import pt.isel.ls.sports.database.exceptions.DatabaseRollbackException
 import pt.isel.ls.sports.utils.Logger
 import java.io.File
 import java.sql.Connection

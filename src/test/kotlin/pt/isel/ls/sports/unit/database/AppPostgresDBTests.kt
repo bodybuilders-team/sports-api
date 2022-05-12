@@ -32,5 +32,4 @@ abstract class AppPostgresDBTests {
             it.runScript("src/main/sql/addData.sql")
         }
     }
-    // TODO: 06/04/2022 Add tests for db.execute transactions error handling
 }

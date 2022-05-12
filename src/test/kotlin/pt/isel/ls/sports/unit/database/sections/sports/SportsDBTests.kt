@@ -29,4 +29,16 @@ interface SportsDBTests {
     fun `hasSport returns true if the sport exists`()
 
     fun `hasSport returns false if the sport does not exist`()
+
+    // updateSport
+
+    fun `updateSport updates a sport correctly`()
+
+    fun `updateSport returns true if a sport was modified`()
+
+    fun `updateSport returns false if a sport was not modified`()
+
+    fun `updateSport throws NotFoundException if there's no sport with the sid`()
+
+    fun `throws InvalidArgumentException if name and description are both null`()
 }

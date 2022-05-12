@@ -18,6 +18,7 @@ data class UserDTO(
     val email: String
 ) {
     companion object {
+
         /**
          * Converts a [User] to a [UserDTO].
          *

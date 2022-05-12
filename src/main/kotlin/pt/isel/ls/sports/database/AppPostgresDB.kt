@@ -3,6 +3,8 @@ package pt.isel.ls.sports.database
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.connection.PostgresConnectionDB
+import pt.isel.ls.sports.database.exceptions.DatabaseAccessException
+import pt.isel.ls.sports.database.exceptions.DatabaseRollbackException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesPostgresDB
 import pt.isel.ls.sports.database.sections.routes.RoutesPostgresDB
 import pt.isel.ls.sports.database.sections.sports.SportsPostgresDB
@@ -23,6 +25,11 @@ class AppPostgresDB(sourceURL: String) : AppDB {
     private val source = PGSimpleDataSource().apply { setURL(sourceURL) }
 
     /**
+     * Encapsulates a function that interacts with the database in order to allow for atomic sets of operations.
+     *
+     * @param func function that interacts with the database
+     *
+     * @return result of [func]
      * @throws DatabaseAccessException if the database cannot be accessed.
      * @throws DatabaseRollbackException if the database cannot be rolled back.
      */

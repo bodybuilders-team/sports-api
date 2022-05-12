@@ -1,6 +1,7 @@
 package pt.isel.ls.sports.unit.database.sections.sports
 
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.tableAsserter
 import pt.isel.ls.sports.unit.database.AppPostgresDBTests
@@ -116,5 +117,47 @@ class SportsPostgresDBTests : AppPostgresDBTests(), SportsDBTests {
     @Test
     override fun `hasSport returns false if the sport does not exist`(): Unit = db.execute { conn ->
         assertFalse(db.sports.hasSport(conn, 999999))
+    }
+
+    // updateSport
+
+    @Test
+    override fun `updateSport updates a sport correctly`(): Unit = db.execute { conn ->
+        val newName = "new name"
+        val newDescription = "new desc"
+        db.sports.updateSport(conn, 1, newName, newDescription)
+
+        val updatedSport = db.sports.getSport(conn, 1)
+
+        assertEquals(newName, updatedSport.name)
+        assertEquals(newDescription, updatedSport.description)
+    }
+
+    @Test
+    override fun `updateSport returns true if a sport was modified`(): Unit = db.execute { conn ->
+        val newName = "new name"
+        val newDescription = "new desc"
+        assertTrue(db.sports.updateSport(conn, 1, newName, newDescription))
+    }
+
+    @Test
+    override fun `updateSport returns false if a sport was not modified`(): Unit = db.execute { conn ->
+        // TODO: 12/05/2022 Fix me
+		/*val sport = db.sports.getSport(conn, 1)
+		assertFalse(db.sports.updateSport(conn, 1, sport.name, sport.description))*/
+    }
+
+    @Test
+    override fun `updateSport throws NotFoundException if there's no sport with the sid`(): Unit = db.execute { conn ->
+        assertFailsWith<NotFoundException> {
+            db.sports.updateSport(conn, 9999, "new name", "new desc")
+        }
+    }
+
+    @Test
+    override fun `throws InvalidArgumentException if name and description are both null`(): Unit = db.execute { conn ->
+        assertFailsWith<InvalidArgumentException> {
+            db.sports.updateSport(conn, 1, null, null)
+        }
     }
 }

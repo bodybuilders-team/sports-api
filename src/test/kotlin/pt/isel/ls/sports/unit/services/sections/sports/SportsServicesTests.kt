@@ -1,17 +1,20 @@
 package pt.isel.ls.sports.unit.services.sections.sports
 
 import kotlinx.datetime.toLocalDate
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Sport
-import pt.isel.ls.sports.services.AuthenticationException
+import pt.isel.ls.sports.services.exceptions.AuthenticationException
+import pt.isel.ls.sports.services.exceptions.AuthorizationException
 import pt.isel.ls.sports.unit.services.AbstractServicesTests
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class SportsServicesTests : AbstractServicesTests() {
 
@@ -173,6 +176,81 @@ class SportsServicesTests : AbstractServicesTests() {
     fun `getSportActivities throws InvalidArgumentException if the limit is invalid`() {
         assertFailsWith<InvalidArgumentException> {
             services.sports.getSportActivities(1, 0, -5)
+        }
+    }
+
+    // updateSport
+
+    @Test
+    fun `updateSport updates a sport correctly`() {
+        val user = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val sid = services.sports.createNewSport(user.token, "Sport name", "Sport desc")
+
+        val newName = "new name"
+        val newDescription = "new desc"
+        services.sports.updateSport(sid, user.token, newName, newDescription)
+
+        val updatedSport = services.sports.getSport(sid)
+        assertEquals(newName, updatedSport.name)
+        assertEquals(newDescription, updatedSport.description)
+    }
+
+    @Test
+    fun `updateSport returns true if a sport was modified`() {
+        val user = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val sid = services.sports.createNewSport(user.token, "Sport name", "Sport desc")
+
+        val newName = "new name"
+        val newDescription = "new desc"
+        assertTrue(services.sports.updateSport(sid, user.token, newName, newDescription))
+    }
+
+    @Test
+    fun `updateSport returns false if a sport was not modified`() {
+        val name = "Sport name"
+        val description = "Sport desc"
+
+        val user = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val sid = services.sports.createNewSport(user.token, name, description)
+
+        assertFalse(services.sports.updateSport(sid, user.token, name, description))
+    }
+
+    @Test
+    fun `updateSport throws NotFoundException if there's no sport with the sid`() {
+        assertFailsWith<InvalidArgumentException> {
+            services.sports.updateSport(-1, "", "new name", "new desc")
+        }
+    }
+
+    @Test
+    fun `throws InvalidArgumentException if name is invalid`() {
+        val user = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val sid = services.sports.createNewSport(user.token, "Sport name", "Sport desc")
+
+        assertFailsWith<InvalidArgumentException> {
+            services.sports.updateSport(sid, user.token, "", null)
+        }
+    }
+
+    @Test
+    fun `throws InvalidArgumentException if description is invalid`() {
+        val user = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val sid = services.sports.createNewSport(user.token, "Sport name", "Sport desc")
+
+        assertFailsWith<InvalidArgumentException> {
+            services.sports.updateSport(sid, user.token, null, "a".repeat(Sport.MAX_DESCRIPTION_LENGTH + 1))
+        }
+    }
+
+    @Test
+    fun `throws AuthorizationException if the user is not the sport creater`() {
+        val user1 = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val user2 = services.users.createNewUser("Nyckollas Brandão2", "nyckollasbrandao2@mail.com")
+        val sid = services.sports.createNewSport(user1.token, "Sport name", "Sport desc")
+
+        assertFailsWith<AuthorizationException> {
+            services.sports.updateSport(sid, user2.token, "new name", "new desc")
         }
     }
 }

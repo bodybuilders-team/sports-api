@@ -8,6 +8,7 @@ enum class SortOrder(val str: String) {
     DESCENDING("DESC");
 
     companion object {
+
         /**
          * Parses a string into a SortOrder or null.
          *

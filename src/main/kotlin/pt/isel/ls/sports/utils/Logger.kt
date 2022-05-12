@@ -5,7 +5,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.sql.Timestamp
 
-// TODO: 07/04/2022 - Double check all log levels so they are appropriate, and add more logs
 /**
  * Logger utility class.
  */
@@ -42,6 +41,7 @@ object Logger {
      *
      * @param message the message to log
      */
+    @Suppress("unused")
     fun debug(message: String) =
         logger.debug("{} : {}", Timestamp(System.currentTimeMillis()), message)
 

@@ -1,8 +1,8 @@
 package pt.isel.ls.sports.database.sections.users
 
-import pt.isel.ls.sports.database.AlreadyExistsException
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.AlreadyExistsException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.utils.getPaginatedQuery
 import pt.isel.ls.sports.domain.User
 import java.sql.Connection
@@ -11,6 +11,9 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
+/**
+ * Users database representation using Postgres.
+ */
 class UsersPostgresDB : UsersDB {
 
     override fun createNewUser(conn: ConnectionDB, name: String, email: String): Int {
@@ -47,11 +50,7 @@ class UsersPostgresDB : UsersDB {
             throw NotFoundException("User with id $uid not found")
     }
 
-    override fun getAllUsers(
-        conn: ConnectionDB,
-        skip: Int,
-        limit: Int
-    ): UsersResponse {
+    override fun getAllUsers(conn: ConnectionDB, skip: Int, limit: Int): UsersResponse {
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
@@ -94,6 +93,7 @@ class UsersPostgresDB : UsersDB {
     }
 
     companion object {
+
         /**
          * Gets a [UsersResponse] returned from the execution of the statement [stm].
          *

@@ -1,7 +1,7 @@
 package pt.isel.ls.sports.unit.database.sections.activities
 
 import kotlinx.datetime.toLocalDate
-import pt.isel.ls.sports.database.NotFoundException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Sport

@@ -22,6 +22,7 @@ data class RouteDTO(
     val uid: Int
 ) {
     companion object {
+
         /**
          * Converts a [Route] to a [RouteDTO].
          *

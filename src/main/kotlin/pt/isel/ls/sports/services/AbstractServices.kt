@@ -1,15 +1,19 @@
+@file:Suppress("unused")
+
 package pt.isel.ls.sports.services
 
 import pt.isel.ls.sports.database.AppDB
-import pt.isel.ls.sports.database.InvalidArgumentException
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
+import pt.isel.ls.sports.services.exceptions.AuthenticationException
 import pt.isel.ls.sports.services.utils.isValidId
 
 /**
  * Abstract Services class that implements the common methods of all services.
  */
 abstract class AbstractServices(protected val db: AppDB) {
+
     /**
      * Gets the user's unique identifier associated with the [token].
      *

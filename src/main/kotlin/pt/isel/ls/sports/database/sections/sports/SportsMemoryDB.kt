@@ -1,10 +1,14 @@
 package pt.isel.ls.sports.database.sections.sports
 
 import pt.isel.ls.sports.database.AppMemoryDBSource
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Sport
 
+/**
+ * Sports database representation using memory.
+ */
 class SportsMemoryDB(private val source: AppMemoryDBSource) : SportsDB {
 
     override fun createNewSport(conn: ConnectionDB, uid: Int, name: String, description: String?): Int {
@@ -20,7 +24,13 @@ class SportsMemoryDB(private val source: AppMemoryDBSource) : SportsDB {
     override fun updateSport(conn: ConnectionDB, sid: Int, name: String?, description: String?): Boolean {
         val prevSport = source.sports[sid] ?: throw NotFoundException("Sport does not exist.")
 
-        val newSport = prevSport.copy(name = name ?: prevSport.name, description = description ?: prevSport.description)
+        if (name == null && description == null)
+            throw InvalidArgumentException("Name or description must be specified.")
+
+        val newSport = prevSport.copy(
+            name = name ?: prevSport.name,
+            description = description ?: prevSport.description
+        )
         source.sports[sid] = newSport
 
         return prevSport != newSport

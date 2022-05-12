@@ -16,6 +16,7 @@ import pt.isel.ls.sports.database.sections.sports.SportsResponse
 @Serializable
 data class SportsResponseDTO(val sports: List<SportDTO>, val totalCount: Int) {
     companion object {
+
         /**
          * Converts a [SportsResponse] to a [SportsResponseDTO].
          *

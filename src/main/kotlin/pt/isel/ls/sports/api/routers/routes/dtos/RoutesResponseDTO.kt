@@ -16,6 +16,7 @@ import pt.isel.ls.sports.database.sections.routes.RoutesResponse
 @Serializable
 data class RoutesResponseDTO(val routes: List<RouteDTO>, val totalCount: Int) {
     companion object {
+
         /**
          * Converts a [RoutesResponse] to a [RoutesResponseDTO].
          *

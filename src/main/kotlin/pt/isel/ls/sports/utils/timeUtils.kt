@@ -2,9 +2,14 @@ package pt.isel.ls.sports.utils
 
 import kotlin.time.Duration
 
-const val HOURS_INDEX = 0
-const val MINUTES_INDEX = 1
-const val SECONDS_INDEX = 2
+private const val HOURS_INDEX = 0
+private const val MINUTES_INDEX = 1
+private const val SECONDS_INDEX = 2
+
+private const val HOURS_LEN = 2
+private const val MINUTES_LEN = 1
+private const val SECONDS_LEN = 2
+private const val NANOS_LEN = 3
 
 /**
  * Converts a string in the format "hh:mm:ss.fff" to a [Duration].
@@ -18,10 +23,13 @@ fun String.toDuration(): Duration {
 
 /**
  * Converts a duration to a [String] in the format "hh:mm:ss.fff".
+ *
  * @return converted string
  */
 fun Duration.toDTOString(): String =
     toComponents { hours, minutes, seconds, nanoseconds ->
-        "${hours.toString().padStart(2, '0')}:" + "${minutes.toString().padStart(2, '0')}:" +
-            "${seconds.toString().padStart(2, '0')}.${nanoseconds.toString().padStart(3, '0').substring(0..2)}"
+        "${hours.toString().padStart(HOURS_LEN, '0')}:" +
+            "${minutes.toString().padStart(MINUTES_LEN, '0')}:" +
+            "${seconds.toString().padStart(SECONDS_LEN, '0')}." +
+            nanoseconds.toString().padStart(NANOS_LEN, '0').substring(0..NANOS_LEN)
     }

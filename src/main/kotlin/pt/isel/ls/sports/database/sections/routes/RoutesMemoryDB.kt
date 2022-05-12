@@ -1,10 +1,13 @@
 package pt.isel.ls.sports.database.sections.routes
 
 import pt.isel.ls.sports.database.AppMemoryDBSource
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Route
 
+/**
+ * Routes database representation using memory.
+ */
 class RoutesMemoryDB(private val source: AppMemoryDBSource) : RoutesDB {
 
     override fun createNewRoute(

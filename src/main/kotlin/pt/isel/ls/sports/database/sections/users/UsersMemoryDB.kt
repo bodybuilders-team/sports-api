@@ -1,11 +1,14 @@
 package pt.isel.ls.sports.database.sections.users
 
-import pt.isel.ls.sports.database.AlreadyExistsException
 import pt.isel.ls.sports.database.AppMemoryDBSource
-import pt.isel.ls.sports.database.NotFoundException
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.AlreadyExistsException
+import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.User
 
+/**
+ * Users database representation using memory.
+ */
 class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
 
     override fun createNewUser(conn: ConnectionDB, name: String, email: String): Int {
@@ -22,11 +25,7 @@ class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
     override fun getUser(conn: ConnectionDB, uid: Int): User =
         source.users[uid] ?: throw NotFoundException("User with id $uid not found")
 
-    override fun getAllUsers(
-        conn: ConnectionDB,
-        skip: Int,
-        limit: Int
-    ): UsersResponse =
+    override fun getAllUsers(conn: ConnectionDB, skip: Int, limit: Int): UsersResponse =
         UsersResponse(
             users = source.users
                 .values.toList()
