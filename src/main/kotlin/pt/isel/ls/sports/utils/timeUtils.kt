@@ -7,7 +7,7 @@ private const val MINUTES_INDEX = 1
 private const val SECONDS_INDEX = 2
 
 private const val HOURS_LEN = 2
-private const val MINUTES_LEN = 1
+private const val MINUTES_LEN = 2
 private const val SECONDS_LEN = 2
 private const val NANOS_LEN = 3
 
@@ -31,5 +31,5 @@ fun Duration.toDTOString(): String =
         "${hours.toString().padStart(HOURS_LEN, '0')}:" +
             "${minutes.toString().padStart(MINUTES_LEN, '0')}:" +
             "${seconds.toString().padStart(SECONDS_LEN, '0')}." +
-            nanoseconds.toString().padStart(NANOS_LEN, '0').substring(0..NANOS_LEN)
+            nanoseconds.toString().padStart(NANOS_LEN, '0').substring(0 until NANOS_LEN)
     }
