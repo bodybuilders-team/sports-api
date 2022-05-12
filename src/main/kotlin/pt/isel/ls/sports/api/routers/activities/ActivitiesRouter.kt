@@ -16,6 +16,8 @@ import pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO
 import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityResponse
 import pt.isel.ls.sports.api.routers.activities.dtos.DeleteActivitiesRequest
+import pt.isel.ls.sports.api.routers.activities.dtos.UpdateActivityRequest
+import pt.isel.ls.sports.api.routers.activities.dtos.UpdateActivityResponse
 import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.api.utils.decodeBodyAs
@@ -78,6 +80,24 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
         )
 
         return Response(CREATED).json(CreateActivityResponse(aid))
+    }
+
+    /**
+     * Updates an activity.
+     *
+     * @param request HTTP request containing a body that follows the [UpdateActivityRequest] format
+     * @return HTTP response containing a body that follows the [UpdateActivityResponse] format
+     */
+    private fun updateActivity(request: Request): Response = runAndCatch {
+        val token = request.tokenOrThrow()
+        val aid = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
+
+        val routeRequest = request.decodeBodyAs<UpdateActivityRequest>()
+        val modified = services.updateActivity(
+            aid, token
+        )
+
+        return Response(CREATED).json(UpdateActivityResponse(modified))
     }
 
     /**

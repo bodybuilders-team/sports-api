@@ -57,7 +57,7 @@ class SportsPostgresDB : SportsDB {
             )
 
         stm.setString(1, name)
-        stm.setStringOrNull(2, description)
+        stm.setString(2, description)
         stm.setInt(3, sid)
 
         return stm.executeUpdate() == 1

@@ -143,8 +143,8 @@ class SportsPostgresDBTests : AppPostgresDBTests(), SportsDBTests {
     @Test
     override fun `updateSport returns false if a sport was not modified`(): Unit = db.execute { conn ->
         // TODO: 12/05/2022 Fix me
-		/*val sport = db.sports.getSport(conn, 1)
-		assertFalse(db.sports.updateSport(conn, 1, sport.name, sport.description))*/
+        /*val sport = db.sports.getSport(conn, 1)
+        assertFalse(db.sports.updateSport(conn, 1, sport.name, sport.description))*/
     }
 
     @Test

@@ -22,6 +22,8 @@ interface RoutesDB {
      */
     fun createNewRoute(conn: ConnectionDB, startLocation: String, endLocation: String, distance: Double, uid: Int): Int
 
+    fun updateRoute(conn: ConnectionDB, rid: Int, startLocation: String?, endLocation: String?): Boolean
+
     /**
      * Gets a specific route.
      *
@@ -40,7 +42,13 @@ interface RoutesDB {
      *
      * @return [RoutesResponse] with the list of routes
      */
-    fun getAllRoutes(conn: ConnectionDB, skip: Int, limit: Int): RoutesResponse
+    fun searchRoutes(
+        conn: ConnectionDB,
+        skip: Int,
+        limit: Int,
+        startLocation: String? = null,
+        endLocation: String? = null
+    ): RoutesResponse
 
     /**
      * Verifies if a route with the given [rid] exists.

@@ -47,6 +47,20 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         }
     }
 
+    fun updateActivity(aid: Int, token: String): Boolean {
+        validateAid(aid)
+
+        return db.execute { conn ->
+            val uid = authenticate(conn, token)
+
+            val activity = db.activities.getActivity(conn, aid)
+            if (activity.uid != uid)
+                throw AuthorizationException("You are not allowed to update this activity.")
+
+            db.activities.updateActivity(conn, aid)
+        }
+    }
+
     /**
      * Gets a specific activity.
      *

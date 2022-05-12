@@ -578,11 +578,11 @@ class ActivitiesServicesTests : AbstractServicesTests() {
         val uid2 = db.users.createNewUser(conn, "André Jesus", "andrejesus@mail.com")
         val uid3 = db.users.createNewUser(conn, "André Páscoa", "andrepascoa@mail.com")
 
-        db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
+        val sid = db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
 
-        db.activities.createNewActivity(conn, uid1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
-        db.activities.createNewActivity(conn, uid2, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
-        db.activities.createNewActivity(conn, uid3, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1)
+        db.activities.createNewActivity(conn, uid1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), sid, 1)
+        db.activities.createNewActivity(conn, uid2, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), sid, 1)
+        db.activities.createNewActivity(conn, uid3, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), sid, 1)
 
         assertFailsWith<InvalidArgumentException> {
             services.activities.searchUsersByActivity(

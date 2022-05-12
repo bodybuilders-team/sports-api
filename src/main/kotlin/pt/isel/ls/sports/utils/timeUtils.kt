@@ -29,7 +29,7 @@ fun String.toDuration(): Duration {
 fun Duration.toDTOString(): String =
     toComponents { hours, minutes, seconds, nanoseconds ->
         "${hours.toString().padStart(HOURS_LEN, '0')}:" +
-            "${minutes.toString().padStart(MINUTES_LEN, '0')}:" +
-            "${seconds.toString().padStart(SECONDS_LEN, '0')}." +
-            nanoseconds.toString().padStart(NANOS_LEN, '0').substring(0 until NANOS_LEN)
+                "${minutes.toString().padStart(MINUTES_LEN, '0')}:" +
+                "${seconds.toString().padStart(SECONDS_LEN, '0')}." +
+                nanoseconds.toString().padStart(NANOS_LEN, '0').substring(0 until NANOS_LEN)
     }

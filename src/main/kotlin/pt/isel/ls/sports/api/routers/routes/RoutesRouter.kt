@@ -1,6 +1,7 @@
 package pt.isel.ls.sports.api.routers.routes
 
 import org.http4k.core.Method.GET
+import org.http4k.core.Method.PATCH
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
@@ -13,6 +14,8 @@ import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteRequest
 import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteResponse
 import pt.isel.ls.sports.api.routers.routes.dtos.RouteDTO
 import pt.isel.ls.sports.api.routers.routes.dtos.RoutesResponseDTO
+import pt.isel.ls.sports.api.routers.routes.dtos.UpdateRouteRequest
+import pt.isel.ls.sports.api.routers.routes.dtos.UpdateRouteResponse
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.errors.runAndCatch
 import pt.isel.ls.sports.api.utils.json
@@ -44,7 +47,8 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
 
     override val routes = routes(
         "/" bind POST to ::createRoute,
-        "/" bind GET to ::getRoutes,
+        "/" bind GET to ::searchRoutes,
+        "/{id}" bind PATCH to ::updateRoute,
         "/{id}" bind GET to ::getRoute
     )
 
@@ -69,16 +73,38 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
     }
 
     /**
-     * Gets all routes.
+     * Updates a route.
+     *
+     * @param request HTTP request containing a body that follows the [UpdateRouteRequest] format
+     * @return HTTP response containing a body that follows the [UpdateRouteResponse] format
+     */
+    private fun updateRoute(request: Request): Response = runAndCatch {
+        val token = request.tokenOrThrow()
+        val rid = request.pathOrThrow("id").toIntOrThrow { "Invalid Route Id" }
+
+        val routeRequest = request.decodeBodyAs<UpdateRouteRequest>()
+        val modified = services.updateRoute(
+            rid, token, routeRequest.startLocation,
+            routeRequest.endLocation,
+            routeRequest.distance
+        )
+
+        return Response(CREATED).json(UpdateRouteResponse(modified))
+    }
+
+    /**
+     * Searches routes.
      *
      * @param request HTTP request
      * @return HTTP response containing a body that follows the [RoutesResponseDTO] format
      */
-    private fun getRoutes(request: Request): Response = runAndCatch {
+    private fun searchRoutes(request: Request): Response = runAndCatch {
+        val startLocation = request.query("startLocation")
+        val endLocation = request.query("startLocation")
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
         val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
-        val routesResponse = services.getAllRoutes(skip, limit)
+        val routesResponse = services.searchRoutes(skip, limit, startLocation, endLocation)
 
         return Response(OK).json(RoutesResponseDTO(routesResponse))
     }

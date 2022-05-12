@@ -71,12 +71,12 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
         source.routes[2] = route1
         source.routes[3] = route2
 
-        assertEquals(listOf(route0, route1, route2), db.routes.getAllRoutes(conn, 0, 10).routes)
+        assertEquals(listOf(route0, route1, route2), db.routes.searchRoutes(conn, 0, 10).routes)
     }
 
     @Test
     override fun `getAllRoutes with no created routes returns empty list`(): Unit = db.execute { conn ->
-        assertEquals(emptyList(), db.routes.getAllRoutes(conn, 0, 10).routes)
+        assertEquals(emptyList(), db.routes.searchRoutes(conn, 0, 10).routes)
     }
 
     @Test
@@ -91,7 +91,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
         source.routes[2] = route1
         source.routes[3] = route2
 
-        assertEquals(listOf(route1, route2), db.routes.getAllRoutes(conn, 1, 10).routes)
+        assertEquals(listOf(route1, route2), db.routes.searchRoutes(conn, 1, 10).routes)
     }
 
     @Test
@@ -106,7 +106,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
         source.routes[2] = route1
         source.routes[3] = route2
 
-        assertEquals(listOf(route0, route1), db.routes.getAllRoutes(conn, 0, 2).routes)
+        assertEquals(listOf(route0, route1), db.routes.searchRoutes(conn, 0, 2).routes)
     }
 
     // hasRoute

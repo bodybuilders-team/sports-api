@@ -7,6 +7,7 @@ import pt.isel.ls.sports.database.sections.routes.RoutesResponse
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.services.AbstractServices
 import pt.isel.ls.sports.services.exceptions.AuthenticationException
+import pt.isel.ls.sports.services.exceptions.AuthorizationException
 
 /**
  * Routes services. Implements methods regarding routes.
@@ -69,12 +70,33 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
      * @throws InvalidArgumentException if [skip] is invalid
      * @throws InvalidArgumentException if [limit] is invalid
      */
-    fun getAllRoutes(skip: Int, limit: Int): RoutesResponse {
+    fun searchRoutes(
+        skip: Int,
+        limit: Int,
+        startLocation: String? = null,
+        endLocation: String? = null
+    ): RoutesResponse {
         validateSkip(skip)
         validateLimit(limit, LIMIT_RANGE)
 
         return db.execute { conn ->
-            db.routes.getAllRoutes(conn, skip, limit)
+            db.routes.searchRoutes(conn, skip, limit, startLocation, endLocation)
+        }
+    }
+
+    fun updateRoute(rid: Int, token: String, startLocation: String?, endLocation: String?, distance: Double?): Boolean {
+        validateRid(rid)
+        if (distance != null && Route.isValidDistance(distance))
+            throw InvalidArgumentException("Invalid distance: $distance")
+
+        return db.execute { conn ->
+            val uid = authenticate(conn, token)
+
+            val route = db.routes.getRoute(conn, rid)
+            if (route.uid != uid)
+                throw AuthorizationException("You are not allowed to update this route.")
+
+            db.routes.updateRoute(conn, rid, startLocation, endLocation)
         }
     }
 

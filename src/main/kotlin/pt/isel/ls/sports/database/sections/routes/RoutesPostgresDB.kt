@@ -1,10 +1,12 @@
 package pt.isel.ls.sports.database.sections.routes
 
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.utils.getPaginatedQuery
 import pt.isel.ls.sports.domain.Route
 import java.sql.Connection
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -43,6 +45,31 @@ class RoutesPostgresDB : RoutesDB {
         return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
     }
 
+    override fun updateRoute(conn: ConnectionDB, rid: Int, startLocation: String?, endLocation: String?): Boolean {
+        if (!hasRoute(conn, rid))
+            throw NotFoundException("Route not found.")
+
+        if (startLocation == null && endLocation == null)
+            throw InvalidArgumentException("Start or end location must be specified.")
+
+        val stm = conn
+            .getPostgresConnection()
+            .prepareStatement(
+                """
+                    UPDATE routes
+                    SET start_location = COALESCE($1, start_location),
+                    end_location= COALESCE($2, end_location)
+                    where id = ?
+                """.trimIndent()
+            )
+
+        stm.setString(1, startLocation)
+        stm.setString(2, endLocation)
+        stm.setInt(3, rid)
+
+        return stm.executeUpdate() == 1
+    }
+
     override fun getRoute(
         conn: ConnectionDB,
         rid: Int
@@ -58,11 +85,19 @@ class RoutesPostgresDB : RoutesDB {
             throw NotFoundException("Route with id $rid not found")
     }
 
-    override fun getAllRoutes(
+    override fun searchRoutes(
         conn: ConnectionDB,
         skip: Int,
-        limit: Int
+        limit: Int,
+        startLocation: String?,
+        endLocation: String?
     ): RoutesResponse {
+
+        val where = if (startLocation != null || endLocation != null) "WHERE" else ""
+        val startLocationQuery = if (startLocation != null) "start_location ILIKE ?" else ""
+        val and = if (startLocation != null) "AND" else ""
+        val endLocationQuery = if (endLocation != null) "end_location ILIKE ?" else ""
+
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
@@ -70,25 +105,21 @@ class RoutesPostgresDB : RoutesDB {
                     """
                 SELECT *
                 FROM routes
+                $where $startLocationQuery $and $endLocationQuery
                     """.trimIndent()
                 )
             )
 
-        stm.setInt(1, skip)
-        stm.setInt(2, limit)
+        var counter = 1
+        if (startLocation != null)
+            stm.setString(counter++, "%$startLocation%")
+        if (endLocation != null)
+            stm.setString(counter++, "%$endLocation%")
 
-        val rs = stm.executeQuery()
-        val routes = mutableListOf<Route>()
+        stm.setInt(counter++, skip)
+        stm.setInt(counter, limit)
 
-        rs.next()
-        val totalCount = rs.getInt("totalCount")
-
-        if (rs.getObject("id") != null)
-            do {
-                routes.add(getRouteFromTable(rs))
-            } while (rs.next())
-
-        return RoutesResponse(routes, totalCount)
+        return getRoutesResponse(stm)
     }
 
     override fun hasRoute(
@@ -136,6 +167,27 @@ class RoutesPostgresDB : RoutesDB {
 
             stm.setInt(1, rid)
             return stm.executeQuery()
+        }
+
+        /**
+         * Gets a list of routes returned from the execution of the statement [stm].
+         *
+         * @param stm statement
+         * @return [RoutesResponse] with the list of Routes
+         */
+        private fun getRoutesResponse(stm: PreparedStatement): RoutesResponse {
+            val rs = stm.executeQuery()
+            val routes = mutableListOf<Route>()
+
+            rs.next()
+            val totalCount = rs.getInt("totalCount")
+
+            if (rs.getObject("id") != null)
+                do {
+                    routes.add(getRouteFromTable(rs))
+                } while (rs.next())
+
+            return RoutesResponse(routes, totalCount)
         }
     }
 }

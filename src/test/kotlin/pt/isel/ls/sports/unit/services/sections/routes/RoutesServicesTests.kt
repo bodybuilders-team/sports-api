@@ -104,25 +104,25 @@ class RoutesServicesTests : AbstractServicesTests() {
         db.routes.createNewRoute(conn, "Chelas", "Odivelas", 0.15, 1)
         db.routes.createNewRoute(conn, "Lisboa", "Chelas", 0.15, 1)
 
-        assertEquals(listOf(route0, route1, route2), services.routes.getAllRoutes(0, 10).routes)
+        assertEquals(listOf(route0, route1, route2), services.routes.searchRoutes(0, 10).routes)
     }
 
     @Test
     fun `getAllRoutes with no created routes returns empty list`() {
-        assertEquals(emptyList(), services.routes.getAllRoutes(0, 10).routes)
+        assertEquals(emptyList(), services.routes.searchRoutes(0, 10).routes)
     }
 
     @Test
     fun `getAllRoutes throws InvalidArgumentException if the skip is invalid`() {
         assertFailsWith<InvalidArgumentException> {
-            services.routes.getAllRoutes(-5, 10)
+            services.routes.searchRoutes(-5, 10)
         }
     }
 
     @Test
     fun `getAllRoutes throws InvalidArgumentException if the limit is invalid`() {
         assertFailsWith<InvalidArgumentException> {
-            services.routes.getAllRoutes(0, -5)
+            services.routes.searchRoutes(0, -5)
         }
     }
 }

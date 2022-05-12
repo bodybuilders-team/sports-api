@@ -29,6 +29,10 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         return id
     }
 
+    override fun updateActivity(conn: ConnectionDB, aid: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun getActivity(conn: ConnectionDB, aid: Int): Activity =
         source.activities[aid] ?: throw NotFoundException("Activity with id $aid not found")
 
@@ -48,8 +52,8 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         val activities = source.activities
             .filter {
                 it.value.sid == sid &&
-                    (date == null || it.value.date == date) &&
-                    (rid == null || it.value.rid == rid)
+                        (date == null || it.value.date == date) &&
+                        (rid == null || it.value.rid == rid)
             }
             .values.toList()
             .sortedWith(

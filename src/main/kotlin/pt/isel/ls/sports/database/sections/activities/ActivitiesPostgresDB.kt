@@ -54,6 +54,10 @@ class ActivitiesPostgresDB : ActivitiesDB {
         return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
     }
 
+    override fun updateActivity(conn: ConnectionDB, aid: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun getActivity(
         conn: ConnectionDB,
         aid: Int

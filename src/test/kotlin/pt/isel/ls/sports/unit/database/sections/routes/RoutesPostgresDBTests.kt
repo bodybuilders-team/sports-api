@@ -77,14 +77,14 @@ class RoutesPostgresDBTests : AppPostgresDBTests(), RoutesDBTests {
             Route(3, "Lisboa", "Porto", 1.5, 3)
         )
 
-        assertEquals(routes, db.routes.getAllRoutes(conn, 0, 10).routes)
+        assertEquals(routes, db.routes.searchRoutes(conn, 0, 10).routes)
     }
 
     @Test
     override fun `getAllRoutes with no created routes returns empty list`() {
         db.reset()
         db.execute { conn ->
-            assertEquals(emptyList(), db.routes.getAllRoutes(conn, 0, 10).routes)
+            assertEquals(emptyList(), db.routes.searchRoutes(conn, 0, 10).routes)
         }
     }
 
@@ -95,7 +95,7 @@ class RoutesPostgresDBTests : AppPostgresDBTests(), RoutesDBTests {
             Route(3, "Lisboa", "Porto", 1.5, 3)
         )
 
-        assertEquals(routes, db.routes.getAllRoutes(conn, 1, 10).routes)
+        assertEquals(routes, db.routes.searchRoutes(conn, 1, 10).routes)
     }
 
     @Test
@@ -105,7 +105,7 @@ class RoutesPostgresDBTests : AppPostgresDBTests(), RoutesDBTests {
             Route(2, "Chelas", "Odivelas", 0.15, 2)
         )
 
-        assertEquals(routes, db.routes.getAllRoutes(conn, 0, 2).routes)
+        assertEquals(routes, db.routes.searchRoutes(conn, 0, 2).routes)
     }
 
     // hasRoute

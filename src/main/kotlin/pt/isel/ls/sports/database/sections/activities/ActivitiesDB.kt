@@ -34,6 +34,8 @@ interface ActivitiesDB {
         rid: Int? = null
     ): Int
 
+    fun updateActivity(conn: ConnectionDB, aid: Int): Boolean
+
     /**
      * Gets the detailed information of an activity.
      *

@@ -26,16 +26,22 @@ class RoutesMemoryDB(private val source: AppMemoryDBSource) : RoutesDB {
         return id
     }
 
+    override fun updateRoute(conn: ConnectionDB, rid: Int, startLocation: String?, endLocation: String?): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun getRoute(
         conn: ConnectionDB,
         rid: Int
     ): Route =
         source.routes[rid] ?: throw NotFoundException("Route with id $rid not found")
 
-    override fun getAllRoutes(
+    override fun searchRoutes(
         conn: ConnectionDB,
         skip: Int,
-        limit: Int
+        limit: Int,
+        startLocation: String?,
+        endLocation: String?
     ): RoutesResponse = RoutesResponse(
         routes = source.routes
             .values.toList()
