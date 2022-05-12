@@ -41,7 +41,7 @@ class ActivitiesServicesTests : AbstractServicesTests() {
     }
 
     @Test
-    fun `createNewActivity throws InvalidArgumentException if sid is not positive`(): Unit = db.execute { conn ->
+    fun `createNewActivity throws InvalidArgumentException if sid is negative`(): Unit = db.execute { conn ->
 
         val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
@@ -59,7 +59,7 @@ class ActivitiesServicesTests : AbstractServicesTests() {
     }
 
     @Test
-    fun `createNewActivity throws InvalidArgumentException if rid is not positive`(): Unit = db.execute { conn ->
+    fun `createNewActivity throws InvalidArgumentException if rid is negative`(): Unit = db.execute { conn ->
 
         val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)

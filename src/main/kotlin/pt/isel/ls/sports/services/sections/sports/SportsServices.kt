@@ -131,7 +131,6 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
     companion object {
         private val LIMIT_RANGE = 0..100
 
-        // TODO: 12/05/2022 Test
         /**
          * Validates a sport name.
          *
@@ -145,7 +144,6 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
                 )
         }
 
-        // TODO: 12/05/2022 Test
         /**
          * Validates a sport description.
          *

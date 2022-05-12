@@ -298,8 +298,15 @@ paths:
     get:
       tags:
         - Sports
-      summary: Gets all sports
+      summary: Search for sports
       parameters:
+        - name: name
+          in: query
+          description: Sport name
+          required: false
+          schema:
+            type: string
+
         - name: skip
           in: query
           description: Number of entities to skip
@@ -345,6 +352,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sport'
+        400:
+          description: Invalid sport id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+        404:
+          description: Sport was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+    patch:
+      tags:
+        - Sports
+      summary: Updates a sport by its id
+      parameters:
+        - name: id
+          in: path
+          description: Sport id
+          required: true
+          schema:
+            type: integer
+            default: 1
+
+      requestBody:
+        description: New sport information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSportRequest'
+
+      responses:
+        201:
+          description: Sport was updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateSportResponse'
         400:
           description: Invalid sport id
           content:
@@ -778,6 +828,15 @@ components:
           default: 1
           description: Sport Id
 
+    UpdateSportResponse:
+      type: object
+      required:
+        - modified
+      properties:
+        modified:
+          type: boolean
+          description: True if the sport was modified
+
     CreateActivityResponse:
       type: object
       required:
@@ -887,6 +946,19 @@ components:
         description:
           type: string
           description: Sport Description
+          example: andre@pascoa.org
+
+    UpdateSportRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: New sport name
+          example: Powerlifting
+
+        description:
+          type: string
+          description: New sport Description
           example: andre@pascoa.org
 
     ActivityUser:

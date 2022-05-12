@@ -4,8 +4,8 @@ TODO: 26/03/2022 Add more tests:
     - database/utils
     - api/utils
     - update sport integration tests
-TODO: 12/05/2022 Review services tests
-TODO: 12/05/2022 Review integration tests
+TODO: 12/05/2022 Add integration tests:
+    - Some activities routes need more tests
 TODO: 12/05/2022 Review openAPI documentation
 TODO: 07/04/2022 Double check all log levels so they are appropriate, and add more logs
 TODO: 12/05/2022 Change some 404 Errors to 400, as the professor said

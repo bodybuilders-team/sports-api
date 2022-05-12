@@ -7,6 +7,7 @@ import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.domain.Sport
 import pt.isel.ls.sports.services.exceptions.AuthenticationException
 import pt.isel.ls.sports.services.exceptions.AuthorizationException
+import pt.isel.ls.sports.services.sections.sports.SportsServices
 import pt.isel.ls.sports.unit.services.AbstractServicesTests
 import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
@@ -251,6 +252,34 @@ class SportsServicesTests : AbstractServicesTests() {
 
         assertFailsWith<AuthorizationException> {
             services.sports.updateSport(sid, user2.token, "new name", "new desc")
+        }
+    }
+
+    // validateName
+
+    @Test
+    fun `validateName does not throw if the sport name is valid`() {
+        SportsServices.validateName("valid name")
+    }
+
+    @Test
+    fun `validateName throws InvalidArgumentException if the sport name is invalid`() {
+        assertFailsWith<InvalidArgumentException> {
+            SportsServices.validateName("a".repeat(Sport.MAX_NAME_LENGTH + 1))
+        }
+    }
+
+    // validateDescription
+
+    @Test
+    fun `validateDescription does not throw if the sport description is valid`() {
+        SportsServices.validateDescription("valid description")
+    }
+
+    @Test
+    fun `validateDescription throws InvalidArgumentException if the sport description is invalid`() {
+        assertFailsWith<InvalidArgumentException> {
+            SportsServices.validateDescription("a".repeat(Sport.MAX_DESCRIPTION_LENGTH + 1))
         }
     }
 }
