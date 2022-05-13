@@ -1,7 +1,8 @@
 import apiFetch from "../../js/apiFetch.js";
 import Sport from "../../components/sports/Sport.js";
 import {LogError} from "../../js/errorUtils.js";
-import {getQuerySkipLimit} from "../../js/utils.js";
+import {getQuerySkipLimit, reloadHash} from "../../js/utils.js";
+import {br, div} from "../../js/dom/domTags.js";
 
 /**
  * Sport details page.
@@ -24,9 +25,61 @@ async function SportPage(state) {
     activitiesData.skip = skip;
     activitiesData.limit = limit;
 
+    /**
+     * Updates a sport.
+     * @param event form event
+     */
+    async function updateSport(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        const name = form.querySelector("#newSportName").value;
+        const description = form.querySelector("#newSportDescription").value;
+
+        const token = window.localStorage.getItem("token");
+
+        const res = await fetch(
+            "http://localhost:8888/api/sports/" + id,
+            {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({name, description})
+            }
+        );
+
+        const json = await res.json();
+
+        if (res.ok) {
+            reloadHash();
+            return;
+        }
+
+        const alertBox = form.parentNode.querySelector("#alert_box");
+        alertBox
+            ? alertBox.innerHTML = json.extraInfo
+            : await form.parentNode.appendChild(
+                await div(
+                    br(),
+                    div(
+                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
+                        json.extraInfo
+                    )
+                )
+            );
+    }
+
     return Sport(
         state,
-        {id: sport.id, name: sport.name, description: sport.description, activitiesData}
+        {
+            id: sport.id,
+            name: sport.name,
+            description: sport.description,
+            activitiesData,
+            onUpdateSubmit: updateSport
+        }
     );
 }
 

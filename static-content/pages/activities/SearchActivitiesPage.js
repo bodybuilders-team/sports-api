@@ -1,9 +1,12 @@
 import SearchActivitiesForm from "../../components/activities/SearchActivitiesForm.js";
-import {br, div} from "../../js/dom/domTags.js";
+import {br, div, h1} from "../../js/dom/domTags.js";
 import FetchedPaginatedCollection from "../../components/pagination/FetchedPaginatedCollection.js";
 import Activities from "../../components/activities/Activities.js";
 import {InvalidSearchParamsError} from "../../js/errorUtils.js";
 import {validate} from "../../js/validationUtils.js";
+import apiFetch from "../../js/apiFetch.js";
+import CreateActivity from "../../components/activities/CreateActivity.js";
+import {reloadHash} from "../../js/utils.js";
 
 /**
  * Search activities page.
@@ -75,9 +78,70 @@ async function SearchActivitiesPage(state) {
         window.location.href = "#activities?" + searchParams.toString();
     }
 
+    const sports = await apiFetch("/sports");
+    const routes = await apiFetch("/routes");
+
+    /**
+     * Creates an activity.
+     * @param event form event
+     */
+    async function createActivity(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        const sport = form.querySelector("#activitySport").value;
+        const date = form.querySelector("#activityDate").value;
+        const duration = form.querySelector("#activityDuration").value;
+        const route = form.querySelector("#activityRoute").value;
+
+        const token = window.localStorage.getItem("token");
+
+        const res = await fetch(
+            "http://localhost:8888/api/activities/",
+            {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({sport, date, duration, route})
+            }
+        );
+
+        const json = await res.json();
+
+        if (res.ok) {
+            reloadHash();
+            return;
+        }
+
+        const alertBox = form.parentNode.querySelector("#alert_box");
+        alertBox
+            ? alertBox.innerHTML = json.extraInfo
+            : await form.parentNode.appendChild(
+                await div(
+                    br(),
+                    div(
+                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
+                        json.extraInfo
+                    )
+                )
+            );
+    }
 
     return div(
-        SearchActivitiesForm(state, {onSubmit: searchActivities, activitiesProps: activitiesProps}),
+        h1({class: "app_icon"}, "Activities"),
+        CreateActivity(state, {onCreateSubmint: createActivity}),
+        br(),
+        SearchActivitiesForm(
+            state,
+            {
+                onSubmit: searchActivities,
+                activitiesProps: activitiesProps,
+                sports: sports,
+                routes: routes
+            }
+        ),
         br(),
         (activitiesProps != null)
             ? FetchedPaginatedCollection(

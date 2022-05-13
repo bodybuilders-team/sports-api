@@ -47,7 +47,6 @@ async function RegisterPage(state) {
                     )
                 )
             );
-
     }
 
     return RegisterForm(

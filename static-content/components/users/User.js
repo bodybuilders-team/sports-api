@@ -9,7 +9,7 @@ import PaginatedCollection from "../pagination/PaginatedCollection.js";
  *
  * @param {Object} props - component properties
  * @param {number} props.id - user id
- * @param {string} props.name - user name
+ * @param {string} props.name - username
  * @param {string} props.email - user email
  * @param {Object} props.activitiesData
  * @param {number} props.activitiesData.skip - activities skip

@@ -1,6 +1,7 @@
-import {div, h1, h3} from "../../js/dom/domTags.js";
+import {br, div, h1, h3} from "../../js/dom/domTags.js";
 import Activities from "../activities/Activities.js";
 import PaginatedCollection from "../pagination/PaginatedCollection.js";
+import EditSport from "./EditSport.js";
 
 /**
  * Sport details page.
@@ -16,6 +17,7 @@ import PaginatedCollection from "../pagination/PaginatedCollection.js";
  * @param {number} props.activitiesData.limit - activities limit
  * @param {PropActivity[]} props.activitiesData.activities - activities
  * @param {number} props.activitiesData.totalCount - total number of activities
+ * @param {OnSubmitCallback} props.onUpdateSubmit - on Submit event callback
  *
  * @return Promise<HTMLElement>
  */
@@ -28,8 +30,11 @@ async function Sport(state, props) {
             {class: "card user_card col-6"},
             div(
                 {class: "card-body"},
-                h3("Name: ", props.name),
-                h3("Description: ", props.description),
+                h3({id: "sportName"}, "Name: ", props.name),
+                h3({id: "sportDescription"}, "Description: ", props.description),
+                br(),
+                EditSport(state, props),
+                br(),
                 (props.activitiesData.activities.length > 0)
                     ? div(
                         h3("Activities:"),

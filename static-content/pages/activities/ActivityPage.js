@@ -1,6 +1,8 @@
 import apiFetch from "../../js/apiFetch.js";
 import Activity from "../../components/activities/Activity.js";
 import {LogError} from "../../js/errorUtils.js";
+import {br, div} from "../../js/dom/domTags.js";
+import {reloadHash} from "../../js/utils.js";
 
 /**
  * Activity details page.
@@ -24,6 +26,54 @@ async function ActivityPage(state) {
         ? await apiFetch(`/routes/${activity.rid}`)
         : null;
 
+    /**
+     * Updates an activity.
+     * @param event form event
+     */
+    async function updateActivity(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        const sport = form.querySelector("#newActivitySport").value;
+        const date = form.querySelector("#newActivityDate").value;
+        const duration = form.querySelector("#newActivityDuration").value;
+        const route = form.querySelector("#newActivityRoute").value;
+
+        const token = window.localStorage.getItem("token");
+
+        const res = await fetch(
+            "http://localhost:8888/api/activities/" + id,
+            {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({sport, date, duration, route})
+            }
+        );
+
+        const json = await res.json();
+
+        if (res.ok) {
+            reloadHash();
+            return;
+        }
+
+        const alertBox = form.parentNode.querySelector("#alert_box");
+        alertBox
+            ? alertBox.innerHTML = json.extraInfo
+            : await form.parentNode.appendChild(
+                await div(
+                    br(),
+                    div(
+                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
+                        json.extraInfo
+                    )
+                )
+            );
+    }
+
     return Activity(
         state,
         {
@@ -31,7 +81,8 @@ async function ActivityPage(state) {
             date: activity.date,
             duration: activity.duration,
             sport,
-            route
+            route,
+            onUpdateSubmit: updateActivity
         }
     );
 }

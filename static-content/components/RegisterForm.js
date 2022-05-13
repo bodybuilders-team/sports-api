@@ -22,20 +22,23 @@ async function RegisterForm(state, props) {
                 input({
                     type: "text", id: "username", name: "username",
                     class: "form-control",
+                    placeholder: "Enter your name",
                     required: true
                 }),
 
                 label({for: "email", class: "form-label"}, "Email"),
                 input({
                     type: "email", id: "email",
-                    class: "form-control"
+                    class: "form-control",
+                    placeholder: "Enter your email"
                 }),
 
                 label({for: "password", class: "form-label"}, "Password"),
                 input({
                     type: "password", id: "password", pattern: "[0-9a-fA-F]{8,}",
                     title: "Enter a password with more than 8 hexadecimal digits",
-                    class: "form-control"
+                    class: "form-control",
+                    placeholder: "Enter your password"
                 }),
             ),
             br(),

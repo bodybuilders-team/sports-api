@@ -52,13 +52,15 @@ class SportsPostgresDB : SportsDB {
                     UPDATE sports
                     SET name = COALESCE(?, name),
                         description= COALESCE(?, description)
-                    WHERE id = ?
+                    WHERE id = ? AND (name != ? OR description != ?)
                 """.trimIndent()
             )
 
         stm.setString(1, name)
         stm.setString(2, description)
         stm.setInt(3, sid)
+        stm.setString(4, name)
+        stm.setString(5, description)
 
         return stm.executeUpdate() == 1
     }

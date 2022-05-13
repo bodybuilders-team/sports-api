@@ -1,7 +1,7 @@
 import {InvalidSearchParamsError} from "./errorUtils.js";
 
 /**
- * Creates an array with range from startNumber to endNumber (inclusive)
+ * Creates an array with range from startNumber to endNumber (inclusive).
  *
  * @param {number} startNumber - Starting range number
  * @param {number} endNumber - Ending range number (inclusive)
@@ -14,7 +14,7 @@ export function range(startNumber, endNumber) {
 }
 
 /**
- * Gets skip and limit from query search parameters
+ * Gets skip and limit from query search parameters.
  *
  * @param {Object} query - query object with search parameters
  * @param {number} defaultSkip - default skip if it does not exist in query
@@ -28,10 +28,15 @@ export function getQuerySkipLimit(query, defaultSkip, defaultLimit) {
     limit = (limit != null) ? parseInt(limit) : defaultLimit;
 
     if (skip == null || Number.isNaN(skip) || skip < 0)
-        throw new InvalidSearchParamsError({error: `Skip must be a valid positive number, not ${query.skip}`})
+        throw new InvalidSearchParamsError({error: `Skip must be a valid positive number, not ${query.skip}`});
 
     if (limit == null || Number.isNaN(limit) || limit < 0)
-        throw new InvalidSearchParamsError({error: `Limit must be a valid positive number, not ${query.limit}`})
+        throw new InvalidSearchParamsError({error: `Limit must be a valid positive number, not ${query.limit}`});
 
-    return {skip, limit}
+    return {skip, limit};
+}
+
+// TODO comment
+export function reloadHash() {
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
 }

@@ -1,4 +1,5 @@
-import {div, h1, h3} from "../../js/dom/domTags.js";
+import {br, div, h1, h3} from "../../js/dom/domTags.js";
+import EditRoute from "./EditRoute.js";
 
 /**
  * Route details component.
@@ -10,6 +11,7 @@ import {div, h1, h3} from "../../js/dom/domTags.js";
  * @param {string} props.startLocation route start location
  * @param {string} props.endLocation route end location
  * @param {number} props.distance route distance
+ * @param {OnSubmitCallback} props.onUpdateSubmit - on Submit event callback
  *
  * @return Promise<HTMLElement>
  */
@@ -22,9 +24,11 @@ async function Route(state, props) {
             {class: "card user_card col-6"},
             div(
                 {class: "card-body"},
-                h3("Start Location: ", props.startLocation),
-                h3("End Location: ", props.endLocation),
-                h3("Distance: ", props.distance.toString())
+                h3({id: "routeStartLocation"}, "Start Location: ", props.startLocation),
+                h3({id: "routeEndLocation"}, "End Location: ", props.endLocation),
+                h3({id: "routeDistance"}, "Distance: ", props.distance.toString()),
+                br(),
+                EditRoute(state, props)
             )
         )
     );

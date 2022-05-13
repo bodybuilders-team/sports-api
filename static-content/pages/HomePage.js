@@ -9,11 +9,13 @@ import {a, br, div, h1, img, p, strong} from "../js/dom/domTags.js";
 async function HomePage(state) {
     return div(
         h1({class: "app_icon"}, "Home"),
-        strong(
-            "Authors: ",
-            a({href: "https://github.com/Andre-J3sus"}, "André Jesus"), ", ",
-            a({href: "https://github.com/devandrepascoa"}, "André Páscoa"), " and ",
-            a({href: "https://github.com/Nyckoka"}, "Nyckollas Brandão")
+        p(
+            strong(
+                "Authors: ",
+                a({href: "https://github.com/Andre-J3sus"}, "André Jesus"), ", ",
+                a({href: "https://github.com/devandrepascoa"}, "André Páscoa"), " and ",
+                a({href: "https://github.com/Nyckoka"}, "Nyckollas Brandão")
+            )
         ),
         p(
             "Project GitHub repository ",

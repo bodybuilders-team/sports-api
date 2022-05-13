@@ -7,7 +7,7 @@
  */
 export function validate(object, schema) {
     if (object == null)
-        return {isValid: false, error: "Cbject cannot null"};
+        return {isValid: false, error: "Object cannot null"};
 
     if (schema == null)
         return {isValid: false, error: "Schema cannot null"};
