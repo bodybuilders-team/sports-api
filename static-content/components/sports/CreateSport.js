@@ -28,7 +28,7 @@ async function CreateSport(state, props) {
             {class: "collapse w-50 center", id: "createSport"},
             br(),
             div(
-                {class: "card card-body"},
+                {class: "card card-body bg-light"},
                 h4("Create Sport"),
                 form(
                     {onSubmit: props.onCreateSubmint},

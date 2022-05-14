@@ -1,5 +1,5 @@
 import LoginForm from "../components/LoginForm.js";
-import {br, div} from "../js/dom/domTags.js";
+import {alertBoxWithError} from "../js/utils.js";
 
 /**
  * Login page.
@@ -31,23 +31,11 @@ async function LoginPage(state) {
         );
         const json = await res.json();
 
-        if (res.ok)
+        if (res.ok) {
             window.localStorage.setItem("token", json.token);
-
-        const alertBox = form.parentNode.querySelector("#alert_box");
-        alertBox
-            ? alertBox.innerHTML = json.extraInfo
-            : await form.parentNode.appendChild(
-                await div(
-                    br(),
-                    div(
-                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
-                        json.extraInfo
-                    )
-                )
-            );
-
-        window.location.href = "home";
+            window.location.href = "#home";
+        } else
+            await alertBoxWithError(state, form, json);
     }
 
     return LoginForm(

@@ -1,8 +1,7 @@
 import apiFetch from "../../js/apiFetch.js";
 import Route from "../../components/routes/Route.js";
 import {LogError} from "../../js/errorUtils.js";
-import {br, div} from "../../js/dom/domTags.js";
-import {reloadHash} from "../../js/utils.js";
+import {alertBoxWithError, reloadHash} from "../../js/utils.js";
 
 /**
  * Route details page.
@@ -27,7 +26,7 @@ async function RoutePage(state) {
 
         const startLocation = form.querySelector("#newRouteStartLocation").value;
         const endLocation = form.querySelector("#newRouteEndLocation").value;
-        const distance = form.querySelector("#newRouteDistance").value; // TODO fix
+        const distance = form.querySelector("#newRouteDistance").value;
 
         const token = window.localStorage.getItem("token");
 
@@ -39,30 +38,16 @@ async function RoutePage(state) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({startLocation, endLocation, distance})
+                body: JSON.stringify({startLocation, endLocation, distance: Number(distance)})
             }
         );
 
         const json = await res.json();
 
-        if (res.ok) {
-            reloadHash();
-            return;
-        }
-
-        // TODO Improve alertBox
-        const alertBox = form.parentNode.querySelector("#alert_box");
-        alertBox
-            ? alertBox.innerHTML = json.extraInfo
-            : await form.parentNode.appendChild(
-                await div(
-                    br(),
-                    div(
-                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
-                        json.extraInfo
-                    )
-                )
-            );
+        if (res.ok)
+            reloadHash()
+        else
+            await alertBoxWithError(state, form, json);
     }
 
     return Route(

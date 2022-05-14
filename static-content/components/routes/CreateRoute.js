@@ -28,7 +28,7 @@ async function CreateRoute(state, props) {
             {class: "collapse w-50 center", id: "createRoute"},
             br(),
             div(
-                {class: "card card-body"},
+                {class: "card card-body bg-light"},
                 h4("Create Route"),
                 form(
                     {onSubmit: props.onCreateSubmint},

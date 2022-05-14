@@ -2,7 +2,7 @@ import Routes from "../../components/routes/Routes.js";
 import FetchedPaginatedCollection from "../../components/pagination/FetchedPaginatedCollection.js";
 import {br, div, h1} from "../../js/dom/domTags.js";
 import CreateRoute from "../../components/routes/CreateRoute.js";
-import {reloadHash} from "../../js/utils.js";
+import {alertBoxWithError, reloadHash} from "../../js/utils.js";
 
 /**
  * Routes page.
@@ -22,7 +22,7 @@ async function RoutesPage(state) {
 
         const startLocation = form.querySelector("#routeStartLocation").value;
         const endLocation = form.querySelector("#routeEndLocation").value;
-        const distance = form.querySelector("#routeDistance").value; // TODO fix
+        const distance = form.querySelector("#routeDistance").value;
 
         const token = window.localStorage.getItem("token");
 
@@ -34,35 +34,22 @@ async function RoutesPage(state) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({startLocation, endLocation, distance})
+                body: JSON.stringify({startLocation, endLocation, distance: Number(distance)})
             }
         );
 
         const json = await res.json();
 
-        if (res.ok) {
-            reloadHash();
-            return;
-        }
-
-        const alertBox = form.parentNode.querySelector("#alert_box");
-        alertBox
-            ? alertBox.innerHTML = json.extraInfo
-            : await form.parentNode.appendChild(
-                await div(
-                    br(),
-                    div(
-                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
-                        json.extraInfo
-                    )
-                )
-            );
+        if (res.ok)
+            reloadHash()
+        else
+            await alertBoxWithError(state, form, json);
     }
 
     return div(
+        h1({class: "app_icon"}, "Routes"),
         CreateRoute(state, {onCreateSubmint: createRoute}),
         br(),
-        h1({class: "app_icon"}, "Routes"),
         FetchedPaginatedCollection(state,
             {
                 defaultSkip: 0,

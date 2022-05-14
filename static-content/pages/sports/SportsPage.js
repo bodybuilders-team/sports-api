@@ -1,7 +1,7 @@
 import Sports from "../../components/sports/Sports.js";
 import FetchedPaginatedCollection from "../../components/pagination/FetchedPaginatedCollection.js";
 import {br, div, h1} from "../../js/dom/domTags.js";
-import {reloadHash} from "../../js/utils.js";
+import {alertBoxWithError, reloadHash} from "../../js/utils.js";
 import CreateSport from "../../components/sports/CreateSport.js";
 
 /**
@@ -39,23 +39,10 @@ async function SportsPage(state) {
 
         const json = await res.json();
 
-        if (res.ok) {
-            reloadHash();
-            return;
-        }
-
-        const alertBox = form.parentNode.querySelector("#alert_box");
-        alertBox
-            ? alertBox.innerHTML = json.extraInfo
-            : await form.parentNode.appendChild(
-                await div(
-                    br(),
-                    div(
-                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
-                        json.extraInfo
-                    )
-                )
-            );
+        if (res.ok)
+            reloadHash()
+        else
+            await alertBoxWithError(state, form, json);
     }
 
     return div(

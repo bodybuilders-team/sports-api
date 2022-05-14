@@ -21,7 +21,7 @@ async function Route(state, props) {
         {class: "row justify-content-evenly"},
         h1({class: "app_icon"}, `Route ${props.id}`),
         div(
-            {class: "card user_card col-6"},
+            {class: "card user_card col-6 bg-light"},
             div(
                 {class: "card-body"},
                 h3({id: "routeStartLocation"}, "Start Location: ", props.startLocation),

@@ -37,7 +37,7 @@ async function SearchActivitiesForm(state, props) {
     }
 
     return div(
-        {class: "card card-body w-50 center"},
+        {class: "card card-body w-50 center bg-light"},
         h1("Search for an Activity"),
         hr(),
         form(

@@ -28,7 +28,7 @@ async function CreateActivity(state, props) {
             {class: "collapse w-50 center", id: "createActivity"},
             br(),
             div(
-                {class: "card card-body"},
+                {class: "card card-body bg-light"},
                 h4("Create Activity"),
                 form(
                     {onSubmit: props.onCreateSubmint},

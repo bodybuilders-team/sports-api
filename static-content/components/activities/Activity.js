@@ -1,5 +1,6 @@
 import {a, br, div, h1, h3, h5} from "../../js/dom/domTags.js";
 import EditActivity from "./EditActivity.js";
+import DeleteActivity from "./DeleteActivity.js";
 
 /**
  * @typedef PropRoute
@@ -19,6 +20,7 @@ import EditActivity from "./EditActivity.js";
  * @param {string} props.sport.name - activity sport name
  * @param {?PropRoute=} props.route - activity route
  * @param {OnSubmitCallback} props.onUpdateSubmit - on Submit event callback
+ * @param {OnSubmitCallback} props.onDeleteSubmit - on Submit event callback
  *
  * @return Promise<HTMLElement>
  */
@@ -28,7 +30,7 @@ async function Activity(state, props) {
         {class: "row justify-content-evenly"},
         h1({class: "app_icon"}, `Activity ${props.id}`),
         div(
-            {class: "card user_card col-6"},
+            {class: "card user_card col-6 bg-light"},
             div(
                 {class: "card-body"},
                 h3({id: "activitySport"}, "Sport: ", a({href: `#sports/${props.sport.id}`}, props.sport.name)),
@@ -38,7 +40,9 @@ async function Activity(state, props) {
                     ? h5({id: "activityRoute"}, "Route: ", a({href: `#routes/${props.route.id}`}, props.route.id.toString()))
                     : undefined,
                 br(),
-                EditActivity(state, props)
+                EditActivity(state, props),
+                br(),
+                DeleteActivity(state, props)
             )
         )
     );

@@ -27,7 +27,7 @@ async function User(state, props) {
         div(
             {class: "card user_card col-6"},
             div(
-                {class: "card-body col justify-content-center"},
+                {class: "card-body col justify-content-center bg-light"},
                 h3("Username: ", props.name),
                 h3("Email: ", props.email),
                 (props.activitiesData.activities.length > 0)

@@ -1,5 +1,5 @@
 import RegisterForm from "../components/RegisterForm.js";
-import {br, div} from "../js/dom/domTags.js";
+import {alertBoxWithError} from "../js/utils.js";
 
 /**
  * Register new user page.
@@ -33,20 +33,9 @@ async function RegisterPage(state) {
         const json = await res.json();
 
         if (res.ok)
-            window.location.href = "login";
-
-        const alertBox = form.parentNode.querySelector("#alert_box");
-        alertBox
-            ? alertBox.innerHTML = json.extraInfo
-            : await form.parentNode.appendChild(
-                await div(
-                    br(),
-                    div(
-                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
-                        json.extraInfo
-                    )
-                )
-            );
+            window.location.href = "#login";
+        else
+            await alertBoxWithError(state, form, json);
     }
 
     return RegisterForm(

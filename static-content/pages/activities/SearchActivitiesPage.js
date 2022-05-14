@@ -6,7 +6,7 @@ import {InvalidSearchParamsError} from "../../js/errorUtils.js";
 import {validate} from "../../js/validationUtils.js";
 import apiFetch from "../../js/apiFetch.js";
 import CreateActivity from "../../components/activities/CreateActivity.js";
-import {reloadHash} from "../../js/utils.js";
+import {alertBoxWithError, reloadHash} from "../../js/utils.js";
 
 /**
  * Search activities page.
@@ -110,23 +110,10 @@ async function SearchActivitiesPage(state) {
 
         const json = await res.json();
 
-        if (res.ok) {
-            reloadHash();
-            return;
-        }
-
-        const alertBox = form.parentNode.querySelector("#alert_box");
-        alertBox
-            ? alertBox.innerHTML = json.extraInfo
-            : await form.parentNode.appendChild(
-                await div(
-                    br(),
-                    div(
-                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
-                        json.extraInfo
-                    )
-                )
-            );
+        if (res.ok)
+            reloadHash()
+        else
+            await alertBoxWithError(state, form, json);
     }
 
     return div(

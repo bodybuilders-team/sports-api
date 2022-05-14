@@ -1,8 +1,7 @@
 import apiFetch from "../../js/apiFetch.js";
 import Activity from "../../components/activities/Activity.js";
 import {LogError} from "../../js/errorUtils.js";
-import {br, div} from "../../js/dom/domTags.js";
-import {reloadHash} from "../../js/utils.js";
+import {alertBoxWithError, reloadHash} from "../../js/utils.js";
 
 /**
  * Activity details page.
@@ -55,23 +54,37 @@ async function ActivityPage(state) {
 
         const json = await res.json();
 
-        if (res.ok) {
-            reloadHash();
-            return;
-        }
+        if (res.ok)
+            reloadHash()
+        else
+            await alertBoxWithError(state, form, json);
+    }
 
-        const alertBox = form.parentNode.querySelector("#alert_box");
-        alertBox
-            ? alertBox.innerHTML = json.extraInfo
-            : await form.parentNode.appendChild(
-                await div(
-                    br(),
-                    div(
-                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
-                        json.extraInfo
-                    )
-                )
-            );
+    /**
+     * Deletes an activity.
+     * @param event form event
+     */
+    async function deleteActivity(event) {
+        event.preventDefault();
+        const form = event.target;
+
+
+        const token = window.localStorage.getItem("token");
+
+        const res = await fetch(
+            "http://localhost:8888/api/activities/" + id,
+            {
+                method: "DELETE",
+                headers: {'Authorization': `Bearer ${token}`}
+            }
+        );
+
+        const json = await res.json();
+
+        if (res.ok)
+            window.location.href = "#activities";
+        else
+            await alertBoxWithError(state, form, json);
     }
 
     return Activity(
@@ -82,7 +95,8 @@ async function ActivityPage(state) {
             duration: activity.duration,
             sport,
             route,
-            onUpdateSubmit: updateActivity
+            onUpdateSubmit: updateActivity,
+            onDeleteSubmit: deleteActivity
         }
     );
 }

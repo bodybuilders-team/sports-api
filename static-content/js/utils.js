@@ -1,4 +1,5 @@
 import {InvalidSearchParamsError} from "./errorUtils.js";
+import AlertBox from "../components/AlertBox.js";
 
 /**
  * Creates an array with range from startNumber to endNumber (inclusive).
@@ -36,7 +37,28 @@ export function getQuerySkipLimit(query, defaultSkip, defaultLimit) {
     return {skip, limit};
 }
 
-// TODO comment
+/**
+ * Dispatches an HashChangeEvent to the window.
+ */
 export function reloadHash() {
     window.dispatchEvent(new HashChangeEvent("hashchange"));
+}
+
+/**
+ * Creates a new AlertBox with the given error in the form element.
+ *
+ * @param {Object} state - application state
+ * @param {HTMLElement} form - form element
+ * @param {Object} error - error object
+ *
+ * @returns Promise<HTMLElement>
+ */
+export async function alertBoxWithError(state, form, error) {
+    const alertBox = form.querySelector("#alert_box");
+    alertBox
+        ? alertBox.innerHTML = error.extraInfo
+        : await form.appendChild(await AlertBox(state, {
+            alertLevel: "warning",
+            message: error.extraInfo
+        }));
 }

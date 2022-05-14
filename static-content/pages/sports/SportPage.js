@@ -1,8 +1,7 @@
 import apiFetch from "../../js/apiFetch.js";
 import Sport from "../../components/sports/Sport.js";
 import {LogError} from "../../js/errorUtils.js";
-import {getQuerySkipLimit, reloadHash} from "../../js/utils.js";
-import {br, div} from "../../js/dom/domTags.js";
+import {alertBoxWithError, getQuerySkipLimit, reloadHash} from "../../js/utils.js";
 
 /**
  * Sport details page.
@@ -52,23 +51,10 @@ async function SportPage(state) {
 
         const json = await res.json();
 
-        if (res.ok) {
-            reloadHash();
-            return;
-        }
-
-        const alertBox = form.parentNode.querySelector("#alert_box");
-        alertBox
-            ? alertBox.innerHTML = json.extraInfo
-            : await form.parentNode.appendChild(
-                await div(
-                    br(),
-                    div(
-                        {id: "alert_box", class: "alert alert-warning", role: "alert"},
-                        json.extraInfo
-                    )
-                )
-            );
+        if (res.ok)
+            reloadHash()
+        else
+            await alertBoxWithError(state, form, json);
     }
 
     return Sport(
