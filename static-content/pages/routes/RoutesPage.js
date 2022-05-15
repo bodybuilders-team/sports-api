@@ -47,7 +47,7 @@ async function RoutesPage(state) {
     }
 
     return div(
-        h1({class: "app_icon"}, "Routes"),
+        h1({class: "app-icon"}, "Routes"),
         CreateRoute(state, {onCreateSubmint: createRoute}),
         br(),
         FetchedPaginatedCollection(state,

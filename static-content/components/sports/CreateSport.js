@@ -6,7 +6,7 @@ import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.j
  * @param state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onCreateSubmint - on Submit event callback
+ * @param {OnSubmitCallback} props.onCreateSubmit - on Submit event callback
  *
  * @return Promise<HTMLElement>
  */
@@ -31,7 +31,7 @@ async function CreateSport(state, props) {
                 {class: "card card-body bg-light"},
                 h4("Create Sport"),
                 form(
-                    {onSubmit: props.onCreateSubmint},
+                    {onSubmit: props.onCreateSubmit},
                     label({for: "sportName", class: "col-form-label"}, "Name"),
                     input({
                         type: "text", id: "sportName", name: "sportName",

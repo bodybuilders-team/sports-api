@@ -117,7 +117,7 @@ async function SearchActivitiesPage(state) {
     }
 
     return div(
-        h1({class: "app_icon"}, "Activities"),
+        h1({class: "app-icon"}, "Activities"),
         CreateActivity(state, {onCreateSubmint: createActivity}),
         br(),
         SearchActivitiesForm(

@@ -21,7 +21,7 @@ async function Routes(state, props) {
         {class: "row justify-content-evenly"},
         ...props.routes.map(route =>
             div(
-                {class: "card user_card col-6 bg-light"},
+                {class: "card user-card col-6 bg-light"},
                 div(
                     {class: "card-body d-flex justify-content-center"},
                     h5({class: "card-title"}, a({href: `#routes/${route.id}`}, `Route ${route.id}`))

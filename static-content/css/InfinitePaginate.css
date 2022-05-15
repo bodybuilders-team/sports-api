@@ -1,0 +1,6 @@
+
+.infinite-paginate-container {
+    height: 100px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

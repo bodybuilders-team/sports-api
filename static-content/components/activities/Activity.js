@@ -28,9 +28,9 @@ async function Activity(state, props) {
 
     return div(
         {class: "row justify-content-evenly"},
-        h1({class: "app_icon"}, `Activity ${props.id}`),
+        h1({class: "app-icon"}, `Activity ${props.id}`),
         div(
-            {class: "card user_card col-6 bg-light"},
+            {class: "card user-card col-6 bg-light"},
             div(
                 {class: "card-body"},
                 h3({id: "activitySport"}, "Sport: ", a({href: `#sports/${props.sport.id}`}, props.sport.name)),

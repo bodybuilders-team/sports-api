@@ -74,6 +74,13 @@ function setAttributes(element, attributes) {
             case "onInput":
                 element.addEventListener("input", value);
                 break;
+            case "style":
+                for(const style in value)
+                    element.style[style] = value[style];
+                break;
+            case "ref":
+                value.resolve(element);
+                break;
             default:
                 element.setAttribute(attribute, value);
         }

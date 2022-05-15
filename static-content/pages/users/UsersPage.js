@@ -10,7 +10,7 @@ import {div, h1} from "../../js/dom/domTags.js";
  */
 async function UsersPage(state) {
     return div(
-        h1({class: "app_icon"}, "Users"),
+        h1({class: "app-icon"}, "Users"),
         FetchedPaginatedCollection(state,
             {
                 defaultSkip: 0,

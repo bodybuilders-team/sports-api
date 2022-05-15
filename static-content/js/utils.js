@@ -56,9 +56,20 @@ export function reloadHash() {
 export async function alertBoxWithError(state, form, error) {
     const alertBox = form.querySelector("#alert_box");
     alertBox
-        ? alertBox.innerHTML = error.extraInfo
+        ? alertBox.textContent = error.extraInfo
         : await form.appendChild(await AlertBox(state, {
             alertLevel: "warning",
-            message: error.extraInfo
+            alertMessage: error.extraInfo
         }));
+}
+
+export function createRef() {
+    let resolve, reject
+
+    let promise = new Promise((_resolve, _reject) => {
+        resolve = _resolve
+        reject = _reject
+    })
+
+    return {current: promise, resolve, reject}
 }

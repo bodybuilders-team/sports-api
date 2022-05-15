@@ -100,7 +100,7 @@ class SportsPostgresDB : SportsDB {
             )
         var counter = 1
         if (name != null)
-            stm.setString(counter++, "%$name%")
+            stm.setString(counter++, "$name%")
 
         stm.setInt(counter++, skip)
         stm.setInt(counter, limit)

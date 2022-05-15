@@ -23,9 +23,9 @@ async function User(state, props) {
 
     return div(
         {class: "row justify-content-evenly"},
-        h1({class: "app_icon"}, `User ${props.id}`),
+        h1({class: "app-icon"}, `User ${props.id}`),
         div(
-            {class: "card user_card col-6"},
+            {class: "card user-card col-6"},
             div(
                 {class: "card-body col justify-content-center bg-light"},
                 h3("Username: ", props.name),

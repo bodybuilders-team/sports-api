@@ -21,7 +21,7 @@ async function Activities(state, props) {
         {class: "row justify-content-evenly"},
         ...props.activities.map(activity =>
             div(
-                {class: "card user_card col-6"},
+                {class: "card user-card col-6"},
                 div(
                     {class: "card-body d-flex justify-content-center"},
                     h5(

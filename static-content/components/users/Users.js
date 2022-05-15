@@ -22,7 +22,7 @@ async function Users(state, props) {
         {class: "row justify-content-evenly"},
         ...props.users.map(user =>
             div(
-                {class: "card user_card col-6 bg-light"},
+                {class: "card user-card col-6 bg-light"},
                 div(
                     {class: "card-body d-flex justify-content-center"},
                     h5({class: "card-title"}, a({href: `#users/${user.id}`}, user.name))
