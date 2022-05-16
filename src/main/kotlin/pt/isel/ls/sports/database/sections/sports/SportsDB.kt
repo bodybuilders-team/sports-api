@@ -24,6 +24,20 @@ interface SportsDB {
     fun createNewSport(conn: ConnectionDB, uid: Int, name: String, description: String? = null): Int
 
     /**
+     * Updates a sport.
+     *
+     * @param conn database Connection
+     * @param sid sport's unique identifier
+     * @param name new name of the sport
+     * @param description new description of the sport
+     *
+     * @return true if the sport was modified, false otherwise
+     * @throws NotFoundException if there's no sport with the [sid]
+     * @throws InvalidArgumentException if [name] and [description] are both null
+     */
+    fun updateSport(conn: ConnectionDB, sid: Int, name: String? = null, description: String? = null): Boolean
+
+    /**
      * Gets a specific sport.
      *
      * @param conn database Connection
@@ -55,18 +69,4 @@ interface SportsDB {
      * @return true if the sport exists, false otherwise
      */
     fun hasSport(conn: ConnectionDB, sid: Int): Boolean
-
-    /**
-     * Updates a sport.
-     *
-     * @param conn database Connection
-     * @param sid sports unique identifier
-     * @param name name of the sport
-     * @param description description of the sport (optional)
-     *
-     * @return true if the sport was modified, false otherwise
-     * @throws NotFoundException if there's no sport with the [sid]
-     * @throws InvalidArgumentException if name and description are both null
-     */
-    fun updateSport(conn: ConnectionDB, sid: Int, name: String? = null, description: String? = null): Boolean
 }

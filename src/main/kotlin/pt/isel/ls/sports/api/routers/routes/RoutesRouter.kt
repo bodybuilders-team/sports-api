@@ -84,12 +84,14 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
 
         val routeRequest = request.decodeBodyAs<UpdateRouteRequest>()
         val modified = services.updateRoute(
-            rid, token, routeRequest.startLocation,
+            rid,
+            token,
+            routeRequest.startLocation,
             routeRequest.endLocation,
             routeRequest.distance
         )
 
-        return Response(CREATED).json(UpdateRouteResponse(modified))
+        return Response(OK).json(UpdateRouteResponse(modified))
     }
 
     /**

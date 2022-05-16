@@ -3,6 +3,7 @@ package pt.isel.ls.sports.database.sections.activities
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.users.UsersPostgresDB.Companion.getUsersResponse
 import pt.isel.ls.sports.database.sections.users.UsersResponse
@@ -54,8 +55,44 @@ class ActivitiesPostgresDB : ActivitiesDB {
         return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
     }
 
-    override fun updateActivity(conn: ConnectionDB, aid: Int): Boolean {
-        TODO("Not yet implemented")
+    override fun updateActivity(
+        conn: ConnectionDB,
+        aid: Int,
+        date: LocalDate?,
+        duration: Duration?,
+        sid: Int?,
+        rid: Int?
+    ): Boolean {
+        if (!hasActivity(conn, aid))
+            throw NotFoundException("Activity not found.")
+
+        if (date == null && duration == null && sid == null && rid == null)
+            throw InvalidArgumentException("Date, duration, sid or rid must be specified.")
+
+        val stm = conn
+            .getPostgresConnection()
+            .prepareStatement(
+                """
+                    UPDATE activities
+                    SET date = COALESCE(?, date),
+                    duration = COALESCE(?, duration),
+                    sid = COALESCE(?, sid),
+                    rid = COALESCE(?, rid)
+                    where id = ? AND (date != ? OR duration != ? OR sid != ? OR rid != ?)
+                """.trimIndent()
+            )
+
+        stm.setDate(1, date?.let { getSQLDate(it) })
+        stm.setString(2, duration?.toDTOString())
+        stm.setIntOrNull(3, sid)
+        stm.setIntOrNull(4, rid)
+        stm.setInt(5, aid)
+        stm.setDate(6, date?.let { getSQLDate(it) })
+        stm.setString(7, duration?.toDTOString())
+        stm.setIntOrNull(8, sid)
+        stm.setIntOrNull(9, rid)
+
+        return stm.executeUpdate() == 1
     }
 
     override fun getActivity(

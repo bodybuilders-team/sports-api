@@ -17,7 +17,6 @@ import pt.isel.ls.sports.api.routers.sports.dtos.SportDTO
 import pt.isel.ls.sports.api.routers.sports.dtos.SportsResponseDTO
 import pt.isel.ls.sports.api.routers.sports.dtos.UpdateSportRequest
 import pt.isel.ls.sports.api.routers.sports.dtos.UpdateSportResponse
-import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.errors.runAndCatch
 import pt.isel.ls.sports.api.utils.json
@@ -66,7 +65,8 @@ class SportsRouter(private val services: SportsServices) : IRouter {
 
         val sportRequest = request.decodeBodyAs<CreateSportRequest>()
         val sid = services.createNewSport(
-            token, sportRequest.name,
+            token,
+            sportRequest.name,
             sportRequest.description
         )
 
@@ -77,7 +77,7 @@ class SportsRouter(private val services: SportsServices) : IRouter {
      * Updates a sport.
      *
      * @param request HTTP request containing a body that follows the [UpdateSportRequest] format
-     * @return HTTP response containing a body that follows the [MessageResponse] format
+     * @return HTTP response containing a body that follows the [UpdateSportResponse] format
      */
     private fun updateSport(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
@@ -85,15 +85,17 @@ class SportsRouter(private val services: SportsServices) : IRouter {
 
         val sportRequest = request.decodeBodyAs<UpdateSportRequest>()
         val modified = services.updateSport(
-            sid, token, sportRequest.name,
+            sid,
+            token,
+            sportRequest.name,
             sportRequest.description
         )
 
-        return Response(CREATED).json(UpdateSportResponse(modified))
+        return Response(OK).json(UpdateSportResponse(modified))
     }
 
     /**
-     * Search for sports.
+     * Searches for sports.
      *
      * @param request HTTP request
      * @return HTTP response containing a body that follows the [SportsResponseDTO] format

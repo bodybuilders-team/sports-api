@@ -1,6 +1,7 @@
 package pt.isel.ls.sports.database.sections.routes
 
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Route
 
@@ -22,7 +23,26 @@ interface RoutesDB {
      */
     fun createNewRoute(conn: ConnectionDB, startLocation: String, endLocation: String, distance: Double, uid: Int): Int
 
-    fun updateRoute(conn: ConnectionDB, rid: Int, startLocation: String?, endLocation: String?): Boolean
+    /**
+     * Updates a route.
+     *
+     * @param conn database Connection
+     * @param rid route's unique identifier
+     * @param startLocation new start location of the route
+     * @param endLocation new end location of the route
+     * @param distance new distance to travel
+     *
+     * @return true if the route was modified, false otherwise
+     * @throws NotFoundException if there's no route with the [rid]
+     * @throws InvalidArgumentException if [startLocation], [endLocation] and [distance] are both null
+     */
+    fun updateRoute(
+        conn: ConnectionDB,
+        rid: Int,
+        startLocation: String?,
+        endLocation: String?,
+        distance: Double?
+    ): Boolean
 
     /**
      * Gets a specific route.

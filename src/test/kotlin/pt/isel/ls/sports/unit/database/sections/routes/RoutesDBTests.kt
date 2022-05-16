@@ -8,6 +8,18 @@ interface RoutesDBTests {
 
     fun `createNewRoute returns correct identifier`()
 
+    // updateRoute
+
+    fun `updateRoute updates a route correctly`()
+
+    fun `updateRoute returns true if a route was modified`()
+
+    fun `updateRoute returns false if a route was not modified`()
+
+    fun `updateRoute throws NotFoundException if there's no route with the rid`()
+
+    fun `throws InvalidArgumentException if startLocation, endLocation and distance are both null`()
+
     // getRoute
 
     fun `getRoute returns the route object`()

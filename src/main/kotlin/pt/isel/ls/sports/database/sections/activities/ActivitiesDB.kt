@@ -2,6 +2,7 @@ package pt.isel.ls.sports.database.sections.activities
 
 import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
@@ -34,7 +35,28 @@ interface ActivitiesDB {
         rid: Int? = null
     ): Int
 
-    fun updateActivity(conn: ConnectionDB, aid: Int): Boolean
+    /**
+     * Updates an activity.
+     *
+     * @param conn database Connection
+     * @param aid activity's unique identifier
+     * @param date new date of the activity
+     * @param duration new duration of the activity
+     * @param sid new sport id of the activity
+     * @param rid new route id of the activity
+     *
+     * @return true if the activity was modified, false otherwise
+     * @throws NotFoundException if there's no activity with the [aid]
+     * @throws InvalidArgumentException if [date], [duration], [sid] and [rid] are both null
+     */
+    fun updateActivity(
+        conn: ConnectionDB,
+        aid: Int,
+        date: LocalDate?,
+        duration: Duration?,
+        sid: Int?,
+        rid: Int?
+    ): Boolean
 
     /**
      * Gets the detailed information of an activity.

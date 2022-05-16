@@ -7,6 +7,7 @@ import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteRequest
 import pt.isel.ls.sports.api.routers.routes.dtos.CreateRouteResponse
 import pt.isel.ls.sports.api.routers.routes.dtos.RouteDTO
 import pt.isel.ls.sports.api.routers.routes.dtos.RoutesResponseDTO
+import pt.isel.ls.sports.api.routers.routes.dtos.UpdateRouteResponse
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.errors.AppError
 import pt.isel.ls.sports.api.utils.json
@@ -16,6 +17,7 @@ import pt.isel.ls.sports.services.utils.isValidId
 import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
@@ -120,6 +122,109 @@ class RoutesIntegrationTests : IntegrationTests() {
 
         val request = Request(Method.POST, "$uriPrefix/routes")
             .token(token)
+            .json(requestBody)
+
+        send(request)
+            .apply {
+                assertEquals(Status.BAD_REQUEST, status)
+
+                val error = this.decodeBodyAs<AppError>()
+                assertEquals("BAD_REQUEST", error.name)
+            }
+    }
+
+    // Update route
+
+    @Test
+    fun `Update route with valid data`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            val rid = db.routes.createNewRoute(conn, "Lisbon", "Lisbon", 10.0, uid)
+
+            object {
+                val token = token
+                val rid = rid
+            }
+        }
+
+        val requestBody = """
+            {
+                "startLocation": "Porto",
+                "endLocation": "Porto",
+                "distance": 5.0
+            }
+        """.trimIndent()
+
+        val request = Request(Method.PATCH, "$uriPrefix/routes/${mockData.rid}")
+            .token(mockData.token)
+            .json(requestBody)
+
+        send(request)
+            .apply {
+                assertEquals(Status.OK, status)
+
+                val modified = this.decodeBodyAs<UpdateRouteResponse>().modified
+                assertTrue(modified)
+            }
+    }
+
+    @Test
+    fun `Update route with valid data same as before`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            val rid = db.routes.createNewRoute(conn, "Lisbon", "Lisbon", 10.0, uid)
+
+            object {
+                val token = token
+                val rid = rid
+            }
+        }
+
+        val requestBody = """
+            {
+                "startLocation": "Lisbon",
+                "endLocation": "Lisbon",
+                "distance": 10.0
+            }
+        """.trimIndent()
+
+        val request = Request(Method.PATCH, "$uriPrefix/routes/${mockData.rid}")
+            .token(mockData.token)
+            .json(requestBody)
+
+        send(request)
+            .apply {
+                assertEquals(Status.OK, status)
+
+                val modified = this.decodeBodyAs<UpdateRouteResponse>().modified
+                assertFalse(modified)
+            }
+    }
+
+    @Test
+    fun `Update route with invalid rid`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+            object {
+                val token = token
+                val rid = -99
+            }
+        }
+
+        val requestBody = """
+            {
+                "startLocation": "Porto",
+                "endLocation": "Porto",
+                "distance": 5.0
+            }
+        """.trimIndent()
+
+        val request = Request(Method.PATCH, "$uriPrefix/routes/${mockData.rid}")
+            .token(mockData.token)
             .json(requestBody)
 
         send(request)

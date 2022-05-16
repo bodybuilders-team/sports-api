@@ -22,7 +22,7 @@ class SportsMemoryDB(private val source: AppMemoryDBSource) : SportsDB {
     }
 
     override fun updateSport(conn: ConnectionDB, sid: Int, name: String?, description: String?): Boolean {
-        val prevSport = source.sports[sid] ?: throw NotFoundException("Sport does not exist.")
+        val prevSport = source.sports[sid] ?: throw NotFoundException("Sport not found.")
 
         if (name == null && description == null)
             throw InvalidArgumentException("Name or description must be specified.")

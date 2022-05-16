@@ -4,6 +4,7 @@ import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.utils.getPaginatedQuery
+import pt.isel.ls.sports.database.utils.setDoubleOrNull
 import pt.isel.ls.sports.domain.Route
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -45,27 +46,38 @@ class RoutesPostgresDB : RoutesDB {
         return if (generatedKeys.next()) generatedKeys.getInt(1) else -1
     }
 
-    override fun updateRoute(conn: ConnectionDB, rid: Int, startLocation: String?, endLocation: String?): Boolean {
+    override fun updateRoute(
+        conn: ConnectionDB,
+        rid: Int,
+        startLocation: String?,
+        endLocation: String?,
+        distance: Double?
+    ): Boolean {
         if (!hasRoute(conn, rid))
             throw NotFoundException("Route not found.")
 
-        if (startLocation == null && endLocation == null)
-            throw InvalidArgumentException("Start or end location must be specified.")
+        if (startLocation == null && endLocation == null && distance == null)
+            throw InvalidArgumentException("Start location, end location or distance must be specified.")
 
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
                 """
                     UPDATE routes
-                    SET start_location = COALESCE($1, start_location),
-                    end_location= COALESCE($2, end_location)
-                    where id = ?
+                    SET start_location = COALESCE(?, start_location),
+                    end_location = COALESCE(?, end_location),
+                    distance = COALESCE(?, distance)
+                    WHERE id = ? AND (start_location != ? OR end_location != ? OR distance != ?)
                 """.trimIndent()
             )
 
         stm.setString(1, startLocation)
         stm.setString(2, endLocation)
-        stm.setInt(3, rid)
+        stm.setDoubleOrNull(3, distance)
+        stm.setInt(4, rid)
+        stm.setString(5, startLocation)
+        stm.setString(6, endLocation)
+        stm.setDoubleOrNull(7, distance)
 
         return stm.executeUpdate() == 1
     }

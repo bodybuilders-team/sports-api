@@ -3,9 +3,8 @@ import PaginatedCollection from "./PaginatedCollection.js";
 import {getQuerySkipLimit} from "../../js/utils.js";
 
 /**
- *
  * Paginated collection component for a specific collection (ex: Sports, Activities...)
- * that fetches it's own data through the api
+ * that fetches its own data through the api.
  *
  * @param state - application state
  *

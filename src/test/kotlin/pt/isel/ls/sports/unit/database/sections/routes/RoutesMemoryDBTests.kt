@@ -1,5 +1,6 @@
 package pt.isel.ls.sports.unit.database.sections.routes
 
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.domain.User
@@ -35,6 +36,62 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
         assertEquals(2, rid2)
         assertEquals(3, rid3)
     }
+
+    // updateRoute
+
+    @Test
+    override fun `updateRoute updates a route correctly`(): Unit = db.execute { conn ->
+        val route1 = Route(1, "Odivelas", "Chelas", 150.0, 1)
+        source.routes[1] = route1
+
+        val newStartLocation = "new start location"
+        val newEndLocation = "new end location"
+        val newDistance = 124.0
+        db.routes.updateRoute(conn, 1, newStartLocation, newEndLocation, newDistance)
+
+        val updatedSport = db.routes.getRoute(conn, 1)
+
+        assertEquals(newStartLocation, updatedSport.startLocation)
+        assertEquals(newEndLocation, updatedSport.endLocation)
+        assertEquals(newDistance, updatedSport.distance)
+    }
+
+    @Test
+    override fun `updateRoute returns true if a route was modified`(): Unit = db.execute { conn ->
+        val route1 = Route(1, "Odivelas", "Chelas", 150.0, 1)
+        source.routes[1] = route1
+
+        val newStartLocation = "new start location"
+        val newEndLocation = "new end location"
+        val newDistance = 124.0
+        assertTrue(db.routes.updateRoute(conn, 1, newStartLocation, newEndLocation, newDistance))
+    }
+
+    @Test
+    override fun `updateRoute returns false if a route was not modified`(): Unit = db.execute { conn ->
+        val route1 = Route(1, "Odivelas", "Chelas", 150.0, 1)
+        source.routes[1] = route1
+
+        assertFalse(db.routes.updateRoute(conn, 1, route1.startLocation, route1.endLocation, route1.distance))
+    }
+
+    @Test
+    override fun `updateRoute throws NotFoundException if there's no route with the rid`(): Unit = db.execute { conn ->
+        assertFailsWith<NotFoundException> {
+            db.routes.updateRoute(conn, 9999, "new start location", "new end location", 124.0)
+        }
+    }
+
+    @Test
+    override fun `throws InvalidArgumentException if startLocation, endLocation and distance are both null`(): Unit =
+        db.execute { conn ->
+            val route1 = Route(1, "Odivelas", "Chelas", 150.0, 1)
+            source.routes[1] = route1
+
+            assertFailsWith<InvalidArgumentException> {
+                db.routes.updateRoute(conn, 1, null, null, null)
+            }
+        }
 
     // getRoute
 

@@ -40,6 +40,42 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
     }
 
     /**
+     * Updates a sport.
+     *
+     * @param sid sport's unique identifier
+     * @param token user's token
+     * @param name new name of the sport
+     * @param description new description of the sport
+     *
+     * @return true if the sport was successfully modified, false otherwise
+     * @throws InvalidArgumentException if [sid] is negative
+     * @throws InvalidArgumentException if [name] or [description] are invalid
+     * @throws AuthenticationException if a user with the [token] was not found
+     * @throws NotFoundException if there's no sport with the [sid]
+     * @throws AuthorizationException if the user with the [token] is not the owner of the sport
+     * @throws InvalidArgumentException if [name] and [description] are both null
+     */
+    fun updateSport(sid: Int, token: String, name: String?, description: String?): Boolean {
+        validateSid(sid)
+
+        if (name != null)
+            validateName(name)
+
+        if (description != null)
+            validateDescription(description)
+
+        return db.execute { conn ->
+            val uid = authenticate(conn, token)
+
+            val sport = db.sports.getSport(conn, sid)
+            if (sport.uid != uid)
+                throw AuthorizationException("You are not allowed to update this sport.")
+
+            db.sports.updateSport(conn, sid, name, description)
+        }
+    }
+
+    /**
      * Gets a specific sport.
      *
      * @param sid sport's unique identifier
@@ -93,38 +129,6 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
 
         return db.execute { conn ->
             db.activities.getSportActivities(conn, sid, skip, limit)
-        }
-    }
-
-    /**
-     * Updates a sport.
-     *
-     * @param sid sports unique identifier
-     * @param name name of the sport
-     * @param description description of the sport (optional)
-     *
-     * @return true if the sport was modified, false otherwise
-     * @throws NotFoundException if there's no sport with the [sid]
-     * @throws InvalidArgumentException if name or description are invalid
-     * @throws AuthorizationException if the user is not the sport creater
-     */
-    fun updateSport(sid: Int, token: String, name: String?, description: String?): Boolean {
-        validateSid(sid)
-
-        if (name != null)
-            validateName(name)
-
-        if (description != null)
-            validateDescription(description)
-
-        return db.execute { conn ->
-            val uid = authenticate(conn, token)
-
-            val sport = db.sports.getSport(conn, sid)
-            if (sport.uid != uid)
-                throw AuthorizationException("You are not allowed to update this sport.")
-
-            db.sports.updateSport(conn, sid, name, description)
         }
     }
 

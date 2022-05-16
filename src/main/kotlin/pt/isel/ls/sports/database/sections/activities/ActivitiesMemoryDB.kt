@@ -3,6 +3,7 @@ package pt.isel.ls.sports.database.sections.activities
 import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.AppMemoryDBSource
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
@@ -29,8 +30,28 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         return id
     }
 
-    override fun updateActivity(conn: ConnectionDB, aid: Int): Boolean {
-        TODO("Not yet implemented")
+    override fun updateActivity(
+        conn: ConnectionDB,
+        aid: Int,
+        date: LocalDate?,
+        duration: Duration?,
+        sid: Int?,
+        rid: Int?
+    ): Boolean {
+        val prevActivity = source.activities[aid] ?: throw NotFoundException("Activity not found.")
+
+        if (date == null && duration == null && sid == null && rid == null)
+            throw InvalidArgumentException("Date, duration, sid or rid must be specified.")
+
+        val newActivity = prevActivity.copy(
+            date = date ?: prevActivity.date,
+            duration = duration ?: prevActivity.duration,
+            sid = sid ?: prevActivity.sid,
+            rid = rid ?: prevActivity.rid
+        )
+        source.activities[aid] = newActivity
+
+        return prevActivity != newActivity
     }
 
     override fun getActivity(conn: ConnectionDB, aid: Int): Activity =

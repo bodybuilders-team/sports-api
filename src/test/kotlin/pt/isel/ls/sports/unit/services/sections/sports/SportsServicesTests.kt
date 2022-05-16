@@ -78,6 +78,133 @@ class SportsServicesTests : AbstractServicesTests() {
         }
     }
 
+    // updateSport
+
+    @Test
+    fun `updateSport updates a sport correctly`() = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
+
+        val newName = "new name"
+        val newDescription = "new desc"
+        services.sports.updateSport(sid, token, newName, newDescription)
+
+        val updatedSport = db.sports.getSport(conn, sid)
+        assertEquals(newName, updatedSport.name)
+        assertEquals(newDescription, updatedSport.description)
+    }
+
+    @Test
+    fun `updateSport returns true if a sport was modified`() = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
+
+        val newName = "new name"
+        val newDescription = "new desc"
+        assertTrue(services.sports.updateSport(sid, token, newName, newDescription))
+    }
+
+    @Test
+    fun `updateSport returns false if a sport was not modified`() = db.execute { conn ->
+        val name = "Sport name"
+        val description = "Sport desc"
+
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val sid = db.sports.createNewSport(conn, uid, name, description)
+
+        assertFalse(services.sports.updateSport(sid, token, name, description))
+    }
+
+    @Test
+    fun `updateSport throws InvalidArgumentException if sid is negative`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        assertFailsWith<InvalidArgumentException> {
+            services.sports.updateSport(-1, token, "new name", "new desc")
+        }
+    }
+
+    @Test
+    fun `updateSport throws InvalidArgumentException if name is invalid`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
+
+        assertFailsWith<InvalidArgumentException> {
+            services.sports.updateSport(sid, token, "", null)
+        }
+    }
+
+    @Test
+    fun `updateSport throws InvalidArgumentException if description is invalid`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
+
+        assertFailsWith<InvalidArgumentException> {
+            services.sports.updateSport(sid, token, null, "a".repeat(Sport.MAX_DESCRIPTION_LENGTH + 1))
+        }
+    }
+
+    @Test
+    fun `updateSport throws AuthenticationException if a user with the token was not found`(): Unit =
+        db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            val token = "lala"
+
+            val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
+
+            assertFailsWith<AuthenticationException> {
+                services.sports.updateSport(sid, token, "new name", "new desc")
+            }
+        }
+
+    @Test
+    fun `updateSport throws NotFoundException if there's no sport with the sid`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        assertFailsWith<NotFoundException> {
+            services.sports.updateSport(4, token, "new name", "new desc")
+        }
+    }
+
+    @Test
+    fun `updateSport throws AuthorizationException if the user is not the sport creator`(): Unit = db.execute { conn ->
+        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+
+        val uid2 = db.users.createNewUser(conn, "Nyckollas Brandão2", "nyckollasbrandao2@mail.com")
+        val token2 = db.tokens.createUserToken(conn, UUID.randomUUID(), uid2)
+
+        val sid = db.sports.createNewSport(conn, uid1, "Sport name", "Sport desc")
+
+        assertFailsWith<AuthorizationException> {
+            services.sports.updateSport(sid, token2, "new name", "new desc")
+        }
+    }
+
+    @Test
+    fun `updateSport throws InvalidArgumentException if name and description are both null`(): Unit =
+        db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+            val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
+
+            assertFailsWith<InvalidArgumentException> {
+                services.sports.updateSport(sid, token, null, null)
+            }
+        }
+
     // getSport
 
     @Test
@@ -177,81 +304,6 @@ class SportsServicesTests : AbstractServicesTests() {
     fun `getSportActivities throws InvalidArgumentException if the limit is invalid`() {
         assertFailsWith<InvalidArgumentException> {
             services.sports.getSportActivities(1, 0, -5)
-        }
-    }
-
-    // updateSport
-
-    @Test
-    fun `updateSport updates a sport correctly`() {
-        val user = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val sid = services.sports.createNewSport(user.token, "Sport name", "Sport desc")
-
-        val newName = "new name"
-        val newDescription = "new desc"
-        services.sports.updateSport(sid, user.token, newName, newDescription)
-
-        val updatedSport = services.sports.getSport(sid)
-        assertEquals(newName, updatedSport.name)
-        assertEquals(newDescription, updatedSport.description)
-    }
-
-    @Test
-    fun `updateSport returns true if a sport was modified`() {
-        val user = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val sid = services.sports.createNewSport(user.token, "Sport name", "Sport desc")
-
-        val newName = "new name"
-        val newDescription = "new desc"
-        assertTrue(services.sports.updateSport(sid, user.token, newName, newDescription))
-    }
-
-    @Test
-    fun `updateSport returns false if a sport was not modified`() {
-        val name = "Sport name"
-        val description = "Sport desc"
-
-        val user = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val sid = services.sports.createNewSport(user.token, name, description)
-
-        assertFalse(services.sports.updateSport(sid, user.token, name, description))
-    }
-
-    @Test
-    fun `updateSport throws NotFoundException if there's no sport with the sid`() {
-        assertFailsWith<InvalidArgumentException> {
-            services.sports.updateSport(-1, "", "new name", "new desc")
-        }
-    }
-
-    @Test
-    fun `throws InvalidArgumentException if name is invalid`() {
-        val user = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val sid = services.sports.createNewSport(user.token, "Sport name", "Sport desc")
-
-        assertFailsWith<InvalidArgumentException> {
-            services.sports.updateSport(sid, user.token, "", null)
-        }
-    }
-
-    @Test
-    fun `throws InvalidArgumentException if description is invalid`() {
-        val user = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val sid = services.sports.createNewSport(user.token, "Sport name", "Sport desc")
-
-        assertFailsWith<InvalidArgumentException> {
-            services.sports.updateSport(sid, user.token, null, "a".repeat(Sport.MAX_DESCRIPTION_LENGTH + 1))
-        }
-    }
-
-    @Test
-    fun `throws AuthorizationException if the user is not the sport creater`() {
-        val user1 = services.users.createNewUser("Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val user2 = services.users.createNewUser("Nyckollas Brandão2", "nyckollasbrandao2@mail.com")
-        val sid = services.sports.createNewSport(user1.token, "Sport name", "Sport desc")
-
-        assertFailsWith<AuthorizationException> {
-            services.sports.updateSport(sid, user2.token, "new name", "new desc")
         }
     }
 

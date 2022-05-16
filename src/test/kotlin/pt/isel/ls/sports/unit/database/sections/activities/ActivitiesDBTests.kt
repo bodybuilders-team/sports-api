@@ -8,6 +8,18 @@ interface ActivitiesDBTests {
 
     fun `createNewActivity returns correct identifier`()
 
+    // updateActivity
+
+    fun `updateActivity updates an activity correctly`()
+
+    fun `updateActivity returns true if an activity was modified`()
+
+    fun `updateActivity returns false if an activity was not modified`()
+
+    fun `updateActivity throws NotFoundException if there's no activity with the aid`()
+
+    fun `throws InvalidArgumentException if date, duration, sid and rid are both null`()
+
     // getActivity
 
     fun `getActivity returns the activity object`()

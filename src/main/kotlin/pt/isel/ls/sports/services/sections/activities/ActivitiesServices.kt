@@ -47,8 +47,29 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         }
     }
 
-    fun updateActivity(aid: Int, token: String): Boolean {
+    /**
+     * Updates an activity.
+     *
+     * @param aid activity's unique identifier
+     * @param token user's token
+     * @param date new date of the activity
+     * @param duration new duration of the activity
+     * @param sid new sport id of the activity
+     * @param rid new route id of the activity
+     *
+     * @return true if the activity was successfully modified, false otherwise
+     * @throws InvalidArgumentException if [aid] is negative
+     * @throws InvalidArgumentException if [sid] is negative
+     * @throws InvalidArgumentException if [rid] is negative
+     * @throws AuthenticationException if a user with the [token] was not found
+     * @throws NotFoundException if there's no activity with the [aid]
+     * @throws AuthorizationException if the user with the [token] is not the owner of the activity
+     * @throws InvalidArgumentException if [date], [duration], [sid] and [rid] are both null
+     */
+    fun updateActivity(aid: Int, token: String, date: LocalDate?, duration: Duration?, sid: Int?, rid: Int?): Boolean {
         validateAid(aid)
+        if (sid != null) validateSid(sid)
+        if (rid != null) validateRid(rid)
 
         return db.execute { conn ->
             val uid = authenticate(conn, token)
@@ -57,7 +78,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
             if (activity.uid != uid)
                 throw AuthorizationException("You are not allowed to update this activity.")
 
-            db.activities.updateActivity(conn, aid)
+            db.activities.updateActivity(conn, aid, date, duration, sid, rid)
         }
     }
 
@@ -94,8 +115,8 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
 
         db.execute { conn ->
             val uid = authenticate(conn, token)
-            val activity = db.activities.getActivity(conn, aid)
 
+            val activity = db.activities.getActivity(conn, aid)
             if (uid != activity.uid)
                 throw AuthorizationException("You are not allowed to delete this activity")
 

@@ -21,6 +21,7 @@ import pt.isel.ls.sports.utils.toDuration
 import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -150,6 +151,106 @@ class SportsIntegrationTests : IntegrationTests() {
 
         val request = Request(Method.POST, "$uriPrefix/sports")
             .token(token)
+            .json(requestBody)
+
+        send(request)
+            .apply {
+                assertEquals(Status.BAD_REQUEST, status)
+
+                val error = this.decodeBodyAs<AppError>()
+                assertEquals("BAD_REQUEST", error.name)
+            }
+    }
+
+    // Update sport
+
+    @Test
+    fun `Update sport with valid data`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
+
+            object {
+                val token = token
+                val sid = sid
+            }
+        }
+
+        val requestBody = """
+            {
+                "name": "Sprint",
+                "description": "100 Meters Sprint"
+            }
+        """.trimIndent()
+
+        val request = Request(Method.PATCH, "$uriPrefix/sports/${mockData.sid}")
+            .token(mockData.token)
+            .json(requestBody)
+
+        send(request)
+            .apply {
+                assertEquals(Status.OK, status)
+
+                val modified = this.decodeBodyAs<UpdateSportResponse>().modified
+                assertTrue(modified)
+            }
+    }
+
+    @Test
+    fun `Update sport with valid data same as before`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
+
+            object {
+                val token = token
+                val sid = sid
+            }
+        }
+
+        val requestBody = """
+            {
+                "name": "Running",
+                "description": "Running"
+            }
+        """.trimIndent()
+
+        val request = Request(Method.PATCH, "$uriPrefix/sports/${mockData.sid}")
+            .token(mockData.token)
+            .json(requestBody)
+
+        send(request)
+            .apply {
+                assertEquals(Status.OK, status)
+
+                val modified = this.decodeBodyAs<UpdateSportResponse>().modified
+                assertFalse(modified)
+            }
+    }
+
+    @Test
+    fun `Update sport with invalid sid`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+            object {
+                val token = token
+                val sid = -99
+            }
+        }
+
+        val requestBody = """
+            {
+                "name": "Sprint",
+                "description": "100 Meters Sprint"
+            }
+        """.trimIndent()
+
+        val request = Request(Method.PATCH, "$uriPrefix/sports/${mockData.sid}")
+            .token(mockData.token)
             .json(requestBody)
 
         send(request)
@@ -345,73 +446,6 @@ class SportsIntegrationTests : IntegrationTests() {
         val mockUid = -1
 
         val request = Request(Method.GET, "$uriPrefix/sports/$mockUid/activities")
-
-        send(request)
-            .apply {
-                assertEquals(Status.BAD_REQUEST, status)
-
-                val error = this.decodeBodyAs<AppError>()
-                assertEquals("BAD_REQUEST", error.name)
-            }
-    }
-
-    // Update sport
-
-    @Test
-    fun `Update sport with valid data`() {
-        val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
-            val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
-
-            object {
-                val token = token
-                val sid = sid
-            }
-        }
-
-        val requestBody = """
-            {
-                "name": "Sprint",
-                "description": "100 Meters Sprint"
-            }
-        """.trimIndent()
-
-        val request = Request(Method.PATCH, "$uriPrefix/sports/${mockData.sid}")
-            .token(mockData.token)
-            .json(requestBody)
-
-        send(request)
-            .apply {
-                assertEquals(Status.CREATED, status)
-
-                val modified = this.decodeBodyAs<UpdateSportResponse>().modified
-                assertTrue(modified)
-            }
-    }
-
-    @Test
-    fun `Update sport with invalid sid`() {
-        val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
-            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
-
-            object {
-                val token = token
-                val sid = -99
-            }
-        }
-
-        val requestBody = """
-            {
-                "name": "Sprint",
-                "description": "100 Meters Sprint"
-            }
-        """.trimIndent()
-
-        val request = Request(Method.PATCH, "$uriPrefix/sports/${mockData.sid}")
-            .token(mockData.token)
-            .json(requestBody)
 
         send(request)
             .apply {

@@ -13,6 +13,8 @@ import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class ActivitiesServicesTests : AbstractServicesTests() {
 
@@ -129,6 +131,198 @@ class ActivitiesServicesTests : AbstractServicesTests() {
                     sid,
                     1
                 )
+            }
+        }
+
+    // updateActivity
+
+    @Test
+    fun `updateActivity updates an activity correctly`() = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val aid =
+            db.activities.createNewActivity(conn, uid, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
+
+        val newDate = "2022-04-20".toLocalDate()
+        val newDuration = "20:00:00.000".toDuration()
+        val newSid = 1
+        val newRid = 1
+        services.activities.updateActivity(aid, token, newDate, newDuration, newSid, newRid)
+
+        val updatedRoute = db.activities.getActivity(conn, aid)
+        assertEquals(newDate, updatedRoute.date)
+        assertEquals(newDuration, updatedRoute.duration)
+        assertEquals(newSid, updatedRoute.sid)
+        assertEquals(newRid, updatedRoute.rid)
+    }
+
+    @Test
+    fun `updateActivity returns true if an activity was modified`() = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val aid =
+            db.activities.createNewActivity(conn, uid, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
+
+        val newDate = "2022-04-20".toLocalDate()
+        val newDuration = "20:00:00.000".toDuration()
+        val newSid = 1
+        val newRid = 1
+        assertTrue(services.activities.updateActivity(aid, token, newDate, newDuration, newSid, newRid))
+    }
+
+    @Test
+    fun `updateActivity returns false if an activity was not modified`() = db.execute { conn ->
+        val date = "2022-04-20".toLocalDate()
+        val duration = "20:00:00.000".toDuration()
+        val sid = 1
+        val rid = 1
+
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val aid = db.activities.createNewActivity(conn, uid, date, duration, sid, rid)
+
+        assertFalse(services.activities.updateActivity(aid, token, date, duration, sid, rid))
+    }
+
+    @Test
+    fun `updateActivity throws InvalidArgumentException if aid is negative`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        assertFailsWith<InvalidArgumentException> {
+            services.activities.updateActivity(-1, token, "2022-04-20".toLocalDate(), "20:00:00.000".toDuration(), 1, 1)
+        }
+    }
+
+    @Test
+    fun `updateActivity throws InvalidArgumentException if sid is negative`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val aid =
+            db.activities.createNewActivity(conn, uid, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
+
+        assertFailsWith<InvalidArgumentException> {
+            services.activities.updateActivity(
+                aid,
+                token,
+                "2022-04-20".toLocalDate(),
+                "20:00:00.000".toDuration(),
+                -1,
+                1
+            )
+        }
+    }
+
+    @Test
+    fun `updateActivity throws InvalidArgumentException if rid is negative`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val aid =
+            db.activities.createNewActivity(conn, uid, "2022-11-20".toLocalDate(), "23:44:59.903".toDuration(), 1, 1)
+
+        assertFailsWith<InvalidArgumentException> {
+            services.activities.updateActivity(
+                aid,
+                token,
+                "2022-04-20".toLocalDate(),
+                "20:00:00.000".toDuration(),
+                1,
+                -1
+            )
+        }
+    }
+
+    @Test
+    fun `updateActivity throws AuthenticationException if a user with the token was not found`(): Unit =
+        db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            val token = "lala"
+
+            val aid =
+                db.activities.createNewActivity(
+                    conn,
+                    uid,
+                    "2022-11-20".toLocalDate(),
+                    "23:44:59.903".toDuration(),
+                    1,
+                    1
+                )
+
+            assertFailsWith<AuthenticationException> {
+                services.activities.updateActivity(
+                    aid,
+                    token,
+                    "2022-04-20".toLocalDate(),
+                    "20:00:00.000".toDuration(),
+                    1,
+                    1
+                )
+            }
+        }
+
+    @Test
+    fun `updateActivity throws NotFoundException if there's no activity with the aid`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        assertFailsWith<NotFoundException> {
+            services.activities.updateActivity(4, token, "2022-04-20".toLocalDate(), "20:00:00.000".toDuration(), 1, 1)
+        }
+    }
+
+    @Test
+    fun `updateActivity throws AuthorizationException if the user is not the activity creator`(): Unit =
+        db.execute { conn ->
+            val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+
+            val uid2 = db.users.createNewUser(conn, "Nyckollas Brandão2", "nyckollasbrandao2@mail.com")
+            val token2 = db.tokens.createUserToken(conn, UUID.randomUUID(), uid2)
+
+            val aid =
+                db.activities.createNewActivity(
+                    conn,
+                    uid1,
+                    "2022-11-20".toLocalDate(),
+                    "23:44:59.903".toDuration(),
+                    1,
+                    1
+                )
+
+            assertFailsWith<AuthorizationException> {
+                services.activities.updateActivity(
+                    aid,
+                    token2,
+                    "2022-04-20".toLocalDate(),
+                    "20:00:00.000".toDuration(),
+                    1,
+                    1
+                )
+            }
+        }
+
+    @Test
+    fun `updateActivity throws InvalidArgumentException if date, duration, sid and rid are both null`(): Unit =
+        db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+            val aid =
+                db.activities.createNewActivity(
+                    conn,
+                    uid,
+                    "2022-11-20".toLocalDate(),
+                    "23:44:59.903".toDuration(),
+                    1,
+                    1
+                )
+
+            assertFailsWith<InvalidArgumentException> {
+                services.activities.updateActivity(aid, token, null, null, null, null)
             }
         }
 

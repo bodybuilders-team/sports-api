@@ -3,6 +3,7 @@ package pt.isel.ls.sports.api.routers.activities
 import kotlinx.datetime.toLocalDate
 import org.http4k.core.Method.DELETE
 import org.http4k.core.Method.GET
+import org.http4k.core.Method.PATCH
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
@@ -56,6 +57,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
         "/" bind GET to ::searchActivities,
         "/" bind DELETE to ::deleteActivities,
         "/users" bind GET to ::searchUsersByActivity,
+        "/{id}" bind PATCH to ::updateActivity,
         "/{id}" bind GET to ::getActivity,
         "/{id}" bind DELETE to ::deleteActivity,
     )
@@ -94,10 +96,15 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
 
         val routeRequest = request.decodeBodyAs<UpdateActivityRequest>()
         val modified = services.updateActivity(
-            aid, token
+            aid,
+            token,
+            routeRequest.date?.toLocalDate(),
+            routeRequest.duration?.toDuration(),
+            routeRequest.sid,
+            routeRequest.rid
         )
 
-        return Response(CREATED).json(UpdateActivityResponse(modified))
+        return Response(OK).json(UpdateActivityResponse(modified))
     }
 
     /**

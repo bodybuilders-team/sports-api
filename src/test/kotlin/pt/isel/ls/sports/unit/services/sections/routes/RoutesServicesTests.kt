@@ -4,11 +4,14 @@ import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.services.exceptions.AuthenticationException
+import pt.isel.ls.sports.services.exceptions.AuthorizationException
 import pt.isel.ls.sports.unit.services.AbstractServicesTests
 import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class RoutesServicesTests : AbstractServicesTests() {
 
@@ -59,6 +62,125 @@ class RoutesServicesTests : AbstractServicesTests() {
 
             assertFailsWith<AuthenticationException> {
                 services.routes.createNewRoute(token, "Odivelas", "Chelas", 0.150)
+            }
+        }
+
+    // updateRoute
+
+    @Test
+    fun `updateRoute updates a route correctly`() = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
+
+        val newStartLocation = "new start location"
+        val newEndLocation = "new end location"
+        val newDistance = 124.0
+        services.routes.updateRoute(rid, token, newStartLocation, newEndLocation, newDistance)
+
+        val updatedRoute = db.routes.getRoute(conn, rid)
+        assertEquals(newStartLocation, updatedRoute.startLocation)
+        assertEquals(newEndLocation, updatedRoute.endLocation)
+        assertEquals(newDistance, updatedRoute.distance)
+    }
+
+    @Test
+    fun `updateRoute returns true if a route was modified`() = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
+
+        val newStartLocation = "new start location"
+        val newEndLocation = "new end location"
+        val newDistance = 124.0
+        assertTrue(services.routes.updateRoute(rid, token, newStartLocation, newEndLocation, newDistance))
+    }
+
+    @Test
+    fun `updateRoute returns false if a route was not modified`() = db.execute { conn ->
+        val startLocation = "new start location"
+        val endLocation = "new end location"
+        val distance = 124.0
+
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val rid = db.routes.createNewRoute(conn, startLocation, endLocation, distance, uid)
+
+        assertFalse(services.routes.updateRoute(rid, token, startLocation, endLocation, distance))
+    }
+
+    @Test
+    fun `updateRoute throws InvalidArgumentException if rid is negative`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        assertFailsWith<InvalidArgumentException> {
+            services.routes.updateRoute(-1, token, "new start location", "new end location", 124.0)
+        }
+    }
+
+    @Test
+    fun `updateRoute throws InvalidArgumentException if distance is invalid`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
+
+        assertFailsWith<InvalidArgumentException> {
+            services.routes.updateRoute(rid, token, null, null, -1.0)
+        }
+    }
+
+    @Test
+    fun `updateRoute throws AuthenticationException if a user with the token was not found`(): Unit =
+        db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            val token = "lala"
+
+            val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
+
+            assertFailsWith<AuthenticationException> {
+                services.routes.updateRoute(rid, token, "new start location", "new end location", 124.0)
+            }
+        }
+
+    @Test
+    fun `updateRoute throws NotFoundException if there's no route with the rid`(): Unit = db.execute { conn ->
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+        assertFailsWith<NotFoundException> {
+            services.routes.updateRoute(4, token, "new start location", "new end location", 124.0)
+        }
+    }
+
+    @Test
+    fun `updateRoute throws AuthorizationException if the user is not the route creator`(): Unit = db.execute { conn ->
+        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+
+        val uid2 = db.users.createNewUser(conn, "Nyckollas Brandão2", "nyckollasbrandao2@mail.com")
+        val token2 = db.tokens.createUserToken(conn, UUID.randomUUID(), uid2)
+
+        val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid1)
+
+        assertFailsWith<AuthorizationException> {
+            services.routes.updateRoute(rid, token2, "new start location", "new end location", 124.0)
+        }
+    }
+
+    @Test
+    fun `updateRoute throws InvalidArgumentException if start location, end location and distance are both null`(): Unit =
+        db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+            val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
+
+            assertFailsWith<InvalidArgumentException> {
+                services.routes.updateRoute(rid, token, null, null, null)
             }
         }
 

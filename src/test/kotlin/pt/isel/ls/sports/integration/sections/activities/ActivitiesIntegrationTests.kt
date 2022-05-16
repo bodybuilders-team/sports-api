@@ -9,6 +9,7 @@ import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO
 import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityResponse
+import pt.isel.ls.sports.api.routers.routes.dtos.UpdateRouteResponse
 import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest
 import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.MessageResponse
@@ -132,6 +133,130 @@ class ActivitiesIntegrationTests : IntegrationTests() {
             val error = this.decodeBodyAs<AppError>()
             assertEquals("BAD_REQUEST", error.name)
         }
+    }
+
+    // Update activity
+
+    @Test
+    fun `Update activity with valid data`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
+            val rid = db.routes.createNewRoute(conn, "Lisbon", "Lisbon", 10.0, uid)
+            val aid = db.activities.createNewActivity(
+                conn,
+                uid,
+                "2020-01-01".toLocalDate(),
+                "01:00:00.000".toDuration(),
+                sid,
+                rid
+            )
+
+            object {
+                val token = token
+                val aid = aid
+            }
+        }
+
+        val requestBody = """
+            {
+                "date": "2011-11-11",
+                "duration": "00:05:00.000",
+                "sid": 1,
+                "rid": 1
+            }
+        """.trimIndent()
+
+        val request = Request(Method.PATCH, "$uriPrefix/activities/${mockData.aid}")
+            .token(mockData.token)
+            .json(requestBody)
+
+        send(request)
+            .apply {
+                assertEquals(Status.OK, status)
+
+                val modified = this.decodeBodyAs<UpdateRouteResponse>().modified
+                assertTrue(modified)
+            }
+    }
+
+    @Test
+    fun `Update activity with valid data same as before`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
+            val rid = db.routes.createNewRoute(conn, "Lisbon", "Lisbon", 10.0, uid)
+            val aid = db.activities.createNewActivity(
+                conn,
+                uid,
+                "2020-01-01".toLocalDate(),
+                "01:00:00.000".toDuration(),
+                sid,
+                rid
+            )
+
+            object {
+                val token = token
+                val aid = aid
+            }
+        }
+
+        val requestBody = """
+            {
+                "date": "2020-01-01",
+                "duration": "01:00:00.000",
+                "sid": 1,
+                "rid": 1
+            }
+        """.trimIndent()
+
+        val request = Request(Method.PATCH, "$uriPrefix/activities/${mockData.aid}")
+            .token(mockData.token)
+            .json(requestBody)
+
+        send(request)
+            .apply {
+                assertEquals(Status.OK, status)
+
+                val modified = this.decodeBodyAs<UpdateRouteResponse>().modified
+                assertFalse(modified)
+            }
+    }
+
+    @Test
+    fun `Update activity with invalid aid`() {
+        val mockData = db.execute { conn ->
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+
+            object {
+                val token = token
+                val aid = -99
+            }
+        }
+
+        val requestBody = """
+            {
+                "date": "2020-01-01",
+                "duration": "01:00:00.000",
+                "sid": 1,
+                "rid": 1
+            }
+        """.trimIndent()
+
+        val request = Request(Method.PATCH, "$uriPrefix/activities/${mockData.aid}")
+            .token(mockData.token)
+            .json(requestBody)
+
+        send(request)
+            .apply {
+                assertEquals(Status.BAD_REQUEST, status)
+
+                val error = this.decodeBodyAs<AppError>()
+                assertEquals("BAD_REQUEST", error.name)
+            }
     }
 
     // Get activity

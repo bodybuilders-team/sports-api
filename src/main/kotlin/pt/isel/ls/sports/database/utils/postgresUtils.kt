@@ -36,6 +36,18 @@ fun PreparedStatement.setIntOrNull(index: Int, value: Int?) =
     }
 
 /**
+ * Sets the designated double to the given value or null.
+ *
+ * @param index the first parameter is 1, the second is 2, ...
+ * @param value the parameter value
+ */
+fun PreparedStatement.setDoubleOrNull(index: Int, value: Double?) =
+    when (value) {
+        null -> setNull(index, Types.DOUBLE)
+        else -> setDouble(index, value)
+    }
+
+/**
  * Rolls back a transaction and logs the error.
  *
  * @throws DatabaseRollbackException if the rollback fails

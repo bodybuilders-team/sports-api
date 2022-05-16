@@ -1,5 +1,6 @@
 package pt.isel.ls.sports.unit.database.sections.routes
 
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Route
 import pt.isel.ls.sports.tableAsserter
@@ -50,6 +51,51 @@ class RoutesPostgresDBTests : AppPostgresDBTests(), RoutesDBTests {
         assertEquals(5, rid1)
         assertEquals(6, rid2)
     }
+
+    // updateRoute
+
+    @Test
+    override fun `updateRoute updates a route correctly`(): Unit = db.execute { conn ->
+        val newStartLocation = "new start location"
+        val newEndLocation = "new end location"
+        val newDistance = 124.0
+        db.routes.updateRoute(conn, 1, newStartLocation, newEndLocation, newDistance)
+
+        val updatedRoute = db.routes.getRoute(conn, 1)
+
+        assertEquals(newStartLocation, updatedRoute.startLocation)
+        assertEquals(newEndLocation, updatedRoute.endLocation)
+        assertEquals(newDistance, updatedRoute.distance)
+    }
+
+    @Test
+    override fun `updateRoute returns true if a route was modified`(): Unit = db.execute { conn ->
+        val newStartLocation = "new start location"
+        val newEndLocation = "new end location"
+        val newDistance = 124.0
+        assertTrue(db.routes.updateRoute(conn, 1, newStartLocation, newEndLocation, newDistance))
+    }
+
+    @Test
+    override fun `updateRoute returns false if a route was not modified`(): Unit = db.execute { conn ->
+        val route = db.routes.getRoute(conn, 1)
+        assertFalse(db.routes.updateRoute(conn, 1, route.startLocation, route.endLocation, route.distance))
+    }
+
+    @Test
+    override fun `updateRoute throws NotFoundException if there's no route with the rid`(): Unit = db.execute { conn ->
+        assertFailsWith<NotFoundException> {
+            db.routes.updateRoute(conn, 9999, "new start location", "new end location", 124.0)
+        }
+    }
+
+    @Test
+    override fun `throws InvalidArgumentException if startLocation, endLocation and distance are both null`(): Unit =
+        db.execute { conn ->
+            assertFailsWith<InvalidArgumentException> {
+                db.routes.updateRoute(conn, 1, null, null, null)
+            }
+        }
 
     // getRoute
 

@@ -5,8 +5,9 @@ import kotlinx.serialization.Serializable
 /**
  * Represents a route update request.
  *
- * @property startLocation
- * @property endLocation
+ * @property startLocation new start location of the route (optional)
+ * @property endLocation new end location of the route (optional)
+ * @property distance new distance of the route (optional)
  */
 @Serializable
 data class UpdateRouteRequest(

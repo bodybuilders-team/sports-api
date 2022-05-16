@@ -2,6 +2,7 @@ package pt.isel.ls.sports.database.sections.routes
 
 import pt.isel.ls.sports.database.AppMemoryDBSource
 import pt.isel.ls.sports.database.connection.ConnectionDB
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.domain.Route
 
@@ -26,8 +27,26 @@ class RoutesMemoryDB(private val source: AppMemoryDBSource) : RoutesDB {
         return id
     }
 
-    override fun updateRoute(conn: ConnectionDB, rid: Int, startLocation: String?, endLocation: String?): Boolean {
-        TODO("Not yet implemented")
+    override fun updateRoute(
+        conn: ConnectionDB,
+        rid: Int,
+        startLocation: String?,
+        endLocation: String?,
+        distance: Double?
+    ): Boolean {
+        val prevRoute = source.routes[rid] ?: throw NotFoundException("Route not found.")
+
+        if (startLocation == null && endLocation == null && distance == null)
+            throw InvalidArgumentException("Start location, end location or distance must be specified.")
+
+        val newRoute = prevRoute.copy(
+            startLocation = startLocation ?: prevRoute.startLocation,
+            endLocation = endLocation ?: prevRoute.endLocation,
+            distance = distance ?: prevRoute.distance
+        )
+        source.routes[rid] = newRoute
+
+        return prevRoute != newRoute
     }
 
     override fun getRoute(

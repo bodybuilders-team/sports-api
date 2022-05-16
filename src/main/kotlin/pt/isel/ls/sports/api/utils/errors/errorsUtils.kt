@@ -18,7 +18,7 @@ import pt.isel.ls.sports.utils.Logger
  * Catches any exceptions and returns an error response accordingly.
  *
  * @param block function to execute
- * @return error response, if any error occurs
+ * @return response from the executed [block] or error response, if any error occurs
  */
 inline fun runAndCatch(block: () -> Response): Response =
     try {

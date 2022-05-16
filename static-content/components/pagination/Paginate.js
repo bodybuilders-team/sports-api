@@ -7,7 +7,7 @@ import {range} from "../../js/utils.js";
  */
 
 /**
- * Pagination component
+ * Pagination component.
  *
  * @param {Object} state - global state
  *

@@ -1,6 +1,7 @@
 package pt.isel.ls.sports.unit.database.sections.activities
 
 import kotlinx.datetime.toLocalDate
+import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
@@ -59,6 +60,64 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
         assertEquals(5, aid5)
         assertEquals(6, aid6)
     }
+
+    // updateActivity
+
+    @Test
+    override fun `updateActivity updates an activity correctly`(): Unit = db.execute { conn ->
+        val newDate = "2022-04-20".toLocalDate()
+        val newDuration = "20:00:00.000".toDuration()
+        val newSid = 1
+        val newRid = 1
+        db.activities.updateActivity(conn, 1, newDate, newDuration, newSid, newRid)
+
+        val updatedActivity = db.activities.getActivity(conn, 1)
+
+        assertEquals(newDate, updatedActivity.date)
+        assertEquals(newDuration, updatedActivity.duration)
+        assertEquals(newSid, updatedActivity.sid)
+        assertEquals(newRid, updatedActivity.rid)
+    }
+
+    @Test
+    override fun `updateActivity returns true if an activity was modified`(): Unit = db.execute { conn ->
+        val newDate = "2022-04-20".toLocalDate()
+        val newDuration = "20:00:00.000".toDuration()
+        val newSid = 1
+        val newRid = 1
+        assertTrue(db.activities.updateActivity(conn, 1, newDate, newDuration, newSid, newRid))
+    }
+
+    @Test
+    override fun `updateActivity returns false if an activity was not modified`(): Unit = db.execute { conn ->
+        val activity = db.activities.getActivity(conn, 1)
+        assertFalse(
+            db.activities.updateActivity(
+                conn,
+                1,
+                activity.date,
+                activity.duration,
+                activity.sid,
+                activity.rid
+            )
+        )
+    }
+
+    @Test
+    override fun `updateActivity throws NotFoundException if there's no activity with the aid`(): Unit =
+        db.execute { conn ->
+            assertFailsWith<NotFoundException> {
+                db.activities.updateActivity(conn, 9999, "2022-04-20".toLocalDate(), "20:00:00.000".toDuration(), 1, 1)
+            }
+        }
+
+    @Test
+    override fun `throws InvalidArgumentException if date, duration, sid and rid are both null`(): Unit =
+        db.execute { conn ->
+            assertFailsWith<InvalidArgumentException> {
+                db.activities.updateActivity(conn, 1, null, null, null, null)
+            }
+        }
 
     // getActivity
 

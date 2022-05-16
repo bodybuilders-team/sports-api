@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 /**
  * Represents a sport update request.
  *
- * @property name name of the sport (optional)
- * @property description description of the sport (optional)
+ * @property name new name of the sport (optional)
+ * @property description new description of the sport (optional)
  */
 @Serializable
 data class UpdateSportRequest(
