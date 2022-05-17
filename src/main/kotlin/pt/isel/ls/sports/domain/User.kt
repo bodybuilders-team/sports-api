@@ -12,7 +12,7 @@ import pt.isel.ls.sports.services.utils.isValidId
 data class User(
     val id: Int,
     val name: String,
-    val email: String
+    val email: String,
 ) {
     companion object {
         const val MIN_NAME_LENGTH = 3

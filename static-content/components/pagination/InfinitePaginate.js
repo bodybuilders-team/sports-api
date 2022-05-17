@@ -19,14 +19,14 @@ async function InfinitePaginate(state, props) {
         if (top < window.innerHeight && !loading) {
             loading = true
 
-            const children = await onLoadMore(numChildren)
+            const children = await Promise.all(await onLoadMore(numChildren))
             container.append(...children)
 
             loading = false
         }
     }, false);
 
-    const children = await onLoadMore(initialNumChildren)
+    const children = await Promise.all(await onLoadMore(initialNumChildren))
     container.append(...children)
 
     return container

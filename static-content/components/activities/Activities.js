@@ -1,4 +1,5 @@
-import {a, div, h5} from "../../js/dom/domTags.js";
+import {div} from "../../js/dom/domTags.js";
+import ActivityCard from "./ActivityCard.js";
 
 /**
  * @typedef PropActivity
@@ -20,18 +21,9 @@ async function Activities(state, props) {
     return div(
         {class: "row justify-content-evenly"},
         ...props.activities.map(activity =>
-            div(
-                {class: "card user-card col-6"},
-                div(
-                    {class: "card-body d-flex justify-content-center"},
-                    h5(
-                        {class: "card-title"},
-                        a({href: `#activities/${activity.id}`}, `Activity ${activity.id}`)
-                    )
-                )
-            )
+            ActivityCard(state, activity)
         )
-    );
+    )
 }
 
 export default Activities;

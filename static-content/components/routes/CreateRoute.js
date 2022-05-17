@@ -1,4 +1,5 @@
 import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.js";
+import {alertBoxWithError} from "../../js/utils.js";
 
 /**
  * CreateSport component.
@@ -6,11 +7,46 @@ import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.j
  * @param state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onCreateSubmint - on Submit event callback
  *
  * @return Promise<HTMLElement>
  */
 async function CreateRoute(state, props) {
+    const {onRouteCreated} = props
+
+    /**
+     * Creates a route.
+     * @param event form event
+     */
+    async function createRoute(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        const startLocation = form.querySelector("#routeStartLocation").value;
+        const endLocation = form.querySelector("#routeEndLocation").value;
+        const distance = form.querySelector("#routeDistance").value;
+
+        const token = window.localStorage.getItem("token");
+
+        const res = await fetch(
+            "http://localhost:8888/api/routes/",
+            {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({startLocation, endLocation, distance: Number(distance)})
+            }
+        );
+
+        const json = await res.json();
+
+        if (res.ok)
+            onRouteCreated({id: json.id, startLocation, endLocation, distance: Number(distance)});
+        else
+            await alertBoxWithError(state, form, json);
+    }
+
     return div(
         p(
             {align: "center"},
@@ -31,7 +67,7 @@ async function CreateRoute(state, props) {
                 {class: "card card-body bg-light"},
                 h4("Create Route"),
                 form(
-                    {onSubmit: props.onCreateSubmint},
+                    {onSubmit: createRoute},
                     label({for: "routeStartLocation", class: "col-form-label"}, "Start Location"),
                     input({
                         type: "text", id: "routeStartLocation", name: "routeStartLocation",

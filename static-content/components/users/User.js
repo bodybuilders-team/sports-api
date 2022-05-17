@@ -25,9 +25,9 @@ async function User(state, props) {
         {class: "row justify-content-evenly"},
         h1({class: "app-icon"}, `User ${props.id}`),
         div(
-            {class: "card user-card col-6"},
+            {class: "card user-card col-6 bg-light"},
             div(
-                {class: "card-body col justify-content-center bg-light"},
+                {class: "card-body col justify-content-center "},
                 h3("Username: ", props.name),
                 h3("Email: ", props.email),
                 (props.activitiesData.activities.length > 0)

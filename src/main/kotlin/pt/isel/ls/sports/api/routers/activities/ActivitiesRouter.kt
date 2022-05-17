@@ -185,7 +185,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
      */
     private fun searchUsersByActivity(request: Request): Response = runAndCatch {
         val sid = request.queryOrThrow("sid").toIntOrThrow { "Invalid Sport Id" }
-        val rid = request.queryOrThrow("rid").toIntOrThrow { "Invalid Route Id" }
+        val rid = request.query("rid")?.toIntOrThrow { "Invalid Route Id" }
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
         val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 

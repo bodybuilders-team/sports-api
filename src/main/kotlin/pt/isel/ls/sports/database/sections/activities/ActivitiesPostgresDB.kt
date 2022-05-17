@@ -170,10 +170,11 @@ class ActivitiesPostgresDB : ActivitiesDB {
     override fun searchUsersByActivity(
         conn: ConnectionDB,
         sid: Int,
-        rid: Int,
+        rid: Int?,
         skip: Int,
         limit: Int
     ): UsersResponse {
+        val queryRid = if (rid != null) "AND rid = ?" else "AND rid IS NULL"
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
@@ -184,16 +185,20 @@ class ActivitiesPostgresDB : ActivitiesDB {
                 JOIN (
                 SELECT uid
                 FROM activities
-                WHERE sid = ? AND rid = ?
+                WHERE sid = ? $queryRid
                 ORDER BY duration
                 ) AS activityUids ON users.id = activityUids.uid
                     """.trimIndent()
                 )
             )
-        stm.setInt(1, sid)
-        stm.setInt(2, rid)
-        stm.setInt(3, skip)
-        stm.setInt(4, limit)
+        var counter = 1
+
+        stm.setInt(counter++, sid)
+        if (rid != null)
+            stm.setInt(counter++, rid)
+
+        stm.setInt(counter++, skip)
+        stm.setInt(counter, limit)
 
         return getUsersResponse(stm)
     }

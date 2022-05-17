@@ -19,30 +19,29 @@ import DeleteActivity from "./DeleteActivity.js";
  * @param {number} props.sport.id - activity sport id
  * @param {string} props.sport.name - activity sport name
  * @param {?PropRoute=} props.route - activity route
- * @param {OnSubmitCallback} props.onUpdateSubmit - on Submit event callback
- * @param {OnSubmitCallback} props.onDeleteSubmit - on Submit event callback
  *
  * @return Promise<HTMLElement>
  */
 async function Activity(state, props) {
+    const {id, date, duration, sport, route, onActivityUpdated, onActivityDeleted} = props;
 
     return div(
         {class: "row justify-content-evenly"},
-        h1({class: "app-icon"}, `Activity ${props.id}`),
+        h1({class: "app-icon"}, `Activity ${id}`),
         div(
             {class: "card user-card col-6 bg-light"},
             div(
                 {class: "card-body"},
-                h3({id: "activitySport"}, "Sport: ", a({href: `#sports/${props.sport.id}`}, props.sport.name)),
-                h3({id: "activityDate"}, "Date: ", props.date),
-                h3({id: "activityDuration"}, "Duration: ", props.duration),
-                props.route != null
-                    ? h5({id: "activityRoute"}, "Route: ", a({href: `#routes/${props.route.id}`}, props.route.id.toString()))
+                h3({id: "activitySport"}, "Sport: ", a({href: `#sports/${sport.id}`}, sport.name)),
+                h3({id: "activityDate"}, "Date: ", date),
+                h3({id: "activityDuration"}, "Duration: ", duration),
+                route != null
+                    ? h5({id: "activityRoute"}, "Route: ", a({href: `#routes/${route.id}`}, route.id.toString()))
                     : undefined,
                 br(),
-                EditActivity(state, props),
+                EditActivity(state, {id, onActivityUpdated}),
                 br(),
-                DeleteActivity(state, props)
+                DeleteActivity(state, {id, onActivityDeleted})
             )
         )
     );

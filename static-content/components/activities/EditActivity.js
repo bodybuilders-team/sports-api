@@ -1,4 +1,5 @@
 import {br, button, div, form, h4, input, label} from "../../js/dom/domTags.js";
+import {alertBoxWithError} from "../../js/utils.js";
 
 /**
  * EditSport component.
@@ -6,11 +7,44 @@ import {br, button, div, form, h4, input, label} from "../../js/dom/domTags.js";
  * @param state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onUpdateSubmit - on Submit event callback
  *
  * @return Promise<HTMLElement>
  */
 async function EditActivity(state, props) {
+    const {id, onActivityUpdated} = props;
+
+    async function updateActivity(event) {
+
+        event.preventDefault();
+        const form = event.target;
+
+        const sid = form.querySelector("#sid").value;
+        const date = form.querySelector("#date").value;
+        const duration = form.querySelector("#duration").value;
+        const rid = form.querySelector("#aid").value;
+
+        const token = window.localStorage.getItem("token");
+
+        const res = await fetch(
+            "http://localhost:8888/api/activities/" + id,
+            {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({sid, date, duration, rid})
+            }
+        );
+
+        const json = await res.json();
+
+        if (res.ok)
+            onActivityUpdated()
+        else
+            await alertBoxWithError(state, form, json);
+    }
+
     return div(
         input(
             {
@@ -29,7 +63,7 @@ async function EditActivity(state, props) {
                 {class: "card card-body"},
                 h4("Edit Activity"),
                 form(
-                    {onSubmit: props.onUpdateSubmit},
+                    {onSubmit: updateActivity},
 
                     label({for: "newActivitySport", class: "col-form-label"}, "New Sport"),
                     input({

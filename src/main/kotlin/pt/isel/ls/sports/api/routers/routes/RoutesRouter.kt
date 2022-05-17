@@ -102,7 +102,7 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
      */
     private fun searchRoutes(request: Request): Response = runAndCatch {
         val startLocation = request.query("startLocation")
-        val endLocation = request.query("startLocation")
+        val endLocation = request.query("endLocation")
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
         val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 

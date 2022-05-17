@@ -117,7 +117,7 @@ interface ActivitiesDB {
     fun searchUsersByActivity(
         conn: ConnectionDB,
         sid: Int,
-        rid: Int,
+        rid: Int?,
         skip: Int,
         limit: Int
     ): UsersResponse

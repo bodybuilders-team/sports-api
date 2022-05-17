@@ -1,4 +1,5 @@
-import {a, div, h5} from "../../js/dom/domTags.js";
+import {div} from "../../js/dom/domTags.js";
+import UserCard from "./UserCard.js";
 
 /**
  * @typedef PropUser
@@ -21,13 +22,7 @@ async function Users(state, props) {
     return div(
         {class: "row justify-content-evenly"},
         ...props.users.map(user =>
-            div(
-                {class: "card user-card col-6 bg-light"},
-                div(
-                    {class: "card-body d-flex justify-content-center"},
-                    h5({class: "card-title"}, a({href: `#users/${user.id}`}, user.name))
-                )
-            )
+            UserCard(state, user)
         )
     );
 }

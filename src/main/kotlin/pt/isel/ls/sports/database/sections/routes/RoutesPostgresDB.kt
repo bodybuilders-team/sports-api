@@ -107,7 +107,7 @@ class RoutesPostgresDB : RoutesDB {
 
         val where = if (startLocation != null || endLocation != null) "WHERE" else ""
         val startLocationQuery = if (startLocation != null) "start_location ILIKE ?" else ""
-        val and = if (startLocation != null) "AND" else ""
+        val and = if (startLocation != null && endLocation != null) "AND" else ""
         val endLocationQuery = if (endLocation != null) "end_location ILIKE ?" else ""
 
         val stm = conn
@@ -124,9 +124,9 @@ class RoutesPostgresDB : RoutesDB {
 
         var counter = 1
         if (startLocation != null)
-            stm.setString(counter++, "%$startLocation%")
+            stm.setString(counter++, "$startLocation%")
         if (endLocation != null)
-            stm.setString(counter++, "%$endLocation%")
+            stm.setString(counter++, "$endLocation%")
 
         stm.setInt(counter++, skip)
         stm.setInt(counter, limit)

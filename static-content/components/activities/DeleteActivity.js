@@ -1,5 +1,6 @@
 import {br, button, div, form, h4, input} from "../../js/dom/domTags.js";
 import AlertBox from "../AlertBox.js";
+import {alertBoxWithError, createRef} from "../../js/utils.js";
 
 /**
  * DeleteActivity component.
@@ -7,11 +8,47 @@ import AlertBox from "../AlertBox.js";
  * @param state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onDeleteSubmit - on Submit event callback
  *
  * @return Promise<HTMLElement>
  */
 async function DeleteActivity(state, props) {
+    const {id, onActivityDeleted} = props;
+
+    let deleting = false
+    const deleteButtonRef = createRef()
+
+    /**
+     * Deletes an activity.
+     * @param event form event
+     */
+    async function deleteActivity(event) {
+        event.preventDefault();
+        if (deleting) return;
+
+        deleting = true
+        const deleteButton = await deleteButtonRef
+        deleteButton.disabled = true
+
+        const form = event.target;
+
+        const token = window.localStorage.getItem("token");
+
+        const res = await fetch(
+            "http://localhost:8888/api/activities/" + id,
+            {
+                method: "DELETE",
+                headers: {'Authorization': `Bearer ${token}`}
+            }
+        );
+
+        const json = await res.json();
+
+        if (res.ok)
+            onActivityDeleted()
+        else
+            await alertBoxWithError(state, form, json);
+    }
+
     return div(
         input(
             {
@@ -30,7 +67,7 @@ async function DeleteActivity(state, props) {
                 {class: "card card-body"},
                 h4("Delete Activity"),
                 form(
-                    {onSubmit: props.onDeleteSubmit},
+                    {onSubmit: deleteActivity},
 
                     AlertBox(
                         state,
@@ -41,7 +78,7 @@ async function DeleteActivity(state, props) {
                     ),
 
                     br(),
-                    button({type: "submit", class: "btn btn-danger w-100"}, "Delete")
+                    button({type: "submit", class: "btn btn-danger w-100", ref: deleteButtonRef}, "Delete")
                 )
             )
         )

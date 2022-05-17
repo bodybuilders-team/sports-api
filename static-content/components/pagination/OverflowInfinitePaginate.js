@@ -25,7 +25,7 @@ async function OverflowInfinitePaginate(state, props) {
         if (lastEleTop < containerBottom && !loading) {
             loading = true
 
-            const children = await onLoadMore(numChildren)
+            const children = await Promise.all(await onLoadMore(numChildren))
             container.append(...children)
 
             loading = false
@@ -39,7 +39,7 @@ async function OverflowInfinitePaginate(state, props) {
         loading = true
         container.innerHTML = ""
 
-        const children = await onLoadMore(initialNumChildren)
+        const children = await Promise.all(await onLoadMore(initialNumChildren))
         container.append(...children)
 
         loading = false

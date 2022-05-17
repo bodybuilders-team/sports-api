@@ -1,4 +1,5 @@
 import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.js";
+import {alertBoxWithError} from "../../js/utils.js";
 
 /**
  * CreateActivity component.
@@ -6,11 +7,48 @@ import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.j
  * @param state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onCreateSubmint - on Submit event callback
+ * @param {OnSubmitCallback} props.onActivityCreated - on activity created callback
  *
  * @return Promise<HTMLElement>
  */
 async function CreateActivity(state, props) {
+    const {onActivityCreated} = props;
+
+    /**
+     * Creates an activity.
+     * @param event form event
+     */
+    async function createActivity(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        const sid = form.querySelector("#sid").value;
+        const date = form.querySelector("#date").value;
+        const duration = form.querySelector("#duration").value;
+        const rid = form.querySelector("#aid").value;
+
+        const token = window.localStorage.getItem("token");
+
+        const res = await fetch(
+            "http://localhost:8888/api/activities/",
+            {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({sid, date, duration, rid})
+            }
+        );
+
+        const json = await res.json();
+
+        if (res.ok)
+            onActivityCreated({id: json.aid, sid, date, duration, rid});
+        else
+            await alertBoxWithError(state, form, json);
+    }
+
     return div(
         p(
             {align: "center"},
@@ -31,7 +69,7 @@ async function CreateActivity(state, props) {
                 {class: "card card-body bg-light"},
                 h4("Create Activity"),
                 form(
-                    {onSubmit: props.onCreateSubmint},
+                    {onSubmit: createActivity},
                     label({for: "activitySport", class: "col-form-label"}, "Sport"),
                     input({
                         type: "text", id: "activitySport", name: "activitySport",

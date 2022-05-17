@@ -211,12 +211,12 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      */
     fun searchUsersByActivity(
         sid: Int,
-        rid: Int,
+        rid: Int?,
         skip: Int,
         limit: Int
     ): UsersResponse {
         validateSid(sid)
-        validateRid(rid)
+        if (rid != null) validateRid(rid)
         validateSkip(skip)
         validateLimit(limit, LIMIT_RANGE)
 

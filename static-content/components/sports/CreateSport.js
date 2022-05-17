@@ -1,16 +1,49 @@
 import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.js";
+import {alertBoxWithError} from "../../js/utils.js";
 
 /**
  * CreateSport component.
  *
  * @param state - application state
  *
- * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onCreateSubmit - on Submit event callback
- *
  * @return Promise<HTMLElement>
  */
 async function CreateSport(state, props) {
+    const {onSportCreated} = props;
+
+    /**
+     * Creates a sport.
+     * @param event form event
+     */
+    async function createSport(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        const name = form.querySelector("#sportName").value;
+        const description = form.querySelector("#sportDescription").value;
+
+        const token = window.localStorage.getItem("token");
+
+        const res = await fetch(
+            "http://localhost:8888/api/sports",
+            {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({name, description})
+            }
+        );
+
+        const json = await res.json();
+
+        if (res.ok)
+            onSportCreated({id: json.id, name, description});
+        else
+            await alertBoxWithError(state, form, json);
+    }
+
     return div(
         p(
             {align: "center"},
@@ -31,7 +64,7 @@ async function CreateSport(state, props) {
                 {class: "card card-body bg-light"},
                 h4("Create Sport"),
                 form(
-                    {onSubmit: props.onCreateSubmit},
+                    {onSubmit: createSport},
                     label({for: "sportName", class: "col-form-label"}, "Name"),
                     input({
                         type: "text", id: "sportName", name: "sportName",
