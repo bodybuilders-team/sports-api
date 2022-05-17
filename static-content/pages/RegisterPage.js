@@ -26,7 +26,7 @@ async function RegisterPage(state) {
             {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({name: username, email})
+                body: JSON.stringify({name: username, email, password})
             }
         );
 

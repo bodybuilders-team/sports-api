@@ -16,7 +16,7 @@ import java.sql.Statement
  */
 class UsersPostgresDB : UsersDB {
 
-    override fun createNewUser(conn: ConnectionDB, name: String, email: String): Int {
+    override fun createNewUser(conn: ConnectionDB, name: String, email: String, hashedPassword: String): Int {
         if (hasUserWithEmail(conn, email))
             throw AlreadyExistsException("Email already in use")
 
@@ -24,13 +24,14 @@ class UsersPostgresDB : UsersDB {
             .getPostgresConnection()
             .prepareStatement(
                 """
-                INSERT INTO users(name, email)
-                VALUES (?, ?)
+                INSERT INTO users(name, email, password)
+                VALUES (?, ?, ?)
                 """.trimIndent(),
                 Statement.RETURN_GENERATED_KEYS
             )
         stm.setString(1, name)
         stm.setString(2, email)
+        stm.setString(3, hashedPassword)
 
         if (stm.executeUpdate() == 0)
             throw SQLException("Creating user failed, no rows affected.")
@@ -124,7 +125,8 @@ class UsersPostgresDB : UsersDB {
         fun getUserFromTable(rs: ResultSet) = User(
             id = rs.getInt(1),
             name = rs.getString(2),
-            email = rs.getString(3)
+            email = rs.getString(3),
+            password = rs.getString(4)
         )
 
         /**

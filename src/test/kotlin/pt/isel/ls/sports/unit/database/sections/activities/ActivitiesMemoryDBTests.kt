@@ -21,7 +21,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `createNewActivity creates activity correctly in the database`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val aid =
             db.activities.createNewActivity(
@@ -40,7 +40,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `createNewActivity returns correct identifier`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val aid1 =
             db.activities.createNewActivity(conn, 1, "2022-12-05".toLocalDate(), "14:16:27.903".toDuration(), 1, 1)
@@ -129,7 +129,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `getActivity returns the activity object`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val activity = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 
@@ -150,7 +150,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `deleteActivity deletes an activity successfully`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         source.activities[1] = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 
@@ -171,7 +171,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `getSportActivities returns the activities list`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
         val activity1 = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
@@ -190,7 +190,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `getSportActivities with skip works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
         val activity1 = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
@@ -209,7 +209,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `getSportActivities with limit works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
         val activity1 = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
@@ -230,7 +230,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `getUserActivities returns the activities list`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
         val activity1 = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
@@ -249,7 +249,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `getUserActivities with skip works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
         val activity1 = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
@@ -268,7 +268,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `getUserActivities with limit works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
         val activity1 = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
@@ -289,7 +289,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `searchActivities returns the activities list`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
         val activity1 = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
@@ -384,7 +384,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `searchActivities with skip works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
         val activity1 = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
@@ -413,7 +413,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `searchActivities with limit works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
         val activity1 = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
@@ -444,9 +444,9 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `searchUsersByActivity returns a list of users`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        source.users[2] = User(2, "André Jesus", "andrejesus@mail.com")
-        source.users[3] = User(3, "André Páscoa", "andrepascoa@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
+        source.users[2] = User(2, "André Jesus", "andrejesus@mail.com", "H42xS")
+        source.users[3] = User(3, "André Páscoa", "andrepascoa@mail.com", "H42xS")
 
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
@@ -464,9 +464,9 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
         assertEquals(
             listOf(
-                User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com"),
-                User(2, "André Jesus", "andrejesus@mail.com"),
-                User(3, "André Páscoa", "andrepascoa@mail.com"),
+                User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS"),
+                User(2, "André Jesus", "andrejesus@mail.com", "H42xS"),
+                User(3, "André Páscoa", "andrepascoa@mail.com", "H42xS"),
             ),
             users
         )
@@ -474,9 +474,9 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `searchUsersByActivity with skip works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        source.users[2] = User(2, "André Jesus", "andrejesus@mail.com")
-        source.users[3] = User(3, "André Páscoa", "andrepascoa@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
+        source.users[2] = User(2, "André Jesus", "andrejesus@mail.com", "H42xS")
+        source.users[3] = User(3, "André Páscoa", "andrepascoa@mail.com", "H42xS")
 
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
@@ -494,8 +494,8 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
         assertEquals(
             listOf(
-                User(2, "André Jesus", "andrejesus@mail.com"),
-                User(3, "André Páscoa", "andrepascoa@mail.com"),
+                User(2, "André Jesus", "andrejesus@mail.com", "H42xS"),
+                User(3, "André Páscoa", "andrepascoa@mail.com", "H42xS"),
             ),
             users
         )
@@ -503,9 +503,9 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `searchUsersByActivity with limit works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        source.users[2] = User(2, "André Jesus", "andrejesus@mail.com")
-        source.users[3] = User(3, "André Páscoa", "andrepascoa@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
+        source.users[2] = User(2, "André Jesus", "andrejesus@mail.com", "H42xS")
+        source.users[3] = User(3, "André Páscoa", "andrepascoa@mail.com", "H42xS")
 
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
@@ -523,8 +523,8 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
         assertEquals(
             listOf(
-                User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com"),
-                User(2, "André Jesus", "andrejesus@mail.com")
+                User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS"),
+                User(2, "André Jesus", "andrejesus@mail.com", "H42xS")
             ),
             users
         )
@@ -534,7 +534,7 @@ class ActivitiesMemoryDBTests : AppMemoryDBTests(), ActivitiesDBTests {
 
     @Test
     override fun `hasActivity returns true if the activity exists`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.sports[1] = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
         source.activities[1] = Activity(1, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), 1, 1, 1)
 

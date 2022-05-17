@@ -31,8 +31,8 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @throws InvalidArgumentException if [sid] is negative
      * @throws InvalidArgumentException if [rid] is negative
      * @throws AuthenticationException if a user with the [token] was not found
-     * @throws NotFoundException if there's no sport with the [sid]
-     * @throws NotFoundException if there's no route with the [rid]
+     * @throws InvalidArgumentException if there's no sport with the [sid]
+     * @throws InvalidArgumentException if there's no route with the [rid]
      */
     fun createNewActivity(token: String, date: LocalDate, duration: Duration, sid: Int, rid: Int?): Int {
         validateSid(sid)
@@ -40,8 +40,12 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
 
         return db.execute { conn ->
             val uid = authenticate(conn, token)
-            validateSportExists(conn, sid)
-            if (rid != null) validateRouteExists(conn, rid)
+
+            if (!db.sports.hasSport(conn, sid))
+                throw InvalidArgumentException("There's no sport with the Sport id $sid")
+
+            if (rid != null && !db.routes.hasRoute(conn, rid))
+                throw InvalidArgumentException("There's no route with the Route id $rid")
 
             db.activities.createNewActivity(conn, uid, date, duration, sid, rid)
         }
@@ -50,7 +54,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
     /**
      * Updates an activity.
      *
-     * @param aid activity's unique identifier
+     * @param id activity's unique identifier
      * @param token user's token
      * @param date new date of the activity
      * @param duration new duration of the activity
@@ -58,44 +62,52 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @param rid new route id of the activity
      *
      * @return true if the activity was successfully modified, false otherwise
-     * @throws InvalidArgumentException if [aid] is negative
+     * @throws InvalidArgumentException if [id] is negative
      * @throws InvalidArgumentException if [sid] is negative
      * @throws InvalidArgumentException if [rid] is negative
      * @throws AuthenticationException if a user with the [token] was not found
-     * @throws NotFoundException if there's no activity with the [aid]
+     * @throws InvalidArgumentException if there's no sport with the [sid]
+     * @throws InvalidArgumentException if there's no route with the [rid]
+     * @throws NotFoundException if there's no activity with the [id]
      * @throws AuthorizationException if the user with the [token] is not the owner of the activity
      * @throws InvalidArgumentException if [date], [duration], [sid] and [rid] are both null
      */
-    fun updateActivity(aid: Int, token: String, date: LocalDate?, duration: Duration?, sid: Int?, rid: Int?): Boolean {
-        validateAid(aid)
+    fun updateActivity(id: Int, token: String, date: LocalDate?, duration: Duration?, sid: Int?, rid: Int?): Boolean {
+        validateAid(id)
         if (sid != null) validateSid(sid)
         if (rid != null) validateRid(rid)
 
         return db.execute { conn ->
             val uid = authenticate(conn, token)
 
-            val activity = db.activities.getActivity(conn, aid)
+            if (sid != null && !db.sports.hasSport(conn, sid))
+                throw InvalidArgumentException("There's no sport with the Sport id $sid")
+
+            if (rid != null && !db.routes.hasRoute(conn, rid))
+                throw InvalidArgumentException("There's no route with the Route id $rid")
+
+            val activity = db.activities.getActivity(conn, id)
             if (activity.uid != uid)
                 throw AuthorizationException("You are not allowed to update this activity.")
 
-            db.activities.updateActivity(conn, aid, date, duration, sid, rid)
+            db.activities.updateActivity(conn, id, date, duration, sid, rid)
         }
     }
 
     /**
      * Gets a specific activity.
      *
-     * @param aid activity's unique identifier
+     * @param id activity's unique identifier
      *
      * @return the activity object
-     * @throws InvalidArgumentException if [aid] is negative
-     * @throws NotFoundException if there's no activity with the [aid]
+     * @throws InvalidArgumentException if [id] is negative
+     * @throws NotFoundException if there's no activity with the [id]
      */
-    fun getActivity(aid: Int): Activity {
-        validateAid(aid)
+    fun getActivity(id: Int): Activity {
+        validateAid(id)
 
         return db.execute { conn ->
-            db.activities.getActivity(conn, aid)
+            db.activities.getActivity(conn, id)
         }
     }
 
@@ -103,24 +115,24 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * Deletes an activity.
      *
      * @param token user's token
-     * @param aid activity's unique identifier
+     * @param id activity's unique identifier
      *
-     * @throws InvalidArgumentException if [aid] is negative
+     * @throws InvalidArgumentException if [id] is negative
      * @throws AuthenticationException if a user with the [token] was not found
-     * @throws NotFoundException if there's no activity with the [aid]
+     * @throws NotFoundException if there's no activity with the [id]
      * @throws AuthorizationException if the user with the [token] is not the owner of the activity
      */
-    fun deleteActivity(token: String, aid: Int) {
-        validateAid(aid)
+    fun deleteActivity(token: String, id: Int) {
+        validateAid(id)
 
         db.execute { conn ->
             val uid = authenticate(conn, token)
 
-            val activity = db.activities.getActivity(conn, aid)
+            val activity = db.activities.getActivity(conn, id)
             if (uid != activity.uid)
                 throw AuthorizationException("You are not allowed to delete this activity")
 
-            db.activities.deleteActivity(conn, aid)
+            db.activities.deleteActivity(conn, id)
         }
     }
 

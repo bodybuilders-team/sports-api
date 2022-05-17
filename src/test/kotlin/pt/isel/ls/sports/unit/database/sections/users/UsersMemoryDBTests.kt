@@ -16,16 +16,16 @@ class UsersMemoryDBTests : AppMemoryDBTests(), UsersDBTests {
 
     @Test
     override fun `createNewUser creates user correctly in the database`(): Unit = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
-        assertEquals(User(uid, "Nyckollas Brandão", "nyckollasbrandao@mail.com"), source.users[uid])
+        assertEquals(User(uid, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS"), source.users[uid])
     }
 
     @Test
     override fun `createNewUser returns correct identifier`(): Unit = db.execute { conn ->
-        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val uid2 = db.users.createNewUser(conn, "André Jesus", "andrejesus@mail.com")
-        val uid3 = db.users.createNewUser(conn, "André Páscoa", "andrepascoa@mail.com")
+        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
+        val uid2 = db.users.createNewUser(conn, "André Jesus", "andrejesus@mail.com", "H42xS")
+        val uid3 = db.users.createNewUser(conn, "André Páscoa", "andrepascoa@mail.com", "H42xS")
 
         assertEquals(1, uid1)
         assertEquals(2, uid2)
@@ -35,10 +35,10 @@ class UsersMemoryDBTests : AppMemoryDBTests(), UsersDBTests {
     @Test
     override fun `createNewUser throws AlreadyExistsException if a user with the email already exists`(): Unit =
         db.execute { conn ->
-            db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
             assertFailsWith<AlreadyExistsException> {
-                db.users.createNewUser(conn, "André Jesus", "nyckollasbrandao@mail.com")
+                db.users.createNewUser(conn, "André Jesus", "nyckollasbrandao@mail.com", "H42xS")
             }
         }
 
@@ -46,7 +46,7 @@ class UsersMemoryDBTests : AppMemoryDBTests(), UsersDBTests {
 
     @Test
     override fun `getUser returns the user object`(): Unit = db.execute { conn ->
-        val user = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val user = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         source.users[1] = user
 
@@ -65,9 +65,9 @@ class UsersMemoryDBTests : AppMemoryDBTests(), UsersDBTests {
 
     @Test
     override fun `getAllUsers returns list of user objects`(): Unit = db.execute { conn ->
-        val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val user2 = User(2, "André Jesus", "andrejesus@mail.com")
-        val user3 = User(3, "André Páscoa", "andrepascoa@mail.com")
+        val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
+        val user2 = User(2, "André Jesus", "andrejesus@mail.com", "H42xS")
+        val user3 = User(3, "André Páscoa", "andrepascoa@mail.com", "H42xS")
 
         source.users[1] = user1
         source.users[2] = user2
@@ -83,9 +83,9 @@ class UsersMemoryDBTests : AppMemoryDBTests(), UsersDBTests {
 
     @Test
     override fun `getAllUsers with skip works`(): Unit = db.execute { conn ->
-        val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val user2 = User(2, "André Jesus", "andrejesus@mail.com")
-        val user3 = User(3, "André Páscoa", "andrepascoa@mail.com")
+        val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
+        val user2 = User(2, "André Jesus", "andrejesus@mail.com", "H42xS")
+        val user3 = User(3, "André Páscoa", "andrepascoa@mail.com", "H42xS")
 
         source.users[1] = user1
         source.users[2] = user2
@@ -96,9 +96,9 @@ class UsersMemoryDBTests : AppMemoryDBTests(), UsersDBTests {
 
     @Test
     override fun `getAllUsers with limit works`(): Unit = db.execute { conn ->
-        val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val user2 = User(2, "André Jesus", "andrejesus@mail.com")
-        val user3 = User(3, "André Páscoa", "andrepascoa@mail.com")
+        val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
+        val user2 = User(2, "André Jesus", "andrejesus@mail.com", "H42xS")
+        val user3 = User(3, "André Páscoa", "andrepascoa@mail.com", "H42xS")
 
         source.users[1] = user1
         source.users[2] = user2
@@ -111,7 +111,7 @@ class UsersMemoryDBTests : AppMemoryDBTests(), UsersDBTests {
 
     @Test
     override fun `hasUserWithEmail returns true if a user with the given email exists`(): Unit = db.execute { conn ->
-        val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.users[1] = user1
 
         assertTrue(db.users.hasUserWithEmail(conn, "nyckollasbrandao@mail.com"))
@@ -127,7 +127,7 @@ class UsersMemoryDBTests : AppMemoryDBTests(), UsersDBTests {
 
     @Test
     override fun `hasUser returns true if a user with the given uid exists`(): Unit = db.execute { conn ->
-        val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val user1 = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         source.users[1] = user1
 
         assertTrue(db.users.hasUser(conn, 1))

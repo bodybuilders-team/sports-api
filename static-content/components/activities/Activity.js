@@ -23,7 +23,7 @@ import DeleteActivity from "./DeleteActivity.js";
  * @return Promise<HTMLElement>
  */
 async function Activity(state, props) {
-    const {id, date, duration,user, sport, route, onActivityUpdated, onActivityDeleted} = props;
+    const {id, date, duration, user, sport, route, onActivityUpdated, onActivityDeleted} = props;
 
     return div(
         {class: "row justify-content-evenly"},

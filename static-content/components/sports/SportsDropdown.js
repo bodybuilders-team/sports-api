@@ -1,6 +1,6 @@
 import {createRef} from "../../js/utils.js";
 import apiFetch from "../../js/apiFetch.js";
-import {label, button, div, input} from "../../js/dom/domTags.js";
+import {button, div, input, label} from "../../js/dom/domTags.js";
 import OverflowInfinitePaginate from "../pagination/OverflowInfinitePaginate.js";
 
 async function SportsDropdown(state, props) {

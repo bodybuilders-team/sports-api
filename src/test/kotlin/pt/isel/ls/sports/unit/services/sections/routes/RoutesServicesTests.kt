@@ -20,7 +20,7 @@ class RoutesServicesTests : AbstractServicesTests() {
     @Test
     fun `createNewRoute creates route correctly`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val rid = services.routes.createNewRoute(token, "Odivelas", "Chelas", 0.150)
@@ -31,7 +31,7 @@ class RoutesServicesTests : AbstractServicesTests() {
     @Test
     fun `createNewRoute returns correct identifier`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val rid1 = services.routes.createNewRoute(token, "Odivelas", "Chelas", 0.150)
@@ -46,7 +46,7 @@ class RoutesServicesTests : AbstractServicesTests() {
     @Test
     fun `createNewRoute throws InvalidArgumentException if the distance is negative`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         assertFailsWith<InvalidArgumentException> {
@@ -57,7 +57,7 @@ class RoutesServicesTests : AbstractServicesTests() {
     @Test
     fun `createNewRoute throws AuthenticationException if a user with the token was not found`(): Unit =
         db.execute { conn ->
-            db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
             val token = "Lalala"
 
             assertFailsWith<AuthenticationException> {
@@ -69,7 +69,7 @@ class RoutesServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateRoute updates a route correctly`() = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
@@ -87,7 +87,7 @@ class RoutesServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateRoute returns true if a route was modified`() = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
@@ -104,7 +104,7 @@ class RoutesServicesTests : AbstractServicesTests() {
         val endLocation = "new end location"
         val distance = 124.0
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val rid = db.routes.createNewRoute(conn, startLocation, endLocation, distance, uid)
@@ -114,7 +114,7 @@ class RoutesServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateRoute throws InvalidArgumentException if rid is negative`(): Unit = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         assertFailsWith<InvalidArgumentException> {
@@ -124,7 +124,7 @@ class RoutesServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateRoute throws InvalidArgumentException if distance is invalid`(): Unit = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
@@ -137,7 +137,7 @@ class RoutesServicesTests : AbstractServicesTests() {
     @Test
     fun `updateRoute throws AuthenticationException if a user with the token was not found`(): Unit =
         db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
             val token = "lala"
 
             val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
@@ -149,7 +149,7 @@ class RoutesServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateRoute throws NotFoundException if there's no route with the rid`(): Unit = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         assertFailsWith<NotFoundException> {
@@ -159,9 +159,9 @@ class RoutesServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateRoute throws AuthorizationException if the user is not the route creator`(): Unit = db.execute { conn ->
-        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
-        val uid2 = db.users.createNewUser(conn, "Nyckollas Brandão2", "nyckollasbrandao2@mail.com")
+        val uid2 = db.users.createNewUser(conn, "Nyckollas Brandão2", "nyckollasbrandao2@mail.com", "H42xS")
         val token2 = db.tokens.createUserToken(conn, UUID.randomUUID(), uid2)
 
         val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid1)
@@ -174,7 +174,7 @@ class RoutesServicesTests : AbstractServicesTests() {
     @Test
     fun `updateRoute throws InvalidArgumentException if start location, end location and distance are both null`(): Unit =
         db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
             val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
@@ -188,7 +188,7 @@ class RoutesServicesTests : AbstractServicesTests() {
 
     @Test
     fun `getRoute returns route object`(): Unit = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.150, uid)
 
         assertEquals(Route(rid, "Odivelas", "Chelas", 0.150, uid), services.routes.getRoute(rid))
@@ -215,7 +215,7 @@ class RoutesServicesTests : AbstractServicesTests() {
     @Test
     fun `getAllRoutes returns list of all route objects`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val route0 = Route(1, "Odivelas", "Chelas", 0.15, 1)

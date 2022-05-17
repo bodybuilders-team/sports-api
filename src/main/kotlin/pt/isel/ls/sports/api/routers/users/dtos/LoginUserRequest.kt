@@ -3,11 +3,10 @@ package pt.isel.ls.sports.api.routers.users.dtos
 import kotlinx.serialization.Serializable
 
 /**
- * Represents a user creation request.
+ * Represents a user login request.
  *
- * @property name name of the user
  * @property email email of the user
  * @property password password of the user
  */
 @Serializable
-data class CreateUserRequest(val name: String, val email: String, val password: String)
+data class LoginUserRequest(val email: String, val password: String)

@@ -81,11 +81,11 @@ class SportsRouter(private val services: SportsServices) : IRouter {
      */
     private fun updateSport(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
-        val sid = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
+        val id = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
 
         val sportRequest = request.decodeBodyAs<UpdateSportRequest>()
         val modified = services.updateSport(
-            sid,
+            id,
             token,
             sportRequest.name,
             sportRequest.description
@@ -117,9 +117,9 @@ class SportsRouter(private val services: SportsServices) : IRouter {
      * @return HTTP response containing a body that follows the [SportDTO] format
      */
     private fun getSport(request: Request): Response = runAndCatch {
-        val sid = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
+        val id = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
 
-        val sport = services.getSport(sid)
+        val sport = services.getSport(id)
 
         return Response(OK).json(SportDTO(sport))
     }
@@ -131,11 +131,11 @@ class SportsRouter(private val services: SportsServices) : IRouter {
      * @return HTTP response containing a body that follows the [ActivitiesResponseDTO] format
      */
     private fun getSportActivities(request: Request): Response = runAndCatch {
-        val sid = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
+        val id = request.pathOrThrow("id").toIntOrThrow { "Invalid Sport Id" }
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
         val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
-        val activitiesResponse = services.getSportActivities(sid, skip, limit)
+        val activitiesResponse = services.getSportActivities(id, skip, limit)
 
         return Response(OK).json(ActivitiesResponseDTO(activitiesResponse))
     }

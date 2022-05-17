@@ -29,6 +29,7 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
      */
     fun createNewSport(token: String, name: String, description: String?): Int {
         validateName(name)
+
         if (description != null)
             validateDescription(description)
 
@@ -42,21 +43,21 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
     /**
      * Updates a sport.
      *
-     * @param sid sport's unique identifier
+     * @param id sport's unique identifier
      * @param token user's token
      * @param name new name of the sport
      * @param description new description of the sport
      *
      * @return true if the sport was successfully modified, false otherwise
-     * @throws InvalidArgumentException if [sid] is negative
+     * @throws InvalidArgumentException if [id] is negative
      * @throws InvalidArgumentException if [name] or [description] are invalid
      * @throws AuthenticationException if a user with the [token] was not found
-     * @throws NotFoundException if there's no sport with the [sid]
+     * @throws NotFoundException if there's no sport with the [id]
      * @throws AuthorizationException if the user with the [token] is not the owner of the sport
      * @throws InvalidArgumentException if [name] and [description] are both null
      */
-    fun updateSport(sid: Int, token: String, name: String?, description: String?): Boolean {
-        validateSid(sid)
+    fun updateSport(id: Int, token: String, name: String?, description: String?): Boolean {
+        validateSid(id)
 
         if (name != null)
             validateName(name)
@@ -67,28 +68,28 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
         return db.execute { conn ->
             val uid = authenticate(conn, token)
 
-            val sport = db.sports.getSport(conn, sid)
+            val sport = db.sports.getSport(conn, id)
             if (sport.uid != uid)
                 throw AuthorizationException("You are not allowed to update this sport.")
 
-            db.sports.updateSport(conn, sid, name, description)
+            db.sports.updateSport(conn, id, name, description)
         }
     }
 
     /**
      * Gets a specific sport.
      *
-     * @param sid sport's unique identifier
+     * @param id sport's unique identifier
      *
      * @return the sport object
-     * @throws InvalidArgumentException if [sid] is negative
-     * @throws NotFoundException if there's no sport with the [sid]
+     * @throws InvalidArgumentException if [id] is negative
+     * @throws NotFoundException if there's no sport with the [id]
      */
-    fun getSport(sid: Int): Sport {
-        validateSid(sid)
+    fun getSport(id: Int): Sport {
+        validateSid(id)
 
         return db.execute { conn ->
-            db.sports.getSport(conn, sid)
+            db.sports.getSport(conn, id)
         }
     }
 
@@ -113,22 +114,22 @@ class SportsServices(db: AppDB) : AbstractServices(db) {
     /**
      * Gets all activities of a specific sport.
      *
-     * @param sid sport's unique identifier
+     * @param id sport's unique identifier
      * @param skip number of elements to skip
      * @param limit number of elements to return
      *
      * @return [ActivitiesResponse] with the list of activities
-     * @throws InvalidArgumentException if [sid] is negative
+     * @throws InvalidArgumentException if [id] is negative
      * @throws InvalidArgumentException if [skip] is invalid
      * @throws InvalidArgumentException if [limit] is invalid
      */
-    fun getSportActivities(sid: Int, skip: Int, limit: Int): ActivitiesResponse {
-        validateSid(sid)
+    fun getSportActivities(id: Int, skip: Int, limit: Int): ActivitiesResponse {
+        validateSid(id)
         validateSkip(skip)
         validateLimit(limit, LIMIT_RANGE)
 
         return db.execute { conn ->
-            db.activities.getSportActivities(conn, sid, skip, limit)
+            db.activities.getSportActivities(conn, id, skip, limit)
         }
     }
 

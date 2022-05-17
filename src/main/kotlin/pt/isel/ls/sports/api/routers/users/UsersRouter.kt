@@ -11,7 +11,9 @@ import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.IRouter
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
 import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest
-import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponseDTO
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponse
+import pt.isel.ls.sports.api.routers.users.dtos.LoginUserRequest
+import pt.isel.ls.sports.api.routers.users.dtos.LoginUserResponse
 import pt.isel.ls.sports.api.routers.users.dtos.UserDTO
 import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
@@ -45,21 +47,35 @@ class UsersRouter(private val services: UsersServices) : IRouter {
     override val routes = routes(
         "/" bind POST to ::createUser,
         "/" bind GET to ::getUsers,
+        "/login" bind POST to ::loginUser,
         "/{id}" bind GET to ::getUser,
-        "/{id}/activities" bind GET to ::getUserActivities,
+        "/{id}/activities" bind GET to ::getUserActivities
     )
 
     /**
      * Creates a user.
      *
      * @param request HTTP request containing a body that follows the [CreateUserRequest] format
-     * @return HTTP response containing a body that follows the [CreateUserResponseDTO] format
+     * @return HTTP response containing a body that follows the [CreateUserResponse] format
      */
     private fun createUser(request: Request): Response = runAndCatch {
         val userRequest = request.decodeBodyAs<CreateUserRequest>()
-        val userResponse = services.createNewUser(userRequest.name, userRequest.email)
+        val userResponse = services.createNewUser(userRequest.name, userRequest.email, userRequest.password)
 
-        return Response(CREATED).json(CreateUserResponseDTO(userResponse))
+        return Response(CREATED).json(CreateUserResponse(userResponse))
+    }
+
+    /**
+     * Logs a user in, by providing a token in exchange for a valid email and password.
+     *
+     * @param request HTTP request containing a body that follows the [LoginUserRequest] format
+     * @return HTTP response containing a body that follows the [LoginUserResponse] format
+     */
+    private fun loginUser(request: Request): Response = runAndCatch {
+        val userRequest = request.decodeBodyAs<LoginUserRequest>()
+        val token = services.loginUser(userRequest.email, userRequest.password)
+
+        return Response(OK).json(LoginUserResponse(token))
     }
 
     /**
@@ -83,9 +99,9 @@ class UsersRouter(private val services: UsersServices) : IRouter {
      * @return HTTP response containing a body that follows the [UserDTO] format
      */
     private fun getUser(request: Request): Response = runAndCatch {
-        val uid = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }
+        val id = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }
 
-        val user = services.getUser(uid)
+        val user = services.getUser(id)
 
         return Response(OK).json(UserDTO(user))
     }
@@ -97,11 +113,11 @@ class UsersRouter(private val services: UsersServices) : IRouter {
      * @return HTTP response containing a body that follows the [ActivitiesResponseDTO] format
      */
     private fun getUserActivities(request: Request): Response = runAndCatch {
-        val uid = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }
+        val id = request.pathOrThrow("id").toIntOrThrow { "Invalid User Id" }
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
         val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT
 
-        val activitiesResponse = services.getUserActivities(uid, skip, limit)
+        val activitiesResponse = services.getUserActivities(id, skip, limit)
 
         return Response(OK).json(ActivitiesResponseDTO(activitiesResponse))
     }

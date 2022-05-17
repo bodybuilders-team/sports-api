@@ -1,6 +1,8 @@
 package pt.isel.ls.sports.domain
 
 import pt.isel.ls.sports.services.utils.isValidId
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 
 /**
  * User representation.
@@ -8,11 +10,13 @@ import pt.isel.ls.sports.services.utils.isValidId
  * @property id user's unique identifier
  * @property name name of the user
  * @property email email of the user
+ * @property password (hashed) password of the user
  */
 data class User(
     val id: Int,
     val name: String,
     val email: String,
+    val password: String
 ) {
     companion object {
         const val MIN_NAME_LENGTH = 3
@@ -37,6 +41,42 @@ data class User(
          */
         fun isValidName(name: String) =
             name.length in MIN_NAME_LENGTH..MAX_NAME_LENGTH
+
+        /**
+         * Hashes a password (preferrably with salt) using the SHA-256 algorithm.
+         *
+         * @param password password to hash
+         * @return hashed password
+         */
+        fun hashPassword(password: String): String {
+            // Hash using SHA-256
+            val digest = MessageDigest.getInstance("SHA-256")
+            val encodedhash = digest.digest(
+                password.toByteArray(StandardCharsets.UTF_8)
+            )
+
+            // Convert to hexadecimal
+            val sb = StringBuilder()
+            for (b in encodedhash) {
+                val hex = Integer.toHexString(b.toInt())
+                if (hex.length == 1) {
+                    sb.append('0')
+                }
+                sb.append(hex)
+            }
+
+            return sb.toString().substring(0 until 64)
+        }
+
+        /**
+         * Checks if the given [password] is the same as the user's,
+         * by comparing the stored hash to the hash of the [password].
+         *
+         * @param password password to check
+         * @return true if it's the same as the user's
+         */
+        fun checkPassword(password: String, hash: String) =
+            hashPassword(password) == hash
     }
 
     init {

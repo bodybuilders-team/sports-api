@@ -338,8 +338,18 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
             ).users
 
         val mockUsers = listOf(
-            User(id = 2, name = "André Páscoa", email = "A48089@alunos.isel.pt"),
-            User(id = 3, name = "Nyckollas Brandão", email = "A48287@alunos.isel.pt")
+            User(
+                id = 2,
+                name = "André Páscoa",
+                email = "A48089@alunos.isel.pt",
+                password = "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            ),
+            User(
+                id = 3,
+                name = "Nyckollas Brandão",
+                email = "A48287@alunos.isel.pt",
+                password = "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            )
         )
         assertEquals(mockUsers, users)
     }
@@ -353,7 +363,12 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
             ).users
 
         val mockUsers = listOf(
-            User(id = 3, name = "Nyckollas Brandão", email = "A48287@alunos.isel.pt"),
+            User(
+                id = 3,
+                name = "Nyckollas Brandão",
+                email = "A48287@alunos.isel.pt",
+                password = "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            )
         )
         assertEquals(mockUsers, users)
     }
@@ -367,7 +382,12 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
             ).users
 
         val mockUsers = listOf(
-            User(id = 2, name = "André Páscoa", email = "A48089@alunos.isel.pt"),
+            User(
+                id = 2,
+                name = "André Páscoa",
+                email = "A48089@alunos.isel.pt",
+                password = "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            )
         )
         assertEquals(mockUsers, users)
     }

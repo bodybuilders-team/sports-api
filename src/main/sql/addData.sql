@@ -1,8 +1,9 @@
 BEGIN;
-INSERT INTO users(name, email)
-VALUES ('André Jesus', 'A48280@alunos.isel.pt'),
-       ('André Páscoa', 'A48089@alunos.isel.pt'),
-       ('Nyckollas Brandão', 'A48287@alunos.isel.pt');
+INSERT INTO users(name, email, password)
+VALUES ('André Jesus', 'A48280@alunos.isel.pt', '31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62'),
+       ('André Páscoa', 'A48089@alunos.isel.pt', '31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62'),
+       ('Nyckollas Brandão', 'A48287@alunos.isel.pt',
+        '31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62');
 
 INSERT INTO tokens(token, uid)
 VALUES ('49698b60-12ca-4df7-8950-d783124f5fas', 1),

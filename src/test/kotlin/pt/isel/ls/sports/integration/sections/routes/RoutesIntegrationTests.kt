@@ -28,7 +28,7 @@ class RoutesIntegrationTests : IntegrationTests() {
     @Test
     fun `Create new route with valid data`() {
         val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
             object {
@@ -109,7 +109,7 @@ class RoutesIntegrationTests : IntegrationTests() {
     @Test
     fun `Create new route with invalid data`() {
         val token = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
             token
         }
@@ -138,7 +138,7 @@ class RoutesIntegrationTests : IntegrationTests() {
     @Test
     fun `Update route with valid data`() {
         val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
             val rid = db.routes.createNewRoute(conn, "Lisbon", "Lisbon", 10.0, uid)
 
@@ -172,7 +172,7 @@ class RoutesIntegrationTests : IntegrationTests() {
     @Test
     fun `Update route with valid data same as before`() {
         val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
             val rid = db.routes.createNewRoute(conn, "Lisbon", "Lisbon", 10.0, uid)
 
@@ -206,7 +206,7 @@ class RoutesIntegrationTests : IntegrationTests() {
     @Test
     fun `Update route with invalid rid`() {
         val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
             object {
@@ -241,7 +241,7 @@ class RoutesIntegrationTests : IntegrationTests() {
     @Test
     fun `Get all routes`() {
         val mockRoutes = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
 
             val mockRoutes = listOf(
                 CreateRouteRequest(
@@ -305,7 +305,7 @@ class RoutesIntegrationTests : IntegrationTests() {
                 10.0
             )
 
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val rid = db.routes.createNewRoute(
                 conn,
                 route.startLocation,

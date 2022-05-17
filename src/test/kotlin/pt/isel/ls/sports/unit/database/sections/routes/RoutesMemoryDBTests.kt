@@ -17,7 +17,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
 
     @Test
     override fun `createNewRoute creates route correctly in the database`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val rid = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 1)
 
@@ -26,7 +26,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
 
     @Test
     override fun `createNewRoute returns correct identifier`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val rid1 = db.routes.createNewRoute(conn, "Odivelas", "Chelas", 0.15, 1)
         val rid2 = db.routes.createNewRoute(conn, "Chelas", "Odivelas", 0.15, 1)
@@ -97,7 +97,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
 
     @Test
     override fun `getRoute returns the route object`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val route = Route(1, "Odivelas", "Chelas", 150.0, 1)
 
@@ -118,7 +118,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
 
     @Test
     override fun `getAllRoutes returns list of all route objects`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
+        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com", "H42xS")
 
         val route0 = Route(1, "Odivelas", "Chelas", 0.15, 1)
         val route1 = Route(2, "Chelas", "Odivelas", 0.15, 1)
@@ -138,7 +138,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
 
     @Test
     override fun `getAllRoutes with skip works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
+        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com", "H42xS")
 
         val route0 = Route(1, "Odivelas", "Chelas", 0.15, 1)
         val route1 = Route(2, "Chelas", "Odivelas", 0.15, 1)
@@ -153,7 +153,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
 
     @Test
     override fun `getAllRoutes with limit works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
+        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com", "H42xS")
 
         val route0 = Route(1, "Odivelas", "Chelas", 0.15, 1)
         val route1 = Route(2, "Chelas", "Odivelas", 0.15, 1)
@@ -170,7 +170,7 @@ class RoutesMemoryDBTests : AppMemoryDBTests(), RoutesDBTests {
 
     @Test
     override fun `hasRoute returns true if the route exists`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
+        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com", "H42xS")
         source.routes[1] = Route(1, "Odivelas", "Chelas", 0.15, 1)
 
         assertTrue(db.routes.hasRoute(conn, 1))

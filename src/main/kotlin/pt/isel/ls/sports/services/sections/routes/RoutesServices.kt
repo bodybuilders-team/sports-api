@@ -46,50 +46,50 @@ class RoutesServices(db: AppDB) : AbstractServices(db) {
     /**
      * Updates a route.
      *
-     * @param rid route's unique identifier
+     * @param id route's unique identifier
      * @param token user's token
      * @param startLocation new start location of the route
      * @param endLocation new end location of the route
      * @param distance new distance to travel
      *
      * @return true if the route was successfully modified, false otherwise
-     * @throws InvalidArgumentException if [rid] is negative
+     * @throws InvalidArgumentException if [id] is negative
      * @throws InvalidArgumentException if [distance] is invalid
      * @throws AuthenticationException if a user with the [token] was not found
-     * @throws NotFoundException if there's no route with the [rid]
+     * @throws NotFoundException if there's no route with the [id]
      * @throws AuthorizationException if the user with the [token] is not the owner of the route
      * @throws InvalidArgumentException if [startLocation], [endLocation] and [distance] are both null
      */
-    fun updateRoute(rid: Int, token: String, startLocation: String?, endLocation: String?, distance: Double?): Boolean {
-        validateRid(rid)
+    fun updateRoute(id: Int, token: String, startLocation: String?, endLocation: String?, distance: Double?): Boolean {
+        validateRid(id)
         if (distance != null && !Route.isValidDistance(distance))
             throw InvalidArgumentException("Invalid distance: $distance")
 
         return db.execute { conn ->
             val uid = authenticate(conn, token)
 
-            val route = db.routes.getRoute(conn, rid)
+            val route = db.routes.getRoute(conn, id)
             if (route.uid != uid)
                 throw AuthorizationException("You are not allowed to update this route.")
 
-            db.routes.updateRoute(conn, rid, startLocation, endLocation, distance)
+            db.routes.updateRoute(conn, id, startLocation, endLocation, distance)
         }
     }
 
     /**
      * Gets a specific route.
      *
-     * @param rid route's unique identifier
+     * @param id route's unique identifier
      *
      * @return the route object
-     * @throws InvalidArgumentException if the [rid] is negative
-     * @throws NotFoundException if there's no route with the [rid]
+     * @throws InvalidArgumentException if the [id] is negative
+     * @throws NotFoundException if there's no route with the [id]
      */
-    fun getRoute(rid: Int): Route {
-        validateRid(rid)
+    fun getRoute(id: Int): Route {
+        validateRid(id)
 
         return db.execute { conn ->
-            db.routes.getRoute(conn, rid)
+            db.routes.getRoute(conn, id)
         }
     }
 

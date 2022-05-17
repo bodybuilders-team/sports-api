@@ -20,13 +20,14 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      *
      * @param name name of the user
      * @param email email of the user
+     * @param password password of the user
      *
-     * @return [CreateUserResponse] with the user's token and the user's unique identifier
+     * @return the user's unique identifier
      * @throws InvalidArgumentException if the name is invalid
      * @throws InvalidArgumentException if the email is invalid
      * @throws AlreadyExistsException if a user with that email already exists
      */
-    fun createNewUser(name: String, email: String): CreateUserResponse {
+    fun createNewUser(name: String, email: String, password: String): Int {
         if (!User.isValidName(name))
             throw InvalidArgumentException(
                 "Name must be between ${User.MIN_NAME_LENGTH} and ${User.MAX_NAME_LENGTH} characters"
@@ -39,27 +40,50 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
             if (db.users.hasUserWithEmail(conn, email))
                 throw AlreadyExistsException("Email already in use")
 
-            val uid = db.users.createNewUser(conn, name, email)
-            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
+            val hashedPassword = User.hashPassword(password + name + email)
 
-            CreateUserResponse(token, uid)
+            db.users.createNewUser(conn, name, email, hashedPassword)
+        }
+    }
+
+    /**
+     * Logs a user in, by providing a token in exchange for a valid email and password.
+     *
+     * @param email email of the user
+     * @param password password of the user
+     *
+     * @return token of the user
+     * @throws InvalidArgumentException if the email is invalid
+     * @throws InvalidArgumentException if the password is invalid
+     * @throws NotFoundException if no user with that email exists
+     */
+    fun loginUser(email: String, password: String): String {
+
+        return db.execute { conn ->
+            val user = db.users.getAllUsers(conn, 0, 1000).users.firstOrNull { it.email == email }
+                ?: throw NotFoundException("User with that email was not found")
+
+            if (!User.checkPassword(password + user.name + user.email, user.password))
+                throw InvalidArgumentException("Password does not match")
+
+            db.tokens.createUserToken(conn, UUID.randomUUID(), user.id)
         }
     }
 
     /**
      * Gets a specific user.
      *
-     * @param uid user's unique identifier
+     * @param id user's unique identifier
      *
      * @return the user object
-     * @throws InvalidArgumentException if [uid] is negative
-     * @throws NotFoundException if there's no user with the [uid]
+     * @throws InvalidArgumentException if [id] is negative
+     * @throws NotFoundException if there's no user with the [id]
      */
-    fun getUser(uid: Int): User {
-        validateUid(uid)
+    fun getUser(id: Int): User {
+        validateUid(id)
 
         return db.execute { conn ->
-            db.users.getUser(conn, uid)
+            db.users.getUser(conn, id)
         }
     }
 
@@ -83,22 +107,22 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
     /**
      * Gets all the activities made by a specific user.
      *
-     * @param uid user's unique identifier
+     * @param id user's unique identifier
      * @param skip number of elements to skip
      * @param limit number of elements to return
      *
      * @return [ActivitiesResponse] with the list of activities
-     * @throws InvalidArgumentException if [uid] is negative
+     * @throws InvalidArgumentException if [id] is negative
      * @throws InvalidArgumentException if [skip] is invalid
      * @throws InvalidArgumentException if [limit] is invalid
      */
-    fun getUserActivities(uid: Int, skip: Int, limit: Int): ActivitiesResponse {
-        validateUid(uid)
+    fun getUserActivities(id: Int, skip: Int, limit: Int): ActivitiesResponse {
+        validateUid(id)
         validateSkip(skip)
         validateLimit(limit, LIMIT_RANGE)
 
         return db.execute { conn ->
-            db.activities.getUserActivities(conn, uid, skip, limit)
+            db.activities.getUserActivities(conn, id, skip, limit)
         }
     }
 

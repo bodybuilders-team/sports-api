@@ -17,7 +17,7 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
 
     @Test
     override fun `createNewSport creates sport correctly in the database`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val rid = db.sports.createNewSport(conn, 1, "Powerlifting", "Get big")
 
@@ -26,7 +26,7 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
 
     @Test
     override fun `createNewSport returns correct identifier`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val uid1 = db.sports.createNewSport(conn, 1, "Powerlifting", "Get big")
         val uid2 = db.sports.createNewSport(conn, 1, "Swimming", "Be like a fish")
@@ -93,7 +93,7 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
 
     @Test
     override fun `getSport returns the sport object`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val sport = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
 
@@ -114,7 +114,7 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
 
     @Test
     override fun `searchSports returns list of all sport objects`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
+        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com", "H42xS")
 
         val sport1 = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
         val sport2 = Sport(2, "Powerlifting", 2, "Get big")
@@ -134,7 +134,7 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
 
     @Test
     override fun `searchSports with skip works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
+        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com", "H42xS")
 
         val sport1 = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
         val sport2 = Sport(2, "Powerlifting", 2, "Get big")
@@ -149,7 +149,7 @@ class SportsMemoryDBTests : AppMemoryDBTests(), SportsDBTests {
 
     @Test
     override fun `searchSports with limit works`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com")
+        source.users[1] = User(1, "André Jesus", "andrejesus@mail.com", "H42xS")
 
         val sport1 = Sport(1, "Soccer", 1, "Kick a ball to score a goal")
         val sport2 = Sport(2, "Powerlifting", 2, "Get big")

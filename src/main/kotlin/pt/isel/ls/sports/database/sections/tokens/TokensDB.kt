@@ -30,4 +30,14 @@ interface TokensDB {
      * @throws NotFoundException if the token isn't associated with any user
      */
     fun getUID(conn: ConnectionDB, token: String): Int
+
+    /**
+     * Verifies whether the [token] is associated with any user.
+     *
+     * @param conn database Connection
+     * @param token user's token
+     *
+     * @return true if the token is associated with any user, false otherwise
+     */
+    fun hasUID(conn: ConnectionDB, token: String): Boolean
 }

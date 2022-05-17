@@ -78,9 +78,9 @@ async function SearchActivitiesForm(state, props) {
 
         const sid = form.querySelector("#sid").value;
 
-        if (sid === ""){
+        if (sid === "") {
             invalidSportFeedback.style.display = "block";
-           return
+            return
         }
 
         invalidSportFeedback.style.display = "none";

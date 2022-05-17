@@ -80,11 +80,11 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
      */
     private fun updateRoute(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
-        val rid = request.pathOrThrow("id").toIntOrThrow { "Invalid Route Id" }
+        val id = request.pathOrThrow("id").toIntOrThrow { "Invalid Route Id" }
 
         val routeRequest = request.decodeBodyAs<UpdateRouteRequest>()
         val modified = services.updateRoute(
-            rid,
+            id,
             token,
             routeRequest.startLocation,
             routeRequest.endLocation,
@@ -118,9 +118,9 @@ class RoutesRouter(private val services: RoutesServices) : IRouter {
      * @return HTTP response containing a body that follows the [RouteDTO] format
      */
     private fun getRoute(request: Request): Response = runAndCatch {
-        val rid = request.pathOrThrow("id").toIntOrThrow { "Invalid Route Id" }
+        val id = request.pathOrThrow("id").toIntOrThrow { "Invalid Route Id" }
 
-        val route = services.getRoute(rid)
+        val route = services.getRoute(id)
 
         return Response(OK).json(RouteDTO(route))
     }

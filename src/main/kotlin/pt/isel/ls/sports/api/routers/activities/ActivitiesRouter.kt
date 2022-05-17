@@ -92,11 +92,11 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
      */
     private fun updateActivity(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
-        val aid = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
+        val id = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
 
         val routeRequest = request.decodeBodyAs<UpdateActivityRequest>()
         val modified = services.updateActivity(
-            aid,
+            id,
             token,
             routeRequest.date?.toLocalDate(),
             routeRequest.duration?.toDuration(),
@@ -114,9 +114,9 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
      * @return HTTP response containing a body that follows the [ActivityDTO] format
      */
     private fun getActivity(request: Request): Response = runAndCatch {
-        val aid = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
+        val id = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
 
-        val activity = services.getActivity(aid)
+        val activity = services.getActivity(id)
 
         return Response(OK).json(ActivityDTO(activity))
     }
@@ -129,9 +129,9 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
      */
     private fun deleteActivity(request: Request): Response = runAndCatch {
         val token = request.tokenOrThrow()
-        val aid = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
+        val id = request.pathOrThrow("id").toIntOrThrow { "Invalid Activity Id" }
 
-        services.deleteActivity(token, aid)
+        services.deleteActivity(token, id)
 
         return Response(OK).json(MessageResponse("Activity deleted"))
     }
@@ -162,7 +162,6 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
         val sid = request.queryOrThrow("sid").toIntOrThrow { "Invalid Sport Id" }
         val orderBy = request.queryOrThrow("orderBy")
         val date = request.query("date")
-
         val rid = request.query("rid")?.toIntOrThrow { "Invalid Route Id" }
         val skip = request.query("skip")?.toIntOrThrow { "Invalid skip" } ?: DEFAULT_SKIP
         val limit = request.query("limit")?.toIntOrThrow { "Invalid limit" } ?: DEFAULT_LIMIT

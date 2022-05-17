@@ -11,13 +11,13 @@ import pt.isel.ls.sports.domain.User
  */
 class UsersMemoryDB(private val source: AppMemoryDBSource) : UsersDB {
 
-    override fun createNewUser(conn: ConnectionDB, name: String, email: String): Int {
+    override fun createNewUser(conn: ConnectionDB, name: String, email: String, hashedPassword: String): Int {
         val id = source.nextUserId.getAndIncrement()
 
         if (hasUserWithEmail(conn, email))
             throw AlreadyExistsException("Email already in use")
 
-        source.users[id] = User(id, name, email)
+        source.users[id] = User(id, name, email, hashedPassword)
 
         return id
     }

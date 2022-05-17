@@ -14,7 +14,7 @@ class TokensDBMemoryTests : AppMemoryDBTests(), TokensDBTests {
 
     @Test
     override fun `createUserToken creates token correctly in the database`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), 1)
 
@@ -23,7 +23,7 @@ class TokensDBMemoryTests : AppMemoryDBTests(), TokensDBTests {
 
     @Test
     override fun `Having multiple tokens for the same user is allowed`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val token0 = db.tokens.createUserToken(conn, UUID.randomUUID(), 1)
         val token1 = db.tokens.createUserToken(conn, UUID.randomUUID(), 1)
@@ -40,7 +40,7 @@ class TokensDBMemoryTests : AppMemoryDBTests(), TokensDBTests {
 
     @Test
     override fun `getUID returns the uid correctly`(): Unit = db.execute { conn ->
-        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        source.users[1] = User(1, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val token = UUID.randomUUID().toString()
         source.tokens[token] = 1

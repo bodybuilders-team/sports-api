@@ -16,11 +16,12 @@ interface UsersDB {
      * @param conn database Connection
      * @param name name of the user
      * @param email email of the user
+     * @param hashedPassword hashed password of the user
      *
      * @return user's unique identifier
      * @throws AlreadyExistsException if a user with the [email] already exists
      */
-    fun createNewUser(conn: ConnectionDB, name: String, email: String): Int
+    fun createNewUser(conn: ConnectionDB, name: String, email: String, hashedPassword: String): Int
 
     /**
      * Gets a specific user.

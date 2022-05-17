@@ -49,4 +49,21 @@ class TokensPostgresDB : TokensDB {
         else
             throw NotFoundException("Token $token isn't associated to any user")
     }
+
+    override fun hasUID(conn: ConnectionDB, token: String): Boolean {
+        val stm = conn
+            .getPostgresConnection()
+            .prepareStatement(
+                """
+                SELECT uid
+                FROM tokens
+                WHERE token = ?
+                """.trimIndent()
+            )
+        stm.setString(1, token)
+
+        val rs = stm.executeQuery()
+
+        return rs.next()
+    }
 }

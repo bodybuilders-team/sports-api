@@ -22,7 +22,8 @@ async function LoginForm(state, props) {
                 input({
                     type: "email", id: "email",
                     class: "form-control",
-                    placeholder: "Enter your email"
+                    placeholder: "Enter your email",
+                    required: true
                 }),
 
                 label({for: "password", class: "form-label"}, "Password"),
@@ -30,7 +31,8 @@ async function LoginForm(state, props) {
                     type: "password", id: "password", pattern: "[0-9a-fA-F]{8,}",
                     title: "Enter a password with more than 8 hexadecimal digits",
                     class: "form-control",
-                    placeholder: "Enter your password"
+                    placeholder: "Enter your password",
+                    required: true
                 }),
             ),
             br(),

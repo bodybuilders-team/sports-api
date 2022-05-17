@@ -7,12 +7,13 @@ import org.http4k.core.Status
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
 import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest
-import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponseDTO
+import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponse
 import pt.isel.ls.sports.api.routers.users.dtos.UserDTO
 import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.errors.AppError
 import pt.isel.ls.sports.api.utils.json
+import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.integration.IntegrationTests
 import pt.isel.ls.sports.services.utils.isValidId
 import pt.isel.ls.sports.utils.toDuration
@@ -30,7 +31,8 @@ class UsersIntegrationTests : IntegrationTests() {
         val requestBody = """
             {
                 "name": "John",
-                "email": "JohnnyBoy@gmail.com"
+                "email": "JohnnyBoy@gmail.com",
+                "password": "123456"
             }
         """.trimIndent()
 
@@ -41,7 +43,7 @@ class UsersIntegrationTests : IntegrationTests() {
             .apply {
                 assertEquals(Status.CREATED, status)
 
-                val uid = this.decodeBodyAs<CreateUserResponseDTO>().uid
+                val uid = this.decodeBodyAs<CreateUserResponse>().uid
                 assertTrue(isValidId(uid))
 
                 db.execute { conn ->
@@ -53,12 +55,13 @@ class UsersIntegrationTests : IntegrationTests() {
     @Test
     fun `Create new user with already existing email`() {
         db.execute { conn ->
-            db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
         }
         val requestBody = """
             {
                 "name": "John",
-                "email": "JohnnyBoy@gmail.com"
+                "email": "JohnnyBoy@gmail.com",
+                "password": "123456"
             }
             
         """.trimIndent()
@@ -102,10 +105,10 @@ class UsersIntegrationTests : IntegrationTests() {
     fun `Get all users`() {
         val mockUsers = db.execute { conn ->
             val users = listOf(
-                CreateUserRequest("Johnny", "JohnnyBoy@gmail.com"),
-                CreateUserRequest("Jesus", "JesusSenpai@gmail.com")
+                CreateUserRequest("Johnny", "JohnnyBoy@gmail.com", "1234"),
+                CreateUserRequest("Jesus", "JesusSenpai@gmail.com", "1234")
             ).associateBy {
-                db.users.createNewUser(conn, it.name, it.email)
+                db.users.createNewUser(conn, it.name, it.email, User.hashPassword(it.password + it.name + it.email))
             }
             users
         }
@@ -147,8 +150,8 @@ class UsersIntegrationTests : IntegrationTests() {
     @Test
     fun `Get user by id`() {
         val mockData = db.execute { conn ->
-            val user = CreateUserRequest("Johnny", "JohnnyBoy@gmail.com")
-            val uid = db.users.createNewUser(conn, user.name, user.email)
+            val user = CreateUserRequest("Johnny", "JohnnyBoy@gmail.com", "H42xS")
+            val uid = db.users.createNewUser(conn, user.name, user.email, user.password)
             object {
                 val uid = uid
                 val user = user
@@ -201,7 +204,7 @@ class UsersIntegrationTests : IntegrationTests() {
     @Test
     fun `Get user activities by valid id`() {
         val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
 
             val activities = listOf(

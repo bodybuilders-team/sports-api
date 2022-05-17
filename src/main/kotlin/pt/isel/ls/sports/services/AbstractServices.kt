@@ -24,10 +24,11 @@ abstract class AbstractServices(protected val db: AppDB) {
      *
      * @throws AuthenticationException if a user with the [token] was not found
      */
-    protected fun authenticate(conn: ConnectionDB, token: String) = try {
-        db.tokens.getUID(conn, token)
-    } catch (error: NotFoundException) {
-        throw AuthenticationException("Invalid token")
+    protected fun authenticate(conn: ConnectionDB, token: String): Int {
+        if (!db.tokens.hasUID(conn, token))
+            throw AuthenticationException("Invalid token")
+
+        return db.tokens.getUID(conn, token)
     }
 
     /**

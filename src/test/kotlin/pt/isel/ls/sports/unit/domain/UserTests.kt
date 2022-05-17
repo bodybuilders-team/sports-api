@@ -13,7 +13,7 @@ class UserTests {
 
     @Test
     fun `Instantiate a User object with valid information`() {
-        val user = User(id = 1, name = "Paulão", email = "paulao@isel.com")
+        val user = User(id = 1, name = "Paulão", email = "paulao@isel.com", password = "H42xS")
         assertEquals(1, user.id)
         assertEquals("Paulão", user.name)
         assertEquals("paulao@isel.com", user.email)
@@ -22,21 +22,21 @@ class UserTests {
     @Test
     fun `Instantiate a User object with invalid ID throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
-            User(id = -1, name = "Paulão", email = "paulao@isel.com")
+            User(id = -1, name = "Paulão", email = "paulao@isel.com", password = "H42xS")
         }
     }
 
     @Test
     fun `Instantiate a User object with invalid name throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
-            User(id = 1, name = "", email = "paulao@isel.com")
+            User(id = 1, name = "", email = "paulao@isel.com", password = "H42xS")
         }
     }
 
     @Test
     fun `Instantiate a User object with invalid email throws IllegalArgumentException`() {
         assertFailsWith<IllegalArgumentException> {
-            User(id = 1, name = "Paulão", email = "")
+            User(id = 1, name = "Paulão", email = "", password = "H42xS")
         }
     }
 

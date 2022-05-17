@@ -36,7 +36,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Create new activity with valid data`() {
         val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
             val sid = db.sports.createNewSport(conn, uid, "Running")
@@ -112,7 +112,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Create new activity with invalid data`() {
         val token = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
             token
         }
@@ -140,7 +140,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Update activity with valid data`() {
         val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
             val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
             val rid = db.routes.createNewRoute(conn, "Lisbon", "Lisbon", 10.0, uid)
@@ -184,7 +184,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Update activity with valid data same as before`() {
         val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
             val sid = db.sports.createNewSport(conn, uid, "Running", "Running")
             val rid = db.routes.createNewRoute(conn, "Lisbon", "Lisbon", 10.0, uid)
@@ -228,7 +228,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Update activity with invalid aid`() {
         val mockData = db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val uid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
             object {
@@ -264,7 +264,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Get activity by id`() {
         val mockData = db.execute { conn ->
-            val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val sid = db.sports.createNewSport(conn, mockId, "Running")
 
             val mockActivity = CreateActivityRequest(
@@ -333,7 +333,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Delete activity`() {
         val mockData = db.execute { conn ->
-            val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), mockId)
 
             val sid = db.sports.createNewSport(conn, mockId, "Running")
@@ -371,7 +371,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Delete activity that does not exist`() {
         val token = db.execute { conn ->
-            val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), mockId)
 
             token
@@ -391,7 +391,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Delete activity with invalid token`() {
         val mockData = db.execute { conn ->
-            val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), mockId)
 
             val sid = db.sports.createNewSport(conn, mockId, "Running")
@@ -400,7 +400,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
                 date = "2020-01-01", duration = "01:00:00.000", sid = sid
             )
 
-            val mockId2 = db.users.createNewUser(conn, "Johnny2", "JohnnyBoy2@gmail.com")
+            val mockId2 = db.users.createNewUser(conn, "Johnny2", "JohnnyBoy2@gmail.com", "H42xS")
             val aid = db.activities.createNewActivity(
                 conn,
                 mockId2,
@@ -429,7 +429,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Delete a set of activities`() {
         val mockData = db.execute { conn ->
-            val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val mockId = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), mockId)
 
             val sid = db.sports.createNewSport(conn, mockId, "Running")
@@ -493,7 +493,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
     @Test
     fun `Search activity by sid and orderBy`() {
         val mockData = db.execute { conn ->
-            val mockUid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com")
+            val mockUid = db.users.createNewUser(conn, "Johnny", "JohnnyBoy@gmail.com", "H42xS")
             val mockSid = db.sports.createNewSport(conn, mockUid, "Running")
             val orderBy = "ascending"
 
@@ -537,10 +537,10 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         val mockData = db.execute { conn ->
 
             val mockUsers = listOf(
-                CreateUserRequest("Johnny", "JohnnyBoy@gmail.com"),
-                CreateUserRequest("Johnny2", "JackyBoy@gmail.com")
+                CreateUserRequest("Johnny", "JohnnyBoy@gmail.com", "H42xS"),
+                CreateUserRequest("Johnny2", "JackyBoy@gmail.com", "H42xS")
             ).associateBy {
-                db.users.createNewUser(conn, it.name, it.email)
+                db.users.createNewUser(conn, it.name, it.email, it.password)
             }
 
             val mockSid = db.sports.createNewSport(conn, 1, "Running")

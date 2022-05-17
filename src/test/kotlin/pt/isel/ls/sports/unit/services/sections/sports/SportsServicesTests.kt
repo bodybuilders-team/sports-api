@@ -24,7 +24,7 @@ class SportsServicesTests : AbstractServicesTests() {
     @Test
     fun `createNewSport creates sport correctly`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val sid = services.sports.createNewSport(token, "Powerlifting", "Get big")
@@ -35,7 +35,7 @@ class SportsServicesTests : AbstractServicesTests() {
     @Test
     fun `createNewSport returns correct identifier`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val uid1 = services.sports.createNewSport(token, "Powerlifting", "Get big")
@@ -50,7 +50,7 @@ class SportsServicesTests : AbstractServicesTests() {
     @Test
     fun `createNewSport throws InvalidArgumentException if the name is invalid`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         assertFailsWith<InvalidArgumentException> {
@@ -61,7 +61,7 @@ class SportsServicesTests : AbstractServicesTests() {
     @Test
     fun `createNewSport throws InvalidArgumentException if the description is invalid`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         assertFailsWith<InvalidArgumentException> {
@@ -82,7 +82,7 @@ class SportsServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateSport updates a sport correctly`() = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
@@ -98,7 +98,7 @@ class SportsServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateSport returns true if a sport was modified`() = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
@@ -113,7 +113,7 @@ class SportsServicesTests : AbstractServicesTests() {
         val name = "Sport name"
         val description = "Sport desc"
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val sid = db.sports.createNewSport(conn, uid, name, description)
@@ -123,7 +123,7 @@ class SportsServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateSport throws InvalidArgumentException if sid is negative`(): Unit = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         assertFailsWith<InvalidArgumentException> {
@@ -133,7 +133,7 @@ class SportsServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateSport throws InvalidArgumentException if name is invalid`(): Unit = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
@@ -145,7 +145,7 @@ class SportsServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateSport throws InvalidArgumentException if description is invalid`(): Unit = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
@@ -158,7 +158,7 @@ class SportsServicesTests : AbstractServicesTests() {
     @Test
     fun `updateSport throws AuthenticationException if a user with the token was not found`(): Unit =
         db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
             val token = "lala"
 
             val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
@@ -170,7 +170,7 @@ class SportsServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateSport throws NotFoundException if there's no sport with the sid`(): Unit = db.execute { conn ->
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
         assertFailsWith<NotFoundException> {
@@ -180,9 +180,9 @@ class SportsServicesTests : AbstractServicesTests() {
 
     @Test
     fun `updateSport throws AuthorizationException if the user is not the sport creator`(): Unit = db.execute { conn ->
-        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
-        val uid2 = db.users.createNewUser(conn, "Nyckollas Brandão2", "nyckollasbrandao2@mail.com")
+        val uid2 = db.users.createNewUser(conn, "Nyckollas Brandão2", "nyckollasbrandao2@mail.com", "H42xS")
         val token2 = db.tokens.createUserToken(conn, UUID.randomUUID(), uid2)
 
         val sid = db.sports.createNewSport(conn, uid1, "Sport name", "Sport desc")
@@ -195,7 +195,7 @@ class SportsServicesTests : AbstractServicesTests() {
     @Test
     fun `updateSport throws InvalidArgumentException if name and description are both null`(): Unit =
         db.execute { conn ->
-            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
             val token = db.tokens.createUserToken(conn, UUID.randomUUID(), uid)
 
             val sid = db.sports.createNewSport(conn, uid, "Sport name", "Sport desc")
@@ -210,7 +210,7 @@ class SportsServicesTests : AbstractServicesTests() {
     @Test
     fun `getSport returns the sport object`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         val sid = db.sports.createNewSport(conn, uid, "Soccer", "Kick a ball to score a goal")
 
@@ -236,7 +236,7 @@ class SportsServicesTests : AbstractServicesTests() {
     @Test
     fun `searchSports returns list of all sport objects`(): Unit = db.execute { conn ->
 
-        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
         db.sports.createNewSport(conn, 1, "Soccer", "Kick a ball to score a goal")
         db.sports.createNewSport(conn, 1, "Powerlifting", "Get big")
@@ -273,7 +273,7 @@ class SportsServicesTests : AbstractServicesTests() {
     @Test
     fun `getSportActivities returns the activities list`(): Unit = db.execute { conn ->
 
-        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+        val uid = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
         val sid = db.sports.createNewSport(conn, uid, "Soccer", "Kick a ball to score a goal")
 
         db.activities.createNewActivity(conn, uid, "2022-11-20".toLocalDate(), "20:23:55.263".toDuration(), sid, 1)

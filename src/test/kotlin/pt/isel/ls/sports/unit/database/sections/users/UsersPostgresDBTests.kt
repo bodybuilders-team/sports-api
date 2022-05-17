@@ -18,7 +18,12 @@ class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
     @Test
     override fun `createNewUser creates user correctly in the database`() {
         val uid = db.execute { conn ->
-            db.users.createNewUser(conn, "Paulão", "paulao@mail.com")
+            db.users.createNewUser(
+                conn,
+                "Paulão",
+                "paulao@mail.com",
+                "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            )
         }
 
         dataSource.connection.use {
@@ -27,22 +32,28 @@ class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
             val rs = stm.executeQuery()
 
             val mockTable: Array<Array<Any>> = arrayOf(
-                arrayOf(4, "Paulão", "paulao@mail.com")
+                arrayOf(
+                    4,
+                    "Paulão",
+                    "paulao@mail.com",
+                    "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+                )
             )
 
             tableAsserter(mockTable, rs) { mockRow, row ->
                 assertEquals(mockRow[0], row.getInt("id"))
                 assertEquals(mockRow[1], row.getString("name"))
                 assertEquals(mockRow[2], row.getString("email"))
+                assertEquals(mockRow[3], row.getString("password"))
             }
         }
     }
 
     @Test
     override fun `createNewUser returns correct identifier`() = db.execute { conn ->
-        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
-        val uid2 = db.users.createNewUser(conn, "André Jesus", "andrejesus@mail.com")
-        val uid3 = db.users.createNewUser(conn, "André Páscoa", "andrepascoa@mail.com")
+        val uid1 = db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
+        val uid2 = db.users.createNewUser(conn, "André Jesus", "andrejesus@mail.com", "H42xS")
+        val uid3 = db.users.createNewUser(conn, "André Páscoa", "andrepascoa@mail.com", "H42xS")
 
         assertEquals(4, uid1)
         assertEquals(5, uid2)
@@ -52,10 +63,10 @@ class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
     @Test
     override fun `createNewUser throws AlreadyExistsException if a user with the email already exists`(): Unit =
         db.execute { conn ->
-            db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com")
+            db.users.createNewUser(conn, "Nyckollas Brandão", "nyckollasbrandao@mail.com", "H42xS")
 
             assertFailsWith<AlreadyExistsException> {
-                db.users.createNewUser(conn, "André Jesus", "nyckollasbrandao@mail.com")
+                db.users.createNewUser(conn, "André Jesus", "nyckollasbrandao@mail.com", "H42xS")
             }
         }
 
@@ -65,7 +76,15 @@ class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
     override fun `getUser returns the user object`(): Unit = db.execute { conn ->
         val user = db.users.getUser(conn, 1)
 
-        assertEquals(User(1, "André Jesus", "A48280@alunos.isel.pt"), user)
+        assertEquals(
+            User(
+                1,
+                "André Jesus",
+                "A48280@alunos.isel.pt",
+                "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            ),
+            user
+        )
     }
 
     @Test
@@ -81,9 +100,24 @@ class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
     @Test
     override fun `getAllUsers returns list of user objects`(): Unit = db.execute { conn ->
         val users = listOf(
-            User(1, "André Jesus", "A48280@alunos.isel.pt"),
-            User(2, "André Páscoa", "A48089@alunos.isel.pt"),
-            User(3, "Nyckollas Brandão", "A48287@alunos.isel.pt")
+            User(
+                1,
+                "André Jesus",
+                "A48280@alunos.isel.pt",
+                "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            ),
+            User(
+                2,
+                "André Páscoa",
+                "A48089@alunos.isel.pt",
+                "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            ),
+            User(
+                3,
+                "Nyckollas Brandão",
+                "A48287@alunos.isel.pt",
+                "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            )
         )
 
         assertEquals(users, db.users.getAllUsers(conn, 0, 10).users)
@@ -100,8 +134,18 @@ class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
     @Test
     override fun `getAllUsers with skip works`(): Unit = db.execute { conn ->
         val users = listOf(
-            User(2, "André Páscoa", "A48089@alunos.isel.pt"),
-            User(3, "Nyckollas Brandão", "A48287@alunos.isel.pt")
+            User(
+                2,
+                "André Páscoa",
+                "A48089@alunos.isel.pt",
+                "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            ),
+            User(
+                3,
+                "Nyckollas Brandão",
+                "A48287@alunos.isel.pt",
+                "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            )
         )
 
         assertEquals(users, db.users.getAllUsers(conn, 1, 10).users)
@@ -110,8 +154,18 @@ class UsersPostgresDBTests : AppPostgresDBTests(), UsersDBTests {
     @Test
     override fun `getAllUsers with limit works`(): Unit = db.execute { conn ->
         val users = listOf(
-            User(1, "André Jesus", "A48280@alunos.isel.pt"),
-            User(2, "André Páscoa", "A48089@alunos.isel.pt")
+            User(
+                1,
+                "André Jesus",
+                "A48280@alunos.isel.pt",
+                "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            ),
+            User(
+                2,
+                "André Páscoa",
+                "A48089@alunos.isel.pt",
+                "31ffffffa91cffffffccffffffe008205748ffffffabffffffbaffffffea6a62"
+            )
         )
 
         assertEquals(users, db.users.getAllUsers(conn, 0, 2).users)

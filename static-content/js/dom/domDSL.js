@@ -78,7 +78,7 @@ function setAttributes(element, attributes) {
                 element.addEventListener("input", value);
                 break;
             case "style":
-                for(const style in value)
+                for (const style in value)
                     element.style[style] = value[style];
                 break;
             case "ref":

@@ -49,6 +49,7 @@ export function reloadHash() {
  *
  * @param {Object} state - application state
  * @param {HTMLElement} element - element
+ * @param errorMessage - error message
  *
  * @returns Promise<HTMLElement>
  */
