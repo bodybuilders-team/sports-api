@@ -35,7 +35,7 @@ async function RegisterPage(state) {
         if (res.ok)
             window.location.href = "#login";
         else
-            await alertBoxWithError(state, form, json);
+            await alertBoxWithError(state, form, json.extraInfo);
     }
 
     return RegisterForm(

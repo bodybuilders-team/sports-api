@@ -41,7 +41,7 @@ async function CreateSport(state, props) {
         if (res.ok)
             onSportCreated({id: json.id, name, description});
         else
-            await alertBoxWithError(state, form, json);
+            await alertBoxWithError(state, form, json.extraInfo);
     }
 
     return div(

@@ -44,7 +44,7 @@ async function CreateRoute(state, props) {
         if (res.ok)
             onRouteCreated({id: json.id, startLocation, endLocation, distance: Number(distance)});
         else
-            await alertBoxWithError(state, form, json);
+            await alertBoxWithError(state, form, json.extraInfo);
     }
 
     return div(

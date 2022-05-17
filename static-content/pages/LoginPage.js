@@ -36,7 +36,7 @@ async function LoginPage(state) {
         //     return
         // }
         //
-        // await alertBoxWithError(state, form, json);
+        // await alertBoxWithError(state, form, json.extraInfo);
 
         window.localStorage.setItem("token", "663f6889-e7b8-4eb4-8698-38d72de4a956");
         window.location.href = "#";

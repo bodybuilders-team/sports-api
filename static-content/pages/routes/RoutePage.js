@@ -47,7 +47,7 @@ async function RoutePage(state) {
         if (res.ok)
             reloadHash()
         else
-            await alertBoxWithError(state, form, json);
+            await alertBoxWithError(state, form, json.extraInfo);
     }
 
     return Route(

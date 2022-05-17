@@ -1,5 +1,7 @@
 import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.js";
-import {alertBoxWithError} from "../../js/utils.js";
+import {alertBoxWithError, createRef} from "../../js/utils.js";
+import SportsDropdown from "../sports/SportsDropdown.js";
+import RoutesDropdown from "../routes/RoutesDropdown.js";
 
 /**
  * CreateActivity component.
@@ -13,6 +15,9 @@ import {alertBoxWithError} from "../../js/utils.js";
  */
 async function CreateActivity(state, props) {
     const {onActivityCreated} = props;
+    const sportsIdInputRef = createRef()
+    const invalidSportFeedbackRef = createRef()
+    const routeIdInputRef = createRef()
 
     /**
      * Creates an activity.
@@ -25,7 +30,23 @@ async function CreateActivity(state, props) {
         const sid = form.querySelector("#sid").value;
         const date = form.querySelector("#date").value;
         const duration = form.querySelector("#duration").value;
-        const rid = form.querySelector("#aid").value;
+        let rid = form.querySelector("#rid").value;
+
+        if (rid === "")
+            rid = null;
+
+        if (date === "") {
+            await alertBoxWithError(state, form, "Please enter a date");
+            return;
+        }
+
+        const invalidSportFeedback = await invalidSportFeedbackRef
+        if (sid === "") {
+            invalidSportFeedback.style.display = "block";
+            return
+        }
+
+        invalidSportFeedback.style.display = "none";
 
         const token = window.localStorage.getItem("token");
 
@@ -46,7 +67,20 @@ async function CreateActivity(state, props) {
         if (res.ok)
             onActivityCreated({id: json.aid, sid, date, duration, rid});
         else
-            await alertBoxWithError(state, form, json);
+            await alertBoxWithError(state, form, json.extraInfo);
+    }
+
+    async function onSportChange(id) {
+        const sportIdInput = await sportsIdInputRef
+        sportIdInput.value = id
+
+        const invalidSportFeedback = await invalidSportFeedbackRef
+        invalidSportFeedback.style.display = "none";
+    }
+
+    async function onRouteChange(id) {
+        const routeIdInput = await routeIdInputRef
+        routeIdInput.value = id;
     }
 
     return div(
@@ -70,39 +104,51 @@ async function CreateActivity(state, props) {
                 h4("Create Activity"),
                 form(
                     {onSubmit: createActivity},
-                    label({for: "activitySport", class: "col-form-label"}, "Sport"),
-                    input({
-                        type: "text", id: "activitySport", name: "activitySport",
-                        class: "form-control",
-                        placeholder: "Enter activity sport"
-                    }),
+                    div(
+                        label({for: "sid", class: "col-form-label"}, "Sport"),
+                        input({
+                            type: "hidden",
+                            id: "sid",
+                            ref: sportsIdInputRef
+                        }),
+                        SportsDropdown(state, {
+                            onChange: onSportChange
+                        }),
+                        div({class: "invalid-feedback", ref: invalidSportFeedbackRef}, "Please select a sport")
+                    ),
 
-                    label({for: "activityDate", class: "col-form-label"}, "Date"),
+                    div(
+                        label({for: "rid", class: "form-label"}, "Route"),
+                        input({
+                            type: "hidden",
+                            id: "rid",
+                            ref: routeIdInputRef
+                        }),
+                        RoutesDropdown(state, {
+                            onChange: onRouteChange
+                        }),
+                    ),
+
+                    label({for: "date", class: "col-form-label"}, "Date"),
                     input({
-                        type: "date", id: "activityDate", name: "activityDate",
+                        type: "date", id: "date", name: "date",
                         class: "form-control",
                         placeholder: "Enter activity date"
                     }),
 
-                    label({for: "activityDuration", class: "col-form-label"}, "Duration"),
+                    label({for: "duration", class: "col-form-label"}, "Duration"),
                     input({
-                        type: "text", id: "activityDuration", name: "activityDuration",
+                        type: "text", id: "duration", name: "duration",
                         class: "form-control",
                         placeholder: "Enter activity duration"
-                    }),
-
-                    label({for: "activityRoute", class: "col-form-label"}, "Route"),
-                    input({
-                        type: "text", id: "activityRoute", name: "activityRoute",
-                        class: "form-control",
-                        placeholder: "Enter activity route"
                     }),
                     br(),
                     button({type: "submit", class: "btn btn-primary w-100"}, "Create")
                 )
             )
         ),
-    );
+    )
+        ;
 }
 
 export default CreateActivity;

@@ -46,7 +46,7 @@ async function DeleteActivity(state, props) {
         if (res.ok)
             onActivityDeleted()
         else
-            await alertBoxWithError(state, form, json);
+            await alertBoxWithError(state, form, json.extraInfo);
     }
 
     return div(

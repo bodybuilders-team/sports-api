@@ -42,7 +42,7 @@ async function EditActivity(state, props) {
         if (res.ok)
             onActivityUpdated()
         else
-            await alertBoxWithError(state, form, json);
+            await alertBoxWithError(state, form, json.extraInfo);
     }
 
     return div(

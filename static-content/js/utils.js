@@ -49,17 +49,16 @@ export function reloadHash() {
  *
  * @param {Object} state - application state
  * @param {HTMLElement} element - element
- * @param {Object} error - error object
  *
  * @returns Promise<HTMLElement>
  */
-export async function alertBoxWithError(state, element, error) {
+export async function alertBoxWithError(state, element, errorMessage) {
     const alertBox = element.querySelector("#alert_box");
     alertBox
-        ? alertBox.textContent = error.extraInfo
+        ? alertBox.textContent = errorMessage
         : await element.appendChild(await AlertBox(state, {
             alertLevel: "warning",
-            alertMessage: error.extraInfo
+            alertMessage: errorMessage
         }));
 }
 
