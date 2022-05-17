@@ -18,7 +18,7 @@ async function ActivityPage(state) {
         throw new LogError("User id");
 
     const activity = await apiFetch(`/activities/${id}`);
-
+    const user = await apiFetch(`/users/${activity.uid}`);
     const sport = await apiFetch(`/sports/${activity.sid}`);
 
     const route = activity.rid !== undefined
@@ -40,6 +40,7 @@ async function ActivityPage(state) {
             id,
             date: activity.date,
             duration: activity.duration,
+            user,
             sport,
             route,
             onActivityUpdated,

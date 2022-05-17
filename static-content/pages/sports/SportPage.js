@@ -17,7 +17,7 @@ async function SportPage(state) {
     const id = state.params.id;
     const sport = await apiFetch(`/sports/${id}`);
 
-    let {skip, limit} = getQuerySkipLimit(state.query, 0, 10);
+    let {skip, limit} = getQuerySkipLimit(state.query, 0, 5);
 
     const activitiesData = await apiFetch(`/sports/${id}/activities?skip=${skip}&limit=${limit}`);
 

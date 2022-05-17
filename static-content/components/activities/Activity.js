@@ -23,7 +23,7 @@ import DeleteActivity from "./DeleteActivity.js";
  * @return Promise<HTMLElement>
  */
 async function Activity(state, props) {
-    const {id, date, duration, sport, route, onActivityUpdated, onActivityDeleted} = props;
+    const {id, date, duration,user, sport, route, onActivityUpdated, onActivityDeleted} = props;
 
     return div(
         {class: "row justify-content-evenly"},
@@ -35,8 +35,9 @@ async function Activity(state, props) {
                 h3({id: "activitySport"}, "Sport: ", a({href: `#sports/${sport.id}`}, sport.name)),
                 h3({id: "activityDate"}, "Date: ", date),
                 h3({id: "activityDuration"}, "Duration: ", duration),
+                h3({id: "activityUser"}, "User: ", a({href: `#users/${user.id}`}, user.name)),
                 route != null
-                    ? h5({id: "activityRoute"}, "Route: ", a({href: `#routes/${route.id}`}, route.id.toString()))
+                    ? h5({id: "activityRoute"}, "Route: ", a({href: `#routes/${route.id}`}, route.startLocation + " - " + route.endLocation))
                     : undefined,
                 br(),
                 EditActivity(state, {id, onActivityUpdated}),
