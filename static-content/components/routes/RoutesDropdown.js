@@ -115,12 +115,12 @@ async function RoutesDropdown(state, props) {
             div({class: "mx-3 mb-2"},
                 label({for: "routeStartLocation"}, "Start location"),
                 input({
-                    type: "text", id: "routeStartLocation", class: "form-control routes-dropdown-input",
+                    type: "text", id: "routeStartLocation", class: "form-control",
                     onInput: onStartRouteLocationInputChange
                 }),
                 label({for: "routeEndLocation"}, "End location"),
                 input({
-                    type: "text", id: "routeEndLocation", class: "form-control routes-dropdown-input",
+                    type: "text", id: "routeEndLocation", class: "form-control",
                     onInput: onEndRouteLocationInputChange
                 }),
             ),

@@ -44,6 +44,19 @@ export function reloadHash() {
     window.dispatchEvent(new HashChangeEvent("hashchange"));
 }
 
+export function changeLocation(location) {
+    if (location == null)
+        window.dispatchEvent(new HashChangeEvent("hashchange"));
+
+    const formatedLocation = location.substring(1);
+    const currentHash = window.location.hash.replace("#", "");
+
+    if (currentHash !== formatedLocation)
+        window.location.hash = formatedLocation;
+    else
+        window.dispatchEvent(new HashChangeEvent("hashchange"));
+}
+
 /**
  * Creates a new AlertBox with the given error in the form element.
  *
