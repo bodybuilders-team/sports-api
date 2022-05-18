@@ -1,7 +1,22 @@
 import {div} from "../../js/dom/domTags.js";
 
-// TODO comment
+// TODO: Check comments
+/**
+ * OverflowInfinitePaginate component.
+ *
+ * @param {Object} state - application state
+ *
+ * @param {Object} props - component properties
+ * @param {LoadMoreCallback} props.onLoadMore - callback to load more items
+ * @param {number} props.initialNumChildren - number of children to initially render
+ * @param {number} props.numChildren - number of children to render after each load
+ * @param {} props.overflowHeight - height of overflow container
+ * @param {} props.resetRef - ref to reset scroll position
+ *
+ * @return Promise<HTMLElement>
+ */
 async function OverflowInfinitePaginate(state, props) {
+
     const {
         onLoadMore,
         initialNumChildren,
@@ -10,9 +25,7 @@ async function OverflowInfinitePaginate(state, props) {
         resetRef
     } = props;
 
-    const container = await div(
-        {style: {height: overflowHeight, overflowY: "scroll"}}
-    );
+    const container = await div({style: {height: overflowHeight, overflowY: "scroll"}});
 
     let loading = false;
 
@@ -33,6 +46,7 @@ async function OverflowInfinitePaginate(state, props) {
         }
     }, false);
 
+    // TODO: comment
     async function reset() {
         if (loading)
             return;

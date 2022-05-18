@@ -38,6 +38,16 @@ async function EditSport(state, props) {
             return;
         }
 
+        if (name !== null && (name.length < 3 || name.length > 30)) {
+            await alertBoxWithError(state, form, "Name must be between 3 and 30 characters");
+            return;
+        }
+
+        if (description !== null && description.length > 1000) {
+            await alertBoxWithError(state, form, "Description must be less than 1000 characters");
+            return;
+        }
+
         const token = getStoredUser().token;
 
         const res = await fetch(
@@ -83,14 +93,14 @@ async function EditSport(state, props) {
                     input({
                         type: "text", id: "name", name: "name",
                         class: "form-control",
-                        placeholder: "Enter new sport name"
+                        placeholder: "Enter new sport name", minlength: "3", maxlength: "30"
                     }),
 
                     label({for: "description", class: "col-form-label"}, "New Description"),
                     input({
                         type: "text", id: "description", name: "description",
                         class: "form-control",
-                        placeholder: "Enter new sport description"
+                        placeholder: "Enter new sport description", minlength: "0", maxlength: "1000"
                     }),
                     br(),
                     button({type: "submit", class: "btn btn-primary w-100"}, "Update")

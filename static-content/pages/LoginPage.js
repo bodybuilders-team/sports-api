@@ -21,6 +21,22 @@ async function LoginPage(state) {
         const email = form.querySelector("#email").value;
         const password = form.querySelector("#password").value;
 
+        if (email.length < 4 || email.length > 320) {
+            await alertBoxWithError(state, form, "An email must be between 4 and 320 characters long.");
+            return;
+        }
+
+        if (!email.match(/^[A-Za-z\d+_.-]+@(.+)$/)) {
+            await alertBoxWithError(state, form, "Invalid email.");
+            return;
+        }
+
+        if (!password.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)) {
+            await alertBoxWithError(state, form,
+                "A password must contain at least one letter and one number, and be at least 8 characters long.");
+            return;
+        }
+
         const res = await fetch(
             "http://localhost:8888/api/users/login",
             {

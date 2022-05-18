@@ -1,4 +1,4 @@
-import {a, div, img, nav} from "../js/dom/domTags.js";
+import {a, div, nav} from "../js/dom/domTags.js";
 import LogoutDropdown from "./LogoutDropdown.js";
 import {getStoredUser} from "../js/utils.js";
 
@@ -13,17 +13,10 @@ async function NavBar(state) {
 
     const user = getStoredUser();
 
-    return div(
+    const navbar = await div(
         nav(
             {class: "nav nav-pills"},
-            a({class: "navbar-brand", href: "#"},
-                img({
-                    alt: "Sports API ICON",
-                    src: "/public/sports-api-icon.png",
-                    width: "40"
-                })
-            ),
-            a({class: "nav-link active", href: "#"}, "Home"),
+            a({class: "nav-link", href: "#"}, "Home"),
             a({class: "nav-link", href: "#users/search"}, "UsersRankings"),
             a({class: "nav-link", href: "#sports"}, "Sports"),
             a({class: "nav-link", href: "#activities/search",}, "ActivitiesSearch"),
@@ -40,6 +33,14 @@ async function NavBar(state) {
                 )
         )
     );
+
+    let active = window.location.hash;
+    if (active === "")
+        active = "#";
+
+    navbar.querySelector(`a[href="${active}"]`).classList.add("active");
+
+    return navbar;
 }
 
 export default NavBar;

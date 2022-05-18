@@ -42,6 +42,16 @@ async function EditRoute(state, props) {
             return;
         }
 
+        if (startLocation !== null && (startLocation.length < 3 || startLocation.length > 250)) {
+            await alertBoxWithError(state, form, "Start location must be between 3 and 250 characters");
+            return;
+        }
+
+        if (endLocation !== null && (endLocation.length < 3 || endLocation.length > 250)) {
+            await alertBoxWithError(state, form, "End location must be between 3 and 250 characters");
+            return;
+        }
+
         const user = getStoredUser();
         if (user == null) {
             await alertBoxWithError(state, form, "You must be logged in to create a route");
@@ -92,14 +102,14 @@ async function EditRoute(state, props) {
                     label({for: "startLocation", class: "col-form-label"}, "New Start Location"),
                     input({
                         type: "text", id: "startLocation", name: "startLocation",
-                        class: "form-control",
+                        class: "form-control", minlength: "3", maxlength: "250",
                         placeholder: "Enter new route start location"
                     }),
 
                     label({for: "endLocation", class: "col-form-label"}, "New End Location"),
                     input({
                         type: "text", id: "endLocation", name: "endLocation",
-                        class: "form-control",
+                        class: "form-control", minlength: "3", maxlength: "250",
                         placeholder: "Enter new route end location"
                     }),
 

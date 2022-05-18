@@ -25,6 +25,8 @@ data class User(
         private const val HASHED_PASSWORD_LENGTH = 64
 
         private const val EMAIL_REGEX = "^[A-Za-z\\d+_.-]+@(.+)$"
+        private const val MIN_EMAIL_LENGTH = 4
+        private const val MAX_EMAIL_LENGTH = 320
 
         /**
          * Checks if an email is valid.
@@ -33,7 +35,7 @@ data class User(
          * @return true if it's valid
          */
         fun isValidEmail(email: String) =
-            email.matches(Regex(EMAIL_REGEX))
+            email.matches(Regex(EMAIL_REGEX)) && email.length in MIN_EMAIL_LENGTH..MAX_EMAIL_LENGTH
 
         /**
          * Checks if a name is valid.

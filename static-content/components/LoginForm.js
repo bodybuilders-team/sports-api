@@ -25,16 +25,16 @@ async function LoginForm(state, props) {
                 input({
                     type: "email", id: "email",
                     class: "form-control",
-                    placeholder: "Enter your email",
+                    placeholder: "Enter your email", minlength: "4", maxlength: "320",
                     required: true
                 }),
 
                 label({for: "password", class: "form-label"}, "Password"),
                 input({
                     type: "password", id: "password", pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
-                    title: "Enter a password with more than 8",
+                    title: "Enter a password with more than 8 hexadecimal digits",
                     class: "form-control",
-                    placeholder: "Enter your password",
+                    placeholder: "Enter your password", minlength: "8",
                     required: true
                 }),
             ),

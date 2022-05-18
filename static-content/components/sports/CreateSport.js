@@ -34,8 +34,13 @@ async function CreateSport(state, props) {
         if (description === "")
             description = null;
 
-        if (name === "") {
-            await alertBoxWithError(state, form, "Please enter a name");
+        if (name.length < 3 || name.length > 30) {
+            await alertBoxWithError(state, form, "Name must be between 3 and 30 characters");
+            return;
+        }
+
+        if (description !== null && description.length > 1000) {
+            await alertBoxWithError(state, form, "Description must be less than 1000 characters");
             return;
         }
 
@@ -92,14 +97,14 @@ async function CreateSport(state, props) {
                     input({
                         type: "text", id: "sportName", name: "sportName",
                         class: "form-control",
-                        placeholder: "Enter sport name", required: true
+                        placeholder: "Enter sport name", required: true, minlength: "3", maxlength: "30"
                     }),
 
                     label({for: "sportDescription", class: "col-form-label"}, "Description"),
                     input({
                         type: "text", id: "sportDescription", name: "sportDescription",
                         class: "form-control",
-                        placeholder: "Enter sport description"
+                        placeholder: "Enter sport description", minlength: "0", maxlength: "1000"
                     }),
                     br(),
                     button({type: "submit", class: "btn btn-primary w-100"}, "Create")

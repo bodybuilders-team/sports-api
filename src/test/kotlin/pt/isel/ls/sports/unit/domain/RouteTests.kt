@@ -42,6 +42,33 @@ class RouteTests {
         }
     }
 
+    // isValidLocation
+
+    @Test
+    fun `isValidLocation returns true with a string with a valid length`() {
+        assertTrue { Route.isValidLocation("a".repeat((Route.MIN_LOCATION_LENGTH..Route.MAX_LOCATION_LENGTH).random())) }
+    }
+
+    @Test
+    fun `isValidLocation returns true with a string at min length`() {
+        assertTrue { Route.isValidLocation("a".repeat(Route.MIN_LOCATION_LENGTH)) }
+    }
+
+    @Test
+    fun `isValidLocation returns true with a string at max length`() {
+        assertTrue { Route.isValidLocation("a".repeat(Route.MAX_LOCATION_LENGTH)) }
+    }
+
+    @Test
+    fun `isValidLocation returns false with string shorter than min length`() {
+        assertFalse { Route.isValidLocation("a".repeat(Route.MIN_LOCATION_LENGTH - 1)) }
+    }
+
+    @Test
+    fun `isValidLocation returns false with string longer than max length`() {
+        assertFalse { Route.isValidLocation("a".repeat(Route.MAX_LOCATION_LENGTH + 1)) }
+    }
+
     // isValidDistance
 
     @Test

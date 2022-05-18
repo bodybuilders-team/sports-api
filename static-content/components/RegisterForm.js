@@ -25,7 +25,7 @@ async function RegisterForm(state, props) {
                 input({
                     type: "text", id: "username", name: "username",
                     class: "form-control",
-                    placeholder: "Enter your name",
+                    placeholder: "Enter your name", minlength: "3", maxlength: "60",
                     required: true
                 }),
 
@@ -33,7 +33,7 @@ async function RegisterForm(state, props) {
                 input({
                     type: "email", id: "email",
                     class: "form-control",
-                    placeholder: "Enter your email",
+                    placeholder: "Enter your email", minlength: "4", maxlength: "320",
                     required: true
                 }),
 
@@ -42,7 +42,7 @@ async function RegisterForm(state, props) {
                     type: "password", id: "password", pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
                     title: "Enter a password with more than 8 hexadecimal digits",
                     class: "form-control",
-                    placeholder: "Enter your password",
+                    placeholder: "Enter your password", minlength: "8",
                     required: true
                 }),
             ),

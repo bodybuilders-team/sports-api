@@ -32,13 +32,13 @@ async function CreateRoute(state, props) {
         const endLocation = form.querySelector("#endLocation").value;
         const distance = form.querySelector("#distance").value;
 
-        if (startLocation === "") {
-            await alertBoxWithError(state, form, "Please enter a start location");
+        if (startLocation.length < 3 || startLocation.length > 250) {
+            await alertBoxWithError(state, form, "Start location must be between 3 and 250 characters");
             return;
         }
 
-        if (endLocation === "") {
-            await alertBoxWithError(state, form, "Please enter an end location");
+        if (endLocation.length < 3 || endLocation.length > 250) {
+            await alertBoxWithError(state, form, "End location must be between 3 and 250 characters");
             return;
         }
 
@@ -99,14 +99,14 @@ async function CreateRoute(state, props) {
                     label({for: "startLocation", class: "col-form-label"}, "Start Location"),
                     input({
                         type: "text", id: "startLocation", name: "startLocation",
-                        class: "form-control",
+                        class: "form-control", minlength: "3", maxlength: "250",
                         placeholder: "Enter route start location", required: true
                     }),
 
                     label({for: "endLocation", class: "col-form-label"}, "End Location"),
                     input({
                         type: "text", id: "endLocation", name: "endLocation",
-                        class: "form-control",
+                        class: "form-control", minlength: "3", maxlength: "250",
                         placeholder: "Enter route end location", required: true
                     }),
 
