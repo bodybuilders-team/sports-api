@@ -54,7 +54,7 @@ async function UsersPage(state) {
             collectionName: "users",
             searchParams: usersProps
         })
-    )
+    );
 }
 
 export default UsersPage;

@@ -3,67 +3,69 @@ import apiFetch from "../../js/apiFetch.js";
 import {button, div, input, label} from "../../js/dom/domTags.js";
 import OverflowInfinitePaginate from "../pagination/OverflowInfinitePaginate.js";
 
+// TODO comment
 async function SportsDropdown(state, props) {
-    const {onChange} = props
+    const {onChange} = props;
 
-    const sportsFetchParams = new URLSearchParams()
+    const sportsFetchParams = new URLSearchParams();
 
-    const sportsDropdownRef = createRef()
-    const sportsResetRef = createRef()
+    const sportsDropdownRef = createRef();
+    const sportsResetRef = createRef();
 
-    let totalSportsCount = null
-    let sportsSkip = 0
+    let totalSportsCount = null;
+    let sportsSkip = 0;
 
 
     async function onSportInputChange(event) {
         event.preventDefault();
         const sportName = event.target.value;
+
         if (sportName !== "")
             sportsFetchParams.set("name", sportName);
         else
             sportsFetchParams.delete("name");
 
-        sportsSkip = 0
-        totalSportsCount = null
+        sportsSkip = 0;
+        totalSportsCount = null;
 
-        const sportsReset = await sportsResetRef
+        const sportsReset = await sportsResetRef;
 
-        await sportsReset()
+        await sportsReset();
     }
 
 
     async function onLoadMoreSports(numberSports) {
         if (totalSportsCount != null && sportsSkip + 1 >= totalSportsCount)
-            return []
+            return [];
 
-        sportsFetchParams.set("skip", sportsSkip)
-        sportsFetchParams.set("limit", numberSports)
+        sportsFetchParams.set("skip", sportsSkip);
+        sportsFetchParams.set("limit", numberSports);
 
         const {
             sports,
             totalCount: newTotalCount,
-        } = await apiFetch(`/sports?${sportsFetchParams.toString()}`)
+        } = await apiFetch(`/sports?${sportsFetchParams.toString()}`);
 
-        totalSportsCount = newTotalCount
-        sportsSkip += numberSports
+        totalSportsCount = newTotalCount;
+        sportsSkip += numberSports;
 
         return Promise.all(sports.map(async sport =>
             button({
                 class: "dropdown-item", "data-id": sport.id,
                 onClick: onSelectedSportChange
             }, sport.name)
-        ))
+        ));
     }
 
     async function onSelectedSportChange(event) {
         event.preventDefault();
 
-        const dropdownBtn = await sportsDropdownRef
-        dropdownBtn.textContent = event.target.textContent
+        const dropdownBtn = await sportsDropdownRef;
+        dropdownBtn.textContent = event.target.textContent;
 
         const sportId = event.target.dataset["id"];
 
-        onChange(sportId)
+        onChange(sportId);
     }
 
 
@@ -98,8 +100,7 @@ async function SportsDropdown(state, props) {
                 overflowHeight: "100px"
             })
         )
-    )
-
+    );
 }
 
 export default SportsDropdown;

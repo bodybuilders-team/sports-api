@@ -11,6 +11,10 @@ import SportCard from "../../components/sports/SportCard.js";
  */
 async function SportsPage(state) {
 
+    /**
+     * Callback for when a sport is created.
+     * @param sport - the sport that was created
+     */
     function onSportCreated(sport) {
         window.location.hash = "#sports/" + sport.id;
     }
@@ -25,8 +29,7 @@ async function SportsPage(state) {
             collectionEndpoint: "/sports",
             collectionName: "sports"
         })
-    )
-
+    );
 }
 
 

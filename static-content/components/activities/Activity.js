@@ -6,6 +6,14 @@ import {getStoredUser} from "../../js/utils.js";
 /**
  * @typedef PropRoute
  * @property {string} id activity route id
+ * @property {string} startLocation activity route start location
+ * @property {string} endLocation activity route end location
+ */
+
+/**
+ * @typedef PropSport
+ * @property {number} id - activity sport id
+ * @property {string} name - activity sport name
  */
 
 /**
@@ -16,16 +24,16 @@ import {getStoredUser} from "../../js/utils.js";
  * @param {number} props.id - activity id
  * @param {string} props.date - activity date
  * @param {string} props.duration - activity duration
- * @param {Object} props.sport - activity sport
- * @param {number} props.sport.id - activity sport id
- * @param {string} props.sport.name - activity sport name
+ * @param {PropSport} props.sport - activity sport
  * @param {?PropRoute=} props.route - activity route
+ * @param {Function} props.onActivityUpdated - callback to update activity
+ * @param {Function} props.onActivityDeleted - callback to delete activity
  *
  * @return Promise<HTMLElement>
  */
 async function Activity(state, props) {
-    const {id, date, duration, user, sport, route, onActivityUpdated, onActivityDeleted} = props;
 
+    const {id, date, duration, user, sport, route, onActivityUpdated, onActivityDeleted} = props;
     const storedUser = getStoredUser();
 
     return div(

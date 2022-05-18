@@ -13,11 +13,13 @@ import {br, div} from "../js/dom/domTags.js";
  */
 async function AlertBox(state, props) {
 
+    const {alertLevel, alertMessage} = props;
+
     return div(
         br(),
         div(
-            {id: "alert_box", class: `alert alert-${props.alertLevel}`, role: "alert"},
-            props.alertMessage
+            {id: "alert_box", class: `alert alert-${alertLevel}`, role: "alert"},
+            alertMessage
         )
     );
 }

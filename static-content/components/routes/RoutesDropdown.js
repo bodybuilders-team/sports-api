@@ -3,24 +3,24 @@ import apiFetch from "../../js/apiFetch.js";
 import {button, div, input, label} from "../../js/dom/domTags.js";
 import OverflowInfinitePaginate from "../pagination/OverflowInfinitePaginate.js";
 
+// TODO comment
 async function RoutesDropdown(state, props) {
-    const {onChange} = props
+    const {onChange} = props;
 
-    const routesFetchParams = new URLSearchParams()
+    const routesFetchParams = new URLSearchParams();
 
-    const routesDropdownRef = createRef()
-    const routesResetRef = createRef()
+    const routesDropdownRef = createRef();
+    const routesResetRef = createRef();
 
-    let totalRoutesCount = null
-    let routesSkip = 0
+    let totalRoutesCount = null;
+    let routesSkip = 0;
 
     const generateNoRouteBtn = () =>
         button({
             class: "dropdown-item",
             "data-id": "",
             onClick: onSelectedRouteChange
-        }, "No route")
-
+        }, "No route");
 
     async function onStartRouteLocationInputChange(event) {
         event.preventDefault();
@@ -31,12 +31,12 @@ async function RoutesDropdown(state, props) {
         else
             routesFetchParams.delete("startLocation");
 
-        routesSkip = 0
-        totalRoutesCount = null
+        routesSkip = 0;
+        totalRoutesCount = null;
 
-        const routesReset = await routesResetRef
+        const routesReset = await routesResetRef;
 
-        await routesReset()
+        await routesReset();
     }
 
     async function onEndRouteLocationInputChange(event) {
@@ -48,26 +48,25 @@ async function RoutesDropdown(state, props) {
         else
             routesFetchParams.delete("endLocation");
 
-        routesSkip = 0
-        totalRoutesCount = null
+        routesSkip = 0;
+        totalRoutesCount = null;
 
-        const routesReset = await routesResetRef
+        const routesReset = await routesResetRef;
 
-        await routesReset()
+        await routesReset();
     }
 
     async function onLoadMoreRoutes(numberRoutes) {
         if (totalRoutesCount != null && routesSkip + 1 >= totalRoutesCount)
-            return []
+            return [];
 
-
-        routesFetchParams.set("skip", routesSkip)
-        routesFetchParams.set("limit", numberRoutes)
+        routesFetchParams.set("skip", routesSkip);
+        routesFetchParams.set("limit", numberRoutes);
 
         const {
             routes,
             totalCount,
-        } = await apiFetch(`/routes?${routesFetchParams.toString()}`)
+        } = await apiFetch(`/routes?${routesFetchParams.toString()}`);
 
 
         let routeBtns = routes.map(route =>
@@ -76,26 +75,26 @@ async function RoutesDropdown(state, props) {
                 "data-id": route.id,
                 onClick: onSelectedRouteChange
             }, route.startLocation + " - " + route.endLocation)
-        )
+        );
 
         if (routesSkip === 0)
-            routeBtns.unshift(generateNoRouteBtn())
+            routeBtns.unshift(generateNoRouteBtn());
 
-        totalRoutesCount = totalCount
-        routesSkip += numberRoutes
+        totalRoutesCount = totalCount;
+        routesSkip += numberRoutes;
 
-        return routeBtns
+        return routeBtns;
     }
 
     async function onSelectedRouteChange(event) {
         event.preventDefault();
 
-        const dropdownBtn = await routesDropdownRef
-        dropdownBtn.textContent = event.target.textContent
+        const dropdownBtn = await routesDropdownRef;
+        dropdownBtn.textContent = event.target.textContent;
 
-        const id = event.target.dataset["id"]
+        const id = event.target.dataset["id"];
 
-        onChange(id)
+        onChange(id);
     }
 
     return div({class: "dropdown"},
@@ -134,8 +133,7 @@ async function RoutesDropdown(state, props) {
                 overflowHeight: "100px"
             })
         )
-    )
-
+    );
 }
 
 export default RoutesDropdown;

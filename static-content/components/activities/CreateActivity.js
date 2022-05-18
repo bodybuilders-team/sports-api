@@ -4,25 +4,30 @@ import SportsDropdown from "../sports/SportsDropdown.js";
 import RoutesDropdown from "../routes/RoutesDropdown.js";
 
 /**
+ * @typedef OnActivityCreatedCallback
+ * @param {Activity} activity
+ */
+
+/**
  * CreateActivity component.
  *
  * @param state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onActivityCreated - on activity created callback
+ * @param {OnActivityCreatedCallback} props.onActivityCreated - on activity created callback
  *
  * @return Promise<HTMLElement>
  */
 async function CreateActivity(state, props) {
     const {onActivityCreated} = props;
 
-    const sportsIdInputRef = createRef()
-    const invalidSportFeedbackRef = createRef()
-    const routeIdInputRef = createRef()
+    const sportsIdInputRef = createRef();
+    const invalidSportFeedbackRef = createRef();
+    const routeIdInputRef = createRef();
 
     /**
      * Creates an activity.
-     * @param event form event
+     * @param {Event} event form event
      */
     async function createActivity(event) {
         event.preventDefault();
@@ -44,12 +49,12 @@ async function CreateActivity(state, props) {
         const invalidSportFeedback = await invalidSportFeedbackRef
         if (sid === "") {
             invalidSportFeedback.style.display = "block";
-            return
+            return;
         }
 
         invalidSportFeedback.style.display = "none";
 
-        const token = getStoredUser().token
+        const token = getStoredUser().token;
 
         const res = await fetch(
             "http://localhost:8888/api/activities/",
@@ -63,6 +68,10 @@ async function CreateActivity(state, props) {
             }
         );
 
+        /**
+         * @type {Object}
+         * @property {number} aid activity id
+         */
         const json = await res.json();
 
         if (res.ok)
@@ -71,16 +80,24 @@ async function CreateActivity(state, props) {
             await alertBoxWithError(state, form, json.extraInfo);
     }
 
+    /**
+     * Callback for when a sport is selected.
+     * @param id sport id
+     */
     async function onSportChange(id) {
-        const sportIdInput = await sportsIdInputRef
-        sportIdInput.value = id
+        const sportIdInput = await sportsIdInputRef;
+        sportIdInput.value = id;
 
-        const invalidSportFeedback = await invalidSportFeedbackRef
+        const invalidSportFeedback = await invalidSportFeedbackRef;
         invalidSportFeedback.style.display = "none";
     }
 
+    /**
+     * Callback for when a route is selected.
+     * @param id route id
+     */
     async function onRouteChange(id) {
-        const routeIdInput = await routeIdInputRef
+        const routeIdInput = await routeIdInputRef;
         routeIdInput.value = id;
     }
 
@@ -147,9 +164,8 @@ async function CreateActivity(state, props) {
                     button({type: "submit", class: "btn btn-primary w-100"}, "Create")
                 )
             )
-        ),
-    )
-        ;
+        )
+    );
 }
 
 export default CreateActivity;

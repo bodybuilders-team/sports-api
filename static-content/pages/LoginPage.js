@@ -1,5 +1,5 @@
 import LoginForm from "../components/LoginForm.js";
-import {alertBoxWithError} from "../js/utils.js";
+import {alertBoxWithError, storeUser} from "../js/utils.js";
 
 /**
  * Login page.
@@ -11,7 +11,7 @@ async function LoginPage(state) {
 
     /**
      * Logins a user.
-     * @param event form event
+     * @param {Event} event form event
      */
     async function login(event) {
         event.preventDefault();
@@ -32,9 +32,9 @@ async function LoginPage(state) {
         const json = await res.json();
 
         if (res.ok) {
-            window.localStorage.setItem("user", JSON.stringify(json));
+            storeUser(json);
             window.location.href = "#";
-            return
+            return;
         }
 
         await alertBoxWithError(state, form, json.extraInfo);

@@ -4,6 +4,7 @@ import ActivityCard from "./ActivityCard.js";
 /**
  * @typedef PropActivity
  * @property {number} id activity id
+ * @property {string} date - activity date
  */
 
 /**
@@ -18,12 +19,14 @@ import ActivityCard from "./ActivityCard.js";
  */
 async function Activities(state, props) {
 
+    const {activities} = props;
+
     return div(
         {class: "row justify-content-evenly"},
-        ...props.activities.map(activity =>
+        ...activities.map(activity =>
             ActivityCard(state, activity)
         )
-    )
+    );
 }
 
 export default Activities;

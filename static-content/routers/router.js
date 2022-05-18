@@ -1,13 +1,15 @@
 import {LogError} from "../js/errorUtils.js";
 
 /**
- * Router generator
+ * Router generator.
  *
  * @returns Router component
  */
 export function Router() {
 
     /**
+     * Router component.
+     *
      * @param {Object} state - application state
      * @param {?Object=} props - component properties
      *
@@ -18,6 +20,8 @@ export function Router() {
     }
 
     /**
+     * Handle router.
+     *
      * @param {Object} state - application state
      * @param {?Object=} props - component properties
      *
@@ -50,6 +54,7 @@ export function Router() {
 
     /**
      * Gets the handler associated with the given path.
+     *
      * @param path handler path
      * @returns {?{handler:Component, handlerPath:string, newPath:string, params:Object}} object representing the handler
      */
@@ -78,6 +83,7 @@ export function Router() {
 
     /**
      * Adds a new handler.
+     *
      * @typedef {Function}
      * @param {string} path handler path
      * @param {Component} handler new handler
@@ -94,6 +100,7 @@ export function Router() {
 
     /**
      * Sets a default handler.
+     *
      * @typedef {Function}
      * @param {Component} handler new default handler
      */

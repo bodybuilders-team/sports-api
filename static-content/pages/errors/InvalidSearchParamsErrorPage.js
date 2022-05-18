@@ -9,6 +9,7 @@ import {div, h1, p} from "../../js/dom/domTags.js";
  * @returns Promise<HTMLElement>
  */
 async function InvalidSearchParamsErrorPage(state, props) {
+
     return div(
         h1("Invalid search parameters"),
         p(props.error),

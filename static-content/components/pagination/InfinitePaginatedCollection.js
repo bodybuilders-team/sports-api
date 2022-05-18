@@ -3,18 +3,19 @@ import apiFetch from "../../js/apiFetch.js";
 import {div} from "../../js/dom/domTags.js";
 import InfinitePaginate from "./InfinitePaginate.js";
 
+// TODO comment
 async function InfinitePaginatedCollection(state, props) {
     let {collectionComponent, collectionEndpoint, collectionName, searchParams} = props;
-    const containerRef = createRef()
+    const containerRef = createRef();
 
     const urlSearchParams = new URLSearchParams(searchParams || {});
 
-    let totalCount = null
-    let currentSkip = 0
+    let totalCount = null;
+    let currentSkip = 0;
 
     async function onLoadMore(numberOfItems) {
         if (totalCount != null && currentSkip + 1 >= totalCount)
-            return []
+            return [];
 
         urlSearchParams.set("skip", currentSkip);
         urlSearchParams.set("limit", numberOfItems);
@@ -26,21 +27,21 @@ async function InfinitePaginatedCollection(state, props) {
 
 
         if (currentSkip === 0 && newTotalCount === 0) {
-            const container = await containerRef
+            const container = await containerRef;
 
-            const alertBox = await div({class: "alert alert-info w-50", role: "alert"}, `No ${collectionName} found.`)
+            const alertBox = await div({class: "alert alert-info w-50", role: "alert"}, `No ${collectionName} found.`);
 
-            container.replaceChildren(alertBox)
+            container.replaceChildren(alertBox);
 
-            return []
+            return [];
         }
 
-        totalCount = newTotalCount
-        currentSkip += numberOfItems
+        totalCount = newTotalCount;
+        currentSkip += numberOfItems;
 
         return items.map(item =>
             collectionComponent(state, item)
-        )
+        );
     }
 
     return div(
@@ -50,8 +51,7 @@ async function InfinitePaginatedCollection(state, props) {
             initialNumChildren: 10,
             numChildren: 5
         })
-    )
-
+    );
 }
 
 

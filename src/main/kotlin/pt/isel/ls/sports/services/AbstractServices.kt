@@ -21,7 +21,6 @@ abstract class AbstractServices(protected val db: AppDB) {
      * @param token user's token
      *
      * @return user's unique identifier associated with the [token]
-     *
      * @throws AuthenticationException if a user with the [token] was not found
      */
     protected fun authenticate(conn: ConnectionDB, token: String): Int {

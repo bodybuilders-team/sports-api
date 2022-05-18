@@ -54,6 +54,9 @@ class AppPostgresDB(sourceURL: String) : AppDB {
         }
     }
 
+    /**
+     * Resets database.
+     */
     override fun reset() {
         source.connection.use {
             it.runScript("src/main/sql/cleanData.sql")

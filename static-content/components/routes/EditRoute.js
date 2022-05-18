@@ -1,5 +1,5 @@
 import {br, button, div, form, h4, input, label} from "../../js/dom/domTags.js";
-import {alertBoxWithError} from "../../js/utils.js";
+import {alertBoxWithError, getStoredUser} from "../../js/utils.js";
 
 /**
  * EditRoute component.
@@ -7,7 +7,7 @@ import {alertBoxWithError} from "../../js/utils.js";
  * @param state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onUpdateSubmit - on Submit event callback
+ * @param {OnSubmitCallback} props.onRouteUpdated - callback to be called when route is updated
  *
  * @return Promise<HTMLElement>
  */
@@ -16,7 +16,7 @@ async function EditRoute(state, props) {
 
     /**
      * Updates a route.
-     * @param event form event
+     * @param {Event} event form event
      */
     async function updateRoute(event) {
         event.preventDefault();
@@ -26,7 +26,7 @@ async function EditRoute(state, props) {
         const endLocation = form.querySelector("#endLocation").value;
         const distance = form.querySelector("#routeDistance").value;
 
-        const token = getStoredUser().token
+        const token = getStoredUser().token;
 
         const res = await fetch(
             "http://localhost:8888/api/routes/" + id,

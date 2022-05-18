@@ -11,7 +11,7 @@ async function RegisterPage(state) {
 
     /**
      * Register a new user.
-     * @param event form event
+     * @param {Event} event form event
      */
     async function register(event) {
         event.preventDefault();

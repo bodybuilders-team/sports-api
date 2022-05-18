@@ -154,7 +154,6 @@ describe('Router', () => {
                     assert.instanceOf(e, LogError);
                 }
             });
-        })
-
-    })
-})
+        });
+    });
+});

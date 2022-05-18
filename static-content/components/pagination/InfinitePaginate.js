@@ -1,5 +1,6 @@
 import {div} from "../../js/dom/domTags.js";
 
+// TODO comment
 async function InfinitePaginate(state, props) {
     const {
         onLoadMore,
@@ -10,26 +11,26 @@ async function InfinitePaginate(state, props) {
 
     const container = await div(
         {class: "row justify-content-evenly"},
-    )
+    );
 
-    let loading = false
+    let loading = false;
 
     window.addEventListener("scroll", async () => {
         const {top} = container.lastElementChild.getBoundingClientRect();
         if (top < window.innerHeight && !loading) {
-            loading = true
+            loading = true;
 
-            const children = await Promise.all(await onLoadMore(numChildren))
-            container.append(...children)
+            const children = await Promise.all(await onLoadMore(numChildren));
+            container.append(...children);
 
-            loading = false
+            loading = false;
         }
     }, false);
 
-    const children = await Promise.all(await onLoadMore(initialNumChildren))
-    container.append(...children)
+    const children = await Promise.all(await onLoadMore(initialNumChildren));
+    container.append(...children);
 
-    return container
+    return container;
 }
 
 export default InfinitePaginate;

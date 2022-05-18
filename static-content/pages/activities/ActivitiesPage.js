@@ -42,6 +42,15 @@ async function ActivitiesPage(state) {
         return activitiesProps;
     }
 
+    /**
+     * @typedef Activity
+     * @property {number} id - The activity id.
+     */
+
+    /**
+     * Callback for activity creation.
+     * @param {Activity} activity - created activity
+     */
     function onActivityCreated(activity) {
         window.location.hash = "#activities/" + activity.id;
     }
@@ -57,7 +66,7 @@ async function ActivitiesPage(state) {
             collectionName: "activities",
             searchParams: activitiesProps
         })
-    )
+    );
 }
 
 

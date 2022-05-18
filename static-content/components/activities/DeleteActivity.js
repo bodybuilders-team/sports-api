@@ -1,6 +1,10 @@
 import {br, button, div, form, h4, input} from "../../js/dom/domTags.js";
 import AlertBox from "../AlertBox.js";
-import {alertBoxWithError, createRef,getStoredUser} from "../../js/utils.js";
+import {alertBoxWithError, createRef, getStoredUser} from "../../js/utils.js";
+
+/**
+ * @typedef OnActivityDeletedCallback
+ */
 
 /**
  * DeleteActivity component.
@@ -8,30 +12,32 @@ import {alertBoxWithError, createRef,getStoredUser} from "../../js/utils.js";
  * @param state - application state
  *
  * @param {Object} props - component properties
+ * @param {number} props.id - activity id
+ * @param {OnActivityDeletedCallback} props.onActivityCreated - on activity deleted callback
  *
  * @return Promise<HTMLElement>
  */
 async function DeleteActivity(state, props) {
     const {id, onActivityDeleted} = props;
 
-    let deleting = false
-    const deleteButtonRef = createRef()
+    let deleting = false;
+    const deleteButtonRef = createRef();
 
     /**
      * Deletes an activity.
-     * @param event form event
+     * @param {Event} event form event
      */
     async function deleteActivity(event) {
         event.preventDefault();
         if (deleting) return;
 
-        deleting = true
-        const deleteButton = await deleteButtonRef
-        deleteButton.disabled = true
+        deleting = true;
+        const deleteButton = await deleteButtonRef;
+        deleteButton.disabled = true;
 
         const form = event.target;
 
-        const token = getStoredUser().token
+        const token = getStoredUser().token;
 
         const res = await fetch(
             "http://localhost:8888/api/activities/" + id,
@@ -44,7 +50,7 @@ async function DeleteActivity(state, props) {
         const json = await res.json();
 
         if (res.ok)
-            onActivityDeleted()
+            onActivityDeleted();
         else
             await alertBoxWithError(state, form, json.extraInfo);
     }

@@ -7,6 +7,7 @@ import {a, br, div, h1, img, p, strong} from "../js/dom/domTags.js";
  * @returns Promise<HTMLElement>
  */
 async function HomePage(state) {
+
     return div(
         h1({class: "app-icon"}, "Home"),
         p(

@@ -13,6 +13,7 @@ import {div, h1} from "../../js/dom/domTags.js";
  * @returns Promise<HTMLElement>
  */
 async function AppErrorPage(state, props) {
+
     return div(
         h1(`Error: ${props.name}`),
         h1(`Description: ${props.description}`),

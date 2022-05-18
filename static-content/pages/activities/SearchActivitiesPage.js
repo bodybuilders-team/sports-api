@@ -3,6 +3,14 @@ import {div, h1} from "../../js/dom/domTags.js";
 import Activities from "../../components/activities/Activities.js";
 
 /**
+ * @typedef ActivityData
+ * @property {String} sid
+ * @property {String} orderBy
+ * @property {?String=} rid
+ * @property {?String=} date
+ */
+
+/**
  * Search activities page.
  * @param {Object} state - application state
  *
@@ -12,6 +20,7 @@ async function SearchActivitiesPage(state) {
 
     /**
      * Search for activities form function.
+     * @param {ActivityData} activityData - activity data
      */
     function searchActivities(activityData) {
         const {sid, orderBy, rid, date} = activityData;

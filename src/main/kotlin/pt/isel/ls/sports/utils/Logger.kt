@@ -33,6 +33,7 @@ object Logger {
      *
      * @param message the message to log
      */
+    @Suppress("unused")
     fun trace(message: String) =
         logger.trace("{} : {}", Timestamp(System.currentTimeMillis()), message)
 

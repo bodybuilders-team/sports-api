@@ -22,6 +22,8 @@ data class User(
         const val MIN_NAME_LENGTH = 3
         const val MAX_NAME_LENGTH = 60
 
+        private const val HASHED_PASSWORD_LENGTH = 64
+
         private const val EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$"
 
         /**
@@ -65,7 +67,7 @@ data class User(
                 sb.append(hex)
             }
 
-            return sb.toString().substring(0 until 64)
+            return sb.toString().substring(0 until HASHED_PASSWORD_LENGTH)
         }
 
         /**

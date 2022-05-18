@@ -28,7 +28,7 @@ async function Paginate(state, props) {
     const pages = range(leftPage, rightPage);
 
     function onLeftmostArrowClick() {
-        onPageChange(1)
+        onPageChange(1);
     }
 
     function onLeftArrowClick() {
@@ -36,7 +36,7 @@ async function Paginate(state, props) {
     }
 
     function onRawPageClick(event) {
-        const newPage = parseInt(event.target.textContent)
+        const newPage = parseInt(event.target.textContent);
         onPageChange(newPage);
     }
 
@@ -45,7 +45,7 @@ async function Paginate(state, props) {
     }
 
     function onRightmostArrowClick() {
-        onPageChange(pagesCount)
+        onPageChange(pagesCount);
     }
 
     // << < 1 2 3 > >>

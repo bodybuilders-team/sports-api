@@ -8,18 +8,15 @@ import PaginatedCollection from "../pagination/PaginatedCollection.js";
  * @param {Object} state - global state
  *
  * @param {Object} props - component properties
- * @param {number} props.id - user id
  * @param {string} props.name - username
  * @param {string} props.email - user email
- * @param {Object} props.activitiesData
- * @param {number} props.activitiesData.skip - activities skip
- * @param {number} props.activitiesData.limit - activities limit
- * @param {PropActivity[]} props.activitiesData.activities - activities
- * @param {number} props.activitiesData.totalCount - total number of activities
+ * @param {ActivitiesData} props.activitiesData - activities data
  *
  * @return Promise<HTMLElement>
  */
 async function User(state, props) {
+
+    const {name, email, activitiesData} = props;
 
     return div(
         {class: "row justify-content-evenly"},
@@ -28,19 +25,19 @@ async function User(state, props) {
             {class: "card user-card col-6 bg-light"},
             div(
                 {class: "card-body col justify-content-center "},
-                h3("Username: ", props.name),
-                h3("Email: ", props.email),
-                (props.activitiesData.activities.length > 0)
+                h3("Username: ", name),
+                h3("Email: ", email),
+                (activitiesData.activities.length > 0)
                     ? div(
                         h3("Activities:"),
                         PaginatedCollection(state,
                             {
-                                skip: props.activitiesData.skip,
-                                limit: props.activitiesData.limit,
+                                skip: activitiesData.skip,
+                                limit: activitiesData.limit,
                                 collectionComponent: Activities,
                                 collectionName: "activities",
-                                collection: props.activitiesData.activities,
-                                totalCount: props.activitiesData.totalCount
+                                collection: activitiesData.activities,
+                                totalCount: activitiesData.totalCount
                             }
                         )
                     )

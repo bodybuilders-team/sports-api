@@ -1,10 +1,17 @@
 import {br, div, h1} from "../../js/dom/domTags.js";
 import SearchUsersForm from "../../components/users/SearchUsersForm.js";
 
+/**
+ * UsersRankingsSearchPage page.
+ * @param {Object} state - application state
+ *
+ * @returns Promise<HTMLElement>
+ */
 async function UsersRankingsSearchPage(state) {
 
     /**
      * Search for users form function.
+     * @param {UsersData} usersData - users data
      */
     function searchUsers(usersData) {
         const {sid, rid} = usersData;

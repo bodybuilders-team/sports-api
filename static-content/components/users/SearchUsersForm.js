@@ -12,8 +12,14 @@ import RoutesDropdown from "../routes/RoutesDropdown.js";
  */
 
 /**
- * @callback OnSubmitCallback
- * @param {Event} event - event
+ * @typedef UsersData
+ * @property {?string} sid - Search sport id
+ * @property {?string} rid - Search route id
+ */
+
+/**
+ * @callback OnSearchUsersCallback
+ * @param {UsersData} usersData - users data
  */
 
 /**
@@ -22,17 +28,20 @@ import RoutesDropdown from "../routes/RoutesDropdown.js";
  * @param state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onSubmit - on Submit event callback
+ * @param {OnSearchUsersCallback} props.onSubmit - on Submit event callback
  *
  * @return Promise<HTMLElement>
  */
 async function SearchUsersForm(state, props) {
     const {onSubmit} = props;
-    const sportsIdInputRef = createRef()
-    const invalidSportFeedbackRef = createRef()
-    const routeIdInputRef = createRef()
+    const sportsIdInputRef = createRef();
+    const invalidSportFeedbackRef = createRef();
+    const routeIdInputRef = createRef();
 
-
+    /**
+     * Called when the form is submitted.
+     * @param {Event} event form submit event
+     */
     async function onFormSubmit(event) {
         event.preventDefault();
 
@@ -44,10 +53,10 @@ async function SearchUsersForm(state, props) {
         if (rid === "")
             rid = null;
 
-        const invalidSportFeedback = await invalidSportFeedbackRef
+        const invalidSportFeedback = await invalidSportFeedbackRef;
         if (sid === "") {
             invalidSportFeedback.style.display = "block";
-            return
+            return;
         }
 
         invalidSportFeedback.style.display = "none";
@@ -55,17 +64,24 @@ async function SearchUsersForm(state, props) {
         onSubmit({sid, rid});
     }
 
-
+    /**
+     * Callback for when a sport is selected.
+     * @param id sport id
+     */
     async function onSportChange(id) {
-        const sportIdInput = await sportsIdInputRef
-        sportIdInput.value = id
+        const sportIdInput = await sportsIdInputRef;
+        sportIdInput.value = id;
 
-        const invalidSportFeedback = await invalidSportFeedbackRef
+        const invalidSportFeedback = await invalidSportFeedbackRef;
         invalidSportFeedback.style.display = "none";
     }
 
+    /**
+     * Callback for when a route is selected.
+     * @param id route id
+     */
     async function onRouteChange(id) {
-        const routeIdInput = await routeIdInputRef
+        const routeIdInput = await routeIdInputRef;
         routeIdInput.value = id;
     }
 
@@ -104,7 +120,7 @@ async function SearchUsersForm(state, props) {
             br(),
             button({type: "submit", class: "btn btn-primary w-100"}, "Search")
         )
-    )
+    );
 }
 
 export default SearchUsersForm;

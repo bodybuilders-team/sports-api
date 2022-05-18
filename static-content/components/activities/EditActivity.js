@@ -2,21 +2,24 @@ import {br, button, div, form, h4, input, label} from "../../js/dom/domTags.js";
 import {alertBoxWithError, createRef, getStoredUser} from "../../js/utils.js";
 import SportsDropdown from "../sports/SportsDropdown.js";
 import RoutesDropdown from "../routes/RoutesDropdown.js";
+
 /**
  * EditSport component.
  *
  * @param state - application state
  *
  * @param {Object} props - component properties
+ * @param {number} props.id - sport id
+ * @param {Function} props.onActivityUpdated - callback to be called when activity is updated
  *
  * @return Promise<HTMLElement>
  */
 async function EditActivity(state, props) {
     const {id, onActivityUpdated} = props;
 
-    const sportsIdInputRef = createRef()
-    const invalidSportFeedbackRef = createRef()
-    const routeIdInputRef = createRef()
+    const sportsIdInputRef = createRef();
+    const invalidSportFeedbackRef = createRef();
+    const routeIdInputRef = createRef();
 
     async function updateActivity(event) {
 
@@ -29,16 +32,16 @@ async function EditActivity(state, props) {
         let rid = form.querySelector("#rid").value;
 
         if (sid === "")
-            sid = null
+            sid = null;
 
         if (duration === "")
-            duration = null
+            duration = null;
 
         if (rid === "")
             rid = null;
 
         if (date === "")
-            date = null
+            date = null;
 
         if (sid == null && rid == null && date == null && duration == null) {
             await alertBoxWithError(state, form, "Please fill atleast one of the fields");
@@ -62,21 +65,29 @@ async function EditActivity(state, props) {
         const json = await res.json();
 
         if (res.ok)
-            onActivityUpdated()
+            onActivityUpdated();
         else
             await alertBoxWithError(state, form, json.extraInfo);
     }
 
+    /**
+     * Callback for when a sport is selected.
+     * @param id sport id
+     */
     async function onSportChange(id) {
-        const sportIdInput = await sportsIdInputRef
-        sportIdInput.value = id
+        const sportIdInput = await sportsIdInputRef;
+        sportIdInput.value = id;
 
-        const invalidSportFeedback = await invalidSportFeedbackRef
+        const invalidSportFeedback = await invalidSportFeedbackRef;
         invalidSportFeedback.style.display = "none";
     }
 
+    /**
+     * Callback for when a route is selected.
+     * @param id route id
+     */
     async function onRouteChange(id) {
-        const routeIdInput = await routeIdInputRef
+        const routeIdInput = await routeIdInputRef;
         routeIdInput.value = id;
     }
 

@@ -25,14 +25,20 @@ async function ActivityPage(state) {
         ? await apiFetch(`/routes/${activity.rid}`)
         : null;
 
+    /**
+     * Callck to update the activity.
+     * @param activity
+     */
     function onActivityUpdated(activity) {
-        reloadHash()
+        reloadHash();
     }
 
+    /**
+     * Callback to delete the activity.
+     */
     async function onActivityDeleted() {
-        reloadHash()
+        reloadHash();
     }
-
 
     return Activity(
         state,

@@ -1,5 +1,5 @@
 import {br, button, div, form, h4, input, label} from "../../js/dom/domTags.js";
-import {alertBoxWithError} from "../../js/utils.js";
+import {alertBoxWithError, getStoredUser} from "../../js/utils.js";
 
 /**
  * EditSport component.
@@ -7,15 +7,17 @@ import {alertBoxWithError} from "../../js/utils.js";
  * @param state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onUpdateSubmit - on Submit event callback
+ * @param {OnSubmitCallback} props.onSportUpdated - callback to be called when sport is updated
  *
  * @return Promise<HTMLElement>
  */
 async function EditSport(state, props) {
 
+    const {onSportUpdated} = props;
+
     /**
      * Updates a sport.
-     * @param event form event
+     * @param {Event} event form event
      */
     async function updateSport(event) {
         event.preventDefault();

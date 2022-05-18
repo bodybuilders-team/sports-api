@@ -1,10 +1,13 @@
 import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.js";
-import {alertBoxWithError} from "../../js/utils.js";
+import {alertBoxWithError, getStoredUser} from "../../js/utils.js";
 
 /**
  * CreateSport component.
  *
  * @param state - application state
+ *
+ * @param {Object} props - component properties
+ * @param {Function} props.onSportCreated - callback function to be called when sport is created
  *
  * @return Promise<HTMLElement>
  */
@@ -13,7 +16,7 @@ async function CreateSport(state, props) {
 
     /**
      * Creates a sport.
-     * @param event form event
+     * @param {Event} event form event
      */
     async function createSport(event) {
         event.preventDefault();
@@ -82,7 +85,7 @@ async function CreateSport(state, props) {
                     button({type: "submit", class: "btn btn-primary w-100"}, "Create")
                 )
             )
-        ),
+        )
     );
 }
 

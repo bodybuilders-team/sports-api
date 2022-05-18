@@ -11,12 +11,15 @@ import {br, button, div, form, h1, hr, input, label} from "../js/dom/domTags.js"
  * @return Promise<HTMLElement>
  */
 async function RegisterForm(state, props) {
+
+    const {onSubmit} = props;
+
     return div(
         {class: "card card-body w-50 center"},
         h1("Register"),
         hr(),
         form(
-            {onSubmit: props.onSubmit},
+            {onSubmit: onSubmit},
             div(
                 label({for: "username", class: "col-form-label"}, "Name"),
                 input({

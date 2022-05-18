@@ -24,6 +24,7 @@ inline fun runAndCatch(block: () -> Response): Response =
     try {
         block()
     } catch (error: SerializationException) {
+
         Logger.warn(error.toString())
         AppError(
             "BAD_REQUEST",
@@ -92,8 +93,8 @@ inline fun runAndCatch(block: () -> Response): Response =
             error.message
         ).toResponse(Status.BAD_REQUEST)
     } catch (error: Exception) {
-        Logger.error(error.stackTraceToString())
 
+        Logger.error(error.stackTraceToString())
         AppError(
             "INTERNAL_ERROR",
             "An internal error occurred"

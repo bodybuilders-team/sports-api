@@ -52,7 +52,7 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      * @param email email of the user
      * @param password password of the user
      *
-     * @return A [LoginUserResponse] object containing the user's unique identifier and a token
+     * @return [LoginUserResponse] object containing the user's unique identifier and a token
      * @throws InvalidArgumentException if the email is invalid
      * @throws InvalidArgumentException if the password is invalid
      * @throws NotFoundException if no user with that email exists

@@ -1,7 +1,7 @@
 import apiFetch from "../../js/apiFetch.js";
 import Sport from "../../components/sports/Sport.js";
 import {LogError} from "../../js/errorUtils.js";
-import {alertBoxWithError, getQuerySkipLimit, reloadHash} from "../../js/utils.js";
+import {getQuerySkipLimit} from "../../js/utils.js";
 
 /**
  * Sport details page.
@@ -13,7 +13,6 @@ async function SportPage(state) {
     if (state.params.id === undefined)
         throw new LogError("Sport id must be defined");
 
-
     const id = state.params.id;
     const sport = await apiFetch(`/sports/${id}`);
 
@@ -24,14 +23,12 @@ async function SportPage(state) {
     activitiesData.skip = skip;
     activitiesData.limit = limit;
 
-
-
     return Sport(
         state,
         {
             ...sport,
             activitiesData,
-            onUpdateSubmit: updateSport
+            onSportUpdated: updateSport
         }
     );
 }

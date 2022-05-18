@@ -12,7 +12,7 @@ import {getStoredUser} from "../../js/utils.js";
  * @param {string} props.startLocation route start location
  * @param {string} props.endLocation route end location
  * @param {number} props.distance route distance
- * @param {OnSubmitCallback} props.onUpdateSubmit - on Submit event callback
+ * @param {OnSubmitCallback} props.onRouteUpdated - callback for route update
  *
  * @return Promise<HTMLElement>
  */

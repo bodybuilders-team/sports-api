@@ -1,5 +1,6 @@
 import {div} from "../../js/dom/domTags.js";
 
+// TODO comment
 async function OverflowInfinitePaginate(state, props) {
     const {
         onLoadMore,
@@ -11,9 +12,9 @@ async function OverflowInfinitePaginate(state, props) {
 
     const container = await div(
         {style: {height: overflowHeight, overflowY: "scroll"}}
-    )
+    );
 
-    let loading = false
+    let loading = false;
 
     container.addEventListener("scroll", async () => {
         const lastElement = container.lastElementChild;
@@ -23,12 +24,12 @@ async function OverflowInfinitePaginate(state, props) {
         const {top: lastEleTop} = lastElement.getBoundingClientRect();
         const {bottom: containerBottom} = container.getBoundingClientRect();
         if (lastEleTop < containerBottom && !loading) {
-            loading = true
+            loading = true;
 
-            const children = await Promise.all(await onLoadMore(numChildren))
-            container.append(...children)
+            const children = await Promise.all(await onLoadMore(numChildren));
+            container.append(...children);
 
-            loading = false
+            loading = false;
         }
     }, false);
 
@@ -36,20 +37,20 @@ async function OverflowInfinitePaginate(state, props) {
         if (loading)
             return;
 
-        loading = true
-        container.innerHTML = ""
+        loading = true;
+        container.innerHTML = "";
 
-        const children = await Promise.all(await onLoadMore(initialNumChildren))
-        container.append(...children)
+        const children = await Promise.all(await onLoadMore(initialNumChildren));
+        container.append(...children);
 
-        loading = false
+        loading = false;
     }
 
-    resetRef.resolve(reset)
+    resetRef.resolve(reset);
 
-    await reset()
+    await reset();
 
-    return container
+    return container;
 }
 
 export default OverflowInfinitePaginate;

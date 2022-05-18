@@ -32,8 +32,8 @@ import pt.isel.ls.sports.services.sections.users.UsersServices
 class UsersRouter(private val services: UsersServices) : IRouter {
 
     companion object {
-        const val DEFAULT_SKIP = 0
-        const val DEFAULT_LIMIT = 10
+        private const val DEFAULT_SKIP = 0
+        private const val DEFAULT_LIMIT = 10
 
         /**
          * Returns the users' router's routes.
