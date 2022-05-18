@@ -1,8 +1,7 @@
-TODO: 12/05/2022 Add integration tests:
-    - update sport integration tests
-    - Some activities routes need more tests
-TODO: 12/05/2022 Review openAPI documentation:
-    - add total_count
-TODO: 12/05/2022 Change some 404 Errors to 400, as the professor said (change in documentation!!!)
-TODO: 12/05/2022 Reformat forms
-TODO: 12/05/2022 JS docs
+TODO: 12/05/2022 Review openAPI documentation
+TODO: 18/05/2022 Update sports-api-test.yml (Postman)
+TODO: 18/05/2022 Check documentation
+TODO: 18/05/2022 Update report
+TODO: 18/05/2022 Verify all string lengths before inserting into database: ex. edit start location in route
+TODO: 18/05/2022 Add blind people stuff
+TODO: 18/05/2022 Add active in nav bar

@@ -16,8 +16,7 @@ export function isAppError(error) {
 /**
  * Error that prints itself (used to print stacktrace properly)
  *
- * @param data - error data
- * @constructor
+ * @param {Object} data - error data
  */
 export function LogError(...data) {
     console.error(...data);
@@ -26,8 +25,7 @@ export function LogError(...data) {
 /**
  * Invalid search parameters error
  *
- * @param data
- * @constructor
+ * @param {Object} data - error data
  *
  * @property {Object} error - error data
  * @property {Object} details - error details

@@ -2,6 +2,7 @@ import {h1} from "../../js/dom/domTags.js";
 
 /**
  * Not Found page.
+ *
  * @param {Object} state - application state
  *
  * @returns Promise<HTMLElement>

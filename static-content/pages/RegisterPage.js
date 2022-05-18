@@ -2,7 +2,8 @@ import RegisterForm from "../components/RegisterForm.js";
 import {alertBoxWithError} from "../js/utils.js";
 
 /**
- * Register new user page.
+ * Register page.
+ *
  * @param {Object} state - application state
  *
  * @returns Promise<HTMLElement>

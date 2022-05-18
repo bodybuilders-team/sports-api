@@ -21,6 +21,7 @@ body {
     margin: auto;
 }
 
+/*noinspection ALL*/
 .page-item:not(.active) {
     cursor: pointer;
 }

@@ -6,14 +6,14 @@ import UserCard from "../../components/users/UserCard.js";
 
 /**
  * Users page.
+ *
  * @param {Object} state - application state
  *
  * @returns Promise<HTMLElement>
  */
 async function UsersPage(state) {
-    const usersProps = getUsersProps();
 
-    //TODO: error handling for invalid activities props (show alertbox)
+    const usersProps = getUsersProps();
 
     /**
      * Parses activities props from state query params.
@@ -26,10 +26,19 @@ async function UsersPage(state) {
         for (const key in state.query)
             usersProps[key] = state.query[key];
 
-        if (state.query.sid != null)
+        if (state.query.sid != null) {
             usersProps.sid = parseInt(state.query.sid);
-        if (state.query.rid != null)
+
+            if (isNaN(usersProps.sid))
+                throw new InvalidSearchParamsError({error: "Invalid sid"});
+        }
+
+        if (state.query.rid != null) {
             usersProps.rid = parseInt(state.query.rid);
+
+            if (isNaN(usersProps.rid))
+                throw new InvalidSearchParamsError({error: "Invalid rid"});
+        }
 
         if (Object.keys(usersProps).length === 0)
             return null;

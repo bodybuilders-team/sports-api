@@ -3,7 +3,7 @@ import EditRoute from "./EditRoute.js";
 import {getStoredUser} from "../../js/utils.js";
 
 /**
- * Route details component.
+ * Route component.
  *
  * @param {Object} state - global state
  *
@@ -12,13 +12,14 @@ import {getStoredUser} from "../../js/utils.js";
  * @param {string} props.startLocation route start location
  * @param {string} props.endLocation route end location
  * @param {number} props.distance route distance
- * @param {OnSubmitCallback} props.onRouteUpdated - callback for route update
+ * @param {number} props.uid - route creator id
+ * @param {onUpdateCallback} props.onRouteUpdated - callback to be called when route is updated
  *
  * @return Promise<HTMLElement>
  */
 async function Route(state, props) {
-    const {uid, startLocation, endLocation, distance, onRouteUpdated} = props;
 
+    const {id, startLocation, endLocation, distance, uid, onRouteUpdated} = props;
     const storedUser = getStoredUser();
 
     return div(
@@ -30,10 +31,10 @@ async function Route(state, props) {
                 {class: "card-body"},
                 h3({id: "routeStartLocation"}, "Start Location: ", startLocation),
                 h3({id: "routeEndLocation"}, "End Location: ", endLocation),
-                h3({id: "routeDistance"}, "Distance: ", distance.toString()),
+                h3({id: "routeDistance"}, "Distance: ", distance.toString(), " Km"),
                 br(),
                 (storedUser != null && storedUser.uid === uid)
-                    ? EditRoute(state, {onRouteUpdated})
+                    ? EditRoute(state, {id, onRouteUpdated})
                     : undefined
             )
         )

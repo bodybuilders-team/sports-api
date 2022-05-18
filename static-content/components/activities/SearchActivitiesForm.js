@@ -24,7 +24,7 @@ import RoutesDropdown from "../routes/RoutesDropdown.js";
 /**
  * SearchActivitiesForm component.
  *
- * @param state - application state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
  * @param {onSearchCallback} props.onSubmit - on Submit event callback

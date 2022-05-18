@@ -1,7 +1,8 @@
 import {a, br, div, h1, img, p, strong} from "../js/dom/domTags.js";
 
 /**
- * HomePage page.
+ * Home page.
+ *
  * @param {Object} state - application state
  *
  * @returns Promise<HTMLElement>

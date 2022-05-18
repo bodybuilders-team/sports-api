@@ -13,22 +13,23 @@ import {getStoredUser} from "../../js/utils.js";
  */
 
 /**
- * Sport details component.
+ * Sport component.
  *
  * @param {Object} state - global state
  *
  * @param {Object} props - component properties
+ * @param {number} props.id - sport id
  * @param {string} props.name - sport name
  * @param {string} props.description - sport description
+ * @param {number} props.uid - sport creator id
  * @param {ActivitiesData} props.activitiesData - activities data
- * @param {OnSubmitCallback} props.onSportUpdated - callback for sport update
- * @param {String} props.uid - sport creator uid
+ * @param {onUpdateCallback} props.onSportUpdated - callback to be called when sport is updated
  *
  * @return Promise<HTMLElement>
  */
 async function Sport(state, props) {
 
-    const {name, description, activitiesData, onSportUpdated, uid} = props;
+    const {id, name, description, uid, activitiesData, onSportUpdated} = props;
     const storedUser = getStoredUser();
 
     return div(
@@ -42,7 +43,7 @@ async function Sport(state, props) {
                 h3({id: "sportDescription"}, "Description: ", description),
                 br(),
                 (storedUser != null && storedUser.uid === uid)
-                    ? EditSport(state, {onSportUpdated})
+                    ? EditSport(state, {id, onSportUpdated})
                     : undefined,
                 br(),
                 (activitiesData.activities.length > 0)

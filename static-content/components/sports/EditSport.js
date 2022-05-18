@@ -4,16 +4,17 @@ import {alertBoxWithError, getStoredUser} from "../../js/utils.js";
 /**
  * EditSport component.
  *
- * @param state - application state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onSportUpdated - callback to be called when sport is updated
+ * @param {number} props.id - route id
+ * @param {onUpdateCallback} props.onSportUpdated - callback to be called when sport is updated
  *
  * @return Promise<HTMLElement>
  */
 async function EditSport(state, props) {
 
-    const {onSportUpdated} = props;
+    const {id, onSportUpdated} = props;
 
     /**
      * Updates a sport.
@@ -23,10 +24,21 @@ async function EditSport(state, props) {
         event.preventDefault();
         const form = event.target;
 
-        const name = form.querySelector("#name").value;
-        const description = form.querySelector("#description").value;
+        let name = form.querySelector("#name").value;
+        let description = form.querySelector("#description").value;
 
-        const token = getStoredUser().token
+        if (name === "")
+            name = null;
+
+        if (description === "")
+            description = null;
+
+        if (name == null && description == null) {
+            await alertBoxWithError(state, form, "Please fill atleast one of the fields");
+            return;
+        }
+
+        const token = getStoredUser().token;
 
         const res = await fetch(
             "http://localhost:8888/api/sports/" + id,

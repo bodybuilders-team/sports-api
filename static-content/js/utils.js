@@ -96,8 +96,8 @@ export function createRef() {
 
 /**
  * @typedef StoredUser
- * @property {?string} uid - user unique identifier
- * @property {?string} token - user token
+ * @property {number} uid - user unique identifier
+ * @property {string} token - user token
  */
 
 /**

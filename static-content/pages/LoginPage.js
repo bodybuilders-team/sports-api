@@ -3,6 +3,7 @@ import {alertBoxWithError, storeUser} from "../js/utils.js";
 
 /**
  * Login page.
+ *
  * @param {Object} state - application state
  *
  * @returns Promise<HTMLElement>

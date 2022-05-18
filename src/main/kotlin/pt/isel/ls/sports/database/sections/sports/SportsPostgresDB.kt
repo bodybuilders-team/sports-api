@@ -45,6 +45,12 @@ class SportsPostgresDB : SportsDB {
         if (name == null && description == null)
             throw InvalidArgumentException("Name or description must be specified.")
 
+        val descriptionQuery =
+            if (description == null)
+                "description IS NOT NULL"
+            else
+                "description != ? OR description IS NULL"
+
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
@@ -52,15 +58,15 @@ class SportsPostgresDB : SportsDB {
                     UPDATE sports
                     SET name = COALESCE(?, name),
                         description= COALESCE(?, description)
-                    WHERE id = ? AND (name != ? OR description != ?)
+                    WHERE id = ? AND (name != ? OR $descriptionQuery)
                 """.trimIndent()
             )
 
-        stm.setString(1, name)
-        stm.setString(2, description)
+        stm.setStringOrNull(1, name)
+        stm.setStringOrNull(2, description)
         stm.setInt(3, sid)
-        stm.setString(4, name)
-        stm.setString(5, description)
+        stm.setStringOrNull(4, name)
+        if (description != null) stm.setStringOrNull(5, description)
 
         return stm.executeUpdate() == 1
     }

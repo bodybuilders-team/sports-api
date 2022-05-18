@@ -1,13 +1,13 @@
-import {a, br, div, h1, h3, h5} from "../../js/dom/domTags.js";
+import {a, br, div, h1, h3} from "../../js/dom/domTags.js";
 import EditActivity from "./EditActivity.js";
 import DeleteActivity from "./DeleteActivity.js";
 import {getStoredUser} from "../../js/utils.js";
 
 /**
  * @typedef PropRoute
- * @property {string} id activity route id
- * @property {string} startLocation activity route start location
- * @property {string} endLocation activity route end location
+ * @property {string} id - activity route id
+ * @property {string} startLocation - activity route start location
+ * @property {string} endLocation - activity route end location
  */
 
 /**
@@ -17,17 +17,26 @@ import {getStoredUser} from "../../js/utils.js";
  */
 
 /**
- * Activity details component.
+ * @typedef PropUser
+ * @property {number} id - user id
+ * @property {string} name - username
+ * @property {string} email - user email
+ */
+
+/**
+ * Activity component.
  *
- * @param state - application state
+ * @param {Object} state - application state
+ *
  * @param {Object} props - component properties
  * @param {number} props.id - activity id
  * @param {string} props.date - activity date
  * @param {string} props.duration - activity duration
+ * @param {PropUser} props.user - activity creator
  * @param {PropSport} props.sport - activity sport
  * @param {?PropRoute=} props.route - activity route
- * @param {Function} props.onActivityUpdated - callback to update activity
- * @param {Function} props.onActivityDeleted - callback to delete activity
+ * @param {onUpdateCallback} props.onActivityUpdated - callback to be called when activity is updated
+ * @param {onDeleteCallback} props.onActivityDeleted - callback to be called when activity is deleted
  *
  * @return Promise<HTMLElement>
  */
@@ -48,7 +57,11 @@ async function Activity(state, props) {
                 h3({id: "activityDuration"}, "Duration: ", duration),
                 h3({id: "activityUser"}, "User: ", a({href: `#users/${user.id}`}, user.name)),
                 route != null
-                    ? h5({id: "activityRoute"}, "Route: ", a({href: `#routes/${route.id}`}, route.startLocation + " - " + route.endLocation))
+                    ? h3(
+                        {id: "activityRoute"},
+                        "Route: ",
+                        a({href: `#routes/${route.id}`}, route.startLocation + " - " + route.endLocation)
+                    )
                     : undefined,
                 br(),
                 (storedUser != null && storedUser.uid === user.id)

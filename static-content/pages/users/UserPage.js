@@ -4,20 +4,31 @@ import {LogError} from "../../js/errorUtils.js";
 import {getQuerySkipLimit} from "../../js/utils.js";
 
 /**
- * User details page.
+ * @typedef User
+ * @property {number} id - user unique identifier
+ * @property {string} name - username
+ * @property {string} email - user email
+ */
+
+/**
+ * User page.
+ *
  * @param {Object} state - application state
  *
  * @returns Promise<HTMLElement>
  */
 async function UserPage(state) {
-    if (state.params.id === undefined)
-        throw new LogError("User id must be defined");
 
     const id = state.params.id;
+    if (isNaN(id))
+        throw new LogError("Invalid param id");
+
+    /**
+     * @type {User}
+     */
     const user = await apiFetch(`/users/${id}`);
 
     const {skip, limit} = getQuerySkipLimit(state.query, 0, 5);
-
     const activitiesData = await apiFetch(`/users/${id}/activities?skip=${skip}&limit=${limit}`);
 
     activitiesData.skip = skip;
@@ -25,7 +36,10 @@ async function UserPage(state) {
 
     return User(
         state,
-        {id: user.id, name: user.name, email: user.email, activitiesData}
+        {
+            ...user,
+            activitiesData
+        }
     );
 }
 

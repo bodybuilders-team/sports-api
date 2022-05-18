@@ -4,18 +4,21 @@ import {LogError} from "../../js/errorUtils.js";
 import {reloadHash} from "../../js/utils.js";
 
 /**
+ * @callback onDeleteCallback
+ */
+
+/**
  * Activity details page.
+ *
  * @param {Object} state - application state
  *
  * @returns Promise<HTMLElement>
  */
 async function ActivityPage(state) {
-    if (state.params.id === undefined)
-        throw new LogError("User id must be defined");
 
     const id = parseInt(state.params.id);
-    if (id == null)
-        throw new LogError("User id");
+    if (isNaN(id))
+        throw new LogError("Invalid param id");
 
     const activity = await apiFetch(`/activities/${id}`);
     const user = await apiFetch(`/users/${activity.uid}`);
@@ -26,18 +29,19 @@ async function ActivityPage(state) {
         : null;
 
     /**
-     * Callck to update the activity.
-     * @param activity
+     * Callback to be called when activity is updated.
+     * @param {boolean} modified true if activity was modified, false otherwise
      */
-    function onActivityUpdated(activity) {
-        reloadHash();
+    function onActivityUpdated(modified) {
+        if (modified)
+            reloadHash();
     }
 
     /**
-     * Callback to delete the activity.
+     * Callback to be called when activity is deleted.
      */
     async function onActivityDeleted() {
-        reloadHash();
+        window.location.hash = "#activities/search";
     }
 
     return Activity(

@@ -2,16 +2,22 @@ import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.j
 import {alertBoxWithError, getStoredUser} from "../../js/utils.js";
 
 /**
+ * @typedef OnSportCreatedCallback
+ * @param {CreatedSport} sport
+ */
+
+/**
  * CreateSport component.
  *
- * @param state - application state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
- * @param {Function} props.onSportCreated - callback function to be called when sport is created
+ * @param {OnSportCreatedCallback} props.onSportCreated - on activity created callback
  *
  * @return Promise<HTMLElement>
  */
 async function CreateSport(state, props) {
+
     const {onSportCreated} = props;
 
     /**
@@ -23,9 +29,23 @@ async function CreateSport(state, props) {
         const form = event.target;
 
         const name = form.querySelector("#sportName").value;
-        const description = form.querySelector("#sportDescription").value;
+        let description = form.querySelector("#sportDescription").value;
 
-        const token = getStoredUser().token
+        if (description === "")
+            description = null;
+
+        if (name === "") {
+            await alertBoxWithError(state, form, "Please enter a name");
+            return;
+        }
+
+        const user = getStoredUser();
+        if (user == null) {
+            await alertBoxWithError(state, form, "You must be logged in to create a route");
+            return;
+        }
+
+        const token = user.token;
 
         const res = await fetch(
             "http://localhost:8888/api/sports",
@@ -42,7 +62,7 @@ async function CreateSport(state, props) {
         const json = await res.json();
 
         if (res.ok)
-            onSportCreated({id: json.id, name, description});
+            onSportCreated({id: json.sid, name, description});
         else
             await alertBoxWithError(state, form, json.extraInfo);
     }
@@ -72,7 +92,7 @@ async function CreateSport(state, props) {
                     input({
                         type: "text", id: "sportName", name: "sportName",
                         class: "form-control",
-                        placeholder: "Enter sport name"
+                        placeholder: "Enter sport name", required: true
                     }),
 
                     label({for: "sportDescription", class: "col-form-label"}, "Description"),

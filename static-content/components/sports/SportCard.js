@@ -3,7 +3,7 @@ import {a, div, h5} from "../../js/dom/domTags.js";
 /**
  * SportCard component.
  *
- * @param state - application state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
  * @param {number} props.id - sport id

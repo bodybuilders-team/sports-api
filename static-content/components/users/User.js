@@ -3,9 +3,9 @@ import Activities from "../activities/Activities.js";
 import PaginatedCollection from "../pagination/PaginatedCollection.js";
 
 /**
- * User details page.
+ * User component.
 
- * @param {Object} state - global state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
  * @param {string} props.name - username

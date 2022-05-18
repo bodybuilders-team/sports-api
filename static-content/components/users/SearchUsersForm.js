@@ -25,14 +25,15 @@ import RoutesDropdown from "../routes/RoutesDropdown.js";
 /**
  * SearchActivitiesForm component.
  *
- * @param state - application state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSearchUsersCallback} props.onSubmit - on Submit event callback
+ * @param {OnSearchUsersCallback} props.onSubmit - onSubmit event callback
  *
  * @return Promise<HTMLElement>
  */
 async function SearchUsersForm(state, props) {
+
     const {onSubmit} = props;
     const sportsIdInputRef = createRef();
     const invalidSportFeedbackRef = createRef();
@@ -99,9 +100,7 @@ async function SearchUsersForm(state, props) {
                         id: "sid",
                         ref: sportsIdInputRef
                     }),
-                    SportsDropdown(state, {
-                        onChange: onSportChange
-                    }),
+                    SportsDropdown(state, {onChange: onSportChange}),
                     div({class: "invalid-feedback", ref: invalidSportFeedbackRef}, "Please select a sport")
                 ),
 
@@ -112,9 +111,7 @@ async function SearchUsersForm(state, props) {
                         id: "rid",
                         ref: routeIdInputRef
                     }),
-                    RoutesDropdown(state, {
-                        onChange: onRouteChange
-                    }),
+                    RoutesDropdown(state, {onChange: onRouteChange}),
                 )
             ),
             br(),

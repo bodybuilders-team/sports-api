@@ -69,6 +69,12 @@ class ActivitiesPostgresDB : ActivitiesDB {
         if (date == null && duration == null && sid == null && rid == null)
             throw InvalidArgumentException("Date, duration, sid or rid must be specified.")
 
+        val ridQuery =
+            if (rid == null)
+                "rid IS NOT NULL"
+            else
+                "rid != ? OR rid IS NULL"
+
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
@@ -78,7 +84,7 @@ class ActivitiesPostgresDB : ActivitiesDB {
                     duration = COALESCE(?, duration),
                     sid = COALESCE(?, sid),
                     rid = COALESCE(?, rid)
-                    where id = ? AND (date != ? OR duration != ? OR sid != ? OR rid != ?)
+                    where id = ? AND (date != ? OR duration != ? OR sid != ? OR $ridQuery)
                 """.trimIndent()
             )
 
@@ -90,7 +96,7 @@ class ActivitiesPostgresDB : ActivitiesDB {
         stm.setDate(6, date?.let { getSQLDate(it) })
         stm.setString(7, duration?.toDTOString())
         stm.setIntOrNull(8, sid)
-        stm.setIntOrNull(9, rid)
+        if (rid != null) stm.setIntOrNull(9, rid)
 
         return stm.executeUpdate() == 1
     }

@@ -1,14 +1,19 @@
 import {br, div, h1} from "../../js/dom/domTags.js";
 import {validate} from "../../js/validationUtils.js";
 import {InvalidSearchParamsError} from "../../js/errorUtils.js";
-import CreateActivity from "../../components/activities/CreateActivity.js";
 import InfinitePaginatedCollection from "../../components/pagination/InfinitePaginatedCollection.js";
 import ActivityCard from "../../components/activities/ActivityCard.js";
 
+/**
+ * Activities page.
+ *
+ * @param {Object} state - application state
+ *
+ * @returns Promise<HTMLElement>
+ */
 async function ActivitiesPage(state) {
-    const activitiesProps = getActivitiesProps();
 
-    //TODO: error handling for invalid activities props (show alertbox)
+    const activitiesProps = getActivitiesProps();
 
     /**
      * Parses activities props from state query params.
@@ -21,10 +26,18 @@ async function ActivitiesPage(state) {
         for (const key in state.query)
             activitiesProps[key] = state.query[key];
 
-        if (state.query.sid != null)
+        if (state.query.sid != null) {
             activitiesProps.sid = parseInt(state.query.sid);
-        if (state.query.rid != null)
+
+            if (isNaN(activitiesProps.sid))
+                throw new InvalidSearchParamsError({error: "Invalid sid"});
+        }
+        if (state.query.rid != null) {
             activitiesProps.rid = parseInt(state.query.rid);
+
+            if (isNaN(activitiesProps.rid))
+                throw new InvalidSearchParamsError({error: "Invalid rid"});
+        }
 
         if (Object.keys(activitiesProps).length === 0)
             return null;
@@ -42,22 +55,8 @@ async function ActivitiesPage(state) {
         return activitiesProps;
     }
 
-    /**
-     * @typedef Activity
-     * @property {number} id - The activity id.
-     */
-
-    /**
-     * Callback for activity creation.
-     * @param {Activity} activity - created activity
-     */
-    function onActivityCreated(activity) {
-        window.location.hash = "#activities/" + activity.id;
-    }
-
     return div(
         h1({class: "app-icon"}, "Activities"),
-        CreateActivity(state, {onActivityCreated}),
         br(),
 
         InfinitePaginatedCollection(state, {

@@ -27,7 +27,7 @@ data class ActivityDTO(
     companion object {
         @Suppress("RegExpUnnecessaryNonCapturingGroup", "RegExpRedundantEscape")
         private const val DURATION_REGEX = "^(?:[01]\\d|2[0123])\\:(?:[012345]\\d)\\:(?:[012345]\\d)\\.\\d{3}$"
-        private const val DATE_REGEX = "^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$"
+        private const val DATE_REGEX = "^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\\d|3[01])$"
 
         /**
          * Converts an [Activity] to an [ActivityDTO].

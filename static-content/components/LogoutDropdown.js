@@ -1,9 +1,23 @@
 import {changeLocation, createRef} from "../js/utils.js";
 import {a, button, div, h5} from "../js/dom/domTags.js";
 
+/**
+ * LogoutDropdown component.
+ *
+ * @param {Object} state - application state
+ * @param {Object} props - component properties
+ *
+ * @return Promise<HTMLElement>
+ */
 async function LogoutDropdown(state, props) {
-    const dropdownRef = createRef()
 
+    const dropdownRef = createRef();
+
+    /**
+     * Logout button click handler.
+     *
+     * @param {Event} event - click event
+     */
     function signout(event) {
         event.preventDefault();
         localStorage.removeItem("user");
@@ -11,6 +25,11 @@ async function LogoutDropdown(state, props) {
         changeLocation("/");
     }
 
+    /**
+     * Cancel button click handler.
+     *
+     * @param {Event} event - click event
+     */
     async function cancelSignout(event) {
         event.preventDefault();
 
@@ -18,13 +37,17 @@ async function LogoutDropdown(state, props) {
         dropdown.classList.remove("show");
     }
 
-    return div({class: "dropdown"},
-        a({
-            class: "nav-item nav-link dropdown-toggle",
-            "data-bs-toggle": "dropdown",
-            "aria-expanded": "false",
-            href: "#"
-        }, "Logout"),
+    return div(
+        {class: "dropdown"},
+        a(
+            {
+                class: "nav-item nav-link dropdown-toggle",
+                "data-bs-toggle": "dropdown",
+                "aria-expanded": "false",
+                href: "#"
+            },
+            "Logout"
+        ),
 
         div({class: "dropdown-menu", ref: dropdownRef},
             div({class: "d-flex flex-column align-items-center"},
@@ -43,8 +66,7 @@ async function LogoutDropdown(state, props) {
                 ),
             )
         )
-    )
-
+    );
 }
 
 export default LogoutDropdown;

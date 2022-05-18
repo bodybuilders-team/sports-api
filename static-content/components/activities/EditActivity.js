@@ -4,25 +4,29 @@ import SportsDropdown from "../sports/SportsDropdown.js";
 import RoutesDropdown from "../routes/RoutesDropdown.js";
 
 /**
- * EditSport component.
+ * EditActivity component.
  *
- * @param state - application state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
- * @param {number} props.id - sport id
- * @param {Function} props.onActivityUpdated - callback to be called when activity is updated
+ * @param {number} props.id - activity id
+ * @param {onUpdateCallback} props.onActivityUpdated - callback to be called when activity is updated
  *
  * @return Promise<HTMLElement>
  */
 async function EditActivity(state, props) {
+
     const {id, onActivityUpdated} = props;
 
     const sportsIdInputRef = createRef();
     const invalidSportFeedbackRef = createRef();
     const routeIdInputRef = createRef();
 
+    /**
+     * Updates an activity.
+     * @param {Event} event form event
+     */
     async function updateActivity(event) {
-
         event.preventDefault();
         const form = event.target;
 
@@ -48,7 +52,13 @@ async function EditActivity(state, props) {
             return;
         }
 
-        const token = getStoredUser().token;
+        const user = getStoredUser();
+        if (user == null) {
+            await alertBoxWithError(state, form, "You must be logged in to create a route");
+            return;
+        }
+
+        const token = user.token;
 
         const res = await fetch(
             "http://localhost:8888/api/activities/" + id,
@@ -65,7 +75,7 @@ async function EditActivity(state, props) {
         const json = await res.json();
 
         if (res.ok)
-            onActivityUpdated();
+            onActivityUpdated(json);
         else
             await alertBoxWithError(state, form, json.extraInfo);
     }
@@ -144,7 +154,7 @@ async function EditActivity(state, props) {
 
                     label({for: "duration", class: "col-form-label"}, "New Duration"),
                     input({
-                        type: "text", id: "duration", name: "duration",
+                        type: "time", step: "0.001", id: "duration", name: "duration",
                         class: "form-control",
                         placeholder: "Enter new activity duration"
                     }),

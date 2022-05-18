@@ -1,3 +1,5 @@
+-- noinspection SpellCheckingInspectionForFile
+
 BEGIN;
 
 INSERT INTO users (name, email, password)

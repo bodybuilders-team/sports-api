@@ -9,7 +9,7 @@ import {alertBoxWithError, createRef, getStoredUser} from "../../js/utils.js";
 /**
  * DeleteActivity component.
  *
- * @param state - application state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
  * @param {number} props.id - activity id
@@ -18,6 +18,7 @@ import {alertBoxWithError, createRef, getStoredUser} from "../../js/utils.js";
  * @return Promise<HTMLElement>
  */
 async function DeleteActivity(state, props) {
+
     const {id, onActivityDeleted} = props;
 
     let deleting = false;

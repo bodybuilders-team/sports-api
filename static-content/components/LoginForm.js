@@ -3,10 +3,10 @@ import {br, button, div, form, h1, hr, input, label} from "../js/dom/domTags.js"
 /**
  * LoginForm component.
  *
- * @param state - application state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onSubmit - on Submit event callback
+ * @param {OnSubmitCallback} props.onSubmit - onSubmit event callback
  *
  * @return Promise<HTMLElement>
  */

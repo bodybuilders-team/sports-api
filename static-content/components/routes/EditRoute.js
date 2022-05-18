@@ -4,15 +4,17 @@ import {alertBoxWithError, getStoredUser} from "../../js/utils.js";
 /**
  * EditRoute component.
  *
- * @param state - application state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
- * @param {OnSubmitCallback} props.onRouteUpdated - callback to be called when route is updated
+ * @param {number} props.id - route id
+ * @param {onUpdateCallback} props.onRouteUpdated - callback to be called when route is updated
  *
  * @return Promise<HTMLElement>
  */
 async function EditRoute(state, props) {
-    const {onRouteUpdated} = props;
+
+    const {id, onRouteUpdated} = props;
 
     /**
      * Updates a route.
@@ -22,11 +24,31 @@ async function EditRoute(state, props) {
         event.preventDefault();
         const form = event.target;
 
-        const startLocation = form.querySelector("#startLocation").value;
-        const endLocation = form.querySelector("#endLocation").value;
-        const distance = form.querySelector("#routeDistance").value;
+        let startLocation = form.querySelector("#startLocation").value;
+        let endLocation = form.querySelector("#endLocation").value;
+        let distance = form.querySelector("#distance").value;
 
-        const token = getStoredUser().token;
+        if (startLocation === "")
+            startLocation = null;
+
+        if (endLocation === "")
+            endLocation = null;
+
+        if (distance === "")
+            distance = null;
+
+        if (startLocation == null && endLocation == null && distance == null) {
+            await alertBoxWithError(state, form, "Please fill atleast one of the fields");
+            return;
+        }
+
+        const user = getStoredUser();
+        if (user == null) {
+            await alertBoxWithError(state, form, "You must be logged in to create a route");
+            return;
+        }
+
+        const token = user.token;
 
         const res = await fetch(
             "http://localhost:8888/api/routes/" + id,
@@ -36,7 +58,7 @@ async function EditRoute(state, props) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({startLocation, endLocation, distance: Number(distance)})
+                body: JSON.stringify({startLocation, endLocation, distance})
             }
         );
 
@@ -83,7 +105,7 @@ async function EditRoute(state, props) {
 
                     label({for: "distance", class: "col-form-label"}, "New Distance"),
                     input({
-                        type: "text", id: "distance", name: "distance",
+                        type: "number", step: "0.01", min: "0", id: "distance", name: "distance",
                         class: "form-control",
                         placeholder: "Enter new route distance"
                     }),

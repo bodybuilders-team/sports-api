@@ -2,7 +2,8 @@ import {br, div, h1} from "../../js/dom/domTags.js";
 import SearchUsersForm from "../../components/users/SearchUsersForm.js";
 
 /**
- * UsersRankingsSearchPage page.
+ * UsersRankingsSearch page.
+ *
  * @param {Object} state - application state
  *
  * @returns Promise<HTMLElement>

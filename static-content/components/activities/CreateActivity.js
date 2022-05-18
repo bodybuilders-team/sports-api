@@ -11,14 +11,15 @@ import RoutesDropdown from "../routes/RoutesDropdown.js";
 /**
  * CreateActivity component.
  *
- * @param state - application state
+ * @param {Object} state - application state
  *
  * @param {Object} props - component properties
- * @param {OnActivityCreatedCallback} props.onActivityCreated - on activity created callback
+ * @param {OnActivityCreatedCallback} props.onActivityCreated - callback to be called when activity is created
  *
  * @return Promise<HTMLElement>
  */
 async function CreateActivity(state, props) {
+
     const {onActivityCreated} = props;
 
     const sportsIdInputRef = createRef();
@@ -38,14 +39,6 @@ async function CreateActivity(state, props) {
         const duration = form.querySelector("#duration").value;
         let rid = form.querySelector("#rid").value;
 
-        if (rid === "")
-            rid = null;
-
-        if (date === "") {
-            await alertBoxWithError(state, form, "Please enter a date");
-            return;
-        }
-
         const invalidSportFeedback = await invalidSportFeedbackRef
         if (sid === "") {
             invalidSportFeedback.style.display = "block";
@@ -54,7 +47,26 @@ async function CreateActivity(state, props) {
 
         invalidSportFeedback.style.display = "none";
 
-        const token = getStoredUser().token;
+        if (rid === "")
+            rid = null;
+
+        if (duration === "") {
+            await alertBoxWithError(state, form, "Please enter a duration");
+            return;
+        }
+
+        if (date === "") {
+            await alertBoxWithError(state, form, "Please enter a date");
+            return;
+        }
+
+        const user = getStoredUser();
+        if (user == null) {
+            await alertBoxWithError(state, form, "You must be logged in to create a route");
+            return;
+        }
+
+        const token = user.token;
 
         const res = await fetch(
             "http://localhost:8888/api/activities/",
@@ -129,9 +141,7 @@ async function CreateActivity(state, props) {
                             id: "sid",
                             ref: sportsIdInputRef
                         }),
-                        SportsDropdown(state, {
-                            onChange: onSportChange
-                        }),
+                        SportsDropdown(state, {onChange: onSportChange}),
                         div({class: "invalid-feedback", ref: invalidSportFeedbackRef}, "Please select a sport")
                     ),
 
@@ -142,23 +152,21 @@ async function CreateActivity(state, props) {
                             id: "rid",
                             ref: routeIdInputRef
                         }),
-                        RoutesDropdown(state, {
-                            onChange: onRouteChange
-                        }),
+                        RoutesDropdown(state, {onChange: onRouteChange}),
                     ),
 
                     label({for: "date", class: "col-form-label"}, "Date"),
                     input({
                         type: "date", id: "date", name: "date",
                         class: "form-control",
-                        placeholder: "Enter activity date"
+                        placeholder: "Enter activity date", required: true
                     }),
 
                     label({for: "duration", class: "col-form-label"}, "Duration"),
                     input({
-                        type: "text", id: "duration", name: "duration",
+                        type: "time", step: "0.001", id: "duration", name: "duration",
                         class: "form-control",
-                        placeholder: "Enter activity duration"
+                        placeholder: "Enter activity duration", required: true
                     }),
                     br(),
                     button({type: "submit", class: "btn btn-primary w-100"}, "Create")

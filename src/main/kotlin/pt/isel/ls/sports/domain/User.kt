@@ -24,7 +24,7 @@ data class User(
 
         private const val HASHED_PASSWORD_LENGTH = 64
 
-        private const val EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$"
+        private const val EMAIL_REGEX = "^[A-Za-z\\d+_.-]+@(.+)$"
 
         /**
          * Checks if an email is valid.
