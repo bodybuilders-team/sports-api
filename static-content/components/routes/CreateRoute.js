@@ -1,5 +1,5 @@
 import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.js";
-import {alertBoxWithError} from "../../js/utils.js";
+import {alertBoxWithError,getStoredUser} from "../../js/utils.js";
 
 /**
  * CreateSport component.
@@ -25,7 +25,7 @@ async function CreateRoute(state, props) {
         const endLocation = form.querySelector("#routeEndLocation").value;
         const distance = form.querySelector("#routeDistance").value;
 
-        const token = window.localStorage.getItem("token");
+        const token = getStoredUser().token
 
         const res = await fetch(
             "http://localhost:8888/api/routes/",
@@ -68,23 +68,23 @@ async function CreateRoute(state, props) {
                 h4("Create Route"),
                 form(
                     {onSubmit: createRoute},
-                    label({for: "routeStartLocation", class: "col-form-label"}, "Start Location"),
+                    label({for: "startLocation", class: "col-form-label"}, "Start Location"),
                     input({
-                        type: "text", id: "routeStartLocation", name: "routeStartLocation",
+                        type: "text", id: "startLocation", name: "startLocation",
                         class: "form-control",
                         placeholder: "Enter route start location"
                     }),
 
-                    label({for: "routeEndLocation", class: "col-form-label"}, "End Location"),
+                    label({for: "endLocation", class: "col-form-label"}, "End Location"),
                     input({
-                        type: "text", id: "routeEndLocation", name: "routeEndLocation",
+                        type: "text", id: "endLocation", name: "endLocation",
                         class: "form-control",
                         placeholder: "Enter route end location"
                     }),
 
-                    label({for: "routeDistance", class: "col-form-label"}, "Distance"),
+                    label({for: "distance", class: "col-form-label"}, "Distance"),
                     input({
-                        type: "text", id: "routeDistance", name: "routeDistance",
+                        type: "text", id: "distance", name: "distance",
                         class: "form-control",
                         placeholder: "Enter route distance"
                     }),

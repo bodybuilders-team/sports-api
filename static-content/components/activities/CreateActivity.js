@@ -1,5 +1,5 @@
 import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.js";
-import {alertBoxWithError, createRef} from "../../js/utils.js";
+import {alertBoxWithError, createRef, getStoredUser} from "../../js/utils.js";
 import SportsDropdown from "../sports/SportsDropdown.js";
 import RoutesDropdown from "../routes/RoutesDropdown.js";
 
@@ -15,6 +15,7 @@ import RoutesDropdown from "../routes/RoutesDropdown.js";
  */
 async function CreateActivity(state, props) {
     const {onActivityCreated} = props;
+
     const sportsIdInputRef = createRef()
     const invalidSportFeedbackRef = createRef()
     const routeIdInputRef = createRef()
@@ -48,7 +49,7 @@ async function CreateActivity(state, props) {
 
         invalidSportFeedback.style.display = "none";
 
-        const token = window.localStorage.getItem("token");
+        const token = getStoredUser().token
 
         const res = await fetch(
             "http://localhost:8888/api/activities/",

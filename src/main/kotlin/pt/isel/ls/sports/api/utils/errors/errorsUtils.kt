@@ -86,7 +86,6 @@ inline fun runAndCatch(block: () -> Response): Response =
     } catch (error: MissingTokenException) {
 
         Logger.warn(error.toString())
-
         AppError(
             "MISSING_TOKEN",
             "Missing Authorization header token",

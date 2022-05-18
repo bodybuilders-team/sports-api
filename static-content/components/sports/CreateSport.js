@@ -22,7 +22,7 @@ async function CreateSport(state, props) {
         const name = form.querySelector("#sportName").value;
         const description = form.querySelector("#sportDescription").value;
 
-        const token = window.localStorage.getItem("token");
+        const token = getStoredUser().token
 
         const res = await fetch(
             "http://localhost:8888/api/sports",

@@ -52,12 +52,12 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
      * @param email email of the user
      * @param password password of the user
      *
-     * @return token of the user
+     * @return A [LoginUserResponse] object containing the user's unique identifier and a token
      * @throws InvalidArgumentException if the email is invalid
      * @throws InvalidArgumentException if the password is invalid
      * @throws NotFoundException if no user with that email exists
      */
-    fun loginUser(email: String, password: String): String {
+    fun loginUser(email: String, password: String): LoginUserResponse {
 
         return db.execute { conn ->
             val user = db.users.getAllUsers(conn, 0, 1000).users.firstOrNull { it.email == email }
@@ -66,7 +66,8 @@ class UsersServices(db: AppDB) : AbstractServices(db) {
             if (!User.checkPassword(password + user.name + user.email, user.password))
                 throw InvalidArgumentException("Password does not match")
 
-            db.tokens.createUserToken(conn, UUID.randomUUID(), user.id)
+            val token = db.tokens.createUserToken(conn, UUID.randomUUID(), user.id)
+            LoginUserResponse(token, user.id)
         }
     }
 

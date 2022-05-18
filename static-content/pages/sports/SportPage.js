@@ -24,45 +24,12 @@ async function SportPage(state) {
     activitiesData.skip = skip;
     activitiesData.limit = limit;
 
-    /**
-     * Updates a sport.
-     * @param event form event
-     */
-    async function updateSport(event) {
-        event.preventDefault();
-        const form = event.target;
 
-        const name = form.querySelector("#newSportName").value;
-        const description = form.querySelector("#newSportDescription").value;
-
-        const token = window.localStorage.getItem("token");
-
-        const res = await fetch(
-            "http://localhost:8888/api/sports/" + id,
-            {
-                method: "PATCH",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({name, description})
-            }
-        );
-
-        const json = await res.json();
-
-        if (res.ok)
-            reloadHash()
-        else
-            await alertBoxWithError(state, form, json.extraInfo);
-    }
 
     return Sport(
         state,
         {
-            id: sport.id,
-            name: sport.name,
-            description: sport.description,
+            ...sport,
             activitiesData,
             onUpdateSubmit: updateSport
         }

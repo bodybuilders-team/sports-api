@@ -19,7 +19,7 @@ async function RegisterPage(state) {
 
         const username = form.querySelector("#username").value;
         const email = form.querySelector("#email").value;
-        const password = form.querySelector("#password").value; // TODO password
+        const password = form.querySelector("#password").value;
 
         const res = await fetch(
             "http://localhost:8888/api/users",

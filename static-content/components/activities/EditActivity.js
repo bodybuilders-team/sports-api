@@ -1,6 +1,7 @@
 import {br, button, div, form, h4, input, label} from "../../js/dom/domTags.js";
-import {alertBoxWithError} from "../../js/utils.js";
-
+import {alertBoxWithError, createRef, getStoredUser} from "../../js/utils.js";
+import SportsDropdown from "../sports/SportsDropdown.js";
+import RoutesDropdown from "../routes/RoutesDropdown.js";
 /**
  * EditSport component.
  *
@@ -13,17 +14,38 @@ import {alertBoxWithError} from "../../js/utils.js";
 async function EditActivity(state, props) {
     const {id, onActivityUpdated} = props;
 
+    const sportsIdInputRef = createRef()
+    const invalidSportFeedbackRef = createRef()
+    const routeIdInputRef = createRef()
+
     async function updateActivity(event) {
 
         event.preventDefault();
         const form = event.target;
 
-        const sid = form.querySelector("#sid").value;
-        const date = form.querySelector("#date").value;
-        const duration = form.querySelector("#duration").value;
-        const rid = form.querySelector("#aid").value;
+        let sid = form.querySelector("#sid").value;
+        let date = form.querySelector("#date").value;
+        let duration = form.querySelector("#duration").value;
+        let rid = form.querySelector("#rid").value;
 
-        const token = window.localStorage.getItem("token");
+        if (sid === "")
+            sid = null
+
+        if (duration === "")
+            duration = null
+
+        if (rid === "")
+            rid = null;
+
+        if (date === "")
+            date = null
+
+        if (sid == null && rid == null && date == null && duration == null) {
+            await alertBoxWithError(state, form, "Please fill atleast one of the fields");
+            return;
+        }
+
+        const token = getStoredUser().token;
 
         const res = await fetch(
             "http://localhost:8888/api/activities/" + id,
@@ -45,6 +67,19 @@ async function EditActivity(state, props) {
             await alertBoxWithError(state, form, json.extraInfo);
     }
 
+    async function onSportChange(id) {
+        const sportIdInput = await sportsIdInputRef
+        sportIdInput.value = id
+
+        const invalidSportFeedback = await invalidSportFeedbackRef
+        invalidSportFeedback.style.display = "none";
+    }
+
+    async function onRouteChange(id) {
+        const routeIdInput = await routeIdInputRef
+        routeIdInput.value = id;
+    }
+
     return div(
         input(
             {
@@ -64,33 +99,43 @@ async function EditActivity(state, props) {
                 h4("Edit Activity"),
                 form(
                     {onSubmit: updateActivity},
+                    div(
+                        label({for: "sid", class: "col-form-label"}, "Sport"),
+                        input({
+                            type: "hidden",
+                            id: "sid",
+                            ref: sportsIdInputRef
+                        }),
+                        SportsDropdown(state, {
+                            onChange: onSportChange
+                        }),
+                        div({class: "invalid-feedback", ref: invalidSportFeedbackRef}, "Please select a sport")
+                    ),
 
-                    label({for: "newActivitySport", class: "col-form-label"}, "New Sport"),
-                    input({
-                        type: "text", id: "newActivitySport", name: "newActivitySport",
-                        class: "form-control",
-                        placeholder: "Enter new activity sport"
-                    }),
+                    div(
+                        label({for: "rid", class: "form-label"}, "Route"),
+                        input({
+                            type: "hidden",
+                            id: "rid",
+                            ref: routeIdInputRef
+                        }),
+                        RoutesDropdown(state, {
+                            onChange: onRouteChange
+                        }),
+                    ),
 
-                    label({for: "newActivityDate", class: "col-form-label"}, "New Date"),
+                    label({for: "date", class: "col-form-label"}, "New Date"),
                     input({
-                        type: "date", id: "newActivityDate", name: "newActivityDate",
+                        type: "date", id: "date", name: "date",
                         class: "form-control",
                         placeholder: "Enter new activity date"
                     }),
 
-                    label({for: "newActivityDuration", class: "col-form-label"}, "New Duration"),
+                    label({for: "duration", class: "col-form-label"}, "New Duration"),
                     input({
-                        type: "text", id: "newActivityDuration", name: "newActivityDuration",
+                        type: "text", id: "duration", name: "duration",
                         class: "form-control",
                         placeholder: "Enter new activity duration"
-                    }),
-
-                    label({for: "newActivityRoute", class: "col-form-label"}, "New Route"),
-                    input({
-                        type: "text", id: "newActivityDuration", name: "newActivityDuration",
-                        class: "form-control",
-                        placeholder: "Enter new activity route"
                     }),
 
                     br(),

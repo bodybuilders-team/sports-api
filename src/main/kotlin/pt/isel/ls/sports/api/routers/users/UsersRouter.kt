@@ -13,7 +13,7 @@ import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
 import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest
 import pt.isel.ls.sports.api.routers.users.dtos.CreateUserResponse
 import pt.isel.ls.sports.api.routers.users.dtos.LoginUserRequest
-import pt.isel.ls.sports.api.routers.users.dtos.LoginUserResponse
+import pt.isel.ls.sports.api.routers.users.dtos.LoginUserResponseDTO
 import pt.isel.ls.sports.api.routers.users.dtos.UserDTO
 import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.decodeBodyAs
@@ -69,13 +69,13 @@ class UsersRouter(private val services: UsersServices) : IRouter {
      * Logs a user in, by providing a token in exchange for a valid email and password.
      *
      * @param request HTTP request containing a body that follows the [LoginUserRequest] format
-     * @return HTTP response containing a body that follows the [LoginUserResponse] format
+     * @return HTTP response containing a body that follows the [LoginUserResponseDTO] format
      */
     private fun loginUser(request: Request): Response = runAndCatch {
         val userRequest = request.decodeBodyAs<LoginUserRequest>()
-        val token = services.loginUser(userRequest.email, userRequest.password)
+        val userResponse = services.loginUser(userRequest.email, userRequest.password)
 
-        return Response(OK).json(LoginUserResponse(token))
+        return Response(OK).json(LoginUserResponseDTO(userResponse))
     }
 
     /**

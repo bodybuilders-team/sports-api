@@ -1,4 +1,5 @@
 import {br, button, div, form, h4, input, label} from "../../js/dom/domTags.js";
+import {alertBoxWithError} from "../../js/utils.js";
 
 /**
  * EditSport component.
@@ -11,6 +12,40 @@ import {br, button, div, form, h4, input, label} from "../../js/dom/domTags.js";
  * @return Promise<HTMLElement>
  */
 async function EditSport(state, props) {
+
+    /**
+     * Updates a sport.
+     * @param event form event
+     */
+    async function updateSport(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        const name = form.querySelector("#name").value;
+        const description = form.querySelector("#description").value;
+
+        const token = getStoredUser().token
+
+        const res = await fetch(
+            "http://localhost:8888/api/sports/" + id,
+            {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({name, description})
+            }
+        );
+
+        const json = await res.json();
+
+        if (res.ok)
+            onSportUpdated(json);
+        else
+            await alertBoxWithError(state, form, json.extraInfo);
+    }
+
     return div(
         input(
             {
@@ -29,17 +64,17 @@ async function EditSport(state, props) {
                 {class: "card card-body"},
                 h4("Edit Sport"),
                 form(
-                    {onSubmit: props.onUpdateSubmit},
-                    label({for: "newSportName", class: "col-form-label"}, "New Name"),
+                    {onSubmit: updateSport},
+                    label({for: "name", class: "col-form-label"}, "New Name"),
                     input({
-                        type: "text", id: "newSportName", name: "newSportName",
+                        type: "text", id: "name", name: "name",
                         class: "form-control",
                         placeholder: "Enter new sport name"
                     }),
 
-                    label({for: "newSportDescription", class: "col-form-label"}, "New Description"),
+                    label({for: "description", class: "col-form-label"}, "New Description"),
                     input({
-                        type: "text", id: "newSportDescription", name: "newSportDescription",
+                        type: "text", id: "description", name: "description",
                         class: "form-control",
                         placeholder: "Enter new sport description"
                     }),

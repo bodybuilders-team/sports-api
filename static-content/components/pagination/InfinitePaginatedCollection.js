@@ -24,6 +24,7 @@ async function InfinitePaginatedCollection(state, props) {
             totalCount: newTotalCount,
         } = await apiFetch(`${collectionEndpoint}?${urlSearchParams.toString()}`);
 
+
         if (currentSkip === 0 && newTotalCount === 0) {
             const container = await containerRef
 

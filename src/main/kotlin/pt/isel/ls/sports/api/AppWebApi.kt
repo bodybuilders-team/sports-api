@@ -21,7 +21,7 @@ class AppWebApi(services: AppServices) {
         "/users" bind UsersRouter.routes(services.users),
         "/routes" bind RoutesRouter.routes(services.routes),
         "/sports" bind SportsRouter.routes(services.sports),
-        "/activities" bind ActivitiesRouter.routes(services.activities)
+        "/activities" bind ActivitiesRouter.routes(services.activities),
     )
 
     /**

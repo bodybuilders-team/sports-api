@@ -1,6 +1,6 @@
 import {br, button, div, form, h4, input} from "../../js/dom/domTags.js";
 import AlertBox from "../AlertBox.js";
-import {alertBoxWithError, createRef} from "../../js/utils.js";
+import {alertBoxWithError, createRef,getStoredUser} from "../../js/utils.js";
 
 /**
  * DeleteActivity component.
@@ -31,7 +31,7 @@ async function DeleteActivity(state, props) {
 
         const form = event.target;
 
-        const token = window.localStorage.getItem("token");
+        const token = getStoredUser().token
 
         const res = await fetch(
             "http://localhost:8888/api/activities/" + id,

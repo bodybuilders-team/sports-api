@@ -1,6 +1,7 @@
 import {a, br, div, h1, h3, h5} from "../../js/dom/domTags.js";
 import EditActivity from "./EditActivity.js";
 import DeleteActivity from "./DeleteActivity.js";
+import {getStoredUser} from "../../js/utils.js";
 
 /**
  * @typedef PropRoute
@@ -25,9 +26,11 @@ import DeleteActivity from "./DeleteActivity.js";
 async function Activity(state, props) {
     const {id, date, duration, user, sport, route, onActivityUpdated, onActivityDeleted} = props;
 
+    const storedUser = getStoredUser();
+
     return div(
         {class: "row justify-content-evenly"},
-        h1({class: "app-icon"}, `Activity ${id}`),
+        h1({class: "app-icon"}, `Activity`),
         div(
             {class: "card user-card col-6 bg-light"},
             div(
@@ -40,9 +43,13 @@ async function Activity(state, props) {
                     ? h5({id: "activityRoute"}, "Route: ", a({href: `#routes/${route.id}`}, route.startLocation + " - " + route.endLocation))
                     : undefined,
                 br(),
-                EditActivity(state, {id, onActivityUpdated}),
-                br(),
-                DeleteActivity(state, {id, onActivityDeleted})
+                (storedUser != null && storedUser.uid === user.id)
+                    ? div(
+                        EditActivity(state, {id, onActivityUpdated}),
+                        br(),
+                        DeleteActivity(state, {id, onActivityDeleted})
+                    )
+                    : undefined
             )
         )
     );

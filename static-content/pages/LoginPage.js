@@ -31,15 +31,13 @@ async function LoginPage(state) {
 
         const json = await res.json();
 
-        console.log(json);
-
         if (res.ok) {
-            window.localStorage.setItem("token", json.token);
+            window.localStorage.setItem("user", JSON.stringify(json));
             window.location.href = "#";
             return
         }
 
-        await alertBoxWithError(state, form, json);
+        await alertBoxWithError(state, form, json.extraInfo);
     }
 
     return LoginForm(

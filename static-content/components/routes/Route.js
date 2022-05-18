@@ -1,5 +1,6 @@
 import {br, div, h1, h3} from "../../js/dom/domTags.js";
 import EditRoute from "./EditRoute.js";
+import {getStoredUser} from "../../js/utils.js";
 
 /**
  * Route details component.
@@ -16,19 +17,24 @@ import EditRoute from "./EditRoute.js";
  * @return Promise<HTMLElement>
  */
 async function Route(state, props) {
+    const {uid, startLocation, endLocation, distance, onRouteUpdated} = props;
+
+    const storedUser = getStoredUser();
 
     return div(
         {class: "row justify-content-evenly"},
-        h1({class: "app-icon"}, `Route ${props.id}`),
+        h1({class: "app-icon"}, `Route`),
         div(
             {class: "card user-card col-6 bg-light"},
             div(
                 {class: "card-body"},
-                h3({id: "routeStartLocation"}, "Start Location: ", props.startLocation),
-                h3({id: "routeEndLocation"}, "End Location: ", props.endLocation),
-                h3({id: "routeDistance"}, "Distance: ", props.distance.toString()),
+                h3({id: "routeStartLocation"}, "Start Location: ", startLocation),
+                h3({id: "routeEndLocation"}, "End Location: ", endLocation),
+                h3({id: "routeDistance"}, "Distance: ", distance.toString()),
                 br(),
-                EditRoute(state, props)
+                (storedUser != null && storedUser.uid === uid)
+                    ? EditRoute(state, {onRouteUpdated})
+                    : undefined
             )
         )
     );
