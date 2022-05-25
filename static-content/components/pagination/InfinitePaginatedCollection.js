@@ -4,17 +4,16 @@ import {div} from "../../js/dom/domTags.js";
 import InfinitePaginate from "./InfinitePaginate.js";
 
 
-// TODO: Check comments
 /**
  * InfinitePaginatedCollection component.
  *
  * @param {Object} state - application state
  *
  * @param {Object} props - component properties
- * @param {} props.collectionComponent - component to render each item
+ * @param {Component} props.collectionComponent - component to visualize the paginated collection
  * @param {String} props.collectionEndpoint - endpoint to fetch collection from
  * @param {String} props.collectionName - name of collection
- * @param {} props.searchParams - search parameters to pass to collection endpoint
+ * @param {Object} props.searchParams - search parameters to pass to collection endpoint
  *
  * @return Promise<HTMLElement>
  */
@@ -28,9 +27,9 @@ async function InfinitePaginatedCollection(state, props) {
     let currentSkip = 0;
 
     /**
-     * callback to load more items.
+     * Callback to load more items.
      * @param numberOfItems - number of items to load
-     * @return Promise<void>
+     * @return Promise<Array<HTMLElement>>
      */
     async function onLoadMore(numberOfItems) {
         if (totalCount != null && currentSkip + 1 >= totalCount)

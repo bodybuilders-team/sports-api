@@ -3,7 +3,21 @@ import apiFetch from "../../js/apiFetch.js";
 import {button, div, input, label} from "../../js/dom/domTags.js";
 import OverflowInfinitePaginate from "../pagination/OverflowInfinitePaginate.js";
 
-// TODO comment
+/**
+ * @callback OnChangeCallback
+ * @param {string} id - id associated to the element
+ */
+
+/**
+ * RoutesDropdown component, used to display a dropdown of searchable routes.
+ *
+ * @param {Object} state - application state
+ *
+ * @param {Object} props - component properties
+ * @param {OnChangeCallback} props.onChange - callback to be called when the selected route changes
+ *
+ * @return Promise<HTMLElement>
+ */
 async function RoutesDropdown(state, props) {
     const {onChange} = props;
 

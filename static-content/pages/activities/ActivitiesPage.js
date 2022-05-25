@@ -55,6 +55,7 @@ async function ActivitiesPage(state) {
         return activitiesProps;
     }
 
+
     return div(
         h1({class: "app-icon"}, "Activities"),
         br(),

@@ -77,8 +77,14 @@ export async function alertBoxWithError(state, element, errorMessage) {
 }
 
 /**
+ * @typedef {Promise} Ref
+ * @property {Function} resolve - resolves the promise
+ * @property {Function} reject - rejects the promise
+ */
+
+/**
  * Creates a reference using a deferred promise.
- * @returns {Promise<unknown>}
+ * @returns {Ref}
  */
 export function createRef() {
     let resolve, reject;

@@ -3,7 +3,16 @@ import apiFetch from "../../js/apiFetch.js";
 import {button, div, input, label} from "../../js/dom/domTags.js";
 import OverflowInfinitePaginate from "../pagination/OverflowInfinitePaginate.js";
 
-// TODO comment
+/**
+ * SportsDropdown component, used to display a dropdown of searchable sports.
+ *
+ * @param {Object} state - application state
+ *
+ * @param {Object} props - component properties
+ * @param {OnChangeCallback} props.onChange - callback to be called when the selected sport changes
+ *
+ * @return Promise<HTMLElement>
+ */
 async function SportsDropdown(state, props) {
     const {onChange} = props;
 
@@ -33,7 +42,6 @@ async function SportsDropdown(state, props) {
         await sportsReset();
     }
 
-
     async function onLoadMoreSports(numberSports) {
         if (totalSportsCount != null && sportsSkip + 1 >= totalSportsCount)
             return [];
@@ -49,12 +57,12 @@ async function SportsDropdown(state, props) {
         totalSportsCount = newTotalCount;
         sportsSkip += numberSports;
 
-        return Promise.all(sports.map(async sport =>
+        return sports.map(async sport =>
             button({
                 class: "dropdown-item", "data-id": sport.id,
                 onClick: onSelectedSportChange
             }, sport.name)
-        ));
+        );
     }
 
     async function onSelectedSportChange(event) {

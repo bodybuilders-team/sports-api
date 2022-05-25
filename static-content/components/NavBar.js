@@ -38,7 +38,9 @@ async function NavBar(state) {
     if (active === "")
         active = "#";
 
-    navbar.querySelector(`a[href="${active}"]`).classList.add("active");
+    const selectedNav = navbar.querySelector(`a[href="${active}"]`)
+    if(selectedNav != null)
+        selectedNav.classList.add("active");
 
     return navbar;
 }
