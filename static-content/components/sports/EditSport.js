@@ -1,5 +1,6 @@
 import {br, button, div, form, h4, input, label} from "../../js/dom/domTags.js";
 import {alertBoxWithError, getStoredUser} from "../../js/utils.js";
+import {API_BASE_URL} from "../../js/config.js";
 
 /**
  * EditSport component.
@@ -51,7 +52,7 @@ async function EditSport(state, props) {
         const token = getStoredUser().token;
 
         const res = await fetch(
-            "http://localhost:8888/api/sports/" + id,
+            `${API_BASE_URL}/sports/${id}`,
             {
                 method: "PATCH",
                 headers: {

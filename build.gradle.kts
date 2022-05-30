@@ -30,3 +30,11 @@ tasks.register<JavaExec>("launch") {
     this.mainClass.set("pt.isel.ls.sports.AppLaunchKt")
     classpath = sourceSets["main"].runtimeClasspath
 }
+
+tasks.named<Jar>("jar") {
+    dependsOn("copyRuntimeDependencies")
+    manifest {
+        attributes["Main-Class"] = "pt.isel.ls.sports.AppLaunchKt"
+        attributes["Class-Path"] = configurations.runtimeClasspath.get().joinToString(" ") { it.name }
+    }
+}

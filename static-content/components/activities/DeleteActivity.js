@@ -1,6 +1,7 @@
 import {br, button, div, form, h4, input} from "../../js/dom/domTags.js";
 import AlertBox from "../AlertBox.js";
 import {alertBoxWithError, createRef, getStoredUser} from "../../js/utils.js";
+import {API_BASE_URL} from "../../js/config.js";
 
 /**
  * @typedef OnActivityDeletedCallback
@@ -41,7 +42,7 @@ async function DeleteActivity(state, props) {
         const token = getStoredUser().token;
 
         const res = await fetch(
-            "http://localhost:8888/api/activities/" + id,
+            `${API_BASE_URL}/activities/${id}`,
             {
                 method: "DELETE",
                 headers: {'Authorization': `Bearer ${token}`}

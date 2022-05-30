@@ -1,5 +1,6 @@
 import {br, button, div, form, h4, input, label} from "../../js/dom/domTags.js";
 import {alertBoxWithError, getStoredUser} from "../../js/utils.js";
+import {API_BASE_URL} from "../../js/config.js";
 
 /**
  * EditRoute component.
@@ -61,7 +62,7 @@ async function EditRoute(state, props) {
         const token = user.token;
 
         const res = await fetch(
-            "http://localhost:8888/api/routes/" + id,
+            `${API_BASE_URL}/routes/${id}`,
             {
                 method: "PATCH",
                 headers: {

@@ -1,4 +1,4 @@
-import {div, h1, h3} from "../../js/dom/domTags.js";
+import {a, div, h1, h3} from "../../js/dom/domTags.js";
 import Activities from "../activities/Activities.js";
 import PaginatedCollection from "../pagination/PaginatedCollection.js";
 
@@ -26,7 +26,7 @@ async function User(state, props) {
             div(
                 {class: "card-body col justify-content-center "},
                 h3("Username: ", name),
-                h3("Email: ", email),
+                h3("Email: ", a({href: `mailto:${email}`}, email)),
                 (activitiesData.activities.length > 0)
                     ? div(
                         h3("Activities:"),

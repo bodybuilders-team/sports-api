@@ -1,5 +1,6 @@
 import LoginForm from "../components/LoginForm.js";
 import {alertBoxWithError, storeUser} from "../js/utils.js";
+import {API_BASE_URL} from "../js/config.js";
 
 /**
  * Login page.
@@ -38,7 +39,7 @@ async function LoginPage(state) {
         }
 
         const res = await fetch(
-            "http://localhost:8888/api/users/login",
+            `${API_BASE_URL}/users/login`,
             {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},

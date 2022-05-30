@@ -1,5 +1,6 @@
 import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.js";
 import {alertBoxWithError, getStoredUser} from "../../js/utils.js";
+import {API_BASE_URL} from "../../js/config.js";
 
 /**
  * @typedef OnSportCreatedCallback
@@ -53,7 +54,7 @@ async function CreateSport(state, props) {
         const token = user.token;
 
         const res = await fetch(
-            "http://localhost:8888/api/sports",
+            `${API_BASE_URL}/sports`,
             {
                 method: "POST",
                 headers: {

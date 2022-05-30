@@ -2,6 +2,7 @@ import {br, button, div, form, h4, input, label, p} from "../../js/dom/domTags.j
 import {alertBoxWithError, createRef, getStoredUser} from "../../js/utils.js";
 import SportsDropdown from "../sports/SportsDropdown.js";
 import RoutesDropdown from "../routes/RoutesDropdown.js";
+import {API_BASE_URL} from "../../js/config.js";
 
 /**
  * @typedef OnActivityCreatedCallback
@@ -69,7 +70,7 @@ async function CreateActivity(state, props) {
         const token = user.token;
 
         const res = await fetch(
-            "http://localhost:8888/api/activities/",
+            `${API_BASE_URL}/activities/`,
             {
                 method: "POST",
                 headers: {

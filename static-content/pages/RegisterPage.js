@@ -1,5 +1,6 @@
 import RegisterForm from "../components/RegisterForm.js";
 import {alertBoxWithError} from "../js/utils.js";
+import {API_BASE_URL} from "../js/config.js";
 
 /**
  * Register page.
@@ -44,7 +45,7 @@ async function RegisterPage(state) {
         }
 
         const res = await fetch(
-            "http://localhost:8888/api/users",
+            `${API_BASE_URL}/users`,
             {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
