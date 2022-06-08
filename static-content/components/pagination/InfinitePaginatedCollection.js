@@ -18,7 +18,7 @@ import InfinitePaginate from "./InfinitePaginate.js";
  * @return Promise<HTMLElement>
  */
 async function InfinitePaginatedCollection(state, props) {
-    const {collectionComponent, collectionEndpoint, collectionName, searchParams} = props;
+    const {collectionComponent, collectionEndpoint, collectionName, searchParams, extraPropData} = props;
     const containerRef = createRef();
 
     const urlSearchParams = new URLSearchParams(searchParams || {});
@@ -57,9 +57,13 @@ async function InfinitePaginatedCollection(state, props) {
         totalCount = newTotalCount;
         currentSkip += numberOfItems;
 
-        return items.map(item =>
-            collectionComponent(state, item)
-        );
+        return items.map(item => {
+            if (extraPropData != null) {
+                for (const extraData in extraPropData)
+                    item[extraData] = extraPropData[extraData]
+            }
+            return collectionComponent(state, item)
+        });
     }
 
     return div(

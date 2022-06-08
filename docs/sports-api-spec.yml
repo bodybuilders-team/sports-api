@@ -670,7 +670,7 @@ paths:
         - name: rid
           in: query
           description: Route id
-          required: true
+          required: false
           schema:
             type: integer
 
@@ -695,7 +695,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersResponse'
+                $ref: '#/components/schemas/ActivitiesUsersResponse'
         400:
           description: Invalid query params
           content:
@@ -871,6 +871,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/User'
+        totalCount:
+          type: integer
+          example: 10
+
+    ActivitiesUsersResponse:
+      type: object
+      required:
+        - activitiesUsers
+      properties:
+        activitiesUsers:
+          $ref: '#/components/schemas/ActivitiesUser'
         totalCount:
           type: integer
           example: 10
@@ -1191,6 +1202,20 @@ components:
           description: User email
           example: andre@pascoa.org
 
+    ActivitiesUser:
+      type: object
+      description: A combination of user and an associated activity id
+      required:
+        - user
+        - aid
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        aid:
+          type: integer
+          description: "Activity Id"
+          example: 1
+
     Sport:
       type: object
       description: Sport object
@@ -1289,6 +1314,7 @@ components:
       description: Date (YYYY-MM-DD)
       pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
       example: "2001-09-26"
+
 
   securitySchemes:
     token:

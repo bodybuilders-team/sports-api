@@ -5,7 +5,7 @@ import pt.isel.ls.sports.database.AppDB
 import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
 import pt.isel.ls.sports.database.sections.activities.ActivitiesResponse
-import pt.isel.ls.sports.database.sections.users.UsersResponse
+import pt.isel.ls.sports.database.sections.activities.ActivitiesUsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import pt.isel.ls.sports.services.AbstractServices
@@ -214,7 +214,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
      * @param skip number of elements to skip
      * @param limit number of elements to return
      *
-     * @return [UsersResponse] with the list of users
+     * @return [ActivitiesUsersResponse] with the list of users
      * @throws InvalidArgumentException if [sid] is negative
      * @throws InvalidArgumentException if [rid] is negative
      * @throws InvalidArgumentException if [skip] is invalid
@@ -226,7 +226,7 @@ class ActivitiesServices(db: AppDB) : AbstractServices(db) {
         rid: Int?,
         skip: Int,
         limit: Int
-    ): UsersResponse {
+    ): ActivitiesUsersResponse {
         validateSid(sid)
         if (rid != null) validateRid(rid)
         validateSkip(skip)

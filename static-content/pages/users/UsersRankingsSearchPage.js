@@ -21,12 +21,13 @@ async function UsersRankingsSearchPage(state) {
         searchParams.set("sid", sid);
         if (rid != null) searchParams.set("rid", rid);
 
-        window.location.href = "#users?" + searchParams.toString();
+        window.location.href = "#users/rankings?" + searchParams.toString();
     }
 
     return div(
         h1({class: "app-icon"}, "Users Rankings"),
         br(),
+
         SearchUsersForm(
             state, {
                 onSubmit: searchUsers

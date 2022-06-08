@@ -13,13 +13,13 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.sports.api.routers.IRouter
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
+import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesUsersResponseDTO
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO
 import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityResponse
 import pt.isel.ls.sports.api.routers.activities.dtos.DeleteActivitiesRequest
 import pt.isel.ls.sports.api.routers.activities.dtos.UpdateActivityRequest
 import pt.isel.ls.sports.api.routers.activities.dtos.UpdateActivityResponse
-import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.errors.runAndCatch
@@ -181,7 +181,7 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
      * Searches for all users that have an activity that satisfies the given query parameters of the request.
      *
      * @param request HTTP request
-     * @return HTTP response containing a body that follows the [UsersResponseDTO] format
+     * @return HTTP response containing a body that follows the [ActivitiesUsersResponseDTO] format
      */
     private fun searchUsersByActivity(request: Request): Response = runAndCatch {
         val sid = request.queryOrThrow("sid").toIntOrThrow { "Invalid Sport Id" }
@@ -191,6 +191,6 @@ class ActivitiesRouter(private val services: ActivitiesServices) : IRouter {
 
         val usersResponse = services.searchUsersByActivity(sid, rid, skip, limit)
 
-        return Response(OK).json(UsersResponseDTO(usersResponse))
+        return Response(OK).json(ActivitiesUsersResponseDTO(usersResponse))
     }
 }

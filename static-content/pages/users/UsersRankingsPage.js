@@ -1,8 +1,9 @@
-import {div, h1} from "../../js/dom/domTags.js";
+import {br, div, h1, h2} from "../../js/dom/domTags.js";
 import {validate} from "../../js/validationUtils.js";
 import {InvalidSearchParamsError} from "../../js/errorUtils.js";
 import InfinitePaginatedCollection from "../../components/pagination/InfinitePaginatedCollection.js";
-import UserCard from "../../components/users/UserCard.js";
+import UsersRankingCard from "../../components/users/UsersRankingCard.js";
+import apiFetch from "../../js/apiFetch.js";
 
 /**
  * Users page.
@@ -11,16 +12,16 @@ import UserCard from "../../components/users/UserCard.js";
  *
  * @returns Promise<HTMLElement>
  */
-async function UsersPage(state) {
+async function UsersRankingsPage(state) {
 
-    const usersProps = getUsersProps();
+    const activityProps = getActivityProps();
 
     /**
-     * Parses activities props from state query params.
+     * Parses activitity props from state query params.
      *
      * @returns {?PropActivitiesProps}
      */
-    function getUsersProps() {
+    function getActivityProps() {
         const usersProps = {};
 
         for (const key in state.query)
@@ -54,16 +55,24 @@ async function UsersPage(state) {
         return usersProps;
     }
 
-    return div(
-        h1({class: "app-icon"}, "Users"),
+    const sport = await apiFetch(`/sports/${activityProps.sid}`)
+    const route = (activityProps.rid != null) ? await apiFetch(`/routes/${activityProps.rid}`) : null
 
+    return div(
+        h1({class: "app-icon"}, "Users Rankings"),
+        br(),
+        h2(`Sport: ${sport.name}`),
+        (route != null)
+            ? h2(`Route: ${route.startLocation + "-" + route.endLocation}`)
+            :
+            null,
         InfinitePaginatedCollection(state, {
-            collectionComponent: UserCard,
+            collectionComponent: UsersRankingCard,
             collectionEndpoint: "/activities/users",
-            collectionName: "users",
-            searchParams: usersProps
+            collectionName: "activitiesUsers",
+            searchParams: activityProps
         })
     );
 }
 
-export default UsersPage;
+export default UsersRankingsPage;

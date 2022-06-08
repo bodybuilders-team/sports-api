@@ -1,0 +1,3886 @@
+{
+	"info": {
+		"_postman_id": "22bb521e-63c8-42e2-b880-4694d08f784e",
+		"name": "Sports API",
+		"description": "API for an application that manages sports",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Gets a user by id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-46708356",
+											"description": "(Required) User id"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "User was found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/users/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) User id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": 1,\n  \"name\": \"André Páscoa\",\n  \"email\": \"andre@pascoa.org\"\n}"
+								},
+								{
+									"name": "Invalid user id",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/users/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) User id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "User was not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/users/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) User id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/users/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) User id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Gets all activities made by a user",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id/activities?skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id",
+										"activities"
+									],
+									"query": [
+										{
+											"key": "skip",
+											"value": "0",
+											"description": "Number of entities to skip"
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"description": "Number of entities that are returned"
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-46708356",
+											"description": "(Required) User id"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Activities were found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/users/:id/activities?skip=0&limit=10",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"users",
+												":id",
+												"activities"
+											],
+											"query": [
+												{
+													"key": "skip",
+													"value": "0"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) User id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"activities\": [\n    {\n      \"id\": 1,\n      \"date\": \"2001-09-26\",\n      \"duration\": \"01:23:45.678\",\n      \"uid\": 1,\n      \"sid\": 1,\n      \"rid\": 1\n    },\n    {\n      \"id\": 1,\n      \"date\": \"2001-09-26\",\n      \"duration\": \"01:23:45.678\",\n      \"uid\": 1,\n      \"sid\": 1,\n      \"rid\": 1\n    }\n  ],\n  \"totalCount\": 10\n}"
+								},
+								{
+									"name": "Invalid user id",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/users/:id/activities?skip=0&limit=10",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"users",
+												":id",
+												"activities"
+											],
+											"query": [
+												{
+													"key": "skip",
+													"value": "0"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) User id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/users/:id/activities?skip=0&limit=10",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"users",
+												":id",
+												"activities"
+											],
+											"query": [
+												{
+													"key": "skip",
+													"value": "0"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) User id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Creates a new user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"André Páscoa\",\n  \"email\": \"andre@pascoa.org\",\n  \"password\": \"LittleHomie123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "User was created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"André Páscoa\",\n  \"email\": \"andre@pascoa.org\",\n  \"password\": \"LittleHomie123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"uid\": 1\n}"
+						},
+						{
+							"name": "Invalid request body",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"André Páscoa\",\n  \"email\": \"andre@pascoa.org\",\n  \"password\": \"LittleHomie123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"BAD_REQUEST\",\n  \"description\": \"The request body is not valid\",\n  \"extraInfo\": \"Route id must be positive\"\n}"
+						},
+						{
+							"name": "User with the same email already exists",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"André Páscoa\",\n  \"email\": \"andre@pascoa.org\",\n  \"password\": \"LittleHomie123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"André Páscoa\",\n  \"email\": \"andre@pascoa.org\",\n  \"password\": \"LittleHomie123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Gets all users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/users?skip=0&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of entities to skip"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of entities that are returned"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Users were found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users?skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"users\": [\n    {\n      \"id\": 1,\n      \"name\": \"André Páscoa\",\n      \"email\": \"andre@pascoa.org\"\n    },\n    {\n      \"id\": 1,\n      \"name\": \"André Páscoa\",\n      \"email\": \"andre@pascoa.org\"\n    }\n  ],\n  \"totalCount\": 10\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users?skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Logs a user in, by providing a token in exchange for a valid email and password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"andre@pascoa.org\",\n  \"password\": \"LittleHomie123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "User was logged in",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"andre@pascoa.org\",\n  \"password\": \"LittleHomie123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"token\": \"663f6889-e7b8-4eb4-8698-38d72de4a956\",\n  \"uid\": 1\n}"
+						},
+						{
+							"name": "Invalid email or password",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"andre@pascoa.org\",\n  \"password\": \"LittleHomie123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+						},
+						{
+							"name": "No user with that email exists",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"andre@pascoa.org\",\n  \"password\": \"LittleHomie123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"andre@pascoa.org\",\n  \"password\": \"LittleHomie123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "routes",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Gets a route by id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/routes/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"routes",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-46708356",
+											"description": "(Required) Route id"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Route was found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/routes/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"routes",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Route id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": 1,\n  \"startLocation\": \"Porto, Portugal\",\n  \"endLocation\": \"Lisbon, Portugal\",\n  \"distance\": 15.2,\n  \"uid\": 1\n}"
+								},
+								{
+									"name": "Invalid route id",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/routes/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"routes",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Route id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Route was not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/routes/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"routes",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Route id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/routes/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"routes",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Route id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Updates a route by id",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"startLocation\": \"Lisbon\",\n  \"endLocation\": \"Lisbon\",\n  \"distance\": 15.2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/routes/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"routes",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-46708356",
+											"description": "(Required) Route id"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Route was updated",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"startLocation\": \"Lisbon\",\n  \"endLocation\": \"Lisbon\",\n  \"distance\": 15.2\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/routes/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"routes",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Route id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"modified\": true\n}"
+								},
+								{
+									"name": "Invalid route id",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"startLocation\": \"Lisbon\",\n  \"endLocation\": \"Lisbon\",\n  \"distance\": 15.2\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/routes/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"routes",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Route id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Route was not found",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"startLocation\": \"Lisbon\",\n  \"endLocation\": \"Lisbon\",\n  \"distance\": 15.2\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/routes/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"routes",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Route id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"startLocation\": \"Lisbon\",\n  \"endLocation\": \"Lisbon\",\n  \"distance\": 15.2\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/routes/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"routes",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Route id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Creates a new route",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "<Bearer Token>",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"startLocation\": \"Lisbon\",\n  \"endLocation\": \"Lisbon\",\n  \"distance\": 15.2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/routes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"routes"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Route was created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"startLocation\": \"Lisbon\",\n  \"endLocation\": \"Lisbon\",\n  \"distance\": 15.2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/routes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"routes"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"rid\": 1\n}"
+						},
+						{
+							"name": "Invalid Request Body",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"startLocation\": \"Lisbon\",\n  \"endLocation\": \"Lisbon\",\n  \"distance\": 15.2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/routes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"routes"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"startLocation\": \"Lisbon\",\n  \"endLocation\": \"Lisbon\",\n  \"distance\": 15.2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/routes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"routes"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Searches for routes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/routes?startLocation=irure culpa&endLocation=irure culpa&skip=0&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"routes"
+							],
+							"query": [
+								{
+									"key": "startLocation",
+									"value": "irure culpa",
+									"description": "Route start location"
+								},
+								{
+									"key": "endLocation",
+									"value": "irure culpa",
+									"description": "Route end location"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of entities to skip"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of entities that are returned"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Routes were found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/routes?startLocation=irure culpa&endLocation=irure culpa&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"routes"
+									],
+									"query": [
+										{
+											"key": "startLocation",
+											"value": "irure culpa"
+										},
+										{
+											"key": "endLocation",
+											"value": "irure culpa"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"routes\": [\n    {\n      \"id\": 1,\n      \"startLocation\": \"Porto, Portugal\",\n      \"endLocation\": \"Lisbon, Portugal\",\n      \"distance\": 15.2,\n      \"uid\": 1\n    },\n    {\n      \"id\": 1,\n      \"startLocation\": \"Porto, Portugal\",\n      \"endLocation\": \"Lisbon, Portugal\",\n      \"distance\": 15.2,\n      \"uid\": 1\n    }\n  ],\n  \"totalCount\": 10\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/routes?startLocation=irure culpa&endLocation=irure culpa&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"routes"
+									],
+									"query": [
+										{
+											"key": "startLocation",
+											"value": "irure culpa"
+										},
+										{
+											"key": "endLocation",
+											"value": "irure culpa"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "sports",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Gets a sport by id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/sports/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"sports",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-46708356",
+											"description": "(Required) Sport id"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Sport was found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": 1,\n  \"name\": \"Powerlifting\",\n  \"uid\": 1,\n  \"description\": \"Get big\"\n}"
+								},
+								{
+									"name": "Invalid sport id",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Sport was not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Updates a sport by id",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Powerlifting\",\n  \"description\": \"Get big\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/sports/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"sports",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-46708356",
+											"description": "(Required) Sport id"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Sport was updated",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"Powerlifting\",\n  \"description\": \"Get big\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"modified\": false\n}"
+								},
+								{
+									"name": "Invalid sport id",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"Powerlifting\",\n  \"description\": \"Get big\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Sport was not found",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"Powerlifting\",\n  \"description\": \"Get big\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"Powerlifting\",\n  \"description\": \"Get big\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Gets all activities of a sport",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/sports/:id/activities?skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"sports",
+										":id",
+										"activities"
+									],
+									"query": [
+										{
+											"key": "skip",
+											"value": "0",
+											"description": "Number of entities to skip"
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"description": "Number of entities that are returned"
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-46708356",
+											"description": "(Required) Sport id"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Activity was found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id/activities?skip=0&limit=10",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id",
+												"activities"
+											],
+											"query": [
+												{
+													"key": "skip",
+													"value": "0"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"activities\": [\n    {\n      \"id\": 1,\n      \"date\": \"2001-09-26\",\n      \"duration\": \"01:23:45.678\",\n      \"uid\": 1,\n      \"sid\": 1,\n      \"rid\": 1\n    },\n    {\n      \"id\": 1,\n      \"date\": \"2001-09-26\",\n      \"duration\": \"01:23:45.678\",\n      \"uid\": 1,\n      \"sid\": 1,\n      \"rid\": 1\n    }\n  ],\n  \"totalCount\": 10\n}"
+								},
+								{
+									"name": "Invalid sport id",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id/activities?skip=0&limit=10",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id",
+												"activities"
+											],
+											"query": [
+												{
+													"key": "skip",
+													"value": "0"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Activity was not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id/activities?skip=0&limit=10",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id",
+												"activities"
+											],
+											"query": [
+												{
+													"key": "skip",
+													"value": "0"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/sports/:id/activities?skip=0&limit=10",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"sports",
+												":id",
+												"activities"
+											],
+											"query": [
+												{
+													"key": "skip",
+													"value": "0"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Sport id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Creates a new sport",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "<Bearer Token>",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Powerlifting\",\n  \"description\": \"Get big\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sports",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sports"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Sport was created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Powerlifting\",\n  \"description\": \"Get big\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/sports",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"sports"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"sid\": 1\n}"
+						},
+						{
+							"name": "Invalid request body",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Powerlifting\",\n  \"description\": \"Get big\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/sports",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"sports"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"BAD_REQUEST\",\n  \"description\": \"The request body is not valid\",\n  \"extraInfo\": \"Route id must be positive\"\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Powerlifting\",\n  \"description\": \"Get big\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/sports",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"sports"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Searches for sports",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sports?name=irure culpa&skip=0&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sports"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "irure culpa",
+									"description": "Sport name"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of entities to skip"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of entities that are returned"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Sports were found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/sports?name=irure culpa&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"sports"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "irure culpa"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"sports\": [\n    {\n      \"id\": 1,\n      \"name\": \"Powerlifting\",\n      \"uid\": 1,\n      \"description\": \"Get big\"\n    },\n    {\n      \"id\": 1,\n      \"name\": \"Powerlifting\",\n      \"uid\": 1,\n      \"description\": \"Get big\"\n    }\n  ],\n  \"totalCount\": 10\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/sports?name=irure culpa&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"sports"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "irure culpa"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "activities",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Gets an activity by id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/activities/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-46708356",
+											"description": "(Required) Activity id"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Activity was found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": 1,\n  \"date\": \"2001-09-26\",\n  \"duration\": \"01:23:45.678\",\n  \"uid\": 1,\n  \"sid\": 1,\n  \"rid\": 1\n}"
+								},
+								{
+									"name": "Invalid activity id",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Activity was not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Deletes an activity by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "<Bearer Token>",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/activities/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-46708356",
+											"description": "(Required) Activity id"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Activity deleted",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"message\": \"ad ut irure ipsum voluptate\"\n}"
+								},
+								{
+									"name": "Invalid activity id",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Activity was not found",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Updates an activity by id",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"date\": \"2001-09-26\",\n  \"duration\": \"01:23:45.678\",\n  \"sid\": 1,\n  \"rid\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/activities/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-46708356",
+											"description": "(Required) Activity id"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Activity was updated",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"date\": \"2001-09-26\",\n  \"duration\": \"01:23:45.678\",\n  \"sid\": 1,\n  \"rid\": 1\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"modified\": false\n}"
+								},
+								{
+									"name": "Invalid activity id",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"date\": \"2001-09-26\",\n  \"duration\": \"01:23:45.678\",\n  \"sid\": 1,\n  \"rid\": 1\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Activity was not found",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"date\": \"2001-09-26\",\n  \"duration\": \"01:23:45.678\",\n  \"sid\": 1,\n  \"rid\": 1\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"date\": \"2001-09-26\",\n  \"duration\": \"01:23:45.678\",\n  \"sid\": 1,\n  \"rid\": 1\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/activities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"activities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "-46708356",
+													"description": "(Required) Activity id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Creates a new activity for the sport identified by a sport id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "<Bearer Token>",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"date\": \"2001-09-26\",\n  \"duration\": \"01:23:45.678\",\n  \"sid\": 1,\n  \"rid\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/activities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"activities"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Activity was created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"date\": \"2001-09-26\",\n  \"duration\": \"01:23:45.678\",\n  \"sid\": 1,\n  \"rid\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/activities",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"aid\": 1\n}"
+						},
+						{
+							"name": "Invalid request body",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"date\": \"2001-09-26\",\n  \"duration\": \"01:23:45.678\",\n  \"sid\": 1,\n  \"rid\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/activities",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"BAD_REQUEST\",\n  \"description\": \"The request body is not valid\",\n  \"extraInfo\": \"Route id must be positive\"\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"date\": \"2001-09-26\",\n  \"duration\": \"01:23:45.678\",\n  \"sid\": 1,\n  \"rid\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/activities",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Deletes activities",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "<Bearer Token>",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"activityIds\": [\n    1,\n    1\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/activities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"activities"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Activities deleted",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"activityIds\": [\n    1,\n    1\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/activities",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"ad ut irure ipsum voluptate\"\n}"
+						},
+						{
+							"name": "Invalid activity ids",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"activityIds\": [\n    1,\n    1\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/activities",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: bearer",
+										"key": "Authorization",
+										"value": "Bearer <token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"activityIds\": [\n    1,\n    1\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/activities",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Searches for activities",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/activities?sid=-46708356&orderBy=irure culpa&date=irure culpa&rid=-46708356&skip=0&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"activities"
+							],
+							"query": [
+								{
+									"key": "sid",
+									"value": "-46708356",
+									"description": "(Required) Sport Id"
+								},
+								{
+									"key": "orderBy",
+									"value": "irure culpa",
+									"description": "(Required) Order by"
+								},
+								{
+									"key": "date",
+									"value": "irure culpa",
+									"description": "Activity date"
+								},
+								{
+									"key": "rid",
+									"value": "-46708356",
+									"description": "Route id"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of entities to skip"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of entities that are returned"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Activity was found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/activities?sid=-46708356&orderBy=irure culpa&date=irure culpa&rid=-46708356&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities"
+									],
+									"query": [
+										{
+											"key": "sid",
+											"value": "-46708356"
+										},
+										{
+											"key": "orderBy",
+											"value": "irure culpa"
+										},
+										{
+											"key": "date",
+											"value": "irure culpa"
+										},
+										{
+											"key": "rid",
+											"value": "-46708356"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"activities\": [\n    {\n      \"id\": 1,\n      \"date\": \"2001-09-26\",\n      \"duration\": \"01:23:45.678\",\n      \"uid\": 1,\n      \"sid\": 1,\n      \"rid\": 1\n    },\n    {\n      \"id\": 1,\n      \"date\": \"2001-09-26\",\n      \"duration\": \"01:23:45.678\",\n      \"uid\": 1,\n      \"sid\": 1,\n      \"rid\": 1\n    }\n  ],\n  \"totalCount\": 10\n}"
+						},
+						{
+							"name": "Invalid query params",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/activities?sid=-46708356&orderBy=irure culpa&date=irure culpa&rid=-46708356&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities"
+									],
+									"query": [
+										{
+											"key": "sid",
+											"value": "-46708356"
+										},
+										{
+											"key": "orderBy",
+											"value": "irure culpa"
+										},
+										{
+											"key": "date",
+											"value": "irure culpa"
+										},
+										{
+											"key": "rid",
+											"value": "-46708356"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+						},
+						{
+							"name": "Activity was not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/activities?sid=-46708356&orderBy=irure culpa&date=irure culpa&rid=-46708356&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities"
+									],
+									"query": [
+										{
+											"key": "sid",
+											"value": "-46708356"
+										},
+										{
+											"key": "orderBy",
+											"value": "irure culpa"
+										},
+										{
+											"key": "date",
+											"value": "irure culpa"
+										},
+										{
+											"key": "rid",
+											"value": "-46708356"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/activities?sid=-46708356&orderBy=irure culpa&date=irure culpa&rid=-46708356&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities"
+									],
+									"query": [
+										{
+											"key": "sid",
+											"value": "-46708356"
+										},
+										{
+											"key": "orderBy",
+											"value": "irure culpa"
+										},
+										{
+											"key": "date",
+											"value": "irure culpa"
+										},
+										{
+											"key": "rid",
+											"value": "-46708356"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Searches for all users that have an activity with a specified sport id and route id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/activities/users?sid=-46708356&rid=-46708356&skip=0&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"activities",
+								"users"
+							],
+							"query": [
+								{
+									"key": "sid",
+									"value": "-46708356",
+									"description": "(Required) Sport Id"
+								},
+								{
+									"key": "rid",
+									"value": "-46708356",
+									"description": "Route id"
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of entities to skip"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of entities that are returned"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Users were found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/activities/users?sid=-46708356&rid=-46708356&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities",
+										"users"
+									],
+									"query": [
+										{
+											"key": "sid",
+											"value": "-46708356"
+										},
+										{
+											"key": "rid",
+											"value": "-46708356"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"activitiesUsers\": {\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"André Páscoa\",\n      \"email\": \"andre@pascoa.org\"\n    },\n    \"aid\": 1\n  },\n  \"totalCount\": 10\n}"
+						},
+						{
+							"name": "Invalid query params",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/activities/users?sid=-46708356&rid=-46708356&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities",
+										"users"
+									],
+									"query": [
+										{
+											"key": "sid",
+											"value": "-46708356"
+										},
+										{
+											"key": "rid",
+											"value": "-46708356"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"FAIL\",\n  \"description\": \"An error occurred\",\n  \"extraInfo\": \"User not found\"\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/activities/users?sid=-46708356&rid=-46708356&skip=0&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"activities",
+										"users"
+									],
+									"query": [
+										{
+											"key": "sid",
+											"value": "-46708356"
+										},
+										{
+											"key": "rid",
+											"value": "-46708356"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"name\": \"INTERNAL_ERROR\",\n  \"description\": \"An internal error occurred\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://isel-ls-2122-2-leic41d-g03.herokuapp.com/api",
+			"type": "string"
+		}
+	]
+}

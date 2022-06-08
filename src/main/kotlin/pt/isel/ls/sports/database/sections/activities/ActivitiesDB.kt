@@ -4,7 +4,6 @@ import kotlinx.datetime.LocalDate
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
-import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import kotlin.time.Duration
@@ -120,7 +119,7 @@ interface ActivitiesDB {
         rid: Int?,
         skip: Int,
         limit: Int
-    ): UsersResponse
+    ): ActivitiesUsersResponse
 
     /**
      * Gets all activities of a specific sport.

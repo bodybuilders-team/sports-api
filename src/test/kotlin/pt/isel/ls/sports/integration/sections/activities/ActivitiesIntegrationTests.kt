@@ -6,12 +6,12 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesResponseDTO
+import pt.isel.ls.sports.api.routers.activities.dtos.ActivitiesUsersResponseDTO
 import pt.isel.ls.sports.api.routers.activities.dtos.ActivityDTO
 import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityRequest
 import pt.isel.ls.sports.api.routers.activities.dtos.CreateActivityResponse
 import pt.isel.ls.sports.api.routers.routes.dtos.UpdateRouteResponse
 import pt.isel.ls.sports.api.routers.users.dtos.CreateUserRequest
-import pt.isel.ls.sports.api.routers.users.dtos.UsersResponseDTO
 import pt.isel.ls.sports.api.utils.MessageResponse
 import pt.isel.ls.sports.api.utils.decodeBodyAs
 import pt.isel.ls.sports.api.utils.errors.AppError
@@ -570,7 +570,7 @@ class ActivitiesIntegrationTests : IntegrationTests() {
         send(request).apply {
             assertEquals(Status.OK, status)
 
-            val users = this.decodeBodyAs<UsersResponseDTO>().users
+            val users = this.decodeBodyAs<ActivitiesUsersResponseDTO>().activitiesUsers.map { it.user }
 
             assertEquals(mockData.users.size, users.size)
 

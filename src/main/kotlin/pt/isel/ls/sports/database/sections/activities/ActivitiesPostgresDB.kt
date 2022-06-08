@@ -5,13 +5,12 @@ import kotlinx.datetime.toKotlinLocalDate
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
-import pt.isel.ls.sports.database.sections.users.UsersPostgresDB.Companion.getUsersResponse
-import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.database.utils.getPaginatedQuery
 import pt.isel.ls.sports.database.utils.getSQLDate
 import pt.isel.ls.sports.database.utils.setIntOrNull
 import pt.isel.ls.sports.domain.Activity
+import pt.isel.ls.sports.domain.User
 import pt.isel.ls.sports.utils.toDTOString
 import pt.isel.ls.sports.utils.toDuration
 import java.sql.Connection
@@ -179,21 +178,21 @@ class ActivitiesPostgresDB : ActivitiesDB {
         rid: Int?,
         skip: Int,
         limit: Int
-    ): UsersResponse {
+    ): ActivitiesUsersResponse {
         val queryRid = if (rid != null) "AND rid = ?" else "AND rid IS NULL"
         val stm = conn
             .getPostgresConnection()
             .prepareStatement(
                 getPaginatedQuery(
                     """
-                SELECT *
+                SELECT users.id, users.name, users.email, users.password, activities.id as aid
                 FROM users
                 JOIN (
-                SELECT uid
+                SELECT *
                 FROM activities
                 WHERE sid = ? $queryRid
                 ORDER BY duration
-                ) AS activityUids ON users.id = activityUids.uid
+            ) AS activities ON users.id = activities.uid
                     """.trimIndent()
                 )
             )
@@ -206,7 +205,7 @@ class ActivitiesPostgresDB : ActivitiesDB {
         stm.setInt(counter++, skip)
         stm.setInt(counter, limit)
 
-        return getUsersResponse(stm)
+        return getActivitiesUsersResponse(stm)
     }
 
     override fun getSportActivities(
@@ -270,6 +269,37 @@ class ActivitiesPostgresDB : ActivitiesDB {
     }
 
     companion object {
+
+        private fun getActivitiesUsersResponse(stm: PreparedStatement): ActivitiesUsersResponse {
+            val rs = stm.executeQuery()
+            val activitiesUsers = mutableListOf<ActivitiesUser>()
+
+            rs.next()
+            val totalCount = rs.getInt("totalCount")
+
+            if (rs.getObject("id") != null)
+                do {
+                    activitiesUsers.add(getActivityUserFromTable(rs))
+                } while (rs.next())
+
+            return ActivitiesUsersResponse(activitiesUsers, totalCount)
+        }
+
+        /**
+         * Gets an [ActivitiesUser] from a ResultSet.
+         *
+         * @param rs table
+         * @return user object
+         */
+        private fun getActivityUserFromTable(rs: ResultSet): ActivitiesUser = ActivitiesUser(
+            user = User(
+                id = rs.getInt(1),
+                name = rs.getString(2),
+                email = rs.getString(3),
+                password = rs.getString(4)
+            ),
+            aid = rs.getInt(5)
+        )
 
         /**
          * Gets a list of activities returned from the execution of the statement [stm].

@@ -17,7 +17,7 @@ async function NavBar(state) {
         nav(
             {class: "nav nav-pills"},
             a({class: "nav-link", href: "#"}, "Home"),
-            a({class: "nav-link", href: "#users/search"}, "UsersRankings"),
+            a({class: "nav-link", href: "#users/rankings/search"}, "UsersRankings"),
             a({class: "nav-link", href: "#sports"}, "Sports"),
             a({class: "nav-link", href: "#activities/search",}, "ActivitiesSearch"),
             a({class: "nav-link", href: "#routes"}, "Routes"),

@@ -5,7 +5,6 @@ import pt.isel.ls.sports.database.AppMemoryDBSource
 import pt.isel.ls.sports.database.connection.ConnectionDB
 import pt.isel.ls.sports.database.exceptions.InvalidArgumentException
 import pt.isel.ls.sports.database.exceptions.NotFoundException
-import pt.isel.ls.sports.database.sections.users.UsersResponse
 import pt.isel.ls.sports.database.utils.SortOrder
 import pt.isel.ls.sports.domain.Activity
 import kotlin.time.Duration
@@ -95,17 +94,22 @@ class ActivitiesMemoryDB(private val source: AppMemoryDBSource) : ActivitiesDB {
         rid: Int?,
         skip: Int,
         limit: Int
-    ): UsersResponse {
+    ): ActivitiesUsersResponse {
 
         val users = source.activities
             .filter { it.value.sid == sid && it.value.rid == rid }
             .values.toList()
             .sortedWith(compareBy { it.duration })
-            .map { source.users[it.uid] ?: throw NotFoundException("User with id ${it.uid} not found") }
+            .map {
+                ActivitiesUser(
+                    source.users[it.uid] ?: throw NotFoundException("User with id ${it.uid} not found"),
+                    aid = it.id
+                )
+            }
             .distinct()
 
         return users.run {
-            UsersResponse(subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit), size)
+            ActivitiesUsersResponse(subList(skip, if (lastIndex + 1 < limit) lastIndex + 1 else limit), size)
         }
     }
 

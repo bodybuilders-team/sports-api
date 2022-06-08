@@ -335,7 +335,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
             db.activities.searchUsersByActivity(
                 conn, sid = 2, rid = 1,
                 skip = 0, limit = 10
-            ).users
+            ).activitiesUsers.map { it.user }
 
         val mockUsers = listOf(
             User(
@@ -360,7 +360,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
             db.activities.searchUsersByActivity(
                 conn, sid = 2, rid = 1,
                 skip = 1, limit = 10
-            ).users
+            ).activitiesUsers.map { it.user }
 
         val mockUsers = listOf(
             User(
@@ -379,7 +379,7 @@ class ActivitiesPostgresDBTests : AppPostgresDBTests(), ActivitiesDBTests {
             db.activities.searchUsersByActivity(
                 conn, sid = 2, rid = 1,
                 skip = 0, limit = 1
-            ).users
+            ).activitiesUsers.map { it.user }
 
         val mockUsers = listOf(
             User(

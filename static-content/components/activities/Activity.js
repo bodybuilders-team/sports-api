@@ -41,7 +41,6 @@ import {getStoredUser} from "../../js/utils.js";
  * @return Promise<HTMLElement>
  */
 async function Activity(state, props) {
-
     const {id, date, duration, user, sport, route, onActivityUpdated, onActivityDeleted} = props;
     const storedUser = getStoredUser();
 

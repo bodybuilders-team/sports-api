@@ -715,7 +715,7 @@ class ActivitiesServicesTests : AbstractServicesTests() {
                 rid = 1,
                 skip = 0,
                 limit = 10
-            ).users
+            ).activitiesUsers.map { it.user }
 
         assertEquals(
             listOf(
