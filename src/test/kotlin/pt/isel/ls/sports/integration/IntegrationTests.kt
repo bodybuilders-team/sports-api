@@ -4,8 +4,8 @@ import org.http4k.client.JavaHttpClient
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import pt.isel.ls.sports.AppServer
-import pt.isel.ls.sports.DATABASE_URL_ENV
 import pt.isel.ls.sports.DEFAULT_PORT
+import pt.isel.ls.sports.JDBC_DATABASE_URL_ENV
 import pt.isel.ls.sports.PORT_ENV
 import pt.isel.ls.sports.database.AppMemoryDB
 import pt.isel.ls.sports.database.AppMemoryDBSource
@@ -16,10 +16,10 @@ abstract class IntegrationTests {
 
     companion object {
         private val port = System.getenv(PORT_ENV)?.toIntOrNull() ?: DEFAULT_PORT
-        private val databaseURL: String? = System.getenv(DATABASE_URL_ENV)
+        private val jdbcDatabaseURL: String? = System.getenv(JDBC_DATABASE_URL_ENV)
 
-        val db = if (databaseURL != null)
-            AppPostgresDB("jdbc:$databaseURL?user=postgres&password=postgres")
+        val db = if (jdbcDatabaseURL != null)
+            AppPostgresDB(jdbcDatabaseURL)
         else
             AppMemoryDB(AppMemoryDBSource())
 
