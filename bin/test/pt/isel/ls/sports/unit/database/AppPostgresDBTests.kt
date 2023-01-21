@@ -4,8 +4,6 @@ import org.junit.Before
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.sports.JDBC_DATABASE_URL_ENV
 import pt.isel.ls.sports.database.AppDB
-import pt.isel.ls.sports.database.AppMemoryDB
-import pt.isel.ls.sports.database.AppMemoryDBSource
 import pt.isel.ls.sports.database.AppPostgresDB
 import pt.isel.ls.sports.database.utils.runScript
 import kotlin.test.BeforeTest

@@ -4,6 +4,8 @@ WORKDIR /usr/app
 COPY src ./src
 COPY static-content ./static-content
 COPY gradle ./gradle
+COPY build.gradle.kts ./
+COPY settings.gradle.kts ./
 
 RUN gradle build && \
     gradle jar
@@ -14,4 +16,4 @@ WORKDIR /usr/app
 COPY --from=build /usr/app/ .
 
 EXPOSE 8888
-CMD ["java", "-jar", "./build/libs/app.jar"]
+CMD ["java", "-jar", "./build/libs/sports-api.jar"]
