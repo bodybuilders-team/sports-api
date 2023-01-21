@@ -4,7 +4,7 @@
 
 > You can check the documentation of the project in the [wiki](https://github.com/isel-leic-ls/2122-2-LEIC41D-G03/wiki).
 
-> The link for the deployed application is [here](https://isel-ls-2122-2-leic41d-g03.herokuapp.com/#).
+> The link for the deployed application is [here](https://sports-api-20os.onrender.com).
 
 The Sports API allows the user to perform creation and management of users, sports, routes and activities.
 These operations can be performed via Web-UI (Website) or Web-API.

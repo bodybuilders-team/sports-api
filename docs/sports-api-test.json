@@ -3879,7 +3879,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "https://isel-ls-2122-2-leic41d-g03.herokuapp.com/api",
+			"value": "https://sports-api-20os.onrender.com/api",
 			"type": "string"
 		}
 	]

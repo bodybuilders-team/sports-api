@@ -6,7 +6,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: https://isel-ls-2122-2-leic41d-g03.herokuapp.com/api
+  - url: https://sports-api-20os.onrender.com/api
   - url: http://localhost:8888/api
 
 tags:
