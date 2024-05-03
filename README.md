@@ -1,13 +1,11 @@
-# 2122-2-LEIC41D-G03
+# sports-api
 
-> Software Laboratory project of group 03 from LEIC41D class.
+The Sports API allows the user to perform creation and management of users, sports, routes and activities.
+These operations can be performed via Web-UI (Website) or Web-API.
 
 > You can check the documentation of the project in the [wiki](https://github.com/isel-leic-ls/2122-2-LEIC41D-G03/wiki).
 
 > The link for the deployed application is [here](https://sports-api-20os.onrender.com).
-
-The Sports API allows the user to perform creation and management of users, sports, routes and activities.
-These operations can be performed via Web-UI (Website) or Web-API.
 
 <p align="center">
   <img align="center" src="docs/gifs/activity-search.gif" alt="Search Activities Gif"/>
